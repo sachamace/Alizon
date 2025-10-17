@@ -1,8 +1,8 @@
-# 🛒 Marketplace Web — Plateforme d'achat et de vente en ligne
+# 🛒 Alizon — Plateforme d'achat et de vente en ligne
 
 ## 📖 Introduction
 
-**Marketplace Web** est une plateforme de commerce en ligne développée en **HTML**, **CSS**, **JavaScript**, **PHP** et **MySQL**.  
+**Alizon** est une plateforme de commerce en ligne développée en **HTML**, **CSS**, **JavaScript**, **PHP** et **MySQL**.  
 L’objectif du projet est de permettre à des utilisateurs de **vendre et acheter des produits** en toute simplicité.  
 
 Ce projet illustre une architecture web complète incluant une **interface utilisateur moderne**, un **système d’authentification sécurisé**, et une **gestion dynamique des produits et commandes**.

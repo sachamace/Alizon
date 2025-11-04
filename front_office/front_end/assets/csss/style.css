@@ -1,0 +1,79 @@
+@charset "UTF-8";
+/*Le header */
+header {
+  height: 127px;
+  background-color: #FFFFFF;
+}
+header nav {
+  display: flex;
+  flex-direction: column; /* empile les deux nav verticalement */
+}
+header nav nav {
+  display: flex;
+  flex-direction: row; /* aligne le contenu de chaque nav horizontalement */
+  align-items: center;
+  margin-top: 6px;
+  margin-left: 20px;
+  margin-right: 10px;
+}
+header nav nav :first-child {
+  display: flex;
+  align-items: center;
+}
+header nav nav :first-child a[href="panier.html"] { /* Le lien “Panier” seul, collé à droite */
+  margin-left: auto;
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  font-size: 23px;
+  font-weight: bold;
+}
+header nav nav :first-child a[href="panier.html"] :last-child, header nav nav :first-child a[href="panier.html"] :nth-last-child(2) {
+  margin-right: 0;
+}
+header nav nav :first-child a[href="panier.html"] :nth-child(2) {
+  margin-left: 42.625px;
+}
+header nav nav :first-child a[href="panier.html"] :visited, header nav nav :first-child a[href="panier.html"] :hover {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  font-size: 23px;
+  font-weight: bold;
+}
+header nav nav :first-child form {
+  margin-left: 42.625px;
+}
+header nav nav :first-child form input {
+  width: 1426.15px;
+  height: 36.95px;
+  border-radius: 25px;
+  border-color: #ff6ce2;
+  padding: 10px 10px 10px 40px;
+  background-image: url(../images/magnifying-glass-solid-full\ \(1\).svg);
+  background-repeat: no-repeat;
+  background-position: left;
+}
+header nav nav :first-child form button {
+  display: none;
+}
+header nav nav :last-child { /* Le deuxième nav du header (celui du bas) */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+header nav nav :last-child div { /* Le conteneur des trois liens à gauche */
+  display: flex;
+  gap: 16px;
+  margin-bottom: 7px;
+}
+header nav nav :last-child div a {
+  background: linear-gradient(to left, #ff6ce2, #FFE0FE);
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 325;
+  width: 203px;
+  border-radius: 10px;
+}
+header nav nav :last-child a { /* Le lien "Mon Compte" tout à droite */
+  margin-left: auto;
+}/*# sourceMappingURL=style.css.map */

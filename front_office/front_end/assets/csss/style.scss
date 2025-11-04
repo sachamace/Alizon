@@ -1,0 +1,81 @@
+@use "variables" as *;
+
+/*Le header */
+
+header{
+    height: 127px;
+    background-color: #FFFFFF;
+    nav{
+        display: flex;
+        flex-direction: column; /* empile les deux nav verticalement */
+        nav{
+            display: flex;
+            flex-direction: row; /* aligne le contenu de chaque nav horizontalement */
+            align-items: center;
+            margin-top: 6px;
+            margin-left: 20px;
+            margin-right: 10px;
+            :first-child{
+                display: flex;
+                align-items: center;
+                a[href="panier.html"]{ /* Le lien “Panier” seul, collé à droite */
+                    margin-left: auto;
+                    text-decoration: none;
+                    color: rgb(0, 0, 0);
+                    font-size: 23px;
+                    font-weight: bold;
+                    :last-child, :nth-last-child(2){
+                        margin-right: 0;
+                    }
+                    :nth-child(2){
+                        margin-left: 42.625px;
+                    }
+                    :visited, :hover{
+                        text-decoration: none;
+                        color: rgb(0, 0, 0);
+                        font-size: 23px;
+                        font-weight: bold;
+                    }
+                }
+                form{
+                    margin-left: 42.625px;
+                    input{
+                        width: 1426.15px;
+                        height: 36.95px;
+                        border-radius: 25px;
+                        border-color: $colP;
+                        padding: 10px 10px 10px 40px;
+                        background-image:url(../images/magnifying-glass-solid-full\ \(1\).svg);
+                        background-repeat: no-repeat;
+                        background-position: left;
+                    }
+                    button{
+                        display: none;
+                    }
+                }
+            }
+            :last-child{ /* Le deuxième nav du header (celui du bas) */
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                div{ /* Le conteneur des trois liens à gauche */
+                    display: flex;
+                    gap: 16px;
+                    margin-bottom: 7px;
+                    a{
+                        background: linear-gradient(to left, $colP,#FFE0FE);
+                        text-align: center ;
+                        padding: 10px;
+                        font-size: 14px;
+                        font-weight: 325;
+                        width: 203px;
+                        border-radius: 10px;
+                    }
+                }
+                a{ /* Le lien "Mon Compte" tout à droite */
+                    margin-left: auto;
+                }
+            }
+        }
+    }
+}

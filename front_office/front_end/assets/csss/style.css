@@ -82,6 +82,10 @@ body header nav nav:last-child div a {
 }
 body header nav nav:last-child a { /* Le lien "Mon Compte" tout à droite */
   margin-left: auto;
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  font-size: 23px;
+  font-weight: bold;
 }
 body header nav nav .notif {
   width: 54px;

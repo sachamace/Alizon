@@ -1,0 +1,211 @@
+@use 'sass:color';
+@use 'sass:map';
+@use 'sass:math';
+
+// Variables
+$primary-color: #6CD3FF;
+$secondary-color: #A9E5FF;
+$background-color: #e6e6e6;
+$white: #fff;
+$black: #000;
+$gray-light: #ddd;
+$gray-medium: #ccc;
+$gray-dark: #666;
+$gray-darker: #333;
+
+$font-family: 'Arial', sans-serif;
+$sidebar-width: 300px;
+$border-radius: 1em;
+$transition-speed: 0.3s;
+
+// Mixins avec les fonctions Sass
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin transition($property: all) {
+  transition: $property $transition-speed ease;
+}
+
+@mixin hover-lift {
+  @include transition(transform box-shadow);
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba($black, 0.15);
+  }
+}
+
+@mixin menu-item-active {
+  background: rgba($white, 0.3);
+  border-left: 4px solid $white;
+}
+
+@mixin disabled-state {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: none !important;
+}
+
+@mixin card-style {
+  background-color: $white;
+  border: 1px solid $gray-light;
+  padding: 15px;
+  border-radius: $border-radius;
+  @include flex-column;
+  box-shadow: 0 2px 5px rgba($black, 0.1);
+  @include transition;
+  cursor: pointer;
+}
+
+// Fonction utilitaire avec color.adjust
+@function darken-color($color, $amount: 10%) {
+  @return color.adjust($color, $lightness: -$amount);
+}
+
+@function lighten-color($color, $amount: 10%) {
+  @return color.adjust($color, $lightness: $amount);
+}
+
+// Styles
+body {
+  margin: 0;
+  font-family: $font-family;
+  background-color: $background-color;
+}
+
+header {
+  a,
+  a:hover,
+  a.active {
+    color: $black;
+    text-decoration: none;
+  }
+}
+
+/* Structure principale */
+.dashboard {
+  display: flex;
+  height: 100vh;
+}
+
+/* --- Barre latérale --- */
+.sidebar {
+  background: linear-gradient(to left, $primary-color, $secondary-color);
+  width: $sidebar-width;
+  @include flex-column;
+  color: $black;
+}
+  .logo {
+    padding: 15px;
+  }
+
+  .menu {
+    @include flex-column;
+    margin-top: 20px;
+
+    a {
+      @include flex-center;
+      gap: 15px;
+      padding: 20px;
+      color: $black;
+      text-decoration: none;
+      font-size: 1.5em;
+      font-weight: bold;
+      @include transition(background);
+
+      &:hover,
+      &.active {
+        @include menu-item-active;
+      }
+
+      &.disabled {
+        @include disabled-state;
+      }
+    }
+  }
+
+
+/* --- Contenu principal --- */
+main {
+  flex: 1;
+  @include flex-column;
+  background: $white;
+
+  /* --- Barre du haut --- */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: $white;
+    padding: 59px 25px;
+    border-bottom: 1px solid $gray-medium;
+  }
+  
+  .user-info {
+    @include flex-center;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 2em;
+  }
+
+  /* --- Contenu --- */
+  .content {
+    display: grid;
+    padding: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    gap: 20px;
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    article {
+      @include card-style;
+      @include hover-lift;
+
+      img {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
+        border-radius: math.div($border-radius, 2);
+      }
+
+      .titre {
+        margin: 10px 0 5px;
+        font-size: 1.2em;
+        color: $gray-darker;
+      }
+
+      .description {
+        color: $gray-dark;
+        font-size: 0.9em;
+        margin: 5px 0;
+        flex-grow: 1;
+      }
+
+      .prix {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: $primary-color;
+        margin-top: 10px;
+        
+        // Exemple avec color.adjust
+        &:hover {
+          color: darken-color($primary-color, 15%);
+        }
+      }
+    }
+  }
+}

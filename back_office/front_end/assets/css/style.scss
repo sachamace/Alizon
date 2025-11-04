@@ -1,78 +1,12 @@
 @use 'sass:color';
 @use 'sass:map';
 @use 'sass:math';
+@use "variables";
+@use "mixin";
 
-// Variables
-$primary-color: #6CD3FF;
-$secondary-color: #A9E5FF;
-$background-color: #e6e6e6;
-$white: #fff;
-$black: #000;
-$gray-light: #ddd;
-$gray-medium: #ccc;
-$gray-dark: #666;
-$gray-darker: #333;
 
-$font-family: 'Arial', sans-serif;
-$sidebar-width: 300px;
-$border-radius: 1em;
-$transition-speed: 0.3s;
 
-// Mixins avec les fonctions Sass
-@mixin flex-column {
-  display: flex;
-  flex-direction: column;
-}
 
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-}
-
-@mixin transition($property: all) {
-  transition: $property $transition-speed ease;
-}
-
-@mixin hover-lift {
-  @include transition(transform box-shadow);
-  
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 10px rgba($black, 0.15);
-  }
-}
-
-@mixin menu-item-active {
-  background: rgba($white, 0.3);
-  border-left: 4px solid $white;
-}
-
-@mixin disabled-state {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-  background: none !important;
-}
-
-@mixin card-style {
-  background-color: $white;
-  border: 1px solid $gray-light;
-  padding: 15px;
-  border-radius: $border-radius;
-  @include flex-column;
-  box-shadow: 0 2px 5px rgba($black, 0.1);
-  @include transition;
-  cursor: pointer;
-}
-
-// Fonction utilitaire avec color.adjust
-@function darken-color($color, $amount: 10%) {
-  @return color.adjust($color, $lightness: -$amount);
-}
-
-@function lighten-color($color, $amount: 10%) {
-  @return color.adjust($color, $lightness: $amount);
-}
 
 // Styles
 body {

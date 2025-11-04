@@ -1,0 +1,46 @@
+// Mixins avec les fonctions Sass
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin transition($property: all) {
+  transition: $property $transition-speed ease;
+}
+
+@mixin hover-lift {
+  @include transition(transform box-shadow);
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba($black, 0.15);
+  }
+}
+
+@mixin menu-item-active {
+  background: rgba($white, 0.3);
+  border-left: 4px solid $white;
+}
+
+@mixin disabled-state {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: none !important;
+}
+
+@mixin card-style {
+  background-color: $white;
+  border: 1px solid $gray-light;
+  padding: 15px;
+  border-radius: $border-radius;
+  @include flex-column;
+  box-shadow: 0 2px 5px rgba($black, 0.1);
+  @include transition;
+  cursor: pointer;
+}

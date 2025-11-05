@@ -1,4 +1,7 @@
 // Mixins avec les fonctions Sass
+@use "variable" as *;
+@use 'sass:color';
+@use 'sass:color';
 @mixin flex-column {
   display: flex;
   flex-direction: column;

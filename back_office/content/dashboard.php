@@ -17,11 +17,11 @@ try {
 try {
     $stmt = $pdo->prepare("
         SELECT p.id_produit, p.nom_produit, p.description_produit, p.prix_ttc, 
-               p.stock_disponible, p.est_actif, c.libelle as categorie
+               p.stock_disponible, p.est_actif, p.seuil_alerte, c.libelle as categorie
         FROM public.produit p
         LEFT JOIN public.categorie c ON p.id_categorie = c.id_categorie
-        WHERE p.est_actif = true AND p.id_vendeur = ?
-        ORDER BY p.id_produit
+        WHERE p.id_vendeur = ?
+        ORDER BY p.est_actif DESC, p.id_produit
     ");
     $stmt->execute([$id_vendeur_connecte]);
     $produits = $stmt->fetchAll();
@@ -31,17 +31,43 @@ try {
 ?>
 
 <section class="content">
+    
+    
     <?php if (empty($produits)): ?>
         <p>Aucun produit disponible pour ce vendeur.</p>
     <?php else: ?>
-        <?php foreach ($produits as $produit): ?>
+        <?php foreach ($produits as $produit): 
+            // Déterminer la classe CSS en fonction du statut et du stock
+            $class_article = '';
+            $statut_text = '';
+            
+            if (!$produit['est_actif']) {
+                $class_article = 'inactif';
+                $statut_text = 'Inactif';
+            } elseif ($produit['stock_disponible'] <= 0) {
+                $class_article = 'rupture-stock';
+                $statut_text = 'Rupture de stock';
+            } elseif ($produit['stock_disponible'] <= $produit['seuil_alerte']) {
+                $class_article = 'stock-faible';
+                $statut_text = 'Stock faible';
+            } else {
+                $class_article = 'stock-normal';
+                $statut_text = 'Actif';
+            }
+        ?>
             <a href="?page=produit&id=<?= $produit['id_produit'] ?>&vendeur=<?= $id_vendeur_connecte ?>">
-                <article>
+                <article class="<?= $class_article ?>">
+                    <div class="statut-badge"><?= $statut_text ?></div>
                     <img src="front_end/assets/images/template.jpg" alt="<?= htmlspecialchars($produit['nom_produit']) ?>" width="350" height="225">
                     <h2 class="titre"><?= htmlspecialchars($produit['nom_produit']) ?></h2>
                     <p class="description"><?= htmlspecialchars($produit['description_produit']) ?></p>
                     <p class="description">Catégorie : <?= htmlspecialchars($produit['categorie']) ?></p>
-                    <p class="description">Stock : <?= $produit['stock_disponible'] ?></p>
+                    <p class="stock <?= $class_article ?>">
+                        Stock : <?= $produit['stock_disponible'] ?> 
+                        <?php if ($produit['stock_disponible'] <= $produit['seuil_alerte'] && $produit['stock_disponible'] > 0): ?>
+                            <span class="alerte">(Seuil: <?= $produit['seuil_alerte'] ?>)</span>
+                        <?php endif; ?>
+                    </p>
                     <p class="prix"><?= number_format($produit['prix_ttc'], 2, ',', ' ') ?>€</p>
                 </article>
             </a>

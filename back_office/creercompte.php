@@ -98,7 +98,7 @@
     <form class="form__creercompte" include ="index.php" method="post" enctype = "multipart/form-data">
         <h2>Créer un compte</h2>
         <!-- Numéro de Siren -->
-        <input class="input__creercompte" type="text"  name="num_siren" placeholder="Numéro de SIREN *" value ="<?= $num_siren?>"required />
+        <input class="input__creercompte" type="text" id="num_siren" name="num_siren" placeholder="Numéro de SIREN *" value ="<?= $num_siren?>"required />
         <?php
             if (!empty($erreur_siren)){
                 echo "<span class='error-message'>$erreur_siren</span>";
@@ -148,7 +148,14 @@
         <input class="input__creercompte"  type="password" name="confirm" placeholder="Confirmer le mot de passe *" required />
         <!-- Bouton de création de compte -->
         <br />
-        <input type="submit" value="Soumettre" />
+        <?php
+            if(!empty($erreur_confirm)){
+                echo "<span>$erreur_confirm</span>";
+            }
+        ?>
+        <input class="input__creercompte--submit" type="submit" value="Créer un compte" />
+
+        <label><a href="connecter.php">Se connecter</a></label>
     </form>
 </body>
 </html>

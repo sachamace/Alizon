@@ -18,6 +18,26 @@ header a.active {
   height: 100vh;
 }
 
+.body__creercompte {
+  width: 1440px;
+  height: 1024px;
+  background: linear-gradient(to left, #6CD3FF, #A9E5FF);
+  display: flex;
+  justify-content: center;
+}
+
+.form__creercompte {
+  margin-top: 209px;
+  width: 542px;
+  height: 542px;
+  background-color: white;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 18px;
+}
+
 /* --- Barre latérale --- */
 .sidebar {
   background: linear-gradient(to left, #6CD3FF, #A9E5FF);
@@ -135,5 +155,5 @@ main .content article .prix {
   margin-top: 10px;
 }
 main .content article .prix:hover {
-  color: rgb(31.5, 188.1020408163, 255);
+  color: darken-color(#6CD3FF, 15%);
 }/*# sourceMappingURL=style.css.map */

@@ -1,7 +1,7 @@
 @charset "UTF-8";
 body {
   margin: 0;
-  font-family: "Arial", sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   background-color: #e6e6e6;
 }
 
@@ -135,5 +135,5 @@ main .content article .prix {
   margin-top: 10px;
 }
 main .content article .prix:hover {
-  color: rgb(31.5, 188.1020408163, 255);
+  color: darken-color(#6CD3FF, 15%);
 }/*# sourceMappingURL=style.css.map */

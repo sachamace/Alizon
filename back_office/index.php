@@ -1,3 +1,20 @@
+<?php
+include 'config.php';
+
+$stmt = $pdo->query("SELECT version();");
+echo "<pre>";
+print_r($stmt->fetch());
+echo "</pre>";
+
+$pdo->exec("SET search_path TO bigou;");
+
+if (isset($_GET['page'])) {
+    $page = $_GET['page'];
+} else {
+    $page = '';
+}
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -15,22 +32,17 @@
 
         <main>
             <?php include 'header.php' ?>
-            
-            <?php if (isset($_GET['page'])) {
-                $page = $_GET['page'];
-            } else {
-                $page = 'dashboard';
+
+            <?php
+            if ($page !== '') {
+                $file = "content/$page.php";
+                if (file_exists($file)) {
+                    include $file;
+                } else {
+                    echo "<p>Page introuvable</p>";
+                }
             }
-
-            $file = "content/$page.php";
-
-            if (file_exists($file)) {
-                include $file;
-            } else {
-                echo "Page introuvable";
-                print_r($_GET['page']);
-                
-            } ?>
+            ?>
         </main>
     </div>
 </body>

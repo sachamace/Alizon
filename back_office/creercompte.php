@@ -93,6 +93,7 @@
 
 </head>
 
+<<<<<<< HEAD
 <body class="body__creercompte">
     <form class="form__creercompte" include ="index.php" method="post" enctype = "multipart/form-data">
         <h2>Créer un compte</h2>
@@ -147,14 +148,7 @@
         <input class="input__creercompte"  type="password" name="confirm" placeholder="Confirmer le mot de passe *" required />
         <!-- Bouton de création de compte -->
         <br />
-        <?php
-            if(!empty($erreur_confirm)){
-                echo "<span>$erreur_confirm</span>";
-            }
-        ?>
-        <input class="input__creercompte--submit" type="submit" value="Créer un compte" />
-
-        <label><a href="connecter.php">Se connecter</a></label>
+        <input type="submit" value="Soumettre" />
     </form>
 </body>
 </html>

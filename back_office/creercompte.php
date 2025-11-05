@@ -103,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <form class="form__creercompte" include ="index.php" method="post" enctype = "multipart/form-data">
         <h2>Créer un compte</h2>
         <!-- Numéro de Siren -->
-        <input class="input__creercompte" type="text"  name="num_siren" placeholder="Numéro de SIREN *" value ="<?= $num_siren?>"required />
+        <input class="input__creercompte" type="text" id="num_siren" name="num_siren" placeholder="Numéro de SIREN *" value ="<?= $num_siren?>"required />
         <?php
             if (!empty($erreur_siren)){
                 echo "<span class='error-message'>$erreur_siren</span>";

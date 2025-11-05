@@ -1,3 +1,29 @@
+<?php
+session_start();
+include 'config.php';
+
+// Pour l'exemple, on utilise un ID de vendeur dynamique
+// En production, ça viendrait de la session utilisateur
+$id_vendeur_connecte = $_GET['vendeur'] ?? 1; // Par défaut vendeur 1
+
+try {
+    $stmt = $pdo->prepare("
+        SELECT cv.id_vendeur, cv.raison_sociale, cv.adresse_mail, i.login 
+        FROM public.compte_vendeur cv 
+        JOIN public.identifiants i ON cv.id_num = i.id_num 
+        WHERE cv.id_vendeur = ?
+    ");
+    $stmt->execute([$id_vendeur_connecte]);
+    $vendeur = $stmt->fetch();
+    
+    if (!$vendeur) {
+        die("Vendeur non trouvé");
+    }
+} catch (PDOException $e) {
+    die("Erreur lors de la récupération des infos vendeur : " . $e->getMessage());
+}
+?>
+
 <header class="topbar">
     <a href="index.php">
         <div>
@@ -5,9 +31,15 @@
                 viewBox="0 0 16 16">
                 <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
             </svg>
-            <span>M./Mme Dupont</span>
+            <span><?= htmlspecialchars($vendeur['raison_sociale']) ?> (ID: <?= $vendeur['id_vendeur'] ?>)</span>
         </div>
     </a>
+
+    <!-- Liens pour changer de vendeur (pour test) -->
+    <div style="display: flex; gap: 10px;">
+        <a href="?vendeur=1&page=<?= $_GET['page'] ?? 'dashboard' ?>" style="padding: 5px; background: #f0f0f0;">Vendeur 1</a>
+        <a href="?vendeur=2&page=<?= $_GET['page'] ?? 'dashboard' ?>" style="padding: 5px; background: #f0f0f0;">Vendeur 2</a>
+    </div>
 
     <a href="index.php">
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-gear-fill"

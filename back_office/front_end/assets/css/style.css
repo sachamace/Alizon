@@ -18,6 +18,26 @@ header a.active {
   height: 100vh;
 }
 
+.body__creercompte {
+  width: 1440px;
+  height: 1024px;
+  background: linear-gradient(to left, #6CD3FF, #A9E5FF);
+  display: flex;
+  justify-content: center;
+}
+
+.form__creercompte {
+  margin-top: 209px;
+  width: 542px;
+  height: 542px;
+  background-color: white;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 18px;
+}
+
 /* --- Barre latérale --- */
 .sidebar {
   background: linear-gradient(to left, #6CD3FF, #A9E5FF);

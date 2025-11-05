@@ -7,6 +7,7 @@
     $tel = "" ;
     $mail= "" ;
     $mdp = "" ;
+    $num_entreprise = "" ;
     $mdpconfirm = "";
     if($_SERVER["REQUEST_METHOD"] === "POST"){
         $num_siren = trim($_POST['num_siren']);
@@ -14,6 +15,7 @@
         $mail = trim($_POST['email']);
         $mdp = trim($_POST['motdepasse']);
         $mdpconfirm = trim($_POST['confirm']);
+        $num_entreprise = trim($_POST['nom_entreprise']);
         if (!preg_match("/^[0-9]{9}$/", $num_siren)) {
             $erreur_siren = "Total de chiffre invalides ! Nombre de chiffre qu'on requière = 9";
         }
@@ -72,6 +74,8 @@
                 echo "<span>$erreur_tel</span>";
             }
         ?>
+        <!-- Nom de l'entreprise -->
+        <input class="input__creercompte" type="text"  name="nom_entreprise" placeholder="Nom de votre entreprise *" value ="<?= $num_entreprise?>"required />
         <!-- Email -->
         <input class="input__creercompte" type="email"  name="email" placeholder="Adresse Mail *" value ="<?= $mail?>"required />
         <br />

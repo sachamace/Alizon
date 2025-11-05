@@ -1,8 +1,12 @@
 @use 'sass:color';
 @use 'sass:map';
 @use 'sass:math';
-@use "variables";
-@use "mixin";
+@use "variable" as *;
+@use "mixin" as *;
+@use "variable"as*;
+@use "mixin" as*;
+@use "variable"as*;
+@use "mixin" as*;
 
 // Styles
 body {

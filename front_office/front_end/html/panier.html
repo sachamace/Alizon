@@ -5,44 +5,88 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Récapitulatif du panier</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../assets/csss/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">
 </head>
 
 <body>
     <header>
-
+        <nav>
+            <nav>
+                <a href="accueil.html"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
+                <a class="notif" href="notification.html"><i class="fa-regular fa-bell icone"></i></a>
+                <form action="recherche.html" method="get" role="search" aria-label="Site search">
+                    <label for="site-search"></label>
+                    <input type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
+                    <button type="submit">Search</button>
+                </form>
+                <a href="panier.html"><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
+            </nav>
+            <nav>
+                <div>
+                    <a href="accueil.html">Accueil</a>
+                    <a href="produitTerroir.html">Produit du Terroir</a>
+                    <a href="modeBretonne.html">Mode Bretonne</a>
+                    <a href="">Artisanat Local</a>
+                    <a href="">Décoration Intérieure</a>
+                    <a href="">Epicerie FIne</a>
+                </div>
+                <a href="seconnecter.html"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
+            </nav>
+        </nav>
     </header>
-    <main>
+    <main class="main_panier">
         <section>
             <article>
-                <img src="Tel.jpg" alt="" height="150px">
-                <h4>Nom article</h4>
-                <p>Prix</p>
-                <p>en stock</p>
-                <p>info complementaire</p>
-                <div>
-                    <span>boutton +</span>
-                    <p>Quantité</p>
-                    <span>Boutton -</span>
+                <img src="../assets/images/Tel.jpg" alt="">
+                <div class="panier_info">
+                    <h4>Nom article</h4>
+                    <p>Prix</p>
+                    <p>en stock</p>
+                    <p>info complementaire</p>
+                    <div class="panier_quantite">
+                        <span>-</span>
+                        <p>1</p>
+                        <span>+</span>
+                    </div>
                 </div>
             </article>
             <article>
-                <img src="Tel.jpg" alt="" height="150px">
-                <h4>Nom article</h4>
-                <p>Prix</p>
-                <p>en stock</p>
-                <p>info complementaire</p>
-                <div>
-                    <span>boutton +</span>
-                    <p>Quantité</p>
-                    <span>Boutton -</span>
+                <img src="../assets/images/Tel.jpg" alt="">
+                <div class="panier_info">
+                    <h4>Nom article</h4>
+                    <p>Prix</p>
+                    <p>en stock</p>
+                    <p>info complementaire</p>
+                    <div class="panier_quantite">
+                        <span>-</span>
+                        <p>1</p>
+                        <span>+</span>
+                    </div>
+                </div>
+            </article>
+            <article>
+                <img src="../assets/images/Tel.jpg" alt="">
+                <div class="panier_info">
+                    <h4>Nom article</h4>
+                    <p>Prix</p>
+                    <p>en stock</p>
+                    <p>info complementaire</p>
+                    <div class="panier_quantite">
+                        <span>-</span>
+                        <p>1</p>
+                        <span>+</span>
+                    </div>
                 </div>
             </article>
         </section>
         <aside>
-            <h4>Prix total X article: XXX,XX€</h4>
+            <h4>Prix total: XXX,XX€</h4>
             <p>detail du prix total</p>
-            <span>Passer au paiement</span> 
+            <a>Passer au paiement</a> 
         </aside>
     </main>
     <footer>

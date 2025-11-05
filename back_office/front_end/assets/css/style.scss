@@ -1,8 +1,13 @@
 @use 'sass:color';
 @use 'sass:map';
 @use 'sass:math';
+<<<<<<< HEAD
 @use "variable" as *;
 @use "mixin" as *;
+=======
+@use "variable"as*;
+@use "mixin" as*;
+>>>>>>> 1af2fae (:construction: Création d'un compte CSS 50%)
 
 
 
@@ -30,7 +35,28 @@ header {
   display: flex;
   height: 100vh;
 }
-
+.body{
+  &__creercompte{
+    width: 1440px;
+    height: 1024px;
+    background: linear-gradient(to left,$primary-color, $secondary-color);
+    display: flex;
+    justify-content: center;
+  }
+}
+.form{
+  &__creercompte{
+    margin-top:209px;
+    width: 542px;
+    height: 542px;
+    background-color: white;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 18px;
+  }
+}
 /* --- Barre latérale --- */
 .sidebar {
   background: linear-gradient(to left, $primary-color, $secondary-color);

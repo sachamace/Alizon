@@ -93,6 +93,7 @@
 
 </head>
 
+<<<<<<< HEAD
 <body class="body__creercompte">
     <form class="form__creercompte" include ="index.php" method="post" enctype = "multipart/form-data">
         <h2>Créer un compte</h2>

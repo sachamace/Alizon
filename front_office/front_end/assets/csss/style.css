@@ -1,7 +1,7 @@
 @charset "UTF-8";
 /*Le header */
 body {
-  background-color: gray;
+  background-color: #E8E8E8;
   margin: 0;
   padding: 0;
   font-family: "Space Grotesk", sans-serif;
@@ -12,11 +12,13 @@ body header {
 }
 body header nav {
   display: flex;
-  flex-direction: column; /* empile les deux nav verticalement */
+  flex-direction: column;
+  /* empile les deux nav verticalement */
 }
 body header nav nav {
   display: flex;
-  flex-direction: row; /* aligne le contenu de chaque nav horizontalement */
+  flex-direction: row;
+  /* aligne le contenu de chaque nav horizontalement */
   align-items: center;
   margin-top: 6px;
   margin-left: 20px;
@@ -26,14 +28,16 @@ body header nav nav:first-child {
   display: flex;
   align-items: center;
 }
-body header nav nav:first-child a[href="panier.html"] { /* Le lien “Panier” seul, collé à droite */
+body header nav nav:first-child a[href="panier.html"] {
+  /* Le lien “Panier” seul, collé à droite */
   margin-left: auto;
   text-decoration: none;
   color: rgb(0, 0, 0);
   font-size: 23px;
   font-weight: bold;
 }
-body header nav nav:first-child a[href="panier.html"]:last-child, body header nav nav:first-child a[href="panier.html"] :nth-last-child(2) {
+body header nav nav:first-child a[href="panier.html"]:last-child,
+body header nav nav:first-child a[href="panier.html"] :nth-last-child(2) {
   margin-right: 0;
 }
 body header nav nav:first-child a[href="panier.html"]:nth-child(2) {
@@ -61,12 +65,14 @@ body header nav nav:first-child form input {
 body header nav nav:first-child form button {
   display: none;
 }
-body header nav nav:last-child { /* Le deuxième nav du header (celui du bas) */
+body header nav nav:last-child {
+  /* Le deuxième nav du header (celui du bas) */
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-body header nav nav:last-child div { /* Le conteneur des trois liens à gauche */
+body header nav nav:last-child div {
+  /* Le conteneur des trois liens à gauche */
   display: flex;
   gap: 16px;
   margin-bottom: 7px;
@@ -80,7 +86,8 @@ body header nav nav:last-child div a {
   width: 203px;
   border-radius: 10px;
 }
-body header nav nav:last-child a { /* Le lien "Mon Compte" tout à droite */
+body header nav nav:last-child a {
+  /* Le lien "Mon Compte" tout à droite */
   margin-left: auto;
   text-decoration: none;
   color: rgb(0, 0, 0);
@@ -96,5 +103,123 @@ body header nav nav .notif .icone {
   font-size: 45px;
   text-align: center;
   vertical-align: middle;
-  margin-right: 8px; /* petit espace avant le texte comme “Panier” */
+  margin-right: 8px;
+  /* petit espace avant le texte comme “Panier” */
+}
+
+/* ----- MAIN du panier ----- */
+.main_panier {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 3em 5em;
+  /* Ajustements globaux */
+}
+.main_panier section,
+.main_panier aside {
+  background-color: #FFFFFF;
+  margin: 2.5em;
+  padding: 0em 1em;
+}
+.main_panier section {
+  flex: 3;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5em;
+}
+.main_panier section article {
+  display: flex;
+  align-items: flex-start;
+  border-bottom: 1px solid #ccc;
+  padding: 1.5em 0;
+}
+.main_panier section article:last-child {
+  border-bottom: none;
+}
+.main_panier section article img {
+  border-radius: 10px;
+  margin-right: 1.5em;
+}
+.main_panier section article h4 {
+  margin: 0 0 0.3em 0;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+.main_panier section article p {
+  margin: 0.3em 0;
+  color: #333;
+}
+.main_panier section article p:nth-of-type(2) {
+  color: #2ecc71;
+  font-weight: 500;
+}
+.main_panier section article .panier_quantite {
+  display: flex;
+  align-items: center;
+  bottom: 0;
+  margin-top: 3em;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.main_panier section article .panier_quantite span,
+.main_panier section article .panier_quantite p {
+  padding: 0.5em 1em;
+  font-size: 1.2em;
+}
+.main_panier section article .panier_quantite span {
+  font-weight: bold;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.main_panier section article .panier_quantite p {
+  margin: 0;
+  font-weight: 500;
+}
+.main_panier aside {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 1em 2em 2em 2em;
+  height: -moz-fit-content;
+  height: fit-content;
+  text-align: center;
+}
+.main_panier aside h4 {
+  margin-bottom: 1em;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+.main_panier aside p {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 1.5em;
+  text-align: left;
+}
+.main_panier aside a {
+  background: linear-gradient(to left, #ff6ce2, #FFE0FE);
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 325;
+  width: 203px;
+  border-radius: 10px;
+}
+.main_panier section article img {
+  width: 150px;
+  height: auto;
+}
+.main_panier section article > div {
+  margin-left: auto;
+}
+.main_panier section article > .panier_info {
+  margin-left: 0;
+}
+.main_panier aside h4 {
+  font-size: 1.1em;
 }/*# sourceMappingURL=style.css.map */

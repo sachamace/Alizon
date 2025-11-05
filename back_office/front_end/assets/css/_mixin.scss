@@ -1,5 +1,9 @@
 // Mixins avec les fonctions Sass
 @use "variable" as *;
+<<<<<<< HEAD
+=======
+@use 'sass:color';
+>>>>>>> 1af2fae (:construction: Création d'un compte CSS 50%)
 @mixin flex-column {
   display: flex;
   flex-direction: column;

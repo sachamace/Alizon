@@ -4,10 +4,6 @@
 @use "variable" as *;
 @use "mixin" as *;
 
-
-
-
-
 // Styles
 body {
   margin: 0;
@@ -36,7 +32,7 @@ header {
   width: $sidebar-width;
   @include flex-column;
   color: $black;
-}
+  
   .logo {
     padding: 15px;
   }
@@ -65,7 +61,7 @@ header {
       }
     }
   }
-
+}
 
 /* --- Contenu principal --- */
 main {
@@ -108,6 +104,29 @@ main {
       @include card-style;
       @include hover-lift;
 
+      // Badge de statut
+      .statut-badge {
+        @include status-badge;
+      }
+
+      // Styles pour les différents statuts des produits
+      &.inactif {
+        @include product-status($status-inactive);
+        opacity: 0.6;
+      }
+
+      &.rupture-stock {
+        @include product-status($status-out-of-stock);
+      }
+
+      &.stock-faible {
+        @include product-status($status-low-stock);
+      }
+
+      &.stock-normal {
+        @include product-status($status-active);
+      }
+
       img {
         display: block;
         margin: 0 auto;
@@ -129,17 +148,134 @@ main {
         flex-grow: 1;
       }
 
+      .stock {
+        font-size: 0.9em;
+        margin: 5px 0;
+        
+        // Styles pour le texte de stock selon le statut
+        .alerte {
+          color: $status-out-of-stock;
+          font-weight: bold;
+        }
+
+        &.rupture-stock {
+          @include stock-text($status-out-of-stock);
+        }
+
+        &.stock-faible {
+          @include stock-text($status-warning-text);
+        }
+
+        &.inactif {
+          @include stock-text($status-inactive);
+        }
+      }
+
       .prix {
         font-size: 1.3em;
         font-weight: bold;
         color: $primary-color;
         margin-top: 10px;
         
-        // Exemple avec color.adjust
         &:hover {
-          color: darken-color($primary-color, 15%);
+          color: color.adjust($primary-color, $lightness: -15%);
         }
       }
     }
+  }
+}
+
+/* --- Page détail produit --- */
+.product-detail {
+  padding: 20px;
+  position: relative;
+
+  .statut-badge {
+    @include status-badge;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+    
+    &.inactif {
+      background-color: $status-inactive;
+    }
+    
+    &.rupture-stock {
+      background-color: $status-out-of-stock;
+    }
+    
+    &.stock-faible {
+      background-color: $status-low-stock;
+      color: $black;
+    }
+    
+    &.stock-normal {
+      background-color: $status-active;
+    }
+  }
+
+  .product-info {
+    margin-top: 20px;
+    
+    p {
+      margin: 10px 0;
+      font-size: 1.1em;
+    }
+    
+    .stock {
+      .alerte {
+        color: $status-out-of-stock;
+        font-weight: bold;
+      }
+      
+      &.rupture-stock {
+        @include stock-text($status-out-of-stock);
+      }
+      
+      &.stock-faible {
+        @include stock-text($status-warning-text);
+      }
+      
+      &.inactif {
+        @include stock-text($status-inactive);
+      }
+    }
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: $primary-color;
+    color: $black;
+    text-decoration: none;
+    border-radius: math.div($border-radius, 2);
+    @include transition(background-color);
+    
+    &:hover {
+      background-color: color.adjust($primary-color, $lightness: -10%);
+    }
+  }
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  main .content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  main .content {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    height: auto;
   }
 }

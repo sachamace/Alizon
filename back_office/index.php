@@ -1,3 +1,10 @@
+<?php
+    include 'config.php';
+    $stmt = $pdo->query("SELECT version();");
+    echo "<pre>"; 
+    print_r($stmt->fetch()); 
+    echo "</pre>"; 
+?>
 <!DOCTYPE html>
 <html lang="fr">
 

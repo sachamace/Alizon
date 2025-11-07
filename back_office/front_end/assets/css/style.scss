@@ -40,20 +40,20 @@ body {
     @include flex-column;
     margin-top: 20px;
 
-    a {
-      @include flex-center;
-      gap: 15px;
-      padding: 20px;
-      color: $black;
-      text-decoration: none;
-      font-size: 1.5em;
-      font-weight: bold;
-      @include transition(background);
+  a {
+    @include flex-center;
+    gap: 15px;
+    padding: 20px;
+    color: $black;
+    text-decoration: none;
+    font-size: 1.5em;
+    font-weight: bold;
+    @include transition(background);
 
-      &:hover,
-      &.active {
-        @include menu-item-active;
-      }
+    &:hover,
+    &.active {
+      @include menu-item-active;
+    }
 
       &.disabled {
         @include disabled-state;

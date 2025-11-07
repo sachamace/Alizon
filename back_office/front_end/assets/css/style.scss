@@ -217,9 +217,7 @@ main {
         color: $primary-color;
         margin-top: 10px;
         
-        &:hover {
-          color: color.adjust($primary-color, $lightness: -15%);
-        }
+        
       }
     }
   }

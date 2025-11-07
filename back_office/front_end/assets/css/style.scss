@@ -4,7 +4,9 @@
 @use "variable" as *;
 @use "mixin" as *;
 
-// Styles
+// =============================================================================
+// Tableau de bord
+// =============================================================================
 body {
   margin: 0;
   font-family: $font-family;
@@ -296,24 +298,194 @@ main {
   }
 }
 
-/* --- Responsive --- */
-@media (max-width: 1024px) {
-  main .content {
-    grid-template-columns: repeat(2, 1fr);
-  }
+
+// =============================================================================
+// PAGE DE CONNEXION
+// =============================================================================
+
+.body__connexion {
+  margin: 0;
+  padding: 0;
+  font-family: $font-family;
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
-@media (max-width: 768px) {
-  main .content {
-    grid-template-columns: 1fr;
-  }
+.logo__connexion {
+  position: absolute;
+  top: 30px;
+  left: 30px;
   
-  .dashboard {
-    flex-direction: column;
-  }
-  
-  .sidebar {
-    width: 100%;
+  img {
+    max-width: 150px;
     height: auto;
   }
 }
+
+.container__connexion {
+  background: $white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba($black, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  margin-top: 60px;
+}
+
+.header__connexion {
+  margin-bottom: 30px;
+  
+  h1 {
+    color: $black;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+  }
+  
+  h2 {
+    color: $black;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0;
+  }
+}
+
+.form__connexion {
+  @include flex-column;
+  gap: 20px;
+}
+
+.input-group {
+  width: 100%;
+  text-align: left;
+}
+
+.input-label {
+  display: block;
+  color: $gray-darker;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 0.95em;
+}
+
+.input__connexion {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid $gray-light;
+  border-radius: 10px;
+  font-size: 1em;
+  font-family: $font-family;
+  background-color: lighten($gray-light, 10%);
+  transition: all $transition-speed ease;
+  box-sizing: border-box;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    background-color: $white;
+  }
+  
+  &::placeholder {
+    color: $gray-dark;
+  }
+}
+
+.forgot-password {
+  color: $primary-color;
+  text-decoration: none;
+  font-size: 0.9em;
+  align-self: flex-end;
+  margin-top: -10px;
+  
+  &:hover {
+    color: color.adjust($primary-color, $lightness: -15%);
+    text-decoration: underline;
+  }
+}
+
+.btn__connexion {
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  color: $black;
+  border: none;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 1.1em;
+  font-weight: bold;
+  font-family: $font-family;
+  cursor: pointer;
+  transition: all $transition-speed ease;
+  margin-top: 10px;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba($primary-color, 0.3);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.separator {
+  color: $gray-medium;
+  font-size: 0.9em;
+  margin: 10px 0;
+  position: relative;
+  
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: $gray-light;
+  }
+  
+  &::before {
+    left: 0;
+  }
+  
+  &::after {
+    right: 0;
+  }
+}
+
+.btn__creer-compte {
+  background: $white;
+  color: $black;
+  border: 2px solid $primary-color;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 1.1em;
+  font-weight: bold;
+  font-family: $font-family;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  transition: all $transition-speed ease;
+  
+  &:hover {
+    background: $primary-color;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba($primary-color, 0.2);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Messages d'erreur
+.error-message {
+  color: $status-out-of-stock;
+  font-size: 0.9em;
+  margin-top: 5px;
+  display: block;
+}
+

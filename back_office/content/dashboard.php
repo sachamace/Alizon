@@ -58,10 +58,10 @@ try {
             <a href="?page=produit&id=<?= $produit['id_produit'] ?>&vendeur=<?= $id_vendeur_connecte ?>">
                 <article class="<?= $class_article ?>">
                     <div class="statut-badge"><?= $statut_text ?></div>
-                    <img src="front_end/assets/images/template.jpg" alt="<?= htmlspecialchars($produit['nom_produit']) ?>" width="350" height="225">
-                    <h2 class="titre"><?= htmlspecialchars($produit['nom_produit']) ?></h2>
-                    <p class="description"><?= htmlspecialchars($produit['description_produit']) ?></p>
-                    <p class="description">Catégorie : <?= htmlspecialchars($produit['categorie']) ?></p>
+                    <img src="front_end/assets/images/template.jpg" alt="<?= htmlentities($produit['nom_produit']) ?>" width="350" height="225">
+                    <h2 class="titre"><?= htmlentities($produit['nom_produit']) ?></h2>
+                    <p class="description"><?= htmlentities($produit['description_produit']) ?></p>
+                    <p class="description">Catégorie : <?= htmlentities($produit['categorie']) ?></p>
                     <p class="stock <?= $class_article ?>">
                         Stock : <?= $produit['stock_disponible'] ?> 
                         <?php if ($produit['stock_disponible'] <= $produit['seuil_alerte'] && $produit['stock_disponible'] > 0): ?>

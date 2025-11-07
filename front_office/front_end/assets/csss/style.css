@@ -267,4 +267,123 @@ body header nav nav .notif .icone {
   background-color: #c9302c;
 }
 
-/* --------------- FIN DU SCSS POUR LE PANIER ---------------*//*# sourceMappingURL=style.css.map */
+/* --------------- FIN DU SCSS POUR LE PANIER ---------------*/
+/* --------------- MAIN du PRODUIT --------------- */
+.main_produit {
+  font-family: "Space Grotesk", sans-serif;
+  padding: 2rem 7rem;
+  color: #333;
+}
+.main_produit .fiche-produit {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.main_produit .fiche-produit .retour {
+  font-size: 2rem;
+  color: #000;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+.main_produit .fiche-produit .fiche-container {
+  display: flex;
+  align-items: flex-start;
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+.main_produit .fiche-produit .fiche-container .images-produit {
+  flex: 1;
+}
+.main_produit .fiche-produit .fiche-container .images-produit .image-principale {
+  width: 100%;
+  max-width: 450px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.main_produit .fiche-produit .fiche-container .images-produit .miniatures {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.main_produit .fiche-produit .fiche-container .images-produit .miniatures img {
+  width: 70px;
+  height: 70px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.main_produit .fiche-produit .fiche-container .images-produit .miniatures img:hover {
+  transform: scale(1.05);
+}
+.main_produit .fiche-produit .fiche-container .infos-produit {
+  flex: 1.2;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .titre-ligne {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .titre-ligne h1 {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .titre-ligne i {
+  font-size: 1.5rem;
+  color: #e87edc;
+  cursor: pointer;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .prix {
+  margin: 1rem 0;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .prix .prix-valeur {
+  background-color: #e87edc;
+  font-weight: bold;
+  font-size: 2em;
+  padding: 0.5rem 1.5rem;
+  border-radius: 5px;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .avis {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .avis .etoiles {
+  color: #e87edc;
+  font-size: 1.2rem;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .avis a {
+  color: #8c3bbf;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .avis a:hover {
+  text-decoration: underline;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .description {
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  color: #555;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .boutons {
+  padding: 1em 2em 2em 2em;
+  height: -moz-fit-content;
+  height: fit-content;
+  text-align: center;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .boutons button {
+  background: linear-gradient(to left, #ff6ce2, #FFE0FE);
+  text-align: center;
+  padding: 0.5em;
+  margin: 1em;
+  font-size: 2em;
+  font-weight: 325;
+  width: 11em;
+  border-radius: 10px;
+}/*# sourceMappingURL=style.css.map */

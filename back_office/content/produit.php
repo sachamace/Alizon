@@ -19,6 +19,8 @@ if (isset($_GET['id']) && isset($_GET['type'])) {
     $categorie = $stmtCat->fetchColumn();
 
     if ($_GET['type'] == "consulter") {
+
+    if ($_GET['type'] == "consulter") {
         include 'produit_consulter.php';
     } else if ($_GET['type'] == 'modifier') {
         include 'produit_modifier.php';

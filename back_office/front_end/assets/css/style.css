@@ -589,13 +589,13 @@ main .content {
   scroll-behavior: smooth;
   gap: 20px;
 }
-main .content a {
+.content a {
   text-decoration: none;
   color: inherit;
 }
-main .content article {
+.content article {
   background-color: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid #fafafa;
   padding: 15px;
   border-radius: 1em;
   display: flex;
@@ -606,7 +606,7 @@ main .content article {
   position: relative;
   transition: transform box-shadow 0.3s ease;
 }
-main .content article:hover {
+.content article:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
@@ -654,12 +654,12 @@ main .content article img {
   height: auto;
   border-radius: 0.5em;
 }
-main .content article .titre {
+.content article .titre {
   margin: 10px 0 5px;
   font-size: 1.2em;
   color: #333;
 }
-main .content article .description {
+.content article .description {
   color: #666;
   font-size: 0.9em;
   margin: 5px 0;

@@ -6,16 +6,75 @@
 
 
 
+/* -----------------------------------------
 
+Structure du site
 
-// Styles
+------------------------------------------*/
+
 body {
   margin: 0;
   font-family: $font-family;
   background-color: $background-color;
 }
 
-header {
+/* Bloc principale du main, la seul partie qui change dans le index.php en gros */
+.dashboard {
+  display: flex;
+  height: 100vh;
+}
+
+/* Barre latérale gauche s*/
+.sidebar {
+  background: linear-gradient(to left, $primary-color, $secondary-color);
+  width: $sidebar-width;
+  @include flex-column;
+  color: $black;
+
+  img {
+    padding: 15px;
+  }
+
+  nav {
+    @include flex-column;
+    margin-top: 20px;
+
+    a {
+      @include flex-center;
+      gap: 15px;
+      padding: 20px;
+      color: $black;
+      text-decoration: none;
+      font-size: 1.5em;
+      font-weight: bold;
+      @include transition(background);
+
+      &:hover,
+      &.active {
+        @include menu-item-active;
+      }
+
+      &.disabled {
+        @include disabled-state;
+      }
+    }
+  }
+}
+
+/* Barre du haut */
+.topbar {
+  @include flex-center;
+  justify-content: space-between;
+  background: $white;
+  padding: 59px 25px;
+  border-bottom: 1px solid $gray-medium;
+
+  div:nth-child(1) {
+    @include flex-center;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 2em;
+  }
 
   a,
   a:hover,
@@ -25,175 +84,43 @@ header {
   }
 }
 
-/* Structure principale */
-.dashboard {
-  display: flex;
-  height: 100vh;
-}
-.body{
-  &__creercompte{
-    width: 1440px;
-    height: 1024px;
-    background: linear-gradient(to left,$primary-color, $secondary-color);
-    display: flex;
-    justify-content: center;
-  }
-}
-.form{
-  &__creercompte{
-    margin-top: 9%;
-    width: 750px;
-    height: 750px;
-    background-color: white;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    gap: 18px;
-    align-items: center;
-    
-  }
-}
-.input{
-  &__creercompte{
-    padding: 5px;
-    background-color: #D9D9D9;
-    border-radius: 10px;
-    width: 369px;
-    height: 34px;
-    &--submit{
-      background: linear-gradient(to left, $primary-color, $secondary-color);
-      border-radius: 10px;
-      width: 207px;
-      height: 34px;
-    }
-  }
-}
-/* --- Barre latérale --- */
-.sidebar {
-  background: linear-gradient(to left, $primary-color, $secondary-color);
-  width: $sidebar-width;
-  @include flex-column;
-  color: $black;
-}
-
-.logo {
-  padding: 15px;
-}
-
-.menu {
-  @include flex-column;
-  margin-top: 20px;
-
-  a {
-    @include flex-center;
-    gap: 15px;
-    padding: 20px;
-    color: $black;
-    text-decoration: none;
-    font-size: 1.5em;
-    font-weight: bold;
-    @include transition(background);
-
-    &:hover,
-    &.active {
-      @include menu-item-active;
-    }
-
-    &.disabled {
-      @include disabled-state;
-    }
-  }
-}
-
-
-/* --- Contenu principal --- */
+/* Structure du main */
 main {
   flex: 1;
   @include flex-column;
   background: $white;
+}
 
-  /* --- Barre du haut --- */
-  .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: $white;
-    padding: 59px 25px;
-    border-bottom: 1px solid $gray-medium;
-  }
+/* -----------------------------------------
 
-  .user-info {
-    @include flex-center;
-    gap: 10px;
-    font-weight: bold;
-    font-size: 2em;
-  }
+Fin de la structure du site
 
-  /* --- Contenu --- */
-  .content {
-    display: grid;
-    padding: 20px;
-    grid-template-columns: repeat(3, 1fr);
-    overflow-y: scroll;
-    scroll-behavior: smooth;
-    gap: 20px;
+------------------------------------------*/
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
 
-    article {
-      @include card-style;
-      @include hover-lift;
 
-      img {
-        display: block;
-        margin: 0 auto;
-        max-width: 100%;
-        height: auto;
-        border-radius: math.div($border-radius, 2);
-      }
 
-      .titre {
-        margin: 10px 0 5px;
-        font-size: 1.2em;
-        color: $gray-darker;
-      }
 
-      .description {
-        color: $gray-dark;
-        font-size: 0.9em;
-        margin: 5px 0;
-        flex-grow: 1;
-      }
 
-      .prix {
-        font-size: 1.3em;
-        font-weight: bold;
-        color: $primary-color;
-        margin-top: 10px;
 
-        // Exemple avec color.adjust
-        &:hover {
-          color: darken-color($primary-color, 15%);
-        }
-      }
-    }
-  }
 
-  .produit-container {
-  background-color: #ffffff;
-  display: flex;
-  flex-direction: column;
+
+/* -----------------------------------------
+
+Structure de Consulter, Créer, Modifier produit
+
+------------------------------------------*/
+
+.produit-container {
+  background-color: $white;
+  @include flex-column;
   padding: 20px;
   overflow-y: auto;
   scroll-behavior: smooth;
 
   h2 {
     font-size: 1.8rem;
-    color: #3b82f6;
+    color: $primary-color;
     text-align: center;
     margin-bottom: 2rem;
   }
@@ -207,24 +134,24 @@ main {
 
     // Partie gauche - Informations générales + Média
     .produit-infos {
-      background-color: #fafafa;
-      border: 1px solid #e0e0e0;
+      background-color: $gray-light;
+      border: 1px solid $gray-medium;
       border-radius: 10px;
       padding: 1.5rem;
       display: flex;
       flex-direction: column;
       gap: 1rem;
 
-      > h3 {
+      >h3 {
         font-size: 1.2rem;
-        color: #111827;
+        color: $black;
         margin: 0 0 1rem 0;
         padding-bottom: 0.5rem;
-        border-bottom: 2px solid #e0e0e0;
+        border-bottom: 2px solid $gray-medium;
       }
 
       article {
-        border-bottom: 1px solid #eaeaea;
+        border-bottom: 1px solid $gray-medium;
         padding-bottom: 1rem;
 
         &:last-child {
@@ -233,7 +160,7 @@ main {
 
         h3 {
           font-size: 0.95rem;
-          color: #6b7280;
+          color: $gray-h3-produit;
           margin: 0 0 0.5rem 0;
           font-weight: 600;
           text-transform: uppercase;
@@ -254,7 +181,7 @@ main {
           max-width: 250px;
           height: auto;
           border-radius: 8px;
-          border: 1px solid #e0e0e0;
+          border: 1px solid $gray-medium;
           margin-top: 0.5rem;
         }
       }
@@ -272,7 +199,7 @@ main {
         border-radius: 10px;
         padding: 1.5rem;
 
-        > h3 {
+        >h3 {
           font-size: 1.2rem;
           color: #111827;
           margin: 0 0 1rem 0;
@@ -345,39 +272,240 @@ main {
 
     a,
     button {
+      @include button-base;
+    }
+
+    .modifier,
+    .confirmer {
+      @include button-variant($success-color);
+    }
+
+    .annuler {
+      @include button-variant($cancel-color);
+    }
+
+    .supprimer {
+      @include button-variant($danger-color);
+    }
+  }
+
+  // Styles pour les inputs
+  input[type="text"] {
+    @include input-base;
+
+    &:hover {
+      border-color: #bdc3c7;
+      background-color: $white;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      background-color: $white;
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    &::placeholder {
+      color: #bdc3c7;
+    }
+  }
+
+  input[type="file"] {
+    padding: 0.5rem;
+    border: 2px dashed $gray-medium;
+    border-radius: 8px;
+    background-color: $white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+
+    &:hover {
+      border-color: $primary-color;
+      background-color: $white;
+    }
+
+    &::file-selector-button {
+      padding: 0.5rem 1rem;
       border: none;
-      border-radius: 8px;
-      padding: 0.8rem 2rem;
-      font-size: 1rem;
-      font-weight: 600;
+      border-radius: 6px;
+      background-color: $primary-color;
+      color: $white;
+      font-weight: 500;
       cursor: pointer;
-      transition: 0.2s ease;
-      text-decoration: none;
-      display: inline-block;
+      transition: background-color 0.3s ease;
+      margin-right: 1rem;
 
       &:hover {
-        transform: translateY(-2px);
+        background-color: darken($primary-color, 8%);
+      }
+    }
+  }
+
+  // Galerie de médias
+  .media-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: $white;
+    border-radius: 8px;
+    border: 2px solid $gray-medium;
+
+    img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 2px solid $gray-medium;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        border-color: #e74c3c;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       }
     }
 
-    .modifier {
-      background-color: #fbbf24;
-      color: #78350f;
+    p {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #95a5a6;
+      font-style: italic;
+    }
+  }
 
-      &:hover {
-        background-color: darken(#fbbf24, 8%);
-      }
+  .media-upload {
+    label {
+      display: block;
+      font-size: 0.9rem;
+      color: #7f8c8d;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+  }
+}
+
+/* -----------------------------------------
+
+Fin de structure de Consulter, Créer, Modifier produit
+
+------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.body {
+  &__creercompte {
+    width: 1440px;
+    height: 1024px;
+    background: linear-gradient(to left, $primary-color, $secondary-color);
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.form {
+  &__creercompte {
+    margin-top: 9%;
+    width: 750px;
+    height: 750px;
+    background-color: white;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 18px;
+    align-items: center;
+
+  }
+}
+
+.input {
+  &__creercompte {
+    padding: 5px;
+    background-color: #D9D9D9;
+    border-radius: 10px;
+    width: 369px;
+    height: 34px;
+
+    &--submit {
+      background: linear-gradient(to left, $primary-color, $secondary-color);
+      border-radius: 10px;
+      width: 207px;
+      height: 34px;
+    }
+  }
+}
+
+/* --- Contenu --- */
+.content {
+  display: grid;
+  padding: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  gap: 20px;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  article {
+    @include card-style;
+    @include hover-lift;
+
+    img {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+      border-radius: math.div($border-radius, 2);
     }
 
-    .supprimer {
-      background-color: #ef4444;
-      color: white;
+    .titre {
+      margin: 10px 0 5px;
+      font-size: 1.2em;
+      color: $gray-darker;
+    }
 
+    .description {
+      color: $gray-dark;
+      font-size: 0.9em;
+      margin: 5px 0;
+      flex-grow: 1;
+    }
+
+    .prix {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: $primary-color;
+      margin-top: 10px;
+
+      // Exemple avec color.adjust
       &:hover {
-        background-color: darken(#ef4444, 8%);
+        color: darken-color($primary-color, 15%);
       }
     }
   }
 }
-}
+

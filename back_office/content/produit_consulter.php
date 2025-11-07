@@ -60,7 +60,7 @@
 
 
     <div class="produit-actions">
-        <a href="index.php?page=produit&id=<?php echo htmlentities($id) ?>&mode=modifier" class="modifier">Modifier</a>
+        <a href="index.php?page=produit&id=<?php echo htmlentities($id) ?>&type=modifier" class="modifier">Modifier</a>
         <button class="supprimer">Supprimer</button>
     </div>
 </section>

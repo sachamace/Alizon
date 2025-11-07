@@ -18,6 +18,10 @@ if (isset($_GET['id']) && isset($_GET['type'])) {
     $stmtCat->execute(['id_categorie' => $produit['id_categorie']]);
     $categorie = $stmtCat->fetchColumn();
 
-    include 'produit_consulter.php';
-} ?>
+    if ($_GET['type'] == "consulter") {
 
+        include 'produit_consulter.php';
+    } else if ($_GET['type'] == 'modifier') {
+        include 'produit_modifier.php';
+    }
+} ?>

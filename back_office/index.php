@@ -26,7 +26,7 @@ if (isset($_GET['page'])) {
         <?php include 'sidebar.php' ?>
 
         <main>
-            <?php include 'header.php' ?>
+            <?php include 'topbar.php' ?>
 
             <?php
             if ($page !== '') {

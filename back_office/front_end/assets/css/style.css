@@ -691,9 +691,6 @@ main .content article .prix {
   color: #6CD3FF;
   margin-top: 10px;
 }
-main .content article .prix:hover {
-  color: rgb(31.5, 188.1020408163, 255);
-}
 
 /* --- Page détail produit --- */
 .product-detail {

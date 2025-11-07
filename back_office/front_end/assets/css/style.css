@@ -517,4 +517,424 @@ Fin de structure du tableau de bord
   border-radius: 10px;
   width: 207px;
   height: 34px;
+}
+
+/* --- Barre latérale --- */
+.sidebar {
+  background: linear-gradient(to left, #6CD3FF, #A9E5FF);
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  color: #000;
+}
+.sidebar .logo {
+  padding: 15px;
+}
+.sidebar .menu {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+.sidebar .menu a {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  color: #000;
+  text-decoration: none;
+  font-size: 1.5em;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+.sidebar .menu a:hover, .sidebar .menu a.active {
+  background: rgba(255, 255, 255, 0.3);
+  border-left: 4px solid #fff;
+}
+.sidebar .menu a.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: none !important;
+}
+
+/* --- Contenu principal --- */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  /* --- Barre du haut --- */
+  /* --- Contenu --- */
+}
+main .topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 59px 25px;
+  border-bottom: 1px solid #ccc;
+}
+main .user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+  font-size: 2em;
+}
+main .content {
+  display: grid;
+  padding: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  gap: 20px;
+}
+main .content a {
+  text-decoration: none;
+  color: inherit;
+}
+main .content article {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 1em;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  transition: transform box-shadow 0.3s ease;
+}
+main .content article:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+main .content article .statut-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.8em;
+  font-weight: bold;
+  color: white;
+  z-index: 10;
+}
+main .content article.inactif {
+  border: 2px solid #6c757d;
+  opacity: 0.6;
+}
+main .content article.inactif .statut-badge {
+  background-color: #6c757d;
+}
+main .content article.rupture-stock {
+  border: 2px solid #dc3545;
+}
+main .content article.rupture-stock .statut-badge {
+  background-color: #dc3545;
+}
+main .content article.stock-faible {
+  border: 2px solid #ffc107;
+}
+main .content article.stock-faible .statut-badge {
+  background-color: #ffc107;
+  color: #000;
+}
+main .content article.stock-normal {
+  border: 2px solid #28a745;
+}
+main .content article.stock-normal .statut-badge {
+  background-color: #28a745;
+}
+main .content article img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5em;
+}
+main .content article .titre {
+  margin: 10px 0 5px;
+  font-size: 1.2em;
+  color: #333;
+}
+main .content article .description {
+  color: #666;
+  font-size: 0.9em;
+  margin: 5px 0;
+  flex-grow: 1;
+}
+main .content article .stock {
+  font-size: 0.9em;
+  margin: 5px 0;
+}
+main .content article .stock .alerte {
+  color: #dc3545;
+  font-weight: bold;
+}
+main .content article .stock.rupture-stock {
+  color: #dc3545;
+  font-weight: bold;
+}
+main .content article .stock.stock-faible {
+  color: #856404;
+  font-weight: bold;
+}
+main .content article .stock.inactif {
+  color: #6c757d;
+  font-weight: bold;
+}
+main .content article .prix {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #6CD3FF;
+  margin-top: 10px;
+}
+main .content article .prix:hover {
+  color: rgb(31.5, 188.1020408163, 255);
+}
+
+/* --- Page détail produit --- */
+.product-detail {
+  padding: 20px;
+  position: relative;
+}
+.product-detail .statut-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.8em;
+  font-weight: bold;
+  color: white;
+  z-index: 10;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+.product-detail .statut-badge.inactif {
+  background-color: #6c757d;
+}
+.product-detail .statut-badge.rupture-stock {
+  background-color: #dc3545;
+}
+.product-detail .statut-badge.stock-faible {
+  background-color: #ffc107;
+  color: #000;
+}
+.product-detail .statut-badge.stock-normal {
+  background-color: #28a745;
+}
+.product-detail .product-info {
+  margin-top: 20px;
+}
+.product-detail .product-info p {
+  margin: 10px 0;
+  font-size: 1.1em;
+}
+.product-detail .product-info .stock .alerte {
+  color: #dc3545;
+  font-weight: bold;
+}
+.product-detail .product-info .stock.rupture-stock {
+  color: #dc3545;
+  font-weight: bold;
+}
+.product-detail .product-info .stock.stock-faible {
+  color: #856404;
+  font-weight: bold;
+}
+.product-detail .product-info .stock.inactif {
+  color: #6c757d;
+  font-weight: bold;
+}
+.product-detail .back-link {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #6CD3FF;
+  color: #000;
+  text-decoration: none;
+  border-radius: 0.5em;
+  transition: background-color 0.3s ease;
+}
+.product-detail .back-link:hover {
+  background-color: rgb(57, 195.7346938776, 255);
+}
+
+.body__connexion {
+  margin: 0;
+  padding: 0;
+  font-family: "Space Grotesk", sans-serif;
+  background: linear-gradient(135deg, #6CD3FF 0%, #A9E5FF 100%);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.logo__connexion {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+}
+.logo__connexion img {
+  max-width: 150px;
+  height: auto;
+}
+
+.container__connexion {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  margin-top: 60px;
+}
+
+.header__connexion {
+  margin-bottom: 30px;
+}
+.header__connexion h1 {
+  color: #000;
+  font-size: 2.5em;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+.header__connexion h2 {
+  color: #000;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.form__connexion {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  width: 100%;
+  text-align: left;
+}
+
+.input-label {
+  display: block;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 0.95em;
+}
+
+.input__connexion {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 1em;
+  font-family: "Space Grotesk", sans-serif;
+  background-color: rgb(246.5, 246.5, 246.5);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+.input__connexion:focus {
+  outline: none;
+  border-color: #6CD3FF;
+  background-color: #fff;
+}
+.input__connexion::-moz-placeholder {
+  color: #666;
+}
+.input__connexion::placeholder {
+  color: #666;
+}
+
+.forgot-password {
+  color: #6CD3FF;
+  text-decoration: none;
+  font-size: 0.9em;
+  align-self: flex-end;
+  margin-top: -10px;
+}
+.forgot-password:hover {
+  color: rgb(31.5, 188.1020408163, 255);
+  text-decoration: underline;
+}
+
+.btn__connexion {
+  background: linear-gradient(135deg, #6CD3FF 0%, #A9E5FF 100%);
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 1.1em;
+  font-weight: bold;
+  font-family: "Space Grotesk", sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+.btn__connexion:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(108, 211, 255, 0.3);
+}
+.btn__connexion:active {
+  transform: translateY(0);
+}
+
+.separator {
+  color: #ccc;
+  font-size: 0.9em;
+  margin: 10px 0;
+  position: relative;
+}
+.separator::before, .separator::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: #ddd;
+}
+.separator::before {
+  left: 0;
+}
+.separator::after {
+  right: 0;
+}
+
+.btn__creer-compte {
+  background: #fff;
+  color: #000;
+  border: 2px solid #6CD3FF;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 1.1em;
+  font-weight: bold;
+  font-family: "Space Grotesk", sans-serif;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  transition: all 0.3s ease;
+}
+.btn__creer-compte:hover {
+  background: #6CD3FF;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(108, 211, 255, 0.2);
+}
+.btn__creer-compte:active {
+  transform: translateY(0);
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.9em;
+  margin-top: 5px;
+  display: block;
 }/*# sourceMappingURL=style.css.map */

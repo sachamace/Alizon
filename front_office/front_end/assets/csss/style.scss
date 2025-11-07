@@ -195,11 +195,11 @@ body {
                 }
 
                 button {
-                    font-size: 2em;        // plus grand
-                    background: none;        // pas de fond
-                    border: none;            // supprime la bordure
-                    cursor: pointer;         // curseur main
-                    padding: 0.3em 0.6em;    // un peu d’espace autour
+                    font-size: 2em; // plus grand
+                    background: none; // pas de fond
+                    border: none; // supprime la bordure
+                    cursor: pointer; // curseur main
+                    padding: 0.3em 0.6em; // un peu d’espace autour
                     transition: transform 0.1s ease, color 0.2s ease;
                     position: relative;
                     top: 0.25em;
@@ -221,7 +221,7 @@ body {
         padding: 1em 2em 2em 2em;
         height: fit-content;
         text-align: center;
-        
+
 
         h4 {
             margin-bottom: 1em;
@@ -264,51 +264,194 @@ body {
     aside h4 {
         font-size: 1.1em;
     }
+
     .panier_actions {
-    margin-top: 1em;
-    display: flex;
-    align-items: center;
-    gap: 5em;
+        margin-top: 1em;
+        display: flex;
+        align-items: center;
+        gap: 5em;
 
-    .en_savoir_plus {
-        text-decoration: none;
-        color: #0077cc;
-        font-weight: 500;
+        .en_savoir_plus {
+            text-decoration: none;
+            color: #0077cc;
+            font-weight: 500;
 
-        &:hover {
-            text-decoration: underline;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .btn-supprimer {
+            position: relative;
+            top: 0.5em;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.4em 1em;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #e04848;
+            }
         }
     }
 
-    .btn-supprimer {
-        position: relative;
-        top: 0.5em;
-        background-color: #ff6b6b;
+    .btn-vider {
+        background-color: #d9534f;
         color: white;
         border: none;
-        border-radius: 6px;
-        padding: 0.4em 1em;
+        border-radius: 8px;
+        padding: 0.6em 1.2em;
+        font-size: 1em;
         cursor: pointer;
+        transition: background-color 0.2s ease;
 
         &:hover {
-            background-color: #e04848;
+            background-color: #c9302c;
         }
     }
 }
 
-.btn-vider {
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+/* --------------- FIN DU SCSS POUR LE PANIER ---------------*/
 
-    &:hover {
-        background-color: #c9302c;
+
+
+
+/* --------------- MAIN du PRODUIT --------------- */
+.main_produit {
+    font-family: "Space Grotesk", sans-serif;
+    padding: 2rem 7rem;
+    color: #333;
+
+    .fiche-produit {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        .retour {
+            font-size: 2rem;
+            color: #000;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .fiche-container {
+            display: flex;
+            align-items: flex-start;
+
+            @media (max-width: 900px) {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .images-produit {
+                flex: 1;
+
+                .image-principale {
+                    width: 100%;
+                    max-width: 450px;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                }
+
+                .miniatures {
+                    display: flex;
+                    gap: 0.5rem;
+                    margin-top: 1rem;
+
+                    img {
+                        width: 70px;
+                        height: 70px;
+                        object-fit: cover;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        transition: transform 0.2s ease;
+
+                        &:hover {
+                            transform: scale(1.05);
+                        }
+                    }
+                }
+            }
+
+            .infos-produit {
+                flex: 1.2;
+
+                .titre-ligne {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    h1 {
+                        font-size: 1.6rem;
+                        font-weight: 600;
+                    }
+
+                    i {
+                        font-size: 1.5rem;
+                        color: #e87edc;
+                        cursor: pointer;
+                    }
+                }
+
+                .prix {
+                    margin: 1rem 0;
+
+                    .prix-valeur {
+                        background-color: #e87edc;
+                        font-weight: bold;
+                        font-size: 2em;
+                        padding: 0.5rem 1.5rem;
+                        border-radius: 5px;
+                    }
+                }
+
+                .avis {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    margin-bottom: 1.5rem;
+
+                    .etoiles {
+                        color: #e87edc;
+                        font-size: 1.2rem;
+                    }
+
+                    a {
+                        color: #8c3bbf;
+                        text-decoration: none;
+                        font-size: 0.9rem;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
+                }
+
+                .description {
+                    margin-bottom: 1rem;
+                    line-height: 1.5;
+                    color: #555;
+                }
+
+                .boutons {
+                    padding: 1em 2em 2em 2em;
+                    height: fit-content;
+                    text-align: center;
+
+                    button {
+                        background: linear-gradient(to left, $colP, #FFE0FE);
+                        text-align: center;
+                        padding: 0.5em;
+                        margin: 1em;
+                        font-size: 2em;
+                        font-weight: 325;
+                        width: 11em;
+                        border-radius: 10px;
+                    }
+                }
+            }
+        }
     }
 }
-}
-/* --------------- FIN DU SCSS POUR LE PANIER ---------------*/

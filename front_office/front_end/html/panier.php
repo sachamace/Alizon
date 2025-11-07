@@ -163,7 +163,7 @@
                                         </form>
                                     </div>
                                     <div class="panier_actions">
-                                        <a href="produit.php?id=' . $produit["id_produit"] . '" class="en_savoir_plus">En savoir plus</a>
+                                        <a href="produitTerroire.php?id=' . $produit["id_produit"] . '" class="en_savoir_plus">En savoir plus</a>
 
                                         <form class="supprimer-produit" method="post">
                                             <input type="hidden" name="action" value="supprimer_produit">

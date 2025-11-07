@@ -45,28 +45,30 @@
         }
         if(empty($erreur_siren)||empty($erreur_confirm)||empty($erreur_tel)||empty($erreur_mdp)){
             // La parties pour créer l'identifiants
-            $mdp_hash = password_hash($mdp, PASSWORD_DEFAULT); // Permet le hachage du mot de passe.
-            $sqlident = "INSERT INTO public.identifiants (login,mdp) VALUES (:login, :mdp)";
-            $stmt = $pdo->prepare($sqlident);
-            $stmt->execute([
-                'login' => $mail,
-                'mdp' => $mdp_hash
-            ]);
-            // Partie pour récupérer le numéro de l'identifiants qu'on vient de créer .
-            $id_num_sql = "SELECT id_num FROM public.identifiants WHERE login = :login";
-            $stmtid = $pdo->prepare($id_num_sql);
-            $stmtid->execute(['login' => $mail]);
-            $id_num = (int) $stmtid->fetchColumn();
-            // Partie pour créer le compte vendeur avec toute ces informations.
-            $sqlvendeur = "INSERT INTO public.compte_vendeur (raison_sociale,num_siren,num_tel,adresse_mail,id_num) VALUES (:raison_sociale,:num_siren,:num_tel,:adresse_mail,:id_num)";
-            $stmtvendeur = $pdo->prepare($sqlvendeur);
-            $stmtvendeur->execute([
-                'raison_sociale' => $fin_raison,
-                'num_siren' => $num_siren,
-                'num_tel' => $tel,
-                'adresse_mail' => $mail,
-                'id_num' => $id_num
-            ]);
+            //if(){
+                $mdp_hash = password_hash($mdp, PASSWORD_DEFAULT); // Permet le hachage du mot de passe.
+                $sqlident = "INSERT INTO public.identifiants (login,mdp) VALUES (:login, :mdp)";
+                $stmt = $pdo->prepare($sqlident);
+                $stmt->execute([
+                    'login' => $mail,
+                    'mdp' => $mdp_hash
+                ]);
+                // Partie pour récupérer le numéro de l'identifiants qu'on vient de créer .
+                $id_num_sql = "SELECT id_num FROM public.identifiants WHERE login = :login";
+                $stmtid = $pdo->prepare($id_num_sql);
+                $stmtid->execute(['login' => $mail]);
+                $id_num = (int) $stmtid->fetchColumn();
+                // Partie pour créer le compte vendeur avec toute ces informations.
+                $sqlvendeur = "INSERT INTO public.compte_vendeur (raison_sociale,num_siren,num_tel,adresse_mail,id_num) VALUES (:raison_sociale,:num_siren,:num_tel,:adresse_mail,:id_num)";
+                $stmtvendeur = $pdo->prepare($sqlvendeur);
+                $stmtvendeur->execute([
+                    'raison_sociale' => $fin_raison,
+                    'num_siren' => $num_siren,
+                    'num_tel' => $tel,
+                    'adresse_mail' => $mail,
+                    'id_num' => $id_num
+                ]);
+            //}   
         }
     }
     
@@ -96,7 +98,7 @@
         ?>
         <br />
         <!-- Raison Sociale -->
-        <select class="select__raison" id="raison" name="raison">
+        <select class="select__raison" id="raison" name="raison" value="<?= $raison_sociale?>">
                 <option disabled selected>Raison Sociale</option>
                 <option value="SA">SA</option>
                 <option value="SAS">SAS</option>

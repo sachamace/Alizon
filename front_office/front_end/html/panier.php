@@ -68,7 +68,7 @@
         $stmt2 = $pdo->query("SELECT * FROM produit;");
         $resultats = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
-        $requete_articles = $pdo->query("SELECT * FROM panier_produit WHERE id_panier = 2;");
+        $requete_articles = $pdo->query("SELECT * FROM panier_produit WHERE id_panier = 2 ORDER BY id_produit ASC;");
         $articles = $requete_articles->fetchAll();
 
     } catch (PDOException $e) {
@@ -180,6 +180,7 @@
         </section>
         <form class="vider-panier" method="post" style="text-align:center; margin-top: 2em;">
             <input type="hidden" name="action" value="vider_panier">
+            <input type="hidden" name="id_produit" value="2">
             <button type="submit" class="btn-vider">Vider le panier</button>
         </form>
         <aside>

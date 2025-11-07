@@ -186,18 +186,23 @@ body {
                 background-color: #f1f1f1;
                 border-radius: 8px;
                 width: fit-content;
+                justify-content: center;
 
 
-                span,
                 p {
                     padding: 0.5em 1em;
-                    font-size: 1.2em;
+                    font-size: 2em;
                 }
 
-                span {
-                    font-weight: bold;
-                    cursor: pointer;
-                    user-select: none;
+                button {
+                    font-size: 2em;        // plus grand
+                    background: none;        // pas de fond
+                    border: none;            // supprime la bordure
+                    cursor: pointer;         // curseur main
+                    padding: 0.3em 0.6em;    // un peu d’espace autour
+                    transition: transform 0.1s ease, color 0.2s ease;
+                    position: relative;
+                    top: 0.25em;
                 }
 
                 p {
@@ -244,7 +249,7 @@ body {
 
     /* Ajustements globaux */
     section article img {
-        width: 150px;
+        width: 12em;
         height: auto;
     }
 
@@ -259,4 +264,50 @@ body {
     aside h4 {
         font-size: 1.1em;
     }
+    .panier_actions {
+    margin-top: 1em;
+    display: flex;
+    align-items: center;
+    gap: 5em;
+
+    .en_savoir_plus {
+        text-decoration: none;
+        color: #0077cc;
+        font-weight: 500;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .btn-supprimer {
+        position: relative;
+        top: 0.5em;
+        background-color: #ff6b6b;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 0.4em 1em;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #e04848;
+        }
+    }
+}
+
+.btn-vider {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: #c9302c;
+    }
+}
 }

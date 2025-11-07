@@ -1,5 +1,68 @@
 <?php
     include 'config.php';
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $id_produit = (int)$_POST['id_produit'];
+        $action = $_POST['action'];
+        $id_panier = 2; // à remplacer par $_SESSION['id_panier'] si tu veux le rendre dynamique
+
+        // Récupérer la quantité actuelle et le stock disponible
+        $stmt_info = $pdo->prepare("
+            SELECT pp.quantite, p.stock_disponible
+            FROM panier_produit pp
+            JOIN produit p ON pp.id_produit = p.id_produit
+            WHERE pp.id_produit = :id_produit AND pp.id_panier = :id_panier
+        ");
+        $stmt_info->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+        $info = $stmt_info->fetch(PDO::FETCH_ASSOC);
+
+        if ($info) {
+            $quantite_actuelle = (int)$info['quantite'];
+            $stock_dispo = (int)$info['stock_disponible'];
+
+            // === Gestion des actions ===
+            if ($action === 'plus') {
+                if ($quantite_actuelle < $stock_dispo) {
+                    $sql = "UPDATE panier_produit 
+                            SET quantite = quantite + 1 
+                            WHERE id_produit = :id_produit AND id_panier = :id_panier";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+                }
+                // sinon : on ne fait rien, quantité déjà au max
+            }
+
+            elseif ($action === 'moins') {
+                if ($quantite_actuelle > 1) {
+                    $sql = "UPDATE panier_produit 
+                            SET quantite = quantite - 1 
+                            WHERE id_produit = :id_produit AND id_panier = :id_panier";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+                }
+                // sinon : on ne descend pas en dessous de 1
+            }
+
+            elseif ($action === 'supprimer_produit') {
+                $stmt = $pdo->prepare("
+                    DELETE FROM panier_produit 
+                    WHERE id_produit = :id_produit AND id_panier = :id_panier
+                ");
+                $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+            }
+
+            elseif ($action === 'vider_panier') {
+                $stmt = $pdo->prepare("DELETE FROM panier_produit WHERE id_panier = :id_panier");
+                $stmt->execute([':id_panier' => $id_panier]);
+            }
+        }
+
+        // Recharge la page pour voir la quantité mise à jour
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
+
+
     try {
 
         $stmt2 = $pdo->query("SELECT * FROM produit;");
@@ -83,17 +146,42 @@
                                 <p>Prix : ' . number_format($produit['prix_ttc'], 2, ',', ' ') . ' €</p>
                                 <p>Stock disponible : ' . htmlspecialchars($produit['stock_disponible']) . '</p>
                                 <p>' . htmlspecialchars($produit['description_produit']) . '</p>
-                                <div class="panier_quantite">
-                                    <span>-</span>
-                                    <p>' . htmlspecialchars($article['quantite']) . '</p>
-                                    <span>+</span>
+                                <div class="panier_bottom">
+                                    <div class="panier_quantite">
+                                        <form action="" method="post" style="display:inline;">
+                                            <input type="hidden" name="action" value="moins">
+                                            <input type="hidden" name="id_produit" value="' . $produit["id_produit"] . '">
+                                            <button type="submit">-</button>
+                                        </form>
+
+                                        <p>' . htmlspecialchars($article["quantite"]) . '</p>
+
+                                        <form action="" method="post" style="display:inline;">
+                                            <input type="hidden" name="action" value="plus">
+                                            <input type="hidden" name="id_produit" value="' . $produit["id_produit"] . '">
+                                            <button type="submit">+</button>
+                                        </form>
+                                    </div>
+                                    <div class="panier_actions">
+                                        <a href="produit.php?id=' . $produit["id_produit"] . '" class="en_savoir_plus">En savoir plus</a>
+
+                                        <form class="supprimer-produit" method="post">
+                                            <input type="hidden" name="action" value="supprimer_produit">
+                                            <input type="hidden" name="id_produit" value="' . $produit["id_produit"] . '">
+                                            <button type="submit" class="btn-supprimer">Supprimer</button>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
+                            </div>  
                         </article>';
                     }
                 }
                 ?>
         </section>
+        <form class="vider-panier" method="post" style="text-align:center; margin-top: 2em;">
+            <input type="hidden" name="action" value="vider_panier">
+            <button type="submit" class="btn-vider">Vider le panier</button>
+        </form>
         <aside>
             <?php
                 echo '

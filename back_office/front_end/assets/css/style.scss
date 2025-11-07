@@ -16,6 +16,7 @@ body {
 }
 
 header {
+
   a,
   a:hover,
   a.active {
@@ -37,34 +38,35 @@ header {
   @include flex-column;
   color: $black;
 }
-  .logo {
-    padding: 15px;
-  }
 
-  .menu {
-    @include flex-column;
-    margin-top: 20px;
+.logo {
+  padding: 15px;
+}
 
-    a {
-      @include flex-center;
-      gap: 15px;
-      padding: 20px;
-      color: $black;
-      text-decoration: none;
-      font-size: 1.5em;
-      font-weight: bold;
-      @include transition(background);
+.menu {
+  @include flex-column;
+  margin-top: 20px;
 
-      &:hover,
-      &.active {
-        @include menu-item-active;
-      }
+  a {
+    @include flex-center;
+    gap: 15px;
+    padding: 20px;
+    color: $black;
+    text-decoration: none;
+    font-size: 1.5em;
+    font-weight: bold;
+    @include transition(background);
 
-      &.disabled {
-        @include disabled-state;
-      }
+    &:hover,
+    &.active {
+      @include menu-item-active;
+    }
+
+    &.disabled {
+      @include disabled-state;
     }
   }
+}
 
 
 /* --- Contenu principal --- */
@@ -82,7 +84,7 @@ main {
     padding: 59px 25px;
     border-bottom: 1px solid $gray-medium;
   }
-  
+
   .user-info {
     @include flex-center;
     gap: 10px;
@@ -134,7 +136,7 @@ main {
         font-weight: bold;
         color: $primary-color;
         margin-top: 10px;
-        
+
         // Exemple avec color.adjust
         &:hover {
           color: darken-color($primary-color, 15%);
@@ -142,4 +144,202 @@ main {
       }
     }
   }
+
+  .produit-container {
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+
+  h2 {
+    font-size: 1.8rem;
+    color: #3b82f6;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  // Grille principale
+  .produit-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    flex: 1;
+
+    // Partie gauche - Informations générales + Média
+    .produit-infos {
+      background-color: #fafafa;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      > h3 {
+        font-size: 1.2rem;
+        color: #111827;
+        margin: 0 0 1rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e0e0e0;
+      }
+
+      article {
+        border-bottom: 1px solid #eaeaea;
+        padding-bottom: 1rem;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        h3 {
+          font-size: 0.95rem;
+          color: #6b7280;
+          margin: 0 0 0.5rem 0;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        p {
+          color: #1f2937;
+          font-weight: 500;
+          margin: 0;
+          font-size: 1rem;
+        }
+
+        // Image média dans la partie gauche
+        img {
+          display: block;
+          width: 100%;
+          max-width: 250px;
+          height: auto;
+          border-radius: 8px;
+          border: 1px solid #e0e0e0;
+          margin-top: 0.5rem;
+        }
+      }
+    }
+
+    // Partie droite - Prix, Stock, Visibilité
+    .produit-prix-stock {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+
+      article {
+        background-color: #fafafa;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 1.5rem;
+
+        > h3 {
+          font-size: 1.2rem;
+          color: #111827;
+          margin: 0 0 1rem 0;
+          padding-bottom: 0.5rem;
+          border-bottom: 2px solid #e0e0e0;
+        }
+
+        // Prix avec sous-sections
+        h4 {
+          font-size: 0.9rem;
+          color: #6b7280;
+          margin: 1rem 0 0.3rem 0;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 600;
+
+          &:first-of-type {
+            margin-top: 0;
+          }
+        }
+
+        p {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #1f2937;
+          margin: 0 0 0.8rem 0;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+
+        // Options de visibilité
+        .visibility-option {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-top: 0.8rem;
+
+          &:first-of-type {
+            margin-top: 0.5rem;
+          }
+
+          input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: not-allowed;
+            accent-color: #3b82f6;
+          }
+
+          label {
+            font-size: 0.95rem;
+            color: #374151;
+            font-weight: 500;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
+
+  // Actions (boutons en bas)
+  .produit-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e0e0e0;
+
+    a,
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    .modifier {
+      background-color: #fbbf24;
+      color: #78350f;
+
+      &:hover {
+        background-color: darken(#fbbf24, 8%);
+      }
+    }
+
+    .supprimer {
+      background-color: #ef4444;
+      color: white;
+
+      &:hover {
+        background-color: darken(#ef4444, 8%);
+      }
+    }
+  }
+}
 }

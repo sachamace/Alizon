@@ -1,11 +1,6 @@
 <?php
 include 'config.php';
 
-$stmt = $pdo->query("SELECT version();");
-echo "<pre>";
-print_r($stmt->fetch());
-echo "</pre>";
-
 $pdo->exec("SET search_path TO bigou;");
 
 if (isset($_GET['page'])) {

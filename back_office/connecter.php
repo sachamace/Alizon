@@ -1,3 +1,9 @@
+<?php
+include "config.php";
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,7 +13,7 @@
     <link rel="stylesheet" href="front_end/assets/css/style.css">
 </head>
 <body class="body__connexion">
-    <!-- Logo en haut à gauche -->
+ 
     <div class="logo__connexion">
         <img src="front_end/assets/images/logo_Alizon.png" alt="Logo Alizon" width="150">
     </div>

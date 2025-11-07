@@ -105,7 +105,7 @@
         ?>
         <br />
         <!-- Raison Sociale -->
-        <select class="select__raison" id="raison" name="raison" value="<?= $raison_sociale?>">
+        <select class="select__raison"  name="raison" value="<?= $raison_sociale?>">
                 <option disabled selected>Raison Sociale</option>
                 <option value="SA">SA</option>
                 <option value="SAS">SAS</option>

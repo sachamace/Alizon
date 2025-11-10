@@ -1,6 +1,5 @@
 <?php
     include 'config.php';
-    include 'session.php';
     $stmt = $pdo->query("SELECT version();");
 ?>
 
@@ -13,6 +12,7 @@
     $erreur_prenom = "";//
     $erreur_confirm = "";//
     $nom = "";
+    $pseudo = "";
     $prenom = "";
     $mail = "" ;
     $tel = "" ;
@@ -91,7 +91,8 @@
                 'num_tel' => $tel,
                 'id_num' => $id_num
             ]);
-
+            header("Location: seconnecter.php");
+            exit();
         }
     }
 ?>
@@ -107,7 +108,7 @@
 </head>
 
 <body class="body__creercompte">
-    <form class="form__creercompte"  method="post" enctype = "multipart/form-data">
+    <form action ="" class="form__creercompte"  method="post" enctype = "multipart/form-data">
         <h2>Créer un compte</h2>
         <!-- Prénom et Nom du Client -->
         <input class="input__creercompte" type="text"  name="nom" placeholder="Nom *" value ="<?= $nom?>"required />
@@ -168,9 +169,10 @@
                 echo "<span class='error-message'>$erreur_confirm</span><br />";
             }
         ?>
+        
         <input class="input__creercompte--submit" type="submit" value="Créer un compte" />
-
-        <label><a href="connecter.php">Se connecter</a></label>
+        <br />
+        <label><a href="seconnecter.php">Se connecter</a></label>
     </form>
 </body>
 </html>

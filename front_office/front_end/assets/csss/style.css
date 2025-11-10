@@ -372,7 +372,7 @@ body header nav nav .notif .icone {
 .main_produit .fiche-produit .fiche-container .infos-produit .description {
   margin-bottom: 1rem;
   line-height: 1.5;
-  color: #555;
+  font-size: 1.25em;
 }
 .main_produit .fiche-produit .fiche-container .infos-produit .boutons {
   display: flex;

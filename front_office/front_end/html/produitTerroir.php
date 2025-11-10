@@ -45,6 +45,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+        }else if ($action === 'payer') {
+        $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = 2 AND id_panier = 2');
+        $stmt->execute();
+        $verif = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
+        $stmt_stock->execute([':id_produit' => $id_produit]);
+        $stock_dispo = (int) $stmt_stock->fetchColumn();
+
+        if ($verif) {
+            $stmt_info = $pdo->prepare("SELECT pp.quantite
+                FROM panier_produit pp
+                WHERE pp.id_produit = :id_produit AND pp.id_panier = :id_panier
+            ");
+            $stmt_info->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+            $info = $stmt_info->fetch(PDO::FETCH_ASSOC);
+            $quantite_actuelle = (int) $info['quantite'];
+            if ($quantite_actuelle < $stock_dispo) {
+                $augmente = "UPDATE panier_produit 
+                SET quantite = quantite + 1 
+                WHERE id_produit = :id_produit AND id_panier = :id_panier";
+                $requete_augmente = $pdo->prepare($augmente);
+                $requete_augmente->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+            }
+        }else{
+            if ($stock_dispo > 0) {
+                $requete_ajout = $pdo->prepare("INSERT INTO panier_produit(id_panier,id_produit,quantite) VALUES(:id_panier, :id_produit, 1);");
+                $requete_ajout->execute([":id_produit"=> $id_produit, ":id_panier"=> $id_panier]);
+                
+            }
+        }
+        header('Location: commandes.html');
+        exit(); // très important pour arrêter le scrip
         }
     }
 ?>
@@ -132,8 +165,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <form action="" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="panier">
                                 <button type="submit">Ajouter au panier</button>
+                            </form>
+                            
+                            <form action="" method="post" style="display:inline;">
+                                <input type="hidden" name="action" value="payer">
+                                <button type="submit">Payer maintenant</button>
                             </form>' ?>
-                        <button class="btn-achat">Acheter maintenant</button>
                     </div>
                 </div>
             </div>
@@ -143,7 +180,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <img class="popup-content" id="popup-img" src="">
         </div>
     </main>
-    <script>
+
+    <script> // PARTI JAVASCRIPT
         // Sélection des éléments
         const miniatures = document.querySelectorAll('.miniatures img');
         const popup = document.getElementById('popup-image');

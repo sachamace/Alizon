@@ -329,16 +329,11 @@ body {
         flex-direction: column;
         align-items: flex-start;
 
-        .retour {
-            font-size: 2rem;
-            color: #000;
-            margin-bottom: 1rem;
-            cursor: pointer;
-        }
-
         .fiche-container {
             display: flex;
             align-items: flex-start;
+            justify-content: flex-start;
+            gap: 3rem; // espace horizontal stable
 
             @media (max-width: 900px) {
                 flex-direction: column;
@@ -346,11 +341,13 @@ body {
             }
 
             .images-produit {
-                flex: 1;
+                flex: 0 0 28rem;
+                width: 28rem;             // largeur fixe
+                max-width: 100%;
 
                 .image-principale {
                     width: 100%;
-                    max-width: 450px;
+                    max-width: 28rem;
                     border-radius: 10px;
                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
                 }
@@ -361,8 +358,8 @@ body {
                     margin-top: 1rem;
 
                     img {
-                        width: 70px;
-                        height: 70px;
+                        width: 4.5rem;
+                        height: 4.5rem;
                         object-fit: cover;
                         border-radius: 6px;
                         cursor: pointer;
@@ -376,7 +373,12 @@ body {
             }
 
             .infos-produit {
-                flex: 1.2;
+                flex: 1;
+                min-width: 19rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between; // pousse le bloc des boutons vers le bas
+                min-height: 28rem; // même hauteur que l’image
 
                 .titre-ligne {
                     display: flex;
@@ -389,7 +391,7 @@ body {
                     }
 
                     i {
-                        font-size: 1.5rem;
+                        font-size: 2.5rem;
                         color: #e87edc;
                         cursor: pointer;
                     }
@@ -436,7 +438,12 @@ body {
                 }
 
                 .boutons {
+                    display: flex;               // aligne les boutons sur une ligne
+                    justify-content: center;     // centre les boutons horizontalement
+                    align-items: center;         // aligne verticalement
+                    gap: 5em;                    // espace entre les deux boutons
                     padding: 1em 2em 2em 2em;
+                    margin-top: 2rem;
                     height: fit-content;
                     text-align: center;
 
@@ -444,14 +451,48 @@ body {
                         background: linear-gradient(to left, $colP, #FFE0FE);
                         text-align: center;
                         padding: 0.5em;
-                        margin: 1em;
                         font-size: 2em;
                         font-weight: 325;
                         width: 11em;
                         border-radius: 10px;
+                        cursor: pointer;
                     }
                 }
             }
         }
     }
+    .popup {
+    display: none; // cachée par défaut
+    position: fixed;
+    z-index: 9999;
+    padding-top: 5%;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+
+    .popup-content {
+        display: block;
+        margin: auto;
+        max-width: 80%;
+        max-height: 80vh;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .close {
+        position: absolute;
+        top: 20px;
+        right: 45px;
+        color: white;
+        font-size: 2.5rem;
+        font-weight: bold;
+        cursor: pointer;
+    }
 }
+
+}
+
+/* --------------- FIN DU SCSS POUR LE PRODUIT ---------------*/

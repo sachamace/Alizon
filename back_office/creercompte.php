@@ -75,6 +75,8 @@
                     'adresse_mail' => $mail,
                     'id_num' => $id_num
                 ]);
+            header("Location: seconnecter.php");
+            exit();
             //}   
         }
     }
@@ -94,7 +96,7 @@
 </head>
 
 <body class="body__creercompte">
-    <form class="form__creercompte" include ="index.php" method="post" enctype = "multipart/form-data">
+    <form action ="" class="form__creercompte" include ="index.php" method="post" enctype = "multipart/form-data">
         <h2>Créer un compte</h2>
         <!-- Numéro de Siren -->
         <input class="input__creercompte" type="text"  name="num_siren" placeholder="Numéro de SIREN *" value ="<?= $num_siren?>"required />

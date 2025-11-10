@@ -310,6 +310,27 @@ Structure de Consulter, Créer, Modifier produit
     }
   }
 
+  select {
+    @include input-base;
+
+    &:hover {
+      border-color: #bdc3c7;
+      background-color: $white;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      background-color: $white;
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    &::placeholder {
+      color: #bdc3c7;
+    }
+  }
+
+  //Partie modification / création
   input[type="file"] {
     padding: 0.5rem;
     border: 2px dashed $gray-medium;
@@ -368,6 +389,18 @@ Structure de Consulter, Créer, Modifier produit
       }
     }
 
+    button {
+      height: 20px;
+      @include button-variant($danger-color);
+      border-radius: 6px;
+      border : none;
+      transition: all 0.3s ease;
+    }
+
+    .image-delete{
+      @include flex-column
+    }
+
     p {
       grid-column: 1 / -1;
       text-align: center;
@@ -397,10 +430,69 @@ Fin de structure de Consulter, Créer, Modifier produit
 
 
 
+/* -----------------------------------------
 
+Structure du tableau de bord
 
+------------------------------------------*/
 
+.content {
+  display: grid;
+  padding: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  gap: 20px;
 
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  article {
+    @include card-style;
+    @include hover-lift;
+
+    img {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+      border-radius: math.div($border-radius, 2);
+    }
+
+    .titre {
+      margin: 10px 0 5px;
+      font-size: 1.2em;
+      color: $gray-darker;
+    }
+
+    .description {
+      color: $gray-dark;
+      font-size: 0.9em;
+      margin: 5px 0;
+      flex-grow: 1;
+    }
+
+    .prix {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: $primary-color;
+      margin-top: 10px;
+
+      // Exemple avec color.adjust
+      &:hover {
+        color: darken-color($primary-color, 15%);
+      }
+    }
+  }
+}
+
+/* -----------------------------------------
+
+Fin de structure du tableau de bord
+
+------------------------------------------*/
 
 
 
@@ -452,59 +544,6 @@ Fin de structure de Consulter, Créer, Modifier produit
       border-radius: 10px;
       width: 207px;
       height: 34px;
-    }
-  }
-}
-
-/* --- Contenu --- */
-.content {
-  display: grid;
-  padding: 20px;
-  grid-template-columns: repeat(3, 1fr);
-  overflow-y: scroll;
-  scroll-behavior: smooth;
-  gap: 20px;
-
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-
-  article {
-    @include card-style;
-    @include hover-lift;
-
-    img {
-      display: block;
-      margin: 0 auto;
-      max-width: 100%;
-      height: auto;
-      border-radius: math.div($border-radius, 2);
-    }
-
-    .titre {
-      margin: 10px 0 5px;
-      font-size: 1.2em;
-      color: $gray-darker;
-    }
-
-    .description {
-      color: $gray-dark;
-      font-size: 0.9em;
-      margin: 5px 0;
-      flex-grow: 1;
-    }
-
-    .prix {
-      font-size: 1.3em;
-      font-weight: bold;
-      color: $primary-color;
-      margin-top: 10px;
-
-      // Exemple avec color.adjust
-      &:hover {
-        color: darken-color($primary-color, 15%);
-      }
     }
   }
 }

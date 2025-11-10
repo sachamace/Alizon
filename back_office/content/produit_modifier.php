@@ -18,8 +18,16 @@
                 </article>
                 <article>
                     <h3>Catégorie</h3>
-                    <input type="text" id="categorie_produit" name="categorie_produit"
-                        value="<?php echo htmlentities($categorie) ?>">
+
+                    <select name="catgeories" id="select-categorie">
+                        <option value="<?php echo htmlentities($categorie)?>"><?php echo htmlentities($categorie)?></option>
+                    <?php 
+                    $stmtAllCat = $pdo->query("SELECT libelle FROM categorie");
+                    
+                    foreach ($stmtAllCat as $cat) { ?>
+                        <option value="<?php echo htmlentities($cat['libelle'])?>"><?php echo htmlentities($cat['libelle'])?></option>
+                    <?php } ?>
+                    </select>
                 </article>
                 <article>
                     <h3>Média</h3>
@@ -30,7 +38,10 @@
                         if (is_dir($imagesPath)) {
                             $images = glob("$imagesPath/*.{jpg,jpeg,png,webp}", GLOB_BRACE);
                             foreach ($images as $img) {
+                                echo "<div class='image-delete'>";
                                 echo "<img src='$img' alt='Image produit'>";
+                                echo "<button class='supprimer'>Supprimer</button>";
+                                echo "</div>";
                             }
                         } else {
                             echo "<p>Aucune image pour ce produit.</p>";

@@ -3,7 +3,7 @@
     $stmt = $pdo->query("SELECT version();");
 ?>
 
-<?= 
+<?php
 
     $erreur_mail ="";//
     $erreur_tel ="";//
@@ -11,15 +11,14 @@
     $erreur_nom = "";//
     $erreur_prenom = "";//
     $erreur_confirm = "";//
-    $erreur_pseudo = ""; //
     $nom = "";
     $prenom = "";
-    $pseudo = "";
     $mail = "" ;
     $tel = "" ;
     $mail= "" ;
     $password = "" ;
     $mdpconfirm = "";
+    $date = "";
     if($_SERVER["REQUEST_METHOD"] === "POST"){
         $pseudo = trim($_POST['pseudo']);
         $mail = trim($_POST['adresse_mail']);
@@ -28,6 +27,7 @@
         $prenom = trim($_POST['prenom']);
         $password = trim($_POST['motdepasse']);
         $mdpconfirm = trim($_POST['confirm']);
+        $date = trim($_POST['date_de_naissance']);
         if(!preg_match("/^0\d{9}$/",$tel)){
             $erreur_tel = "Total de chiffres invalides ! Nombre de chiffre qu'on requière = 10 et un zéro au début.";
         }
@@ -43,9 +43,6 @@
         if(!preg_match("/^[a-zA-ZÀ-ÿ]+([ -][a-zA-ZÀ-ÿ]+)?$/",$prenom)){
             $erreur_prenom = "Prénom invalides ! (Lettres , '-' et un espace acceptés).";
         }
-        if(!preg_match("/^[a-zA-Z0-9](?:[a-zA-Z0-9_-]{1,18}[a-zA-Z0-9])?$/",$pseudo)){
-            $erreur_pseudo = "Pseudo invalides ! (Lettres , '-' ,chiffre , '_',min = 3 , max = 20 , commence par lettre ou chiffre acceptés).";
-        }
         if(strcmp($password,$mdpconfirm) != 0){
             $erreur_confirm = "La confirmation du mot de passe ne correspond pas au mot de passe que vous avez mis.";
         }
@@ -59,6 +56,40 @@
             $erreur_pseudo
         ];
         if(!array_filter($erreurs)){
+            $mdp_hash = password_hash($mdp, PASSWORD_DEFAULT); // Permet le hachage du mot de passe.
+            $sqlident = "INSERT INTO public.identifiants (login,mdp) VALUES (:login, :mdp)";
+            $stmtident = $pdo->prepare($sqlident);
+            $stmtident->execute([
+                'login' => $mail,
+                'mdp' => $mdp_hash
+            ]);
+            // Partie pour récupérer le numéro de l'identifiants qu'on vient de créer .
+            $id_num_sql = "SELECT id_num FROM public.identifiants WHERE login = :login";
+            $stmtid = $pdo->prepare($id_num_sql);
+            $stmtid->execute(['login' => $mail]);
+            $id_num = (int) $stmtid->fetchColumn();
+            // Partie pour savoir si il est majeur.
+            $date_naissance = new DateTime($date);
+            $aujourdhui = new DateTime();
+            $age = $aujourdhui->diff($date_naissance)->y;
+            if($age>=18){
+                $majeur = true;
+            }
+            else{
+                $majeur = false;
+            }
+            $sqlclient = "INSERT INTO public.compte_client (adresse_mail,est_majeur,date_naissance,nom,prenom,pseudo,num_tel,id_num) VALUES (:adresse_mail,:est_majeur,:date_naissance,:nom,:prenom,:pseudo,:num_tel,:id_num)";
+            $stmtclient = $pdo->prepare($sqlclient);
+            $stmtclient->execute([
+                'adresse_mail' => $mail,
+                'est_majeur' => $majeur,
+                'date_naissance' => $date,
+                'nom' => $nom,
+                'prenom' => $prenom,
+                'pseudo' => $pseudo,
+                'num_tel' => $tel,
+                'id_num' => $id_num
+            ]);
 
         }
     }
@@ -69,7 +100,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord - Alizon</title>
+    <title>Créer un compte - Clients</title>
     <link rel="stylesheet" href="../front_end/assets/csss/style.css">
     <script src="../assets/js/date.js"></script> 
 </head>
@@ -101,7 +132,7 @@
             }
         ?>
         <!-- Numéro de Téléphone -->
-        <input class="input__creercompte" type="tel" id="tel" name="tel" placeholder="Numéro de Téléphone *" value ="<?= $tel?>"required />
+        <input class="input__creercompte" type="tel"  name="tel" placeholder="Numéro de Téléphone *" value ="<?= $tel?>"required />
         <br />
         <?php
             if (!empty($erreur_tel)){

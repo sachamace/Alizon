@@ -279,15 +279,11 @@ body header nav nav .notif .icone {
   flex-direction: column;
   align-items: flex-start;
 }
-.main_produit .fiche-produit .retour {
-  font-size: 2rem;
-  color: #000;
-  margin-bottom: 1rem;
-  cursor: pointer;
-}
 .main_produit .fiche-produit .fiche-container {
   display: flex;
   align-items: flex-start;
+  justify-content: flex-start;
+  gap: 3rem;
 }
 @media (max-width: 900px) {
   .main_produit .fiche-produit .fiche-container {
@@ -296,11 +292,13 @@ body header nav nav .notif .icone {
   }
 }
 .main_produit .fiche-produit .fiche-container .images-produit {
-  flex: 1;
+  flex: 0 0 28rem;
+  width: 28rem;
+  max-width: 100%;
 }
 .main_produit .fiche-produit .fiche-container .images-produit .image-principale {
   width: 100%;
-  max-width: 450px;
+  max-width: 28rem;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -310,8 +308,8 @@ body header nav nav .notif .icone {
   margin-top: 1rem;
 }
 .main_produit .fiche-produit .fiche-container .images-produit .miniatures img {
-  width: 70px;
-  height: 70px;
+  width: 4.5rem;
+  height: 4.5rem;
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 6px;
@@ -322,7 +320,12 @@ body header nav nav .notif .icone {
   transform: scale(1.05);
 }
 .main_produit .fiche-produit .fiche-container .infos-produit {
-  flex: 1.2;
+  flex: 1;
+  min-width: 19rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 28rem;
 }
 .main_produit .fiche-produit .fiche-container .infos-produit .titre-ligne {
   display: flex;
@@ -334,7 +337,7 @@ body header nav nav .notif .icone {
   font-weight: 600;
 }
 .main_produit .fiche-produit .fiche-container .infos-produit .titre-ligne i {
-  font-size: 1.5rem;
+  font-size: 2.5rem;
   color: #e87edc;
   cursor: pointer;
 }
@@ -372,7 +375,12 @@ body header nav nav .notif .icone {
   color: #555;
 }
 .main_produit .fiche-produit .fiche-container .infos-produit .boutons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5em;
   padding: 1em 2em 2em 2em;
+  margin-top: 2rem;
   height: -moz-fit-content;
   height: fit-content;
   text-align: center;
@@ -381,9 +389,40 @@ body header nav nav .notif .icone {
   background: linear-gradient(to left, #ff6ce2, #FFE0FE);
   text-align: center;
   padding: 0.5em;
-  margin: 1em;
   font-size: 2em;
   font-weight: 325;
   width: 11em;
   border-radius: 10px;
-}/*# sourceMappingURL=style.css.map */
+  cursor: pointer;
+}
+.main_produit .popup {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  padding-top: 5%;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+.main_produit .popup .popup-content {
+  display: block;
+  margin: auto;
+  max-width: 80%;
+  max-height: 80vh;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+.main_produit .popup .close {
+  position: absolute;
+  top: 20px;
+  right: 45px;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* --------------- FIN DU SCSS POUR LE PRODUIT ---------------*//*# sourceMappingURL=style.css.map */

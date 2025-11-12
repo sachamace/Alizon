@@ -1,17 +1,18 @@
-
 <?php
+session_start();
 include 'config.php';
+
+// Vérifier si l'utilisateur est connecté, sinon rediriger vers la page de connexion
+if (!isset($_SESSION['est_connecte']) || $_SESSION['est_connecte'] !== true) {
+    header("Location: connecter.php");
+    exit();
+}
 
 $stmt = $pdo->query("SELECT version();");
 echo "<pre>";
 print_r($stmt->fetch());
 echo "</pre>";
-
 ?>
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="fr">

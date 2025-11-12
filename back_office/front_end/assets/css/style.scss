@@ -444,23 +444,25 @@ Structure du tableau de bord
   overflow-y: scroll;
   scroll-behavior: smooth;
   gap: 20px;
-  grid-auto-rows: 1fr;
+  grid-auto-rows: auto;
+  align-items: start;
 
   a {
-    text-decoration: none;
+    display: block;
+    height: 100%;
     color: inherit;
+    text-decoration: none;
+    box-sizing: border-box;
   }
 
   article {
     @include card-style;
-    @include hover-lift;
+    @include hover-lift;  
 
-      // Badge de statut
       .statut-badge {
         @include status-badge;
       }
 
-      // Styles pour les différents statuts des produits
       &.inactif {
         @include product-status($status-inactive);
         opacity: 0.6;
@@ -496,14 +498,18 @@ Structure du tableau de bord
       color: $gray-dark;
       font-size: 0.9em;
       margin: 5px 0;
-      flex-grow: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 1; /* 1 ligne max */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: break-word; /* cette ligne force la coupure */
     }
 
       .stock {
         font-size: 0.9em;
         margin: 5px 0;
         
-        // Styles pour le texte de stock selon le statut
         .alerte {
           color: $status-out-of-stock;
           font-weight: bold;
@@ -528,7 +534,6 @@ Structure du tableau de bord
       color: $primary-color;
       margin-top: 10px;
 
-      // Exemple avec color.adjust
       &:hover {
         color: darken-color($primary-color, 15%);
       }
@@ -540,13 +545,10 @@ Structure du tableau de bord
     // Style spécifique pour la carte de création
     background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
     color: $white;
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     position: relative;
-    overflow: hidden;
     border: 3px dashed rgba($white, 0.3);
     transition: all $transition-speed ease;
     

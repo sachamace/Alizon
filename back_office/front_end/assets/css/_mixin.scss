@@ -49,6 +49,10 @@
   padding: 15px;
   border-radius: $border-radius;
   @include flex-column;
+  justify-content: space-between;
+  height: 100%; 
+  box-sizing: border-box;
+  overflow: hidden;
   box-shadow: 0 2px 5px rgba($black, 0.1);
   @include transition;
   cursor: pointer;

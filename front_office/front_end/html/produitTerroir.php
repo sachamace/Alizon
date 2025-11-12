@@ -1,22 +1,30 @@
 <?php
 include 'config.php';
 try {
-
-    $stmt2 = $pdo->query("SELECT * FROM produit WHERE id_produit = 2;"); // attention pas dynamique
+    
+    $stmt2 = $pdo->query("SELECT * FROM produit WHERE id_produit = 5;"); // attention pas dynamique
     $infos = $stmt2->fetch(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
     echo "Erreur SQL : " . $e->getMessage();
 }
 
+$id_produit = 5; // depend du paramètre
+$id_panier = 2; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
+
+$stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
+$stmt_stock->execute([':id_produit' => $id_produit]);
+$stock_dispo = (int) $stmt_stock->fetchColumn();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_produit = 2; // depend du paramètre
+    
     $action = $_POST['action'];
+    $id_produit = 5; // depend du paramètre
     $id_panier = 2; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
 
     if ($action === 'panier') {
-        $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = 2 AND id_panier = 2');
-        $stmt->execute();
+        $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');
+        $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
         $verif = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
@@ -46,13 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         }else if ($action === 'payer') {
-        $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = 2 AND id_panier = 2');
-        $stmt->execute();
+        $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');
+        $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
         $verif = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
-        $stmt_stock->execute([':id_produit' => $id_produit]);
-        $stock_dispo = (int) $stmt_stock->fetchColumn();
 
         if ($verif) {
             $stmt_info = $pdo->prepare("SELECT pp.quantite
@@ -143,15 +147,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <h1><?= htmlspecialchars($infos['nom_produit']) ?></h1>
                         <i class="fa-regular fa-heart"></i>
                     </div>
+                    
 
                     <div class="prix">
                         <span class="prix-valeur"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</span>
                     </div>
 
-                    <div class="avis">
-                        <span class="etoiles">★★★★☆</span>
-                        <span class="note">4/5</span>
-                        <a href="#">Voir les 51 avis</a>
+
+                    <div class="stock-avis">
+                        <span class="stock-dispo" style="color: <?= $stock_dispo > 0 ? 'green' : 'red' ?>">
+                            <?php
+                                if ($stock_dispo > 0) {
+                                    echo 'stock : ' . $stock_dispo .'';
+                                }
+                                else {
+                                    echo 'Rupture de stock';
+                                }
+                            ?>
+                        </span>
+
+                        <div class="avis">
+                            <span class="etoiles">★★★★☆</span>
+                            <span class="note">4/5</span>
+                            <a href="#">Voir les 51 avis</a>
+                        </div>
                     </div>
 
                     <p class="description">

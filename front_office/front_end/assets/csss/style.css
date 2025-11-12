@@ -351,22 +351,31 @@ body header nav nav .notif .icone {
   padding: 0.5rem 1.5rem;
   border-radius: 5px;
 }
-.main_produit .fiche-produit .fiche-container .infos-produit .avis {
+.main_produit .fiche-produit .fiche-container .infos-produit .stock-avis {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.5rem 0 1.5rem 0;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .stock-dispo {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .avis {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
 }
-.main_produit .fiche-produit .fiche-container .infos-produit .avis .etoiles {
+.main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .avis .etoiles {
   color: #e87edc;
   font-size: 1.2rem;
 }
-.main_produit .fiche-produit .fiche-container .infos-produit .avis a {
+.main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .avis a {
   color: #8c3bbf;
   text-decoration: none;
   font-size: 0.9rem;
 }
-.main_produit .fiche-produit .fiche-container .infos-produit .avis a:hover {
+.main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .avis a:hover {
   text-decoration: underline;
 }
 .main_produit .fiche-produit .fiche-container .infos-produit .description {

@@ -211,14 +211,12 @@ Structure de Consulter, Créer, Modifier produit
 .produit-container .produit-content .produit-prix-stock article .visibility-option input[type=radio] {
   width: 18px;
   height: 18px;
-  cursor: not-allowed;
   accent-color: #3b82f6;
 }
 .produit-container .produit-content .produit-prix-stock article .visibility-option label {
   font-size: 0.95rem;
   color: #374151;
   font-weight: 500;
-  cursor: not-allowed;
 }
 .produit-container .produit-actions {
   display: flex;
@@ -229,7 +227,8 @@ Structure de Consulter, Créer, Modifier produit
   border-top: 1px solid #e0e0e0;
 }
 .produit-container .produit-actions a,
-.produit-container .produit-actions button {
+.produit-container .produit-actions button,
+.produit-container .produit-actions input[type=submit] {
   border: none;
   border-radius: 8px;
   padding: 0.8em 2em;
@@ -243,12 +242,14 @@ Structure de Consulter, Créer, Modifier produit
   transition: all 0.3s ease;
 }
 .produit-container .produit-actions a:hover,
-.produit-container .produit-actions button:hover {
+.produit-container .produit-actions button:hover,
+.produit-container .produit-actions input[type=submit]:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 .produit-container .produit-actions a:active,
-.produit-container .produit-actions button:active {
+.produit-container .produit-actions button:active,
+.produit-container .produit-actions input[type=submit]:active {
   transform: translateY(0);
 }
 .produit-container .produit-actions .modifier,

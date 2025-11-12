@@ -246,7 +246,6 @@ Structure de Consulter, Créer, Modifier produit
           input[type="radio"] {
             width: 18px;
             height: 18px;
-            cursor: not-allowed;
             accent-color: #3b82f6;
           }
 
@@ -254,7 +253,6 @@ Structure de Consulter, Créer, Modifier produit
             font-size: 0.95rem;
             color: #374151;
             font-weight: 500;
-            cursor: not-allowed;
           }
         }
       }
@@ -271,7 +269,8 @@ Structure de Consulter, Créer, Modifier produit
     border-top: 1px solid #e0e0e0;
 
     a,
-    button {
+    button,
+    input[type="submit"] {
       @include button-base;
     }
 

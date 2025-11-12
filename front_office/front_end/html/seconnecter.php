@@ -16,8 +16,9 @@
         $user = $user_sql->fetch();
         if($user){
             if(strcmp($mdp,$user['mdp']) == 0){
+                $_SESSION['id'] = $user['id_num'];
                 $_SESSION['login'] = $user['login'];
-                header("Location: index.php");
+                header("Location: test.php");
                 exit();
             }
             else{

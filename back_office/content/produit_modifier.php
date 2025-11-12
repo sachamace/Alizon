@@ -5,15 +5,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nom = $_POST['nom_produit'];
     $description = $_POST['description_produit'];
     $categorie = $_POST['categorie'];
-    $prix_ttc = str_replace(',', '.', $_POST['prix_ttc_produit']);
     $prix_ht = str_replace(',', '.', $_POST['prix_unitaire_ht_produit']);
     $tva = str_replace(',', '.', $_POST['taux_tva_produit']);
     $stock = $_POST['stock_disponible_produit'];
     $actif = $_POST['visibilite'];
-
-    if (!preg_match('/^\d+([.,]\d{1,2})?$/', $_POST['prix_ttc_produit'])) {
-        $errors[] = "Le prix TTC doit contenir uniquement des chiffres et une virgule (ex : 12,99).";
-    }
 
     if (!preg_match('/^\d+([.,]\d{1,2})?$/', $_POST['prix_unitaire_ht_produit'])) {
         $errors[] = "Le prix HT doit contenir uniquement des chiffres et une virgule (ex : 10,50).";
@@ -28,28 +23,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if (empty($errors)) {
-        $stmt = $pdo->prepare("UPDATE produit 
-            SET nom_produit = :nom, 
-                description_produit = :description_prod, 
-                prix_unitaire_ht = :prix_ht, 
-                taux_tva = :tva, 
-                prix_ttc = :prix_ttc, 
-                stock_disponible = :stock, 
-                est_actif = :actif, 
-                categorie = :categorie 
-            WHERE id_produit = :id_produit");
+    $stmt = $pdo->prepare("UPDATE produit 
+        SET nom_produit = :nom, 
+            description_produit = :description_prod, 
+            prix_unitaire_ht = :prix_ht, 
+            taux_tva = :tva, 
+            stock_disponible = :stock, 
+            est_actif = :actif, 
+            categorie = :categorie 
+        WHERE id_produit = :id_produit");
 
-        $stmt->execute([
-            'id_produit' => $id,
-            'nom' => $nom,
-            'description_prod' => $description,
-            'categorie' => $categorie,
-            'prix_ttc' => $prix_ttc,
-            'prix_ht' => $prix_ht,
-            'tva' => $tva,
-            'stock' => $stock,
-            'actif' => $actif
-        ]);
+    $stmt->execute([
+        'id_produit' => $id,
+        'nom' => $nom,
+        'description_prod' => $description,
+        'categorie' => $categorie,
+        'prix_ht' => $prix_ht,
+        'tva' => $tva,
+        'stock' => $stock,
+        'actif' => $actif
+    ]);
 
         echo "<script>
             window.location.href = 'index.php?page=produit&id=$id&type=consulter';
@@ -66,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <section class="produit-container">
     <form action="" method="POST" enctype="multipart/form-data">
-        <h2>Fiche produit</h2>
+        <h2>Modifier produit</h2>
 
         <div class="produit-content">
             <!-- Partie gauche : informations générales -->
@@ -106,12 +99,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         $imagesPath = "front_end/assets/images_produits/" . $produit['id_produit'];
                         if (is_dir($imagesPath)) {
                             $images = glob("$imagesPath/*.{jpg,jpeg,png,webp}", GLOB_BRACE);
-                            foreach ($images as $img) {
-                                echo "<div class='image-delete'>";
-                                echo "<img src='$img' alt='Image produit'>";
-                                echo "<button class='supprimer'>Supprimer</button>";
-                                echo "</div>";
-                            }
+                            foreach ($images as $img) { ?>
+                                <div class='image-delete'>
+                                    <img src='<?php echo htmlentities($img)?>' alt='Image produit'>
+                                    <button type="button" class='supprimer'>Supprimer</button>
+                                </div>
+                            <?php }
                         } else {
                             echo "<p>Aucune image pour ce produit.</p>";
                         }
@@ -130,10 +123,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <article>
                     <h3>Prix</h3>
 
-                    <h4>Prix TTC</h4>
+                    <h4>Prix TTC (calculé automatiquement)</h4>
                     <input type="text" id="prix_ttc_produit" name="prix_ttc_produit"
                         value="<?php echo htmlentities(number_format($produit['prix_ttc'], 2, ',', ' ')) ?>"
-                        pattern="^\d+([,]\d{1,2})?$" title="Uniquement chiffres et virgule (ex : 12,99)">
+                        readonly>
 
                     <h4>Prix HT</h4>
                     <input type="text" id="prix_unitaire_ht_produit" name="prix_unitaire_ht_produit"
@@ -178,3 +171,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     </form>
 </section>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const prixHT = document.getElementById('prix_unitaire_ht_produit');
+    const tauxTVA = document.getElementById('taux_tva_produit');
+    const prixTTC = document.getElementById('prix_ttc_produit');
+
+    prixTTC.disabled = true;
+    prixTTC.style.backgroundColor = '#e9ecef';
+    prixTTC.style.cursor = 'not-allowed';
+
+    function calculerPrixTTC() {
+        let ht = parseFloat(prixHT.value.replace(',', '.').replace(/\s/g, ''));
+        let tva = parseFloat(tauxTVA.value.replace(',', '.').replace(/\s/g, ''));
+
+        if (!isNaN(ht) && !isNaN(tva) && ht >= 0 && tva >= 0) {
+            let ttc = ht * (1 + tva);
+            
+            prixTTC.value = ttc.toFixed(2).replace('.', ',');
+        } else {
+            prixTTC.value = '';
+        }
+    }
+
+    calculerPrixTTC();
+
+    prixHT.addEventListener('input', calculerPrixTTC);
+    tauxTVA.addEventListener('input', calculerPrixTTC);
+});
+</script>

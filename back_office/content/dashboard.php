@@ -1,8 +1,8 @@
 <?php
 include 'config.php';
 
-// Récupérer l'ID du vendeur depuis l'URL ou la session
-$id_vendeur_connecte = $_GET['vendeur'] ?? 1;
+// Récupérer l'ID du vendeur depuis la session
+$id_vendeur_connecte = $_SESSION['vendeur_id'];
 
 // Récupérer les informations du vendeur
 try {
@@ -32,9 +32,10 @@ try {
 
 <section class="content">
     
+
     
     <?php if (empty($produits)): ?>
-        <p>Aucun produit disponible pour ce vendeur.</p>
+        <p>Aucun produit disponible pour votre compte.</p>
     <?php else: ?>
         <?php foreach ($produits as $produit): 
             // Déterminer la classe CSS en fonction du statut et du stock
@@ -55,7 +56,7 @@ try {
                 $statut_text = 'Actif';
             }
         ?>
-            <a href="?page=produit&id=<?= $produit['id_produit'] ?>&vendeur=<?= $id_vendeur_connecte ?>">
+            <a href="?page=produit&id=<?= $produit['id_produit'] ?>">
                 <article class="<?= $class_article ?>">
                     <div class="statut-badge"><?= $statut_text ?></div>
                     <img src="front_end/assets/images/template.jpg" alt="<?= htmlentities($produit['nom_produit']) ?>" width="350" height="225">

@@ -1,6 +1,12 @@
-
 <?php
+session_start();
 include 'config.php';
+
+// Vérifier si l'utilisateur est connecté, sinon rediriger vers la page de connexion
+if (!isset($_SESSION['est_connecte']) || $_SESSION['est_connecte'] !== true) {
+    header("Location: connecter.php");
+    exit();
+}
 
 $pdo->exec("SET search_path TO bigou;");
 

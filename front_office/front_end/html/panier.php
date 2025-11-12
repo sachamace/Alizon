@@ -7,6 +7,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_panier = 2; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
 
     // Récupérer la quantité actuelle et le stock disponible
+
+    if ($action === 'vider_panier') {
+            $stmt = $pdo->prepare("DELETE FROM panier_produit WHERE id_panier = :id_panier");
+            $stmt->execute([':id_panier' => $id_panier]);
+        }
+
     $stmt_info = $pdo->prepare("
             SELECT pp.quantite, p.stock_disponible
             FROM panier_produit pp
@@ -45,9 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     WHERE id_produit = :id_produit AND id_panier = :id_panier
                 ");
             $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
-        } elseif ($action === 'vider_panier') {
-            $stmt = $pdo->prepare("DELETE FROM panier_produit WHERE id_panier = :id_panier");
-            $stmt->execute([':id_panier' => $id_panier]);
         }
     }
 
@@ -131,7 +134,7 @@ try {
             
                 if ($produit) {
                     $prixtotal += $produit["prix_ttc"] * $article['quantite'];
-                    $taxe += $produit['prix_unitaire_ht'] * $produit['taux_tva'] * $article['quantite'];
+                    $taxe += $produit['prix_ttc'] - $produit['prix_unitaire_ht'];
                     $prixht += $produit['prix_unitaire_ht'] * $article['quantite'];
                     echo '
                         <article>

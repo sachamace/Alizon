@@ -107,72 +107,91 @@
     <script src="../assets/js/date.js"></script> 
 </head>
 
-<body class="body__creercompte">
-    <form action ="" class="form__creercompte"  method="post" enctype = "multipart/form-data">
-        <h2>Créer un compte</h2>
-        <!-- Prénom et Nom du Client -->
-        <input class="input__creercompte" type="text"  name="nom" placeholder="Nom *" value ="<?= $nom?>"required />
-        <br />
-        <?php
-            if (!empty($erreur_nom)){
-                echo "<span class='error-message'>$erreur_nom</span><br />";
-            }
-        ?>
-        <input class="input__creercompte" type="text"  name="prenom" placeholder="Prénom *" value ="<?= $prenom?>"required />
-        <br />
-        <?php
-            if (!empty($erreur_prenom)){
-                echo "<span class='error-message'>$erreur_prenom</span><br />";
-            }
-        ?>
-        <!-- Adresse Mail -->
-        <input class="input__creercompte" type="text"  name="adresse_mail" placeholder="Adresse de Mail *" value ="<?= $mail?>"required />
-        <br />
-        <?php
-            if (!empty($erreur_mail)){
-                echo "<span class='error-message'>$erreur_mail</span><br />";
-            }
-        ?>
-        <!-- Numéro de Téléphone -->
-        <input class="input__creercompte" type="tel"  name="tel" placeholder="Numéro de Téléphone *" value ="<?= $tel?>"required />
-        <br />
-        <?php
-            if (!empty($erreur_tel)){
-                echo "<span class='error-message'>$erreur_tel</span><br />";
-            }
-        ?>
-        <!-- Date de Naissance -->
-        <input class="input__creercompte" type="date" id="date_de_naissance" name="date_de_naissance" placeholder="Date de Naissance *"required />
-        <br />
-        <!-- Nom_Utilisateur -->
-        <input class="input__creercompte" type="text"  name="pseudo" placeholder="Nom d'Utilisateur *" value ="<?= $pseudo?>"required />
-        <br />
-        <?php
-            if (!empty($erreur_pseudo)){
-                echo "<span class='error-message'>$erreur_pseudo</span><br />";
-            }
-        ?>
-        <!-- Mot de passe -->
-        <input class="input__creercompte" type="password"  name="motdepasse" placeholder="Mot de passe "required />
-        <br />
-        <?php
-            if (!empty($erreur_mdp)){
-                echo "<span class='error-message'>$erreur_mdp</span><br />";
-            }
-        ?>
-        <!-- Confirmer le mot de passe -->
-        <input class="input__creercompte"  type="password" name="confirm" placeholder="Confirmer le mot de passe *" required />
-        <!-- Bouton de création de compte -->
-        <br />
-        <?php
-            if (!empty($erreur_confirm)){
-                echo "<span class='error-message'>$erreur_confirm</span><br />";
-            }
-        ?>
-        
-        <input class="input__creercompte--submit" type="submit" value="Créer un compte" />
-        <br />
-        <label><a href="seconnecter.php">Se connecter</a></label>
-    </form>
+<body class="body__connexion">
+        <!-- Logo en haut à gauche -->
+    <div class="logo__connexion">
+        <img src="../assets/images/Logo_TABLETTE.png" alt="Logo Alizon" width="150">
+    </div>
+    <div class="container__connexion">
+        <div class="header__connexion">
+            <h2>Créer un compte</h2>
+        </div>
+        <form action ="" class="form__connexion"   method="post" enctype = "multipart/form-data">
+            <!-- Prénom et Nom du Client -->
+            <div class="input-group">
+                <label for="nom" class="input-label">Nom</label>
+                <input class="input__connexion" type="text"  name="nom" placeholder="Nom *" value ="<?= $nom?>"required />
+                <?php
+                    if (!empty($erreur_nom)){
+                        echo "<span class='error-message'>$erreur_nom</span><br />";
+                    }
+                ?>
+            </div>
+            
+            <div class="input-group">
+                <label for="prenom" class="input-label">Prénom</label>
+                <input class="input__connexion" type="text"  name="prenom" placeholder="Prénom *" value ="<?= $prenom?>"required />
+                <?php
+                    if (!empty($erreur_prenom)){
+                        echo "<span class='error-message'>$erreur_prenom</span><br />";
+                    }
+                ?>
+            </div>
+            <!-- Adresse Mail -->
+            <div class="input-group">
+                <label for="email" class="input-label">E-mail</label>
+                <input class="input__connexion" type="text"  name="adresse_mail" placeholder="Adresse de Mail *" value ="<?= $mail?>"required />
+                <?php
+                    if (!empty($erreur_mail)){
+                        echo "<span class='error-message'>$erreur_mail</span><br />";
+                    }
+                ?>
+            </div>
+            <!-- Numéro de Téléphone -->
+            <div class="input-group">
+                <label for="tel" class="input-label">Numéro de Téléphone</label>
+                <input class="input__connexion" type="tel"  name="tel" placeholder="Numéro de Téléphone *" value ="<?= $tel?>"required />
+                <?php
+                    if (!empty($erreur_tel)){
+                        echo "<span class='error-message'>$erreur_tel</span><br />";
+                    }
+                ?>
+            </div>
+            <!-- Date de Naissance -->
+            <div class="input-group">
+                <label for="naissance" class="input-label">Date de Naissance</label>
+                <input class="input__connexion" type="date" id="date_de_naissance" name="date_de_naissance" placeholder="Date de Naissance *"required />
+            </div>
+            <div>
+                <!-- Mot de passe -->
+                <label for="mdp" class="input-label">Mot de passe</label>
+                <input class="input__connexion" type="password"  name="motdepasse" placeholder="Mot de passe "required />
+                <?php
+                    if (!empty($erreur_mdp)){
+                        echo "<span class='error-message'>$erreur_mdp</span><br />";
+                    }
+                ?>                
+            </div>
+            <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+            <div>
+                <!-- Confirmer le mot de passe -->
+                 <label for="confirm" class="input-label">Confirmer le mot de passe</label>
+                <input class="input__connexion"  type="password" name="confirm" placeholder="Confirmer le mot de passe *" required />
+                <!-- Bouton de création de compte -->
+                <?php
+                    if (!empty($erreur_confirm)){
+                        echo "<span class='error-message'>$erreur_confirm</span><br />";
+                    }
+                ?>
+            </div>
+
+
+
+            <button type="submit" class="btn__connexion">Créer un compte</button>
+            
+            <div class="separator"></div>
+            
+            <a href="seconnecter.php" class="btn__creer-compte">Se connecter</a>
+        </form>
 </body>
 </html>

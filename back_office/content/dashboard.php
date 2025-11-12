@@ -12,8 +12,6 @@
     </a>
     <?php } ?>
     
-    <a href="?page=produit&type=creer">
-        
-    </a>
+    <a href="?page=produit&type=creer"></a>
 
 </section>

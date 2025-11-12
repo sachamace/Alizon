@@ -14,8 +14,8 @@ if (isset($_GET['id']) && isset($_GET['type'])) {
         exit;
     }
 
-    $stmtCat = $pdo->prepare("SELECT libelle FROM categorie WHERE id_categorie= :id_categorie");
-    $stmtCat->execute(['id_categorie' => $produit['id_categorie']]);
+    $stmtCat = $pdo->prepare("SELECT libelle FROM categorie WHERE libelle= :libelle");
+    $stmtCat->execute(['libelle' => $produit['categorie']]);
     $categorie = $stmtCat->fetchColumn();
 
     if ($_GET['type'] == "consulter") {

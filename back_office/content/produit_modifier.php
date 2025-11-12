@@ -1,5 +1,55 @@
+<?php 
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $errors = [];
+
+    $nom = $_POST['nom_produit'];
+    $description = $_POST['description_produit'];
+    $categorie = $_POST['categorie'];
+    $prix_ttc = str_replace(',', '.', $_POST['prix_ttc_produit']);
+    $prix_ht = str_replace(',', '.', $_POST['prix_unitaire_ht_produit']);
+    $tva = str_replace(',', '.', $_POST['taux_tva_produit']);
+    $stock = $_POST['stock_disponible_produit'];
+    $actif = $_POST['visibilite'];
+
+    if (!preg_match('/^\d+([.,]\d{1,2})?$/', $_POST['prix_ttc_produit'])) {
+        $errors[] = "Le prix TTC doit contenir uniquement des chiffres et une virgule (ex : 12,99).";
+    }
+
+    if (!preg_match('/^\d+([.,]\d{1,2})?$/', $_POST['prix_unitaire_ht_produit'])) {
+        $errors[] = "Le prix HT doit contenir uniquement des chiffres et une virgule (ex : 10,50).";
+    }
+
+    if (!preg_match('/^\d+([.,]\d{1,2})?$/', $_POST['taux_tva_produit'])) {
+        $errors[] = "La TVA doit contenir uniquement des chiffres et une virgule.";
+    }
+
+    if (!preg_match('/^\d+$/', $stock)) {
+        $errors[] = "Le stock doit être un nombre entier positif.";
+    }
+
+    if (empty($errors)) {
+        $stmt = $pdo->prepare("UPDATE produit SET nom_produit= :nom, description_produit= :description_prod, prix_unitaire_ht= :prix_ht, taux_tva= :tva, prix_ttc= :prix_ttc, stock_disponible= :stock, est_actif= :actif, categorie= :categorie WHERE id_produit = :id_produit");
+        $stmt->execute([
+                    'id_produit'=> $id,
+                    'nom' => $nom,
+                    'description_prod' => $description,
+                    'categorie'=> $categorie,
+                    'prix_ttc'=> $prix_ttc,
+                    'prix_ht'=> $prix_ht,
+                    'tva'=> $tva,
+                    'stock'=> $stock,
+                    'actif'=> $actif
+                ]);
+    } else {
+        echo "<ul style='color:red'>";
+        foreach ($errors as $err) echo "<li>$err</li>";
+        echo "</ul>";
+    }
+}
+?>
+
 <section class="produit-container">
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         <h2>Fiche produit</h2>
 
         <div class="produit-content">
@@ -19,14 +69,16 @@
                 <article>
                     <h3>Catégorie</h3>
 
-                    <select name="catgeories" id="select-categorie">
-                        <option value="<?php echo htmlentities($categorie)?>"><?php echo htmlentities($categorie)?></option>
-                    <?php 
-                    $stmtAllCat = $pdo->query("SELECT libelle FROM categorie");
-                    
-                    foreach ($stmtAllCat as $cat) { ?>
-                        <option value="<?php echo htmlentities($cat['libelle'])?>"><?php echo htmlentities($cat['libelle'])?></option>
-                    <?php } ?>
+                    <select name="categorie" id="select-categorie">
+                        <option value="<?php echo htmlentities($categorie) ?>"><?php echo htmlentities($categorie) ?>
+                        </option>
+                        <?php
+                        $stmtAllCat = $pdo->query("SELECT libelle FROM categorie");
+
+                        foreach ($stmtAllCat as $cat) { ?>
+                            <option value="<?php echo htmlentities($cat['libelle']) ?>">
+                                <?php echo htmlentities($cat['libelle']) ?></option>
+                        <?php } ?>
                     </select>
                 </article>
                 <article>
@@ -63,35 +115,37 @@
 
                     <h4>Prix TTC</h4>
                     <input type="text" id="prix_ttc_produit" name="prix_ttc_produit"
-                        value="<?php echo htmlentities(number_format($produit['prix_ttc'], 2, ',', ' ')) ?>€">
+                        value="<?php echo htmlentities(number_format($produit['prix_ttc'], 2, ',', ' ')) ?>"
+                        pattern="^\d+([,]\d{1,2})?$" title="Uniquement chiffres et virgule (ex : 12,99)">
 
                     <h4>Prix HT</h4>
                     <input type="text" id="prix_unitaire_ht_produit" name="prix_unitaire_ht_produit"
-                        value="<?php echo htmlentities(number_format($produit['prix_unitaire_ht'], 2, ',', ' ')) ?>€">
-
+                        value="<?php echo htmlentities(number_format($produit['prix_unitaire_ht'], 2, ',', ' ')) ?>"
+                        pattern="^\d+([,]\d{1,2})?$" title="Uniquement chiffres et virgule (ex : 10,50)">
 
                     <h4>TVA</h4>
                     <input type="text" id="taux_tva_produit" name="taux_tva_produit"
-                        value="<?php echo htmlentities($produit['taux_tva'] * 100) ?>%">
-
-                    <p></p>
+                        value="<?php echo htmlentities($produit['taux_tva'] * 100) ?>" pattern="^\d+([,]\d{1,2})?$"
+                        title="Uniquement chiffres et virgule">
                 </article>
 
                 <article>
                     <h3>Stock</h3>
                     <input type="text" id="stock_disponible_produit" name="stock_disponible_produit"
-                        value="<?php echo htmlentities($produit['stock_disponible']) ?>">
+                        value="<?php echo htmlentities($produit['stock_disponible']) ?>" pattern="^\d+$"
+                        title="Uniquement chiffres entiers">
                 </article>
 
                 <article>
                     <h3>Visibilité</h3>
+
                     <div class="visibility-option">
-                        <input type="radio" id="visible" name="visibilite" <?php echo htmlentities($produit['est_actif']) ? 'checked' : '' ?>>
+                        <input type="radio" id="visible" name="visibilite" value="1" <?php echo $produit['est_actif'] ? 'checked' : '' ?>>
                         <label for="visible">Visible</label>
                     </div>
 
                     <div class="visibility-option">
-                        <input type="radio" id="cache" name="visibilite" <?php echo htmlentities(!$produit['est_actif']) ? 'checked' : '' ?>>
+                        <input type="radio" id="cache" name="visibilite" value="0" <?php echo !$produit['est_actif'] ? 'checked' : '' ?>>
                         <label for="cache">Caché</label>
                     </div>
                 </article>
@@ -101,7 +155,8 @@
 
         <div class="produit-actions">
             <input type="submit" name="confirmer" classe="confirmer" value="Confirmer">
-            <a href="index.php?page=produit&id=<?php echo htmlentities($id) ?>&type=consulter" class="annuler">Annuler</a>
+            <a href="index.php?page=produit&id=<?php echo htmlentities($id) ?>&type=consulter"
+                class="annuler">Annuler</a>
         </div>
     </form>
 </section>

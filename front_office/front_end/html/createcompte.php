@@ -57,12 +57,11 @@
             $erreur_pseudo
         ];
         if(!array_filter($erreurs)){
-            $mdp_hash = password_hash($mdp, PASSWORD_DEFAULT); // Permet le hachage du mot de passe.
             $sqlident = "INSERT INTO public.identifiants (login,mdp) VALUES (:login, :mdp)";
             $stmtident = $pdo->prepare($sqlident);
             $stmtident->execute([
                 'login' => $mail,
-                'mdp' => $mdp_hash
+                'mdp' => $password
             ]);
             // Partie pour récupérer le numéro de l'identifiants qu'on vient de créer .
             $id_num_sql = "SELECT id_num FROM public.identifiants WHERE login = :login";
@@ -73,11 +72,12 @@
             $date_naissance = new DateTime($date);
             $aujourdhui = new DateTime();
             $age = $aujourdhui->diff($date_naissance)->y;
+            echo $age;
             if($age>=18){
-                $majeur = true;
+                $majeur = 'true';
             }
             else{
-                $majeur = false;
+                $majeur = 'false';
             }
             $sqlclient = "INSERT INTO public.compte_client (adresse_mail,est_majeur,date_naissance,nom,prenom,pseudo,num_tel,id_num) VALUES (:adresse_mail,:est_majeur,:date_naissance,:nom,:prenom,:pseudo,:num_tel,:id_num)";
             $stmtclient = $pdo->prepare($sqlclient);
@@ -103,7 +103,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Créer un compte - Clients</title>
-    <link rel="stylesheet" href="../front_end/assets/csss/style.css">
+    <link rel="stylesheet" href="../assets/csss/style.css">
     <script src="../assets/js/date.js"></script> 
 </head>
 

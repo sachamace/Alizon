@@ -100,7 +100,7 @@
 
 
         <div class="produit-actions">
-            <button class="confirmer">Confirmer</button>
+            <input type="submit" name="confirmer" classe="confirmer" value="Confirmer">
             <a href="index.php?page=produit&id=<?php echo htmlentities($id) ?>&type=consulter" class="annuler">Annuler</a>
         </div>
     </form>

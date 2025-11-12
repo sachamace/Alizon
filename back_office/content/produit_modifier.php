@@ -14,8 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $errors[] = "Le prix HT doit contenir uniquement des chiffres et une virgule (ex : 10,50).";
     }
 
-    if (!preg_match('/^(0([.,]\d{1,2})?|1([.,]0{1,2})?)$/', $_POST['taux_tva_produit'])) {
-        $errors[] = "La TVA doit être un nombre entre 0 et 1 (ex : 0,20).";
+    if (!preg_match('/^(100([\.,]0{1,2})?|[0-9]{1,2}([\.,]\d{1,2})?)$/', $_POST['taux_tva_produit'])) {
+        $errors[] = "La TVA doit être un nombre entre 0 et 100 (ex : 20 ou 20,50).";
     }
 
     if (!preg_match('/^\d+$/', $stock)) {
@@ -133,11 +133,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         value="<?php echo htmlentities(number_format($produit['prix_unitaire_ht'], 2, ',', ' ')) ?>"
                         pattern="^\d+([,]\d{1,2})?$" title="Uniquement chiffres et virgule (ex : 10,50)">
 
-                    <h4>TVA</h4>
+                    <h4>TVA (%)</h4>
                     <input type="text" id="taux_tva_produit" name="taux_tva_produit"
                         value="<?php echo htmlentities(number_format($produit['taux_tva'], 2, ',', '')) ?>"
-                        pattern="^(0([,]\d{1,2})?|1([,]0{1,2})?)$"
-                        title="Uniquement un nombre entre 0 et 1 (ex : 0,20)">
+                        pattern="^(100([\.,]0{1,2})?|[0-9]{1,2}([\.,]\d{1,2})?)$"
+                        title="Uniquement un nombre entre 0 et 100 (ex : 20 ou 5,5)">
                 </article>
 
                 <article>
@@ -185,8 +185,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         let ht = parseFloat(prixHT.value.replace(',', '.').replace(/\s/g, ''));
         let tva = parseFloat(tauxTVA.value.replace(',', '.').replace(/\s/g, ''));
 
-        if (!isNaN(ht) && !isNaN(tva) && ht >= 0 && tva >= 0) {
-            let ttc = ht * (1 + tva);
+        if (!isNaN(ht) && !isNaN(tva) && ht >= 0 && tva >= 0 && tva <= 100) {
+            // Diviser par 100 car c'est maintenant un pourcentage
+            let ttc = ht * (1 + tva / 100);
             
             prixTTC.value = ttc.toFixed(2).replace('.', ',');
         } else {

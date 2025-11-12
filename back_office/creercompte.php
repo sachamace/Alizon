@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 include 'config.php';
 
@@ -86,9 +85,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 
-
-=======
->>>>>>> f51834d (:construction: formulaire creer compte html fait !)
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -97,71 +93,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <title>Créer un compte - Alizon</title>
     <link rel="stylesheet" href="front_end/assets/css/style.css">
 </head>
-
-<<<<<<< HEAD
-<body class="body__creercompte">
-    <form class="form__creercompte" include ="index.php" method="post" enctype = "multipart/form-data">
-        <h2>Créer un compte</h2>
-        <!-- Numéro de Siren -->
-        <input class="input__creercompte" type="text" id="num_siren" name="num_siren" placeholder="Numéro de SIREN *" value ="<?= $num_siren?>"required />
-        <?php
-            if (!empty($erreur_siren)){
-                echo "<span class='error-message'>$erreur_siren</span>";
-            }
-        ?>
-        <br />
-        <!-- Raison Sociale -->
-        <select class="select__raison"  name="raison" value="<?= $raison_sociale?>">
-                <option disabled selected>Raison Sociale</option>
-                <option value="SA">SA</option>
-                <option value="SAS">SAS</option>
-                <option value="SARL">SARL</option>
-                <option value="EURL">EURL</option>
-                <option value="SASU">SASU</option>
-                <option value="SCP">SCP</option>
-        </select>
-        <br />
-        <?php
-            if (!empty($erreur_raison)){
-                echo "<span>$erreur_raison</span>";
-            } 
-        ?>
-
-
-        <!-- Numéro de Téléphone -->
-        <input class="input__creercompte" type="tel" id="tel" name="tel" placeholder="Numéro de Téléphone *" value ="<?= $tel?>"required />
-        <br />
-        <?php
-            if (!empty($erreur_tel)){
-                echo "<span>$erreur_tel</span>";
-            }
-        ?>
-        <!-- Nom de l'entreprise -->
-        <input class="input__creercompte" type="text"  name="nom_entreprise" placeholder="Nom de votre entreprise *" value ="<?= $num_entreprise?>"required />
-        <!-- Email -->
-        <input class="input__creercompte" type="email"  name="email" placeholder="Adresse Mail *" value ="<?= $mail?>"required />
-        <br />
-        <!-- Mot de passe -->
-        <input class="input__creercompte" type="password"  name="motdepasse" placeholder="Mot de passe *" value ="<?= $mdp?>"required />
-        <br />
-        <?php
-            if (!empty($erreur_mdp)){
-                echo "<span>$erreur_mdp</span>";
-            }
-        ?>
-        <!-- Confirmer le mot de passe -->
-        <input class="input__creercompte"  type="password" name="confirm" placeholder="Confirmer le mot de passe *" required />
-        <!-- Bouton de création de compte -->
-        <br />
-        <?php
-            if(!empty($erreur_confirm)){
-                echo "<span>$erreur_confirm</span>";
-            }
-        ?>
-        <input class="input__creercompte--submit" type="submit" value="Créer un compte" />
-
-        <label><a href="connecter.php">Se connecter</a></label>
-=======
 <body>
     <img href="front_end/assets/images/logo_Alizon.png">
     <form method="post" enctype = "multipart/form-data">
@@ -209,7 +140,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <!-- Bouton de création de compte -->
         <br />
         <input type="submit" value="Soumettre" />
->>>>>>> f51834d (:construction: formulaire creer compte html fait !)
     </form>
 </body>
 </html>

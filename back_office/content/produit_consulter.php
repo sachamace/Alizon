@@ -35,7 +35,7 @@
                 <p><?php echo htmlentities(number_format($produit['prix_unitaire_ht'], 2, ',', ' ')) ?> €</p>
 
                 <h4>TVA</h4>
-                <p><?php echo htmlentities($produit['taux_tva'] * 100) ?>%</p>
+                <p><?php echo htmlentities($produit['taux_tva']) ?>%</p>
             </article>
 
             <article>

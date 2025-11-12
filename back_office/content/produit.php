@@ -28,8 +28,3 @@ if (isset($_GET['id']) && isset($_GET['type'])) {
     $categorie = $stmtCat->fetchAll();
     include 'produit_creer.php';
 }?>
-} else if (isset($_GET['type']) && $_GET['type'] === 'creer') {
-    $stmtCat = $pdo->query("SELECT libelle FROM categorie");
-    $categorie = $stmtCat->fetchAll();
-    include 'produit_creer.php';
-}?>

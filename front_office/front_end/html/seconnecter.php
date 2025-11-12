@@ -42,26 +42,39 @@
     <link rel="stylesheet" href="../assets/csss/style.css">
 </head>
 
-<body class="body__creercompte">
-    <form action =""class="form__creercompte"  method="post" enctype = "multipart/form-data">
-        <h2>Se connecter</h2>
-        <input class="input__creercompte" type="text"  name="adresse_mail" placeholder="Adresse de Mail" value ="<?= $email?>"required />
-        <br />
-        <?php
-            if (!empty($erreur_ident)){
-                echo "<span class='error-message'>$erreur_ident</span><br />";
-            }
-        ?>
-        <input class="input__creercompte" type="password"  name="motdepasse" placeholder="Mot de passe"required />
-        <br />
-        <?php
-            if (!empty($erreur_mdp)){
-                echo "<span class='error-message'>$erreur_mdp</span><br />";
-            }
-        ?>
-        <input class="input__creercompte--submit" type="submit" value="Se connecter" />
-        <br />
-        <label><a href="createcompte.php">Créer un compte</a></label>
-    </form>
+<body class="body__connexion">
+        <!-- Logo en haut à gauche -->
+    <div class="logo__connexion">
+        <img src="../assets/images/Logo_TABLETTE.png" alt="Logo Alizon" width="150">
+    </div>
+    <div class="container__connexion">
+        <div class="header__connexion">
+            <h2>Se connecter</h2>
+        </div>
+        <form action =""class="form__connexion"  method="post" enctype = "multipart/form-data">
+            <div class="input-group">
+                <label for="email" class="input-label">E-mail</label>
+                <input class="input__connexion" type="email"  name="adresse_mail" placeholder="Adresse de Mail" value ="<?= $email?>"required />
+                <?php
+                    if (!empty($erreur_ident)){
+                        echo "<span class='error-message'>$erreur_ident</span><br />";
+                    }
+                ?>
+            </div>
+            <div class="input-group">
+                <label for="motdepasse" class="input-label">Mot de passe</label>
+                <input class="input__connexion" type="password"  name="motdepasse" placeholder="Mot de passe"required />
+                <?php
+                    if (!empty($erreur_mdp)){
+                        echo "<span class='error-message'>$erreur_mdp</span><br />";
+                    }
+                ?>
+            </div>
+            <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+            <button type="submit" class="btn__connexion">Se connecter</button>
+            <div class="separator"></div>
+            <label><a href="createcompte.php" class="btn__creer-compte">Créer un compte</a></label>
+        </form>
+    </div>
 </body>
 </html>

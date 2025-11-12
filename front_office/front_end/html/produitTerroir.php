@@ -2,24 +2,45 @@
 include 'config.php';
 try {
     
-    $stmt2 = $pdo->query("SELECT * FROM produit WHERE id_produit = 5;"); // attention pas dynamique
+    $stmt2 = $pdo->query("SELECT * FROM produit WHERE id_produit = 3;"); // attention pas dynamique
     $infos = $stmt2->fetch(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
     echo "Erreur SQL : " . $e->getMessage();
 }
 
-$id_produit = 5; // depend du paramètre
+$id_produit = 3; // depend du paramètre
 $id_panier = 2; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
 
 $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
 $stmt_stock->execute([':id_produit' => $id_produit]);
 $stock_dispo = (int) $stmt_stock->fetchColumn();
 
+// php avis du produit
+$requete_avis = $pdo->prepare("
+    SELECT * 
+    FROM avis
+    WHERE id_produit = :id_produit 
+    ORDER BY id_produit ASC
+");
+$requete_avis->execute([':id_produit' => $id_produit]);
+$avis = $requete_avis->fetchAll(PDO::FETCH_ASSOC);
+
+// Calcul de la moyenne des notes des avis
+$moyenne = 0;
+if (count($avis) > 0) {
+    $total_notes = 0;
+    foreach ($avis as $un_avis) {
+        $total_notes += (int)$un_avis['note'];
+    }
+    $moyenne = round($total_notes / count($avis)); // arrondi à l'entier le plus proche
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $action = $_POST['action'];
-    $id_produit = 5; // depend du paramètre
+    $id_produit = 3; // depend du paramètre
     $id_panier = 2; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
 
     if ($action === 'panier') {
@@ -80,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
             }
         }
-        header('Location: commandes.html');
+        header('Location: panier.php');
         exit(); // très important pour arrêter le scrip
         }
     }
@@ -158,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <span class="stock-dispo" style="color: <?= $stock_dispo > 0 ? 'green' : 'red' ?>">
                             <?php
                                 if ($stock_dispo > 0) {
-                                    echo 'stock : ' . $stock_dispo .'';
+                                    echo 'Stock disponible : ' . $stock_dispo .'';
                                 }
                                 else {
                                     echo 'Rupture de stock';
@@ -167,9 +188,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </span>
 
                         <div class="avis">
-                            <span class="etoiles">★★★★☆</span>
-                            <span class="note">4/5</span>
-                            <a href="#">Voir les 51 avis</a>
+                            <?php
+                                if (count($avis) > 0) {
+                                    $etoiles_moyenne = str_repeat('★', $moyenne) . str_repeat('☆', 5 - $moyenne);
+                                    echo '<span class="etoiles">' . $etoiles_moyenne . '</span>';
+                                    echo '<span class="note">' . $moyenne . '/5</span>';
+                                    echo '<a href="#avis-section">Voir les ' . count($avis) . ' avis</a>';
+                                } else {
+                                    echo '<span class="etoiles">☆☆☆☆☆</span>';
+                                    echo '<span class="note">Aucune note</span>';
+                                }
+                            ?>
                         </div>
                     </div>
 
@@ -193,6 +222,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
             </div>
+        </section>
+        <hr class="separateur-avis">
+        <section class="avis" id="avis-section">
+            
+            <?php
+                echo '<h1>' . count($avis) . ' avis</h1>';
+                if (count($avis) > 0) {
+                    foreach ($avis as $un_avis) {
+                        $id_client = (int) $un_avis['id_client'];
+                        $client = $pdo->query("SELECT * FROM compte_client WHERE id_client = $id_client")->fetch(PDO::FETCH_ASSOC);
+                        // Génération des étoiles selon la note
+                        $note = (int)$un_avis['note'];
+                        $etoiles = str_repeat('★', $note) . str_repeat('☆', 5 - $note);
+
+                        echo '
+                        <div class="avis-item"> 
+                            <div class="avis-header">
+                                <strong>' . htmlspecialchars($client['prenom']) . ' ' . htmlspecialchars($client['nom']) . '</strong>
+                                <span class="avis-etoiles">' . $etoiles . '</span>
+                            </div>
+                            <p class="avis-commentaire">' . htmlspecialchars($un_avis['description']) . '</p>
+                        </div>';
+                    }
+                } else {
+                    echo '<p>Aucun avis pour ce produit pour le moment.</p>';
+                }
+            ?>
         </section>
         <div id="popup-image" class="popup">
             <span class="close">&times;</span>

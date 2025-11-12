@@ -273,6 +273,9 @@ body header nav nav .notif .icone {
   font-family: "Space Grotesk", sans-serif;
   padding: 4rem 10rem;
   color: #333;
+  /* Séparation entre le produit et les avis */
+  /* Séparation entre le produit et les avis */
+  /* Section des avis */
 }
 .main_produit .fiche-produit {
   display: flex;
@@ -432,6 +435,50 @@ body header nav nav .notif .icone {
   font-size: 2.5rem;
   font-weight: bold;
   cursor: pointer;
+}
+.main_produit .separateur-avis {
+  border: none;
+  border-top: 2px solid #000;
+  margin: 3rem 0 2rem 0;
+}
+.main_produit .avis {
+  padding: 1rem 2rem;
+  background-color: #fafafa;
+  border-radius: 10px;
+  /* Chaque avis */
+}
+.main_produit .avis h1,
+.main_produit .avis h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+.main_produit .avis .avis-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid #000;
+  /* En-tête d’un avis : nom + étoiles */
+  /* Commentaire */
+}
+.main_produit .avis .avis-item:last-child {
+  border-bottom: none;
+}
+.main_produit .avis .avis-item .avis-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.main_produit .avis .avis-item .avis-header strong {
+  font-size: 1.1rem;
+  color: #5a2ca0;
+}
+.main_produit .avis .avis-item .avis-header .avis-etoiles {
+  color: #e87edc;
+  font-size: 1.2rem;
+}
+.main_produit .avis .avis-item .avis-commentaire {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 /* --------------- FIN DU SCSS POUR LE PRODUIT ---------------*//*# sourceMappingURL=style.css.map */

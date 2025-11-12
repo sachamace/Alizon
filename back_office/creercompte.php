@@ -1,85 +1,89 @@
 <<<<<<< HEAD
 <?php
-    include 'config.php';
-    $stmt = $pdo->query("SELECT version();");
-?>
-<?php
-    // Init des variables erreur et des valeurs qui seront dans les input du formulaire.
-    $erreur_siren ="";
-    $erreur_tel ="";
-    $erreur_mdp ="";
-    $erreur_raison ="";
-    $erreur_confirm ="";
-    $num_siren = "" ;
-    $tel = "" ;
-    $mail= "" ;
-    $mdp = "" ;
-    $num_entreprise = "" ;
-    $mdpconfirm = "";
-    $raison_sociale = "" ;
-    // Si le bouton créer compte a été cliqué alors .
-    if($_SERVER["REQUEST_METHOD"] === "POST"){
-        // Ajout de chaque input à une valeur.
-        $num_siren = trim($_POST['num_siren']);
-        $tel = trim($_POST['tel']);
-        $mail = trim($_POST['email']);
-        $mdp = trim($_POST['motdepasse']);
-        $mdpconfirm = trim($_POST['confirm']);
-        $num_entreprise = trim($_POST['nom_entreprise']);
-        $raison_sociale = trim($_POST['raison']);
-        $fin_raison = $num_entreprise . " " . $raison_sociale;
+include 'config.php';
 
-        if (!preg_match("/^[0-9]{9}$/", $num_siren)) {
-            $erreur_siren = "Total de chiffre invalides ! Nombre de chiffre qu'on requière = 9";
-        }
-        if(!preg_match("/^[0-9]{10}$/",$tel)){
-            $erreur_tel = "Total de chiffres invalides ! Nombre de chiffre qu'on requière = 10";
-        }
-        if(!preg_match("/^.{12,}$/",$mdp)){
-            $erreur_mdp="Nombre de caractère trop petit ! Nombre de caractère minimale = 12";
-        }
-        if(strcmp($mdp,$mdpconfirm) != 0){
-            $erreur_confirm = "La confirmation du mot de passe ne correspond pas au mot de passe que vous avez mis.";
-        }
-        if(empty($raison_sociale)){
-            $erreur_raison="Vous n'avez pas sélectionner de raison_sociale.";
-        }
-        $erreurs = [ // la liste entière des erreurs par ce que y'en a beaucoup 
-            $erreur_siren,
-            $erreur_confirm,
-            $erreur_tel,
-            $erreur_mdp,
-            $erreur_raison
-        ];
-        if(!array_filter($erreurs)){ // array_filter permet de vérifier si y'a des élements dans la array en gros si y'a rien ça fait la condition .
-            // La parties pour créer l'identifiants
-            //if(){
-                $mdp_hash = password_hash($mdp, PASSWORD_DEFAULT); // Permet le hachage du mot de passe.
-                $sqlident = "INSERT INTO public.identifiants (login,mdp) VALUES (:login, :mdp)";
-                $stmt = $pdo->prepare($sqlident);
-                $stmt->execute([
-                    'login' => $mail,
-                    'mdp' => $mdp_hash
-                ]);
-                // Partie pour récupérer le numéro de l'identifiants qu'on vient de créer .
-                $id_num_sql = "SELECT id_num FROM public.identifiants WHERE login = :login";
-                $stmtid = $pdo->prepare($id_num_sql);
-                $stmtid->execute(['login' => $mail]);
-                $id_num = (int) $stmtid->fetchColumn();
-                // Partie pour créer le compte vendeur avec toute ces informations.
-                $sqlvendeur = "INSERT INTO public.compte_vendeur (raison_sociale,num_siren,num_tel,adresse_mail,id_num) VALUES (:raison_sociale,:num_siren,:num_tel,:adresse_mail,:id_num)";
-                $stmtvendeur = $pdo->prepare($sqlvendeur);
-                $stmtvendeur->execute([
-                    'raison_sociale' => $fin_raison,
-                    'num_siren' => $num_siren,
-                    'num_tel' => $tel,
-                    'adresse_mail' => $mail,
-                    'id_num' => $id_num
-                ]);
-            //}   
-        }
+// Init des variables erreur et des valeurs qui seront dans les input du formulaire.
+$erreur_siren = "";
+$erreur_tel = "";
+$erreur_mdp = "";
+$erreur_raison = "";
+$erreur_confirm = "";
+$num_siren = "";
+$tel = "";
+$mail = "";
+$mdp = "";
+$num_entreprise = "";
+$mdpconfirm = "";
+$raison_sociale = "";
+
+// Si le bouton créer compte a été cliqué alors
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Ajout de chaque input à une valeur.
+    $num_siren = trim($_POST['num_siren']);
+    $tel = trim($_POST['tel']);
+    $mail = trim($_POST['email']);
+    $mdp = trim($_POST['motdepasse']);
+    $mdpconfirm = trim($_POST['confirm']);
+    $num_entreprise = trim($_POST['nom_entreprise']);
+    $raison_sociale = trim($_POST['raison']);
+    $fin_raison = $num_entreprise . " " . $raison_sociale;
+
+    if (!preg_match("/^[0-9]{9}$/", $num_siren)) {
+        $erreur_siren = "Total de chiffre invalides ! Nombre de chiffre qu'on requière = 9";
+    }
+    if (!preg_match("/^[0-9]{10}$/", $tel)) {
+        $erreur_tel = "Total de chiffres invalides ! Nombre de chiffre qu'on requière = 10";
+    }
+    if (!preg_match("/^.{12,}$/", $mdp)) {
+        $erreur_mdp = "Nombre de caractère trop petit ! Nombre de caractère minimale = 12";
+    }
+    if (strcmp($mdp, $mdpconfirm) != 0) {
+        $erreur_confirm = "La confirmation du mot de passe ne correspond pas au mot de passe que vous avez mis.";
+    }
+    if (empty($raison_sociale)) {
+        $erreur_raison = "Vous n'avez pas sélectionné de raison sociale.";
     }
     
+    $erreurs = [
+        $erreur_siren,
+        $erreur_confirm,
+        $erreur_tel,
+        $erreur_mdp,
+        $erreur_raison
+    ];
+    
+    if (!array_filter($erreurs)) {
+        // La partie pour créer l'identifiant
+        $mdp_hash = password_hash($mdp, PASSWORD_DEFAULT);
+        $sqlident = "INSERT INTO public.identifiants (login, mdp) VALUES (:login, :mdp)";
+        $stmt = $pdo->prepare($sqlident);
+        $stmt->execute([
+            'login' => $mail,
+            'mdp' => $mdp_hash
+        ]);
+        
+        // Partie pour récupérer le numéro de l'identifiant qu'on vient de créer
+        $id_num_sql = "SELECT id_num FROM public.identifiants WHERE login = :login";
+        $stmtid = $pdo->prepare($id_num_sql);
+        $stmtid->execute(['login' => $mail]);
+        $id_num = (int) $stmtid->fetchColumn();
+        
+        // Partie pour créer le compte vendeur avec toutes ces informations
+        $sqlvendeur = "INSERT INTO public.compte_vendeur (raison_sociale, num_siren, num_tel, adresse_mail, id_num) VALUES (:raison_sociale, :num_siren, :num_tel, :adresse_mail, :id_num)";
+        $stmtvendeur = $pdo->prepare($sqlvendeur);
+        $stmtvendeur->execute([
+            'raison_sociale' => $fin_raison,
+            'num_siren' => $num_siren,
+            'num_tel' => $tel,
+            'adresse_mail' => $mail,
+            'id_num' => $id_num
+        ]);
+        
+        // Redirection vers la page de connexion
+        header("Location: connecter.php");
+        exit();
+    }
+}
 ?>
 
 
@@ -87,13 +91,11 @@
 >>>>>>> f51834d (:construction: formulaire creer compte html fait !)
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord - Alizon</title>
+    <title>Créer un compte - Alizon</title>
     <link rel="stylesheet" href="front_end/assets/css/style.css">
-
 </head>
 
 <<<<<<< HEAD

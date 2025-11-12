@@ -119,15 +119,11 @@ body header nav nav .notif .icone {
   align-items: center;
   position: relative;
 }
-
-.logo__connexion {
-  position: absolute;
-  top: 30px;
-  left: 30px;
-}
-.logo__connexion img {
-  max-width: 150px;
-  height: auto;
+@media screen and (max-width: 428px) and (max-height: 926px) {
+  .body__connexion {
+    transform: scale(0.7);
+    transform-origin: center center;
+  }
 }
 
 .container__connexion {

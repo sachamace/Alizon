@@ -144,18 +144,17 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
-}
 
-.logo__connexion {
-  position: absolute;
-  top: 30px;
-  left: 30px;
-  
-  img {
-    max-width: 150px;
-    height: auto;
+  // Réduction pour écrans mobiles 428x926 (classe principale)
+  @media screen and (max-width: 428px) and (max-height: 926px) {
+    transform: scale(0.7); // Réduction d’environ 15 %
+    transform-origin: center center;
   }
 }
+
+  // Variante : body__connexion-creercompte
+
+
 
 .container__connexion {
   background: $white;

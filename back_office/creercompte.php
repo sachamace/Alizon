@@ -1,8 +1,6 @@
 <?php
     include 'config.php';
     $stmt = $pdo->query("SELECT version();");
-?>
-<?php
     // Init des variables erreur et des valeurs qui seront dans les input du formulaire.
     $erreur_siren ="";
     $erreur_tel ="";
@@ -27,7 +25,7 @@
         $num_entreprise = trim($_POST['nom_entreprise']);
         $raison_sociale = trim($_POST['raison']);
         $fin_raison = $num_entreprise . " " . $raison_sociale;
-
+        
         if (!preg_match("/^[0-9]{9}$/", $num_siren)) {
             $erreur_siren = "Total de chiffre invalides ! Nombre de chiffre qu'on requière = 9";
         }

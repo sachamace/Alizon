@@ -158,7 +158,7 @@
                 <label for="naissance" class="input-label">Date de Naissance</label>
                 <input class="input__connexion" type="date" id="date_de_naissance" name="date_de_naissance" placeholder="Date de Naissance *"required />
             </div>
-            <div>
+            <div class="input-group">
                 <!-- Mot de passe -->
                 <label for="mdp" class="input-label">Mot de passe</label>
                 <input class="input__connexion" type="password"  name="motdepasse" placeholder="Mot de passe "required />
@@ -169,11 +169,10 @@
                 ?>                
             </div>
             <a href="#" class="forgot-password">Mot de passe oublié ?</a>
-            <div>
+            <div class="input-group">
                 <!-- Confirmer le mot de passe -->
                  <label for="confirm" class="input-label">Confirmer le mot de passe</label>
                 <input class="input__connexion"  type="password" name="confirm" placeholder="Confirmer le mot de passe *" required />
-                <!-- Bouton de création de compte -->
                 <?php
                     if (!empty($erreur_confirm)){
                         echo "<span class='error-message'>$erreur_confirm</span><br />";
@@ -189,5 +188,6 @@
             
             <a href="seconnecter.php" class="btn__creer-compte">Se connecter</a>
         </form>
+    </div>
 </body>
 </html>

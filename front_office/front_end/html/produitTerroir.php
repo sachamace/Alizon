@@ -1,15 +1,23 @@
 <?php
 include 'config.php';
 try {
-    
-    $stmt2 = $pdo->query("SELECT * FROM produit WHERE id_produit = 3;"); // attention pas dynamique
+    if (isset($_GET['article'])) {
+        $id_produit = $_GET['article'];
+    } else {
+        $id_produit = null; // ou une valeur par défaut
+    }
+    $stmt2 = $pdo->query("SELECT * FROM produit WHERE id_produit = $id_produit;");
     $infos = $stmt2->fetch(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
     echo "Erreur SQL : " . $e->getMessage();
 }
 
-$id_produit = 3; // depend du paramètre
+if (isset($_GET['article'])) {
+    $id_produit = $_GET['article'];
+} else {
+    $id_produit = null; // ou une valeur par défaut
+}
 $id_panier = 2; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
 
 $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
@@ -35,12 +43,44 @@ if (count($avis) > 0) {
     }
     $moyenne = round($total_notes / count($avis)); // arrondi à l'entier le plus proche
 }
+// Traitement du formulaire d'avis
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajouter_avis') {
+    $note = (int)$_POST['note'];
+    $description = trim($_POST['description']);
+    $id_client = 1; // À remplacer par $_SESSION['id_client'] quand tu auras le système de connexion  ATTENTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+    if ($note >= 1 && $note <= 5 && !empty($description)) {
+        try {
+            $requete_ajout_avis = $pdo->prepare("
+                INSERT INTO avis (id_client, id_produit, note, description)
+                VALUES (:id_client, :id_produit, :note, :description)
+            ");
+            $requete_ajout_avis->execute([
+                ':id_client' => $id_client,
+                ':id_produit' => $id_produit,
+                ':note' => $note,
+                ':description' => $description
+            ]);
+            
+            // On recharge la page pour voir le nouvel avis
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
+        } catch (PDOException $e) {
+        }
+    } else {
+        $erreur_avis = "Veuillez entrer une note entre 1 et 5 et une description.";
+    }
+}
 
+// traitement des autres actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $action = $_POST['action'];
-    $id_produit = 3; // depend du paramètre
+    if (isset($_GET['article'])) {
+        $id_produit = $_GET['article'];
+    } else {
+        $id_produit = null; // ou une valeur par défaut
+    }
     $id_panier = 2; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
 
     if ($action === 'panier') {
@@ -249,6 +289,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     echo '<p>Aucun avis pour ce produit pour le moment.</p>';
                 }
             ?>
+            <div class="form-avis">
+                <h2>✏️ Écrire un avis</h2>
+
+                <?php if (isset($erreur_avis)) echo "<p class='erreur'>$erreur_avis</p>"; ?>
+
+                <form action="" method="post">
+                    <input type="hidden" name="action" value="ajouter_avis">
+
+                    <label for="note">Note (1 à 5) :</label>
+                    <select name="note" id="note" required>
+                        <option value="">-- Sélectionnez --</option>
+                        <option value="1">★☆☆☆☆ - 1</option>
+                        <option value="2">★★☆☆☆ - 2</option>
+                        <option value="3">★★★☆☆ - 3</option>
+                        <option value="4">★★★★☆ - 4</option>
+                        <option value="5">★★★★★ - 5</option>
+                    </select>
+
+                    <label for="description">Votre avis :</label>
+                    <textarea name="description" id="description" rows="4" placeholder="Partagez votre expérience..." required></textarea>
+
+                    <button type="submit">Envoyer mon avis</button>
+                </form>
+            </div>
         </section>
         <div id="popup-image" class="popup">
             <span class="close">&times;</span>

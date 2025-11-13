@@ -272,21 +272,29 @@ body header nav nav .notif .icone {
 .main_produit {
   font-family: "Space Grotesk", sans-serif;
   padding: 4rem 10rem;
-  color: #333;
-  /* Séparation entre le produit et les avis */
+  color: #000;
+  margin: 0 auto;
+  box-sizing: border-box;
   /* Séparation entre le produit et les avis */
   /* Section des avis */
+}
+@media (max-width: 900px) {
+  .main_produit {
+    padding: 4rem 1rem;
+  }
 }
 .main_produit .fiche-produit {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  width: 100%;
 }
 .main_produit .fiche-produit .fiche-container {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
   gap: 3rem;
+  flex-wrap: wrap;
 }
 @media (max-width: 900px) {
   .main_produit .fiche-produit .fiche-container {
@@ -300,7 +308,7 @@ body header nav nav .notif .icone {
   max-width: 100%;
 }
 .main_produit .fiche-produit .fiche-container .images-produit .image-principale {
-  width: 100%;
+  width: 80%;
   max-width: 28rem;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -479,6 +487,68 @@ body header nav nav .notif .icone {
   margin-top: 0.5rem;
   font-size: 1rem;
   line-height: 1.5;
+}
+.main_produit .avis .form-avis {
+  margin-top: 3rem;
+  padding: 1.5rem 2rem;
+  background-color: #f3f3f3;
+  border-radius: 10px;
+}
+.main_produit .avis .form-avis h2 {
+  font-size: 1.4rem;
+  color: #5a2ca0;
+  margin-bottom: 1rem;
+}
+.main_produit .avis .form-avis label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+.main_produit .avis .form-avis select,
+.main_produit .avis .form-avis textarea {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: "Space Grotesk", sans-serif;
+  background-color: white;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.main_produit .avis .form-avis select:focus,
+.main_produit .avis .form-avis textarea:focus {
+  border-color: #e87edc;
+  box-shadow: 0 0 5px rgba(232, 126, 220, 0.5);
+  outline: none;
+}
+.main_produit .avis .form-avis button {
+  margin-top: 1.5rem;
+  background-color: #5a2ca0;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.main_produit .avis .form-avis button:hover {
+  background-color: rgb(112.5, 55, 200);
+  transform: scale(1.05);
+}
+.main_produit .avis .form-avis button:active {
+  transform: scale(0.98);
+}
+.main_produit .avis .form-avis .erreur {
+  color: red;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.main_produit .infos-produit .avis {
+  width: auto;
 }
 
 /* --------------- FIN DU SCSS POUR LE PRODUIT ---------------*//*# sourceMappingURL=style.css.map */

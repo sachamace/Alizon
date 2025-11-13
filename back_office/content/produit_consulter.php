@@ -1,3 +1,9 @@
+<?php 
+    $stmt = $pdo->prepare("SELECT * FROM media_produit WHERE id_produit = ?");
+    $stmt->execute([$id]);
+    $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <section class="produit-container">
     <h2>Fiche produit</h2>
 
@@ -19,7 +25,15 @@
             </article>
             <article>
                 <h3>Média</h3>
-                <img src="front_end/assets/images/template.jpg" alt="">
+                <?php if (!empty($images)){ ?>
+                    <div class="produit-images">
+                        <?php foreach ($images as $image){ ?>
+                            <img src="<?php echo htmlentities($image['chemin_image']); ?>" alt="Image du produit" class="produit-image">
+                        <?php } ?>
+                    </div>
+                <?php } else{ ?>
+                    <p>Aucune image disponible pour ce produit.</p>
+                <?php } ?>
             </article>
         </div>
 

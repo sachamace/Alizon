@@ -26,8 +26,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $errors[] = "Veuillez sélectionner une catégorie.";
     }
 
-    if (!isset($_FILES['nouvelle_image']) || empty($_FILES['nouvelle_image']['name'][0])) {
-        $errors[] = "Veuillez ajouter au moins une image pour le produit.";
+    $hasImage = isset($_FILES['nouvelle_image']) && !empty($_FILES['nouvelle_image']['name'][0]);
+    if (!$hasImage) {
+        $errors[] = "Veuillez ajouter au moins une image du produit.";
+    }
+
+    if ($hasImage && count($_FILES['nouvelle_image']['name']) > 3) {
+        $errors[] = "Vous ne pouvez ajouter que 3 images maximum par produit.";
     }
 
     if (empty($errors)) {
@@ -71,6 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         foreach ($_FILES['nouvelle_image']['tmp_name'] as $index => $tmpName) {
             if ($_FILES['nouvelle_image']['error'][$index] === UPLOAD_ERR_OK) {
+                if ($index >= 3) break;
+                
                 $fileName = basename($_FILES['nouvelle_image']['name'][$index]);
                 $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 

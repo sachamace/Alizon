@@ -175,11 +175,19 @@ Structure de Consulter, Créer, Modifier produit
           font-size: 1rem;
         }
 
+        .produit-images {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+          align-items: center;
+          margin-top: 10px;
+        }
+
         // Image média dans la partie gauche
         img {
           display: block;
           width: 100%;
-          max-width: 250px;
+          max-width: 150px;
           height: auto;
           border-radius: 8px;
           border: 1px solid $gray-medium;
@@ -483,7 +491,9 @@ Structure du tableau de bord
     img {
       display: block;
       margin: 0 auto;
-      max-width: 100%;
+      max-width: 300px;
+      max-height: 250px;
+      width: auto;
       height: auto;
       border-radius: math.div($border-radius, 2);
     }
@@ -672,7 +682,12 @@ Fin de structure du tableau de bord
 
 
 
-/* --- Page détail produit --- */
+/* -----------------------------------------
+
+Structure du dashboard produit
+
+------------------------------------------*/
+
 .product-detail {
   padding: 20px;
   position: relative;
@@ -744,6 +759,15 @@ Fin de structure du tableau de bord
     }
   }
 }
+
+/* -----------------------------------------
+
+Fin de structure du dashboard produit
+
+------------------------------------------*/
+
+
+
 
 
 // =============================================================================
@@ -935,4 +959,3 @@ Fin de structure du tableau de bord
   margin-top: 5px;
   display: block;
 }
-

@@ -152,10 +152,17 @@ Structure de Consulter, Créer, Modifier produit
   margin: 0;
   font-size: 1rem;
 }
+.produit-container .produit-content .produit-infos article .produit-images {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
 .produit-container .produit-content .produit-infos article img {
   display: block;
   width: 100%;
-  max-width: 250px;
+  max-width: 150px;
   height: auto;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
@@ -500,7 +507,9 @@ Structure du tableau de bord
 .content article img {
   display: block;
   margin: 0 auto;
-  max-width: 100%;
+  max-width: 300px;
+  max-height: 250px;
+  width: auto;
   height: auto;
   border-radius: 0.5em;
 }
@@ -640,7 +649,11 @@ Fin de structure du tableau de bord
   height: 34px;
 }
 
-/* --- Page détail produit --- */
+/* -----------------------------------------
+
+Structure du dashboard produit
+
+------------------------------------------*/
 .product-detail {
   padding: 20px;
   position: relative;
@@ -709,6 +722,11 @@ Fin de structure du tableau de bord
   background-color: rgb(57, 195.7346938776, 255);
 }
 
+/* -----------------------------------------
+
+Fin de structure du dashboard produit
+
+------------------------------------------*/
 .body__connexion {
   margin: 0;
   padding: 0;

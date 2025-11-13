@@ -36,8 +36,8 @@ body header nav nav:first-child a[href="panier.php"] {
   font-size: 23px;
   font-weight: bold;
 }
-body header nav nav:first-child a[href="panier.php"]:last-child,
-body header nav nav:first-child a[href="panier.php"] :nth-last-child(2) {
+body header nav nav:first-child a[href="panier.html"]:last-child,
+body header nav nav:first-child a[href="panier.html"] :nth-last-child(2) {
   margin-right: 0;
 }
 body header nav nav:first-child a[href="panier.php"]:nth-child(2) {
@@ -53,7 +53,7 @@ body header nav nav:first-child form {
   margin-left: 42.625px;
 }
 body header nav nav:first-child form input {
-  width: 1426.15px;
+  width: 1000px;
   height: 36.95px;
   border-radius: 25px;
   border-color: #ff6ce2;
@@ -83,7 +83,7 @@ body header nav nav:last-child div a {
   padding: 10px;
   font-size: 14px;
   font-weight: 325;
-  width: 203px;
+  width: 150px;
   border-radius: 10px;
 }
 body header nav nav:last-child a {
@@ -93,6 +93,7 @@ body header nav nav:last-child a {
   color: rgb(0, 0, 0);
   font-size: 23px;
   font-weight: bold;
+  margin-right: 8px;
 }
 body header nav nav .notif {
   width: 54px;

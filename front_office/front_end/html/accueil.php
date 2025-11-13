@@ -16,14 +16,14 @@
     <header>
         <nav>
             <nav>
-                <a href="accueil.html"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
+                <a href="accueil.php"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
                 <a class="notif" href="notification.html"><i class="fa-regular fa-bell icone"></i></a>
                 <form action="recherche.html" method="get" role="search" aria-label="Site search">
                     <label for="site-search"></label>
                     <input type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
                     <button type="submit">Search</button>
                 </form>
-                <a href="panier.html"><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
+                <a href="panier.php"><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
             </nav>
             <nav>
                 <div>
@@ -34,7 +34,7 @@
                     <a href="">Décoration Intérieure</a>
                     <a href="">Epicerie FIne</a>
                 </div>
-                <a href="seconnecter.html"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
+                <a href="consulterProfilClient.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
             </nav>
         </nav>
     </header>

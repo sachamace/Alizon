@@ -6,7 +6,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: "Space Grotesk", sans-serif;
-    width: fit-content;
+    width: 1440px;
     header {
         height: 200px;
         background-color: #FFFFFF;
@@ -29,7 +29,7 @@ body {
                     display: flex;
                     align-items: center;
 
-                    a[href="panier.html"] {
+                    a[href="panier.php"] {
                         /* Le lien “Panier” seul, collé à droite */
                         margin-left: auto;
                         text-decoration: none;
@@ -39,7 +39,7 @@ body {
 
                         &:last-child,
                         :nth-last-child(2) {
-                            margin-right: 0;
+                            margin-right: 30px;
                         }
 
                         &:nth-child(2) {
@@ -59,7 +59,7 @@ body {
                         margin-left: 42.625px;
 
                         input {
-                            width: 1426.15px;
+                            width: 1000px;
                             height: 36.95px;
                             border-radius: 25px;
                             border-color: $colP;
@@ -93,7 +93,7 @@ body {
                             padding: 10px;
                             font-size: 14px;
                             font-weight: 325;
-                            width: 203px;
+                            width: 150px;
                             border-radius: 10px;
                         }
                     }
@@ -105,6 +105,7 @@ body {
                         color: rgb(0, 0, 0);
                         font-size: 23px;
                         font-weight: bold;
+                        margin-right: 8px;
                     }
                 }
 

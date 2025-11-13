@@ -12,7 +12,6 @@
     $erreur_prenom = "";//
     $erreur_confirm = "";//
     $nom = "";
-    $pseudo = "";
     $prenom = "";
     $mail = "" ;
     $tel = "" ;
@@ -29,6 +28,26 @@
         $password = trim($_POST['motdepasse']);
         $mdpconfirm = trim($_POST['confirm']);
         $date = trim($_POST['date_de_naissance']);
+        // TEST SUR Base de données 
+        // TEST pour le téléphone.
+        $tel_sql = "SELECT num_tel FROM public.compte_client";
+        $stmt_tel = $pdo->query($tel_sql);
+        $tab_tel = $stmt_tel->fetchAll(PDO::FETCH_COLUMN, 0);
+        foreach ($tab_tel as $num_tel) {
+            if($tel == $num_tel){
+                $erreur_tel = "Il existe déja !";
+            }
+        }
+        // TEST POUR email
+        $email_sql = "SELECT adresse_mail FROM public.compte_client";
+        $stmt_email= $pdo->query($email_sql);
+        $tab_email = $stmt_email->fetchAll(PDO::FETCH_COLUMN, 0);
+        
+        foreach ($tab_email as $email) {
+            if($mail == $email){
+                $erreur_mail = "Il existe déja !";
+            }
+        }
         if(!preg_match("/^0\d{9}$/",$tel)){
             $erreur_tel = "Total de chiffres invalides ! Nombre de chiffre qu'on requière = 10 et un zéro au début.";
         }
@@ -53,8 +72,7 @@
             $erreur_mdp,
             $erreur_nom,
             $erreur_prenom,
-            $erreur_confirm,
-            $erreur_pseudo
+            $erreur_confirm
         ];
         if(!array_filter($erreurs)){
             $sqlident = "INSERT INTO public.identifiants (login,mdp) VALUES (:login, :mdp)";
@@ -79,7 +97,7 @@
             else{
                 $majeur = 'false';
             }
-            $sqlclient = "INSERT INTO public.compte_client (adresse_mail,est_majeur,date_naissance,nom,prenom,pseudo,num_tel,id_num) VALUES (:adresse_mail,:est_majeur,:date_naissance,:nom,:prenom,:pseudo,:num_tel,:id_num)";
+            $sqlclient = "INSERT INTO public.compte_client (adresse_mail,est_majeur,date_naissance,nom,prenom,num_tel,id_num) VALUES (:adresse_mail,:est_majeur,:date_naissance,:nom,:prenom,:num_tel,:id_num)";
             $stmtclient = $pdo->prepare($sqlclient);
             $stmtclient->execute([
                 'adresse_mail' => $mail,
@@ -87,7 +105,6 @@
                 'date_naissance' => $date,
                 'nom' => $nom,
                 'prenom' => $prenom,
-                'pseudo' => $pseudo,
                 'num_tel' => $tel,
                 'id_num' => $id_num
             ]);

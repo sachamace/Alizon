@@ -38,7 +38,7 @@
         }
         // TEST POUR email
         $email_sql = "SELECT adresse_mail FROM public.compte_vendeur";
-        $stmt_email= $pdo->query($siren_sql);
+        $stmt_email= $pdo->query($email_sql);
         $tab_email = $stmt_email->fetchAll(PDO::FETCH_COLUMN, 0);
         
         foreach ($tab_email as $email) {
@@ -75,7 +75,8 @@
             $erreur_confirm,
             $erreur_tel,
             $erreur_mdp,
-            $erreur_raison
+            $erreur_raison,
+            $erreur_mail
         ];
         if(!array_filter($erreurs)){ // array_filter permet de vérifier si y'a des élements dans la array en gros si y'a rien ça fait la condition .
             // La parties pour créer l'identifiants

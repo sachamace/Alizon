@@ -14,6 +14,7 @@
     $num_entreprise = "" ;
     $mdpconfirm = "";
     $raison_sociale = "" ;
+    $erreur_mail = "";
     // Si le bouton créer compte a été cliqué alors .
     if($_SERVER["REQUEST_METHOD"] === "POST"){
         // Ajout de chaque input à une valeur.
@@ -25,7 +26,35 @@
         $num_entreprise = trim($_POST['nom_entreprise']);
         $raison_sociale = trim($_POST['raison']);
         $fin_raison = $num_entreprise . " " . $raison_sociale;
+        // TEST SUR Base de données 
+        // TEST pour le num_siren.
+        $siren_sql = "SELECT num_siren FROM public.compte_vendeur";
+        $stmt_siren = $pdo->query($siren_sql);
+        $tab_num_siren = $stmt_siren->fetchAll(PDO::FETCH_COLUMN, 0);
+        foreach ($tab_num_siren as $siren) {
+            if($num_siren == $siren){
+                $erreur_siren = "Il existe déja !";
+            }
+        }
+        // TEST POUR email
+        $email_sql = "SELECT adresse_mail FROM public.compte_vendeur";
+        $stmt_email= $pdo->query($siren_sql);
+        $tab_email = $stmt_email->fetchAll(PDO::FETCH_COLUMN, 0);
         
+        foreach ($tab_email as $email) {
+            if($mail == $email){
+                $erreur_mail = "Il existe déja !";
+            }
+        }
+        // TEST POUR Numéro de Téléphone
+        $tel_sql = "SELECT num_tel FROM public.compte_vendeur";
+        $stmt_tel= $pdo->query($tel_sql);
+        $tab_tel = $stmt_tel->fetchAll(PDO::FETCH_COLUMN, 0);
+        foreach ($tab_tel as $telephone) {
+            if($tel == $telephone){
+                $erreur_tel = "Il existe déja !";
+            }
+        }
         if (!preg_match("/^[0-9]{9}$/", $num_siren)) {
             $erreur_siren = "Total de chiffre invalides ! Nombre de chiffre qu'on requière = 9";
         }
@@ -72,8 +101,8 @@
                     'adresse_mail' => $mail,
                     'id_num' => $id_num
                 ]);
-            header("Location: seconnecter.php");
-            exit();
+            // header("Location: connecter.php");
+            // exit();
             //}   
         }
     }
@@ -108,7 +137,7 @@
                 <input class="input__connexion" type="text"  name="num_siren" placeholder="Numéro de SIREN *" value ="<?= $num_siren?>"required />
                 <?php
                     if (!empty($erreur_siren)){
-                        echo "<span class='error-message'>$erreur_siren</span>";
+                        echo $erreur_siren;
                     }
                 ?>
             </div>
@@ -152,6 +181,11 @@
                 <!-- Email -->
                 <label for="mail" class="input-label">E-Mail</label>
                 <input class="input__connexion" type="email"  name="email" placeholder="Adresse Mail *" value ="<?= $mail?>"required />
+                <?php
+                    if (!empty($erreur_mail)){
+                        echo "<span>$erreur_mail</span>";
+                    }
+                ?>
             </div>
             
             <div class="input-group">

@@ -4,10 +4,10 @@ if (isset($_GET['id']) && isset($_GET['type'])) {
     $type = $_GET['type'];
 
     $stmt = $pdo->prepare("SELECT * FROM produit WHERE id_produit= :id");
-
     $stmt->execute(['id' => $id]);
-
     $produit = $stmt->fetch();
+
+    $id_vendeur_connecte = $_SESSION['vendeur_id'];
 
     if (!$produit) {
         echo "<p>Produit introuvable.</p>";

@@ -38,7 +38,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             taux_tva, 
             stock_disponible,
             est_actif,
-            categorie
+            categorie,
+            id_vendeur
         ) VALUES (
             :nom,
             :description_prod,
@@ -46,18 +47,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             :tva,
             :stock,
             :actif,
-            :categorie
+            :categorie,
+            :id_vendeur
         )");
 
         $stmt->execute([
             'nom' => $nom,
             'description_prod' => $description,
             'categorie' => $categorie,
-            'prix_ttc' => $prix_ttc,
             'prix_ht' => $prix_ht,
             'tva' => $tva,
             'stock' => $stock,
-            'actif' => $actif
+            'actif' => $actif,
+            'id_vendeur' => $id_vendeur_connecte
         ]);
 
         $id_produit = $pdo->lastInsertId();
@@ -174,6 +176,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <input type="text" id="stock_disponible_produit" name="stock_disponible_produit"
                         value="" pattern="^\d+$"
                         title="Uniquement chiffres entiers">
+                </article>
+
+                <article>
+                    <h3>Visibilité</h3>
+
+                    <div class="visibility-option">
+                        <input type="radio" id="visible" name="visibilite" value="1" CHECKED>
+                        <label for="visible">Visible</label>
+                    </div>
+
+                    <div class="visibility-option">
+                        <input type="radio" id="cache" name="visibilite" value="0">
+                        <label for="cache">Caché</label>
+                    </div>
                 </article>
             </div>
         </div>

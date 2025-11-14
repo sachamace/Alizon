@@ -1,29 +1,26 @@
 <?php
+    include 'config.php';
     session_start();
-    include 'config.php'; // Connexion à la base
-
 /* ---------------------------------------------------
    1. Vérification de la connexion client
 --------------------------------------------------- */
 
     $id_client_connecte = $_SESSION['id_client'];
-    /* if (!$id_client_connecte) {
-        die("Aucun client connecté.");
-    } */
-   
+
 /* ---------------------------------------------------
    2. Récupération de l'adresse du client
 --------------------------------------------------- */
 
     try {
-    $stmt = $pdo->prepare("
-        SELECT adresse, code_postal, ville, pays
-        FROM public.adresse a
-        WHERE id_client = :id_client
-        ORDER BY id_adresse DESC LIMIT 1
-    ");
-    $stmt->execute(['id_client' => $id_client_connecte]);
-    $client = $stmt->fetch();
+        $stmt = $pdo->prepare("
+            SELECT adresse, code_postal, ville, pays
+            FROM public.adresse a
+            WHERE id_client = :id_client
+            ORDER BY id_adresse DESC 
+            LIMIT 1
+        ");
+        $stmt->execute(['id_client' => $id_client_connecte]);
+        $client = $stmt->fetch();
 
 
     } catch (PDOException $e) {
@@ -31,7 +28,7 @@
     }
 
 /* ---------------------------------------------------
-   3. Variables par défaut (évite les undefined)
+   3. Variables par défaut
 --------------------------------------------------- */
 
     $erreurs = [];
@@ -55,7 +52,7 @@
         if ($type_paiement === "carte") {
 
             // Récupération des données
-            $numero = str_replace(' ', '', $_POST['carte'] ?? '');
+            $numero = str_replace(' ', '', $_POST['carte'] ?? '');  // ?? '' : renvoie une chaine vide si le champ concerné est vide
             $securite = str_replace('-', '', $_POST['cvv'] ?? '');
             $expiration = $_POST['expiration'] ?? '';
             $nom = $_POST['nom_titulaire'] ?? '';
@@ -82,16 +79,6 @@
                 }
             }
 
-        } elseif ($type_paiement === "paypal") {
-
-            $email = trim($_POST['paypal_email'] ?? "");
-
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $erreurs['paypal_email'] = "Adresse email PayPal invalide.";
-            }
-
-        } else {
-            $erreurs['paiement'] = "Veuillez choisir un mode de paiement.";
         }
 
         // Si aucune erreur
@@ -158,22 +145,22 @@
 
     <!-- HEADER -->
     <div class="commande-header">
-        <button class="back-btn" onclick="history.back()">←</button>
+        <button class="back-btn">←</button>
         <h1>Paiement</h1>
     </div>
 
     <!-- MESSAGE -->
-    <?php if ($message): ?>
+    <?php if ($message){ ?>
         <div class="bloc" style="border-color:#ff7aaa; background:#ffe4ef;">
             <?= htmlentities($message) ?>
         </div>
-    <?php endif; ?>
+    <?php } ?>
 
     <!-- ADRESSE CLIENT -->
     <div class="bloc recap">
         <h2>Adresse de livraison</h2>
 
-        <?php if ($client): ?>
+        <?php if ($client){ ?>
             <p>
                 <span>Adresse :</span>
                 <span><?= htmlentities($client['adresse']) ?></span>
@@ -186,9 +173,9 @@
                 <span>Pays :</span>
                 <span><?= htmlentities($client['pays']) ?></span>
             </p>
-        <?php else: ?>
+        <?php } else { ?>
             <p>Aucune adresse enregistrée.</p>
-        <?php endif; ?>
+        <?php } ?>
     </div>
 
     <!-- FORMULAIRE PAIEMENT -->
@@ -209,14 +196,16 @@
                 <div class="formulaire" id="form-carte">
                     <input type="text" name="carte" placeholder="Numéro de carte (16 chiffres)" 
                            value="<?= htmlentities($numero) ?>">
+                    <p><?= htmlentities($erreurs['carte']) ?></p>
                     <input type="month" name="expiration"
                            value="<?= htmlentities($expiration) ?>">
+                    <p><?= htmlentities($erreurs['expiration']) ?></p>
                     <input type="text" name="cvv" placeholder="CVV" 
                            value="<?= htmlentities($securite) ?>">
+                    <p><?= htmlentities($erreurs['cvv']) ?></p>
                     <input type="text" name="nom_titulaire" placeholder="Nom du titulaire"
                            value="<?= htmlentities($nom) ?>">
-                    <input type="email" name="email" placeholder="Email"
-                           value="<?= htmlentities($email) ?>">
+                    <p><?= htmlentities($erreurs['nom']) ?></p>
                 </div>
 
                 <!-- OPTION PAYPAL -->

@@ -137,7 +137,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../assets/csss/style.css">
 </head>
 <body class="body_paiement">
 

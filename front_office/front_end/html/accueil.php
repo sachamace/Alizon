@@ -1,3 +1,8 @@
+<?php
+    include 'config.php';
+    include 'sessionindex.php';
+    $stmt = $pdo->query("SELECT version();");
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -32,16 +37,16 @@
                     <a href="">Artisanat Local</a>
                     <a href="">Décoration Intérieure</a>
                     <a href="">Epicerie FIne</a>
+                    <?php if($isLogged):?><a href="seconnecter.php"></i>S'identifier</a>
                 </div>
-                <a href="seconnecter.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
+                <?php else: ?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
+                <?php endif; ?>
+                
             </nav>
         </nav>
     </header>
     <div>
         <?php
-            include 'config.php';
-            include 'session.php';
-            $stmt = $pdo->query("SELECT version();");
             // On récupère tout le contenu de la table produit
             $reponse = $pdo->query('SELECT * FROM produit');
             // On affiche chaque entrée une à une

@@ -1,4 +1,29 @@
 <?php
+    include 'config.php'; // Connexion à la base
+
+    // Exemple : récupération de l'email du client connecté (à adapter selon ton système de connexion)
+    session_start();
+
+/*     if (!$id_client) {
+        die("Aucun client connecté.");
+    } */
+
+    $id_vendeur_connecte = $_SESSION['vendeur_id'];
+
+    try {
+    $stmt = $pdo->prepare("
+        SELECT adresse, code_postal, ville, pays
+        FROM public.adresse a
+        WHERE id_client = :id_client
+    ");
+    $stmt->execute([$id_vendeur_connecte]);
+    $vendeur = $stmt->fetch();
+
+
+    } catch (PDOException $e) {
+    die("Erreur lors de la récupération des infos vendeur : " . $e->getMessage());
+    }
+
     $erreurs = [];
     $success = false;
 
@@ -165,12 +190,18 @@
 
         <!-- Bloc des informations personnelles du client -->
         <section class="bloc adresse">
-            <h2>Adresse de livraison</h2>
-            <p>Adresse<br><?php htmlspecialchars($commande['adresse']); ?></p>
-            <p>Code postal<br><?php htmlspecialchars($commande['code_postal']); ?></p>
-            <p>Ville<br><?php htmlspecialchars($commande['ville']); ?></p>
-            <p>Pays<br><?php htmlspecialchars($commande['pays']); ?></p>
-        </section>
+        <h2>Adresse de livraison</h2>
+        <?php if ($client): ?>
+            <p>Adresse<br><?= htmlentities($client['adresse']) ?></p>
+            <p>Code postal<br><?= htmlentities($client['code_postal']) ?></p>
+            <p>Ville<br><?= htmlentities($client['ville']) ?></p>
+            <p>Pays<br><?= htmlentities($client['pays']) ?></p>
+        <?php else: ?>
+            <p>Aucune adresse trouvée pour ce client.</p>
+        <?php endif; ?>
+    </section>
+       
+        
 
         <!-- Bloc du récapitulatif du prix des articles du panier -->
         <section class="bloc recap">
@@ -189,45 +220,6 @@
             <button><i class="fa-regular fa-user"></i></button>
         </footer>
     </main>
-    
-    <script>
-        const radioCarte = document.getElementById("radio-carte");
-        const formCarte = document.querySelector(".paiement-carte");
-
-        const radioPaypal = document.getElementById("radio-paypal");
-        const formPaypal = document.querySelector(".paiement-paypal");
-
-        const carteInput = document.getElementById('carte');
-
-        radioPaypal.disabled = true;
-
-        // Variables pour suivre la visibilité des formulaires
-        let carteVisible = false;   // true si formulaire carte visible
-        let paypalVisible = false;
-
-        // Gestion du clic sur la radio "Carte"
-        radioCarte.addEventListener("click", () => {
-            if (carteVisible) {  // si le formulaire carte est déjà visible
-                radioCarte.checked = false;  // décocher la radio
-                formCarte.classList.add("hidden"); // cacher le formulaire
-                carteVisible = false; // mettre à jour l'état
-            } else {
-                formCarte.classList.remove("hidden"); // afficher le formulaire
-                carteVisible = true; // mettre à jour l'état
-                // S'assurer que PayPal est caché
-                formPaypal.classList.add("hidden");
-                paypalVisible = false;
-            }
-        });
-
-        carteInput.addEventListener('input', function (e) {
-            // On retire tous les espaces
-            let valeur = this.value.replace(/\s+/g, '');
-            // On garde seulement les chiffres
-            valeur = valeur.replace(/\D/g, '');
-            // On regroupe tous les 4 chiffres avec un espace
-            this.value = valeur.match(/.{1,4}/g)?.join(' ') || '';
-        });
-</script>
+<script src="javascript.js"></script>
 </body>
 </html>

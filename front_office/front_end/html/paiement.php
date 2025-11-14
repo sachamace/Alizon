@@ -1,77 +1,104 @@
 <?php
+    session_start();
     include 'config.php'; // Connexion à la base
 
-    // Exemple : récupération de l'email du client connecté (à adapter selon ton système de connexion)
-    session_start();
+/* ---------------------------------------------------
+   1. Vérification de la connexion client
+--------------------------------------------------- */
 
-/*     if (!$id_client) {
+    $id_client_connecte = $_SESSION['id_client'];
+    /* if (!$id_client_connecte) {
         die("Aucun client connecté.");
     } */
-
-    $id_vendeur_connecte = $_SESSION['vendeur_id'];
+   
+/* ---------------------------------------------------
+   2. Récupération de l'adresse du client
+--------------------------------------------------- */
 
     try {
     $stmt = $pdo->prepare("
         SELECT adresse, code_postal, ville, pays
         FROM public.adresse a
         WHERE id_client = :id_client
+        ORDER BY id_adresse DESC LIMIT 1
     ");
-    $stmt->execute([$id_vendeur_connecte]);
-    $vendeur = $stmt->fetch();
+    $stmt->execute(['id_client' => $id_client_connecte]);
+    $client = $stmt->fetch();
 
 
     } catch (PDOException $e) {
-    die("Erreur lors de la récupération des infos vendeur : " . $e->getMessage());
+        die("Erreur lors de la récupération des infos client : " . $e->getMessage());
     }
+
+/* ---------------------------------------------------
+   3. Variables par défaut (évite les undefined)
+--------------------------------------------------- */
 
     $erreurs = [];
     $success = false;
 
+    $numero = "";
+    $securite = "";
+    $expiration = "";
+    $nom = "";
+    $email = "";
+    $message = "";
+
+/* ---------------------------------------------------
+   4. Traitement du formulaire
+--------------------------------------------------- */
+
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
-        // Vérification paiement par carte
-        if (isset($_POST['carte']) || isset($_POST['cvv']) || isset($_POST['expiration'])) {
-            $numero = $_POST['carte'] ?? '';
-            $securite = $_POST['cvv'] ?? '';
+        // Vérification du type de paiement
+        $type_paiement = $_POST['paiement'] ?? null;
+
+        if ($type_paiement === "carte") {
+
+            // Récupération des données
+            $numero = str_replace(' ', '', $_POST['carte'] ?? '');
+            $securite = str_replace('-', '', $_POST['cvv'] ?? '');
             $expiration = $_POST['expiration'] ?? '';
-            $nom = $POST['nom_titulaire'] ?? '';
+            $nom = $_POST['nom_titulaire'] ?? '';
 
-            // Enlever les espaces
-            $numero = str_replace([' ', ''], '', $numero);
-            $securite = str_replace([' ', '-'], '', $securite);
-            $expiration = trim($expiration);
-
-            // Vérification du numéro de carte
-            if (!preg_match('/^\d{16}$/', $numero)) {
-                $erreurs['carte'] = "Numéro de carte invalide, 16 chiffres requis";
+            // Vérification numéro de carte (16 chiffres)
+            if (!preg_match('/^[0-9]{16}$/', $numero)) {
+                $erreurs['carte'] = "Numéro de carte invalide (16 chiffres requis).";
             }
 
-            // Vérification du CVV ou cryptogramme visuel
-            if (!preg_match('/^\d{3}$/', $securite)) {
-                $erreurs['cvv'] = "Code de sécurité invalide.";
+            // Vérification CVV (3 chiffres)
+            if (!preg_match('/^[0-9]{3}$/', $securite)) {
+                $erreurs['cvv'] = "CVV invalide (3 chiffres).";
             }
 
-            // Vérification de l'expiration de la carte
-            if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $expiration)) {
-                $erreurs[] = "Format d'expiration invalide.";
+            // Vérification expiration
+            if (!preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])$/', $expiration)) {
+                $erreurs['expiration'] = "Format d’expiration invalide.";
             } else {
                 list($annee, $mois) = explode("-", $expiration);
-                $timestampExpiration = mktime(23, 59, 59, (int)$mois + 1, 0, (int)$annee);
+                $timestampExpiration = mktime(23, 59, 59, $mois + 1, 0, $annee);
+                
                 if ($timestampExpiration < time()) {
                     $erreurs['expiration'] = "Votre carte est expirée.";
                 }
             }
+
+        } elseif ($type_paiement === "paypal") {
+
+            $email = trim($_POST['paypal_email'] ?? "");
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $erreurs['paypal_email'] = "Adresse email PayPal invalide.";
+            }
+
+        } else {
+            $erreurs['paiement'] = "Veuillez choisir un mode de paiement.";
         }
 
-        // Vérification de l'email PayPal
-        if (isset($_POST['paypal_email'])) {
-            $email = trim($_POST['paypal_email']);
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $erreurs['paypal_email'] = "Adresse email invalide.";
-            }
-        }
-        //Pour pas afficher la liste des erreurs au début du lancement du script php
-        if(empty($erreurs)){
+        // Si aucune erreur
+        if (empty($erreurs)) {
             $success = true;
+
+            // Ici tu peux créer la commande, enregistrer dans la BDD, etc.
         }
     }
     //Affichage du modal "Paiement réussi"
@@ -126,100 +153,93 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="body_paiement">
-    <main class="main_paiement">
-        <header class="commande-header">
-            <a href="./panier.php"><button class="back-btn">←</button></a>
-            <h1>Passer la commande</h1>
-        </header>
 
-        <section class="bloc paiement">
-            <h2>Mode de paiement</h2>
-            <div class="options">
-                <!-- Bouton radio carte bancaire -->
-                <label class="option">
-                    <input type="radio" name="paiement" value="carte" id="radio-carte">
-                    <span>Payer par carte bleue</span>
-                </label>
+<main class="main_paiement">
 
-                <!-- Formulaire Carte Bancaire-->
-                <form class="formulaire paiement-carte hidden" action="paiement.php" method="post" id="form-carte">
-                    <label>Numéro de carte<span class="required">*</span></label>
-                    <input type="text" id="carte" maxlength="19" placeholder="Saisir le numéro de carte" name="carte" value ="<?=$numero?>" required>
-                    <p style="color: red; font-size: 12px;"><?php echo isset($erreurs['carte']) ? htmlentities($erreurs['carte']) : ''; ?></p>
+    <!-- HEADER -->
+    <div class="commande-header">
+        <button class="back-btn" onclick="history.back()">←</button>
+        <h1>Paiement</h1>
+    </div>
 
-                    <div>
-                        <label>Date d’expiration<span class="required">*</span></label>
-                        <input type="month" name="expiration" value ="<?=$expiration?>" required>
-                        <p style="color: red; font-size: 12px;"><?php echo isset($erreurs['expiration']) ? htmlentities($erreurs['expiration']) : ''; ?></p>
-                    </div>
-                    <div>
-                        <label>Cryptogramme visuel<span class="required">*</span></label>
-                        <input type="text" placeholder="CVV" name="cvv" value ="<?=$securite?>" required>
-                        <p style="color: red; font-size: 12px;"><?php echo isset($erreurs['cvv']) ? htmlentities($erreurs['cvv']) : ''; ?></p>
-                    </div>
+    <!-- MESSAGE -->
+    <?php if ($message): ?>
+        <div class="bloc" style="border-color:#ff7aaa; background:#ffe4ef;">
+            <?= htmlentities($message) ?>
+        </div>
+    <?php endif; ?>
 
-                    <label>Nom du titulaire de la carte<span class="required">*</span></label>
-                    <input type="text" placeholder="Nom complet" name="nom_titulaire" value ="<?=$nom?>" required>
-
-                    <div class="checkbox">
-                        <input type="checkbox" id="save-carte" name="save_carte">
-                        <label for="save-carte">Enregistrer pour vos prochains achats</label>
-                    </div>
-                    <button form="form-carte" type="submit" class="payer-btn">Payer cette commande</button>
-                </form>
-
-                <!-- Bouton radio Paypal -->
-                <label class="option">
-                    <input type="radio" name="paiement" value="paypal" id="radio-paypal" disable>
-                    <span>Payer par PayPal</span>
-                </label>
-
-                <!-- Formulaire PayPal -->
-                <form class="formulaire paiement-paypal hidden" action="paiement.php" method="post" id="form-paypal">
-                    <label>Adresse mail du compte<span class="required">*</span></label>
-                    <input type="email" placeholder="Saisir son adresse mail PayPal" name="paypal_email" value ="<?=$email?>" required>
-                    <p style="color: red; font-size: 12px;"><?php echo isset($erreurs['paypal_email']) ? htmlentities($erreurs['paypal_email']) : ''; ?></p>
-                    <div class="checkbox">
-                        <input type="checkbox" id="save-paypal" name="save_paypal">
-                        <label for="save-paypal">Enregistrer pour vos prochains achats</label>
-                    </div>
-                    <button form="form-paypal" type="submit" class="payer-btn">Payer cette commande</button>
-                </form>
-            </div>
-        </section>
-
-        <!-- Bloc des informations personnelles du client -->
-        <section class="bloc adresse">
+    <!-- ADRESSE CLIENT -->
+    <div class="bloc recap">
         <h2>Adresse de livraison</h2>
+
         <?php if ($client): ?>
-            <p>Adresse<br><?= htmlentities($client['adresse']) ?></p>
-            <p>Code postal<br><?= htmlentities($client['code_postal']) ?></p>
-            <p>Ville<br><?= htmlentities($client['ville']) ?></p>
-            <p>Pays<br><?= htmlentities($client['pays']) ?></p>
+            <p>
+                <span>Adresse :</span>
+                <span><?= htmlentities($client['adresse']) ?></span>
+            </p>
+            <p>
+                <span>Ville :</span>
+                <span><?= htmlentities($client['code_postal']) ?> <?= htmlentities($client['ville']) ?></span>
+            </p>
+            <p>
+                <span>Pays :</span>
+                <span><?= htmlentities($client['pays']) ?></span>
+            </p>
         <?php else: ?>
-            <p>Aucune adresse trouvée pour ce client.</p>
+            <p>Aucune adresse enregistrée.</p>
         <?php endif; ?>
-    </section>
-       
-        
+    </div>
 
-        <!-- Bloc du récapitulatif du prix des articles du panier -->
-        <section class="bloc recap">
-            <h2>Récapitulatif du prix</h2>
-            <p>Article <span><?= number_format($commande['prix_article'], 2, ',', ' '); ?>€</span></p>
-            <p>Livraison <span><?= number_format($commande['prix_livraison'], 2, ',', ' '); ?>€</span></p>
-            <p>Réduction <span>-<?= number_format($commande['reduction'], 2, ',', ' '); ?>€</span></p>
-            <p class="total">Total <span><?= number_format($commande['total'], 2, ',', ' '); ?>€</span></p>
-        </section>
+    <!-- FORMULAIRE PAIEMENT -->
+    <form method="POST" class="paiement">
 
-        <footer class="navbar">
-            <button><i class="fa-regular fa-house"></i></button>
-            <button><i class="fa-solid fa-magnifying-glass"></i></button>
-            <button><i class="fa-solid fa-cart-shopping"></i></button>
-            <button><i class="fa-regular fa-bell"></i></button>
-            <button><i class="fa-regular fa-user"></i></button>
-        </footer>
-    </main>
+        <div class="bloc">
+            <h2>Méthode de paiement</h2>
+
+            <div class="options">
+
+                <!-- OPTION CARTE -->
+                <label class="option">
+                    <input type="radio" name="paiement" value="carte">
+                    <span>Carte bancaire</span>
+                </label>
+
+                <!-- FORMULAIRE CARTE -->
+                <div class="formulaire" id="form-carte">
+                    <input type="text" name="carte" placeholder="Numéro de carte (16 chiffres)" 
+                           value="<?= htmlentities($numero) ?>">
+                    <input type="month" name="expiration"
+                           value="<?= htmlentities($expiration) ?>">
+                    <input type="text" name="cvv" placeholder="CVV" 
+                           value="<?= htmlentities($securite) ?>">
+                    <input type="text" name="nom_titulaire" placeholder="Nom du titulaire"
+                           value="<?= htmlentities($nom) ?>">
+                    <input type="email" name="email" placeholder="Email"
+                           value="<?= htmlentities($email) ?>">
+                </div>
+
+                <!-- OPTION PAYPAL -->
+                <label class="option">
+                    <input type="radio" name="paiement" value="paypal" disabled>
+                    <span>PayPal</span>
+                </label>
+
+            </div>
+        </div>
+
+        <button type="submit" class="payer-btn">Payer</button>
+
+    </form>
+
+    <!-- NAVBAR BAS DE PAGE -->
+    <div class="navbar">
+        <button>🏠</button>
+        <button>🛒</button>
+        <button>👤</button>
+    </div>
+
+</main>
 <script src="javascript.js"></script>
 </body>
 </html>

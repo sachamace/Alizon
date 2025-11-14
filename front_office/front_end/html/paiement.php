@@ -148,14 +148,7 @@
         <button class="back-btn">←</button>
         <h1>Paiement</h1>
     </div>
-
-    <!-- MESSAGE -->
-    <?php if ($message){ ?>
-        <div class="bloc" style="border-color:#ff7aaa; background:#ffe4ef;">
-            <?= htmlentities($message) ?>
-        </div>
-    <?php } ?>
-
+    
     <!-- ADRESSE CLIENT -->
     <div class="bloc recap">
         <h2>Adresse de livraison</h2>

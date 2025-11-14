@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $errors[] = "Le prix HT doit contenir uniquement des chiffres et une virgule (ex : 10,50).";
     }
 
-    if (!preg_match('/^(100([\.,]0{1,2})?|[0-9]{1,2}([\.,]\d{1,2})?)$/', $_POST['taux_tva_produit'])) {
+    if (!preg_match('/^(100([.,]0{1,2})?|[0-9]{1,2}([.,]\d{1,2})?)$/', $_POST['taux_tva_produit'])) {
         $errors[] = "La TVA doit être un nombre entre 0 et 100 (ex : 20 ou 20,50).";
     }
 
@@ -193,7 +193,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <h4>TVA (%)</h4>
                     <input type="text" id="taux_tva_produit" name="taux_tva_produit"
                         value="<?php echo htmlentities(number_format($produit['taux_tva'], 2, ',', '')) ?>"
-                        pattern="^(100([\.,]0{1,2})?|[0-9]{1,2}([\.,]\d{1,2})?)$"
+                        pattern="^(100([.,]0{1,2})?|[0-9]{1,2}([.,]\d{1,2})?)$"
                         title="Uniquement un nombre entre 0 et 100 (ex : 20 ou 5,5)">
                 </article>
 
@@ -290,9 +290,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         updateImageCount();
     }
 
+    const MAX_SIZE = 2 * 1024 * 1024;
+
     document.getElementById("nouvelle_image").addEventListener("change", function (e) {
         const file = e.target.files[0];
         if (!file) return;
+
+        if (file.size > MAX_SIZE) {
+            alert("L'image est trop lourde (max 2 Mo).");
+            e.target.value = ""; // reset input
+            return;
+        }
 
         // Limite 3
         const existingImages = <?php echo $imageCount ?>;

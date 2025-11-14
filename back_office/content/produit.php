@@ -2,12 +2,11 @@
 if (isset($_GET['id']) && isset($_GET['type'])) {
     $id = $_GET['id'];
     $type = $_GET['type'];
+    $id_vendeur_connecte = $_SESSION['vendeur_id'];
 
     $stmt = $pdo->prepare("SELECT * FROM produit WHERE id_produit= :id");
     $stmt->execute(['id' => $id]);
     $produit = $stmt->fetch();
-
-    $id_vendeur_connecte = $_SESSION['vendeur_id'];
 
     if (!$produit) {
         echo "<p>Produit introuvable.</p>";
@@ -21,6 +20,10 @@ if (isset($_GET['id']) && isset($_GET['type'])) {
     $stmt = $pdo->prepare("SELECT * FROM media_produit WHERE id_produit = ?");
     $stmt->execute([$id]);
     $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM media_produit WHERE id_produit = ?");
+    $stmtCheck->execute([$id]);
+    $imageCount = $stmtCheck->fetchColumn();
 
     if ($_GET['type'] == "consulter") {
         include 'produit_consulter.php';

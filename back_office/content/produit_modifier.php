@@ -1,20 +1,4 @@
 <?php
-if (isset($_POST['delete_image'])) {
-    $id_media = $_POST['delete_image'];
-
-    $stmt = $pdo->prepare("SELECT chemin_image FROM media_produit WHERE id_media = ?");
-    $stmt->execute([$id_media]);
-    $media = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($media && file_exists($media['chemin_image'])) {
-        unlink($media['chemin_image']);
-    }
-
-    $deleteStmt = $pdo->prepare("DELETE FROM media_produit WHERE id_media = ?");
-    $deleteStmt->execute([$id_media]);
-}
-
-
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $errors = [];
 
@@ -36,6 +20,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (!preg_match('/^\d+$/', $stock)) {
         $errors[] = "Le stock doit être un nombre entier positif.";
+    }
+
+    $imagesToDelete = !empty($_POST['images_to_delete']) ? json_decode($_POST['images_to_delete'], true) : [];
+    $currentImagesCount = $imageCount - count($imagesToDelete);
+
+    $newImagesCount = 0;
+    if (isset($_FILES['nouvelle_image']) && !empty($_FILES['nouvelle_image']['name'][0])) {
+        $newImagesCount = count(array_filter($_FILES['nouvelle_image']['name']));
+    }
+
+    $totalImages = $currentImagesCount + $newImagesCount;
+    if ($totalImages < 1) {
+        $errors[] = "Vous devez avoir au moins une image pour ce produit.";
+    }
+
+    if ($totalImages > 3) {
+        $errors[] = "Vous ne pouvez pas avoir plus de 3 images par produit.";
     }
 
     if (empty($errors)) {
@@ -60,11 +61,46 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             'actif' => $actif
         ]);
 
+        if (!empty($imagesToDelete)) {
+            foreach ($imagesToDelete as $id_media) {
 
+                $stmt = $pdo->prepare("SELECT chemin_image FROM media_produit WHERE id_media = ?");
+                $stmt->execute([$id_media]);
+                $media = $stmt->fetch(PDO::FETCH_ASSOC);
 
+                if ($media && file_exists($media['chemin_image'])) {
+                    unlink($media['chemin_image']);
+                }
 
+                $deleteStmt = $pdo->prepare("DELETE FROM media_produit WHERE id_media = ?");
+                $deleteStmt->execute([$id_media]);
+            }
+        }
 
+        if (!empty($_FILES['nouvelle_image']['name'])) {
 
+            $uploadDir = "front_end/assets/images_produits/";
+
+            foreach ($_FILES['nouvelle_image']['name'] as $index => $name) {
+
+                if ($_FILES['nouvelle_image']['error'][$index] === UPLOAD_ERR_OK) {
+
+                    $tmp = $_FILES['nouvelle_image']['tmp_name'][$index];
+                    $extension = pathinfo($name, PATHINFO_EXTENSION);
+
+                    $fileName = uniqid("prod_{$id}_") . "." . $extension;
+                    $filePath = $uploadDir . $fileName;
+
+                    move_uploaded_file($tmp, $filePath);
+
+                    $stmt = $pdo->prepare("
+                INSERT INTO media_produit (id_produit, chemin_image)
+                VALUES (?, ?)
+            ");
+                    $stmt->execute([$id, $filePath]);
+                }
+            }
+        }
 
 
         echo "<script>
@@ -115,25 +151,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </select>
                 </article>
                 <article>
-                    <h3>Média (3 images maximum)</h3>
+                    <h3>Média (<span id="imageCount"><?php echo count($images); ?></span>/3 images)</h3>
 
                     <div class="media-gallery" id="mediaGallery">
-                        <?php if (!empty($images)) {
-                            foreach ($images as $image) { ?>
-                                <div class="media-item existing">
-                                    <img src="<?php echo htmlentities($image['chemin_image']); ?>" alt="Image du produit"
-                                        class="produit-image">
-                                    <button type="button" class="delete-btn"
-                                        onclick="deleteImage(<?php echo $image['id_media']; ?>)">Supprimer</button>
-                                </div>
-                            <?php }
-                        } else { ?>
-                            <p>Aucune image disponible pour ce produit.</p>
-                        <?php } ?>
+
+                        <?php foreach ($images as $image): ?>
+                            <div class="media-item" data-id="<?php echo $image['id_media']; ?>">
+                                <img src="<?php echo $image['chemin_image']; ?>" class="produit-image">
+
+                                <button type="button" class="delete-btn"
+                                    onclick="deleteImageLocal(<?php echo $image['id_media']; ?>)">
+                                    Supprimer
+                                </button>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
+
+                    <input type="hidden" id="images_to_delete" name="images_to_delete" value="">
+
                     <div class="media-upload">
                         <label for="nouvelle_image">Ajouter une image :</label>
-                        <input type="file" name="nouvelle_image[]" id="nouvelle_image" accept="image/*" multiple>
+                        <input type="file" name="nouvelle_image" id="nouvelle_image" accept="image/*">
                     </div>
                 </article>
             </div>
@@ -205,7 +243,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             let tva = parseFloat(tauxTVA.value.replace(',', '.').replace(/\s/g, ''));
 
             if (!isNaN(ht) && !isNaN(tva) && ht >= 0 && tva >= 0 && tva <= 100) {
-                // Diviser par 100 car c'est maintenant un pourcentage
                 let ttc = ht * (1 + tva / 100);
 
                 prixTTC.value = ttc.toFixed(2).replace('.', ',');
@@ -220,41 +257,108 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         tauxTVA.addEventListener('input', calculerPrixTTC);
     });
 
+    let imagesToDelete = [];
+    let newImagesPreview = [];
+
+    function updateImageCount() {
+        const existingImages = <?php echo $imageCount ?>;
+        const deletedImages = imagesToDelete.length;
+        const newImages = newImagesPreview.length;
+
+        const totalImages = existingImages - deletedImages + newImages;
+        document.getElementById('imageCount').textContent = totalImages;
+
+        const fileInput = document.getElementById('nouvelle_image');
+        if (totalImages >= 3) {
+            fileInput.disabled = true;
+            fileInput.parentElement.style.opacity = '0.5';
+        } else {
+            fileInput.disabled = false;
+            fileInput.parentElement.style.opacity = '1';
+        }
+    }
+
+    function deleteImageLocal(id) {
+        const item = document.querySelector(`.media-item[data-id="${id}"]`);
+
+        if (!imagesToDelete.includes(id)) {
+            imagesToDelete.push(id);
+            item.remove();
+        }
+
+        document.getElementById("images_to_delete").value = JSON.stringify(imagesToDelete);
+        updateImageCount();
+    }
+
     document.getElementById("nouvelle_image").addEventListener("change", function (e) {
-        const gallery = document.getElementById("mediaGallery");
-        document.querySelectorAll(".media-item.preview").forEach(p => p.remove());
+        const file = e.target.files[0];
+        if (!file) return;
 
-        Array.from(e.target.files).forEach(file => {
-            const reader = new FileReader();
-            reader.onload = function (event) {
-                const div = document.createElement("div");
-                div.classList.add("media-item", "preview");
+        // Limite 3
+        const existingImages = <?php echo $imageCount ?>;
+        const deletedImages = imagesToDelete.length;
+        const newImages = newImagesPreview.length;
 
-                const img = document.createElement("img");
-                img.src = event.target.result;
-                img.classList.add("produit-image");
+        if (existingImages - deletedImages + newImages >= 3) {
+            alert("Maximum 3 images !");
+            e.target.value = "";
+            return;
+        }
 
-                const label = document.createElement("span");
-                label.innerText = "Preview";
-                label.classList.add("preview-label");
+        // Preview
+        const reader = new FileReader();
+        reader.onload = ev => {
+            const div = document.createElement("div");
+            div.classList.add("media-item", "preview");
 
-                div.appendChild(img);
-                div.appendChild(label);
-                gallery.appendChild(div);
-            };
+            const img = document.createElement("img");
+            img.src = ev.target.result;
 
-            reader.readAsDataURL(file);
-        });
+            const btn = document.createElement("button");
+            btn.textContent = "Supprimer";
+            btn.classList.add("delete-btn");
+            btn.type = "button";
+
+            // Bouton supprimer
+            btn.addEventListener("click", function () {
+
+                // Supprimer preview
+                div.remove();
+
+                // Supprimer du tableau
+                newImagesPreview = newImagesPreview.filter(f => f !== file);
+
+                // Supprimer le fichier de son input hidden
+                fileInput.remove();
+
+                updateImageCount();
+            });
+
+            div.appendChild(img);
+            div.appendChild(btn);
+            document.getElementById("mediaGallery").appendChild(div);
+        };
+        reader.readAsDataURL(file);
+
+        // 👉 Création d’un vrai input file qui sera envoyé au serveur
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.name = "nouvelle_image[]";
+        fileInput.hidden = true;
+        document.forms[0].appendChild(fileInput);
+
+        // Hack pour cloner le FileList
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+
+        newImagesPreview.push(file);
+        updateImageCount();
+
+        // Reset input principal
+        e.target.value = "";
     });
 
-    function deleteImage(id) {
-        if (!confirm("Supprimer cette image ?")) return;
 
-        fetch("delete_image.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "delete_image=" + id
-        })
-            .then(() => location.reload());
-    }
+    updateImageCount();
 </script>

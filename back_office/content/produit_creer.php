@@ -70,9 +70,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $id_produit = $pdo->lastInsertId();
 
         $upload_dir = 'front_end/assets/images_produits/';
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
-        }
 
         foreach ($_FILES['nouvelle_image']['tmp_name'] as $index => $tmpName) {
             if ($_FILES['nouvelle_image']['error'][$index] === UPLOAD_ERR_OK) {

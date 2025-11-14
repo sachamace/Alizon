@@ -16,7 +16,7 @@ try {
 if (isset($_GET['article'])) {
     $id_produit = $_GET['article'];
 } else {
-    $id_produit = null; // ou une valeur par défaut
+    $id_produit = null; // valeur par défaut
 }
 $id_panier = 2; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
 
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $id_panier = 2; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
 
-    if ($action === 'panier') {
+    if ($action === 'panier') { // traitement ajouter panier
         $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');
         $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
         $verif = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        }else if ($action === 'payer') {
+        }else if ($action === 'payer') { // traitement payer immediatement
         $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');
         $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
         $verif = $stmt->fetch(PDO::FETCH_ASSOC);

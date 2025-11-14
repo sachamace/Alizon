@@ -114,6 +114,7 @@ body header nav nav .notif .icone {
   align-items: flex-start;
   margin: 3em 5em;
   /* Ajustements globaux */
+  /* ----- Responsive panier ----- */
 }
 .main_panier section,
 .main_panier aside {
@@ -265,6 +266,48 @@ body header nav nav .notif .icone {
 }
 .main_panier .btn-vider:hover {
   background-color: #c9302c;
+}
+@media (max-width: 600px) {
+  .main_panier {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1em;
+  }
+  .main_panier section {
+    margin: 1em;
+    flex: none;
+    width: 80%;
+  }
+  .main_panier section article {
+    margin: 0;
+  }
+  .main_panier section article .panier_info {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    min-width: 0;
+    font-size: 0.75em;
+  }
+  .main_panier section article .panier_bottom {
+    flex-basis: 100%;
+    width: 100%;
+    margin-left: -2.5em;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .main_panier section article img {
+    width: 50%;
+    max-width: 120px;
+    height: auto;
+  }
+  .main_panier form {
+    padding: 0;
+    margin: 0;
+  }
 }
 
 /* --------------- FIN DU SCSS POUR LE PANIER ---------------*/

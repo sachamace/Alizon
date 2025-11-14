@@ -38,5 +38,31 @@
             </nav>
         </nav>
     </header>
+    <div>
+        <?php
+            include 'config.php';
+
+            $stmt = $pdo->query("SELECT version();");
+            echo "<pre>";
+            print_r($stmt->fetch());
+            echo "</pre>";
+            // On récupère tout le contenu de la table produit
+            $reponse = $pdo->query('SELECT * FROM produit');
+            // On affiche chaque entrée une à une
+            while ($donnees = $reponse->fetch()){ ?>
+            <a href="produit.php?article=<?php echo $donnees['id_produit']?>" style="text-decoration:none; color:inherit;">
+                <article>
+                    <img src="../assets/images/Tel.jpg" alt="Image du produit" width="350" height="225">
+                    <h2 class="titre"><?php echo htmlentities($donnees['nom_produit']) ?></h2>
+                    <p class="description"><?php echo htmlentities($donnees['description_produit']) ?></p>
+                    <p class="prix"><?php echo htmlentities($donnees['prix_ttc'].'€') ?></p>
+                </article>
+            </a>
+                
+            <?php
+            }
+            $reponse->closeCursor(); // Termine le traitement de la requête
+        ?>
+    </div>
 </body>
 </html>

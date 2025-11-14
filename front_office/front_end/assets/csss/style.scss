@@ -321,12 +321,12 @@ body {
 /* --------------- MAIN du PRODUIT --------------- */
 .main_produit {
     font-family: "Space Grotesk", sans-serif;
-    padding: 4rem 10rem;
+    padding: 4rem clamp(1rem, 8vw, 10rem);
     color: #000;
     margin: 0 auto;
     box-sizing: border-box;
     @media (max-width: 900px){
-        padding: 4rem 1rem;
+        padding: 3rem 1rem;
     }
     
 
@@ -342,23 +342,39 @@ body {
             align-items: flex-start;
             justify-content: flex-start;
             gap: 3rem; // espace horizontal stable
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
 
             @media (max-width: 900px) {
                 flex-direction: column;
                 align-items: center;
+                justify-content: center; // ← indispensable
+                width: 100%;
+                max-width: 100%;
+                gap: 0;
             }
 
             .images-produit {
-                flex: 0 0 28rem;
-                width: 28rem; // largeur fixe
-                max-width: 100%;
+                flex: 1 1 28rem;
+                @media (max-width: 900px){
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-items: center;
+                    width: 100%;
+                    max-width: 100%;
+                }
+                
 
                 .image-principale {
                     width: 80%;
                     max-width: 28rem;
+                    min-width: 20rem;
                     border-radius: 10px;
                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                    @media(max-width: 900px){
+                        min-width: 16rem;
+                        max-width: 16rem;
+                    }
                 }
 
                 .miniatures {
@@ -378,16 +394,27 @@ body {
                             transform: scale(1.05);
                         }
                     }
+                    @media (max-width: 900px){
+                        display: none;
+                    }
                 }
             }
 
             .infos-produit {
                 flex: 1;
-                min-width: 19rem;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between; // pousse le bloc des boutons vers le bas
                 min-height: 28rem; // même hauteur que l’image
+                width: auto;
+                margin-left: 5%;
+                @media (max-width: 900px){
+                    margin-left: 0;
+                    min-width: 19rem;
+                    width: 100%;
+                    max-width: 100%;
+                }
+                
 
                 .titre-ligne {
                     display: flex;
@@ -423,16 +450,25 @@ body {
                     align-items: center;
                     justify-content: space-between;
                     margin: 0.5rem 0 1.5rem 0;
+                    @media (max-width: 900px) {
+                        flex-wrap: wrap;
+                    }
 
                     .stock-dispo {
                         font-size: 1rem;
                         font-weight: 600;
+                        @media (max-width: 900px) {
+                            margin-top: 1em;
+                        }
                     }
 
                     .avis {
                         display: flex;
                         align-items: center;
                         gap: 0.5rem;
+                        @media (max-width: 900px) {
+                            margin-top: 2em;
+                        }
 
                         .etoiles {
                             color: #e87edc;
@@ -467,6 +503,9 @@ body {
                     margin-top: 2rem;
                     height: fit-content;
                     text-align: center;
+                    @media (max-width: 900px){
+                        flex-wrap: wrap;
+                    }
 
                     button {
                         background: linear-gradient(to left, $colP, #FFE0FE);
@@ -617,11 +656,6 @@ body {
                 font-size: 1rem;
                 font-weight: 600;
                 transition: background-color 0.3s ease, transform 0.2s ease;
-
-                &:hover {
-                background-color: lighten(#5a2ca0, 10%);
-                transform: scale(1.05);
-                }
 
                 &:active {
                 transform: scale(0.98);

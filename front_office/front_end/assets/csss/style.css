@@ -271,7 +271,7 @@ body header nav nav .notif .icone {
 /* --------------- MAIN du PRODUIT --------------- */
 .main_produit {
   font-family: "Space Grotesk", sans-serif;
-  padding: 4rem 10rem;
+  padding: 4rem clamp(1rem, 8vw, 10rem);
   color: #000;
   margin: 0 auto;
   box-sizing: border-box;
@@ -280,7 +280,7 @@ body header nav nav .notif .icone {
 }
 @media (max-width: 900px) {
   .main_produit {
-    padding: 4rem 1rem;
+    padding: 3rem 1rem;
   }
 }
 .main_produit .fiche-produit {
@@ -294,24 +294,43 @@ body header nav nav .notif .icone {
   align-items: flex-start;
   justify-content: flex-start;
   gap: 3rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 @media (max-width: 900px) {
   .main_produit .fiche-produit .fiche-container {
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    gap: 0;
   }
 }
 .main_produit .fiche-produit .fiche-container .images-produit {
-  flex: 0 0 28rem;
-  width: 28rem;
-  max-width: 100%;
+  flex: 1 1 28rem;
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .images-produit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    width: 100%;
+    max-width: 100%;
+  }
 }
 .main_produit .fiche-produit .fiche-container .images-produit .image-principale {
   width: 80%;
   max-width: 28rem;
+  min-width: 20rem;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .images-produit .image-principale {
+    min-width: 16rem;
+    max-width: 16rem;
+  }
 }
 .main_produit .fiche-produit .fiche-container .images-produit .miniatures {
   display: flex;
@@ -330,13 +349,27 @@ body header nav nav .notif .icone {
 .main_produit .fiche-produit .fiche-container .images-produit .miniatures img:hover {
   transform: scale(1.05);
 }
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .images-produit .miniatures {
+    display: none;
+  }
+}
 .main_produit .fiche-produit .fiche-container .infos-produit {
   flex: 1;
-  min-width: 19rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 28rem;
+  width: auto;
+  margin-left: 5%;
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .infos-produit {
+    margin-left: 0;
+    min-width: 19rem;
+    width: 100%;
+    max-width: 100%;
+  }
 }
 .main_produit .fiche-produit .fiche-container .infos-produit .titre-ligne {
   display: flex;
@@ -368,14 +401,29 @@ body header nav nav .notif .icone {
   justify-content: space-between;
   margin: 0.5rem 0 1.5rem 0;
 }
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .infos-produit .stock-avis {
+    flex-wrap: wrap;
+  }
+}
 .main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .stock-dispo {
   font-size: 1rem;
   font-weight: 600;
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .stock-dispo {
+    margin-top: 1em;
+  }
 }
 .main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .avis {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .avis {
+    margin-top: 2em;
+  }
 }
 .main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .avis .etoiles {
   color: #e87edc;
@@ -404,6 +452,11 @@ body header nav nav .notif .icone {
   height: -moz-fit-content;
   height: fit-content;
   text-align: center;
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .infos-produit .boutons {
+    flex-wrap: wrap;
+  }
 }
 .main_produit .fiche-produit .fiche-container .infos-produit .boutons button {
   background: linear-gradient(to left, #ff6ce2, #FFE0FE);
@@ -534,10 +587,6 @@ body header nav nav .notif .icone {
   font-size: 1rem;
   font-weight: 600;
   transition: background-color 0.3s ease, transform 0.2s ease;
-}
-.main_produit .avis .form-avis button:hover {
-  background-color: rgb(112.5, 55, 200);
-  transform: scale(1.05);
 }
 .main_produit .avis .form-avis button:active {
   transform: scale(0.98);

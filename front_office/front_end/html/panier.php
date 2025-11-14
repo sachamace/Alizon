@@ -94,9 +94,9 @@ try {
     <header>
         <nav>
             <nav>
-                <a href="accueil.html"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
+                <a href="accueil.php"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
                 <a class="notif" href="notification.html"><i class="fa-regular fa-bell icone"></i></a>
-                <form action="recherche.html" method="get" role="search" aria-label="Site search">
+                <form action="recherche.php" method="get" role="search" aria-label="Site search">
                     <label for="site-search"></label>
                     <input type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
                     <button type="submit">Search</button>
@@ -105,14 +105,14 @@ try {
             </nav>
             <nav>
                 <div>
-                    <a href="accueil.html">Accueil</a>
-                    <a href="produitTerroir.html">Produit du Terroir</a>
-                    <a href="modeBretonne.html">Mode Bretonne</a>
+                    <a href="accueil.php">Accueil</a>
+                    <a href="produitTerroir.php">Produit du Terroir</a>
+                    <a href="modeBretonne.php">Mode Bretonne</a>
                     <a href="">Artisanat Local</a>
                     <a href="">Décoration Intérieure</a>
                     <a href="">Epicerie FIne</a>
                 </div>
-                <a href="seconnecter.html"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
+                <a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
             </nav>
         </nav>
     </header>

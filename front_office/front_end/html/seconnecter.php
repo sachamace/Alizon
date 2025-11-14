@@ -18,7 +18,7 @@
             if(strcmp($mdp,$user['mdp']) == 0){
                 $_SESSION['id'] = $user['id_num'];
                 $_SESSION['login'] = $user['login'];
-                header("Location: test.php");
+                header("Location: acuueil.php");
                 exit();
             }
             else{

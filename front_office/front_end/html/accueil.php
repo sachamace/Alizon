@@ -34,18 +34,15 @@
                     <a href="">Décoration Intérieure</a>
                     <a href="">Epicerie FIne</a>
                 </div>
-                <a href="seconnecter.html"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
+                <a href="seconnecter.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
             </nav>
         </nav>
     </header>
     <div>
         <?php
             include 'config.php';
-
+            include 'session.php';
             $stmt = $pdo->query("SELECT version();");
-            echo "<pre>";
-            print_r($stmt->fetch());
-            echo "</pre>";
             // On récupère tout le contenu de la table produit
             $reponse = $pdo->query('SELECT * FROM produit');
             // On affiche chaque entrée une à une

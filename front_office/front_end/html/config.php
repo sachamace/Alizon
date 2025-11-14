@@ -11,7 +11,6 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
     $pdo->exec("SET NAMES 'UTF8'");
-    echo "✅ Connexion réussie à PostgreSQL !";
 } catch (PDOException $e) {
     die("❌ Erreur de connexion : " . $e->getMessage());
 }

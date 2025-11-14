@@ -102,8 +102,8 @@
                     'adresse_mail' => $mail,
                     'id_num' => $id_num
                 ]);
-            // header("Location: connecter.php");
-            // exit();
+            header("Location: connecter.php");
+            exit();
             //}   
         }
     }

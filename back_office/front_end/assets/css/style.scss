@@ -1,83 +1,42 @@
 @use 'sass:color';
 @use 'sass:map';
 @use 'sass:math';
+
 @use "variable" as *;
 @use "mixin" as *;
 
-// =============================================================================
-// Tableau de bord
-// =============================================================================
+
+
+/* -----------------------------------------
+
+Structure du site
+
+------------------------------------------*/
+
 body {
   margin: 0;
   font-family: $font-family;
   background-color: $background-color;
 }
 
-header {
-  a,
-  a:hover,
-  a.active {
-    color: $black;
-    text-decoration: none;
-  }
-}
-
-/* Structure principale */
+/* Bloc principale du main, la seul partie qui change dans le index.php en gros */
 .dashboard {
   display: flex;
   height: 100vh;
 }
-.body{
-  &__creercompte{
-    width: 1440px;
-    height: 1024px;
-    background: linear-gradient(to left,$primary-color, $secondary-color);
-    display: flex;
-    justify-content: center;
-  }
-}
-.form{
-  &__creercompte{
-    margin-top: 9%;
-    width: 750px;
-    height: 750px;
-    background-color: white;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    gap: 18px;
-    align-items: center;
-    
-  }
-}
-.input{
-  &__creercompte{
-    padding: 5px;
-    background-color: #D9D9D9;
-    border-radius: 10px;
-    width: 369px;
-    height: 34px;
-    &--submit{
-      background: linear-gradient(to left, $primary-color, $secondary-color);
-      border-radius: 10px;
-      width: 207px;
-      height: 34px;
-    }
-  }
-}
-/* --- Barre latérale --- */
+
+/* Barre latérale gauche s*/
 .sidebar {
   background: linear-gradient(to left, $primary-color, $secondary-color);
   width: $sidebar-width;
   @include flex-column;
   color: $black;
-  
-  .logo {
+
+  img {
     padding: 15px;
   }
 
-  .menu {
+  nav {
     @include flex-column;
     margin-top: 20px;
 
@@ -103,127 +62,641 @@ header {
   }
 }
 
-/* --- Contenu principal --- */
-main {
-  flex: 1;
-  @include flex-column;
+/* Barre du haut */
+.topbar {
+  @include flex-center;
+  justify-content: space-between;
   background: $white;
+  padding: 59px 25px;
+  border-bottom: 1px solid $gray-medium;
 
-  /* --- Barre du haut --- */
-  .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: $white;
-    padding: 59px 25px;
-    border-bottom: 1px solid $gray-medium;
-  }
-  
-  .user-info {
+  div:nth-child(1) {
     @include flex-center;
     gap: 10px;
     font-weight: bold;
     font-size: 2em;
   }
 
-  /* --- Contenu --- */
-  .content {
-    display: grid;
-    padding: 20px;
-    grid-template-columns: repeat(3, 1fr);
-    overflow-y: scroll;
-    scroll-behavior: smooth;
-    gap: 20px;
+  a,
+  a:hover,
+  a.active {
+    color: $black;
+    text-decoration: none;
+  }
+}
 
-    a {
-      text-decoration: none;
-      color: inherit;
+/* Structure du main */
+main {
+  flex: 1;
+  @include flex-column;
+  background: $white;
+}
+
+/* -----------------------------------------
+
+Fin de la structure du site
+
+------------------------------------------*/
+
+
+
+
+
+
+
+
+
+/* -----------------------------------------
+
+Structure de Consulter, Créer, Modifier produit
+
+------------------------------------------*/
+
+.produit-container {
+  background-color: $white;
+  @include flex-column;
+  padding: 20px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+
+  h2 {
+    font-size: 1.8rem;
+    color: $primary-color;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  // Grille principale
+  .produit-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    flex: 1;
+
+    // Partie gauche - Informations générales + Média
+    .produit-infos {
+      background-color: $gray-light;
+      border: 1px solid $gray-medium;
+      border-radius: 10px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      >h3 {
+        font-size: 1.2rem;
+        color: $black;
+        margin: 0 0 1rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid $gray-medium;
+      }
+
+      article {
+        border-bottom: 1px solid $gray-medium;
+        padding-bottom: 1rem;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        h3 {
+          font-size: 0.95rem;
+          color: $gray-h3-produit;
+          margin: 0 0 0.5rem 0;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        p {
+          color: #1f2937;
+          font-weight: 500;
+          margin: 0;
+          font-size: 1rem;
+        }
+
+        .produit-images {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+          align-items: center;
+          margin-top: 10px;
+
+          // Image média dans la partie gauche
+          img {
+            display: block;
+            width: 100%;
+            max-width: 150px;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid $gray-medium;
+            margin-top: 0.5rem;
+          }
+        }
+      }
     }
 
-    article {
-      @include card-style;
-      @include hover-lift;
+    // Partie droite - Prix, Stock, Visibilité
+    .produit-prix-stock {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
 
-      // Badge de statut
-      .statut-badge {
-        @include status-badge;
-      }
+      article {
+        background-color: #fafafa;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 1.5rem;
 
-      // Styles pour les différents statuts des produits
-      &.inactif {
-        @include product-status($status-inactive);
-        opacity: 0.6;
-      }
-
-      &.rupture-stock {
-        @include product-status($status-out-of-stock);
-      }
-
-      &.stock-faible {
-        @include product-status($status-low-stock);
-      }
-
-      &.stock-normal {
-        @include product-status($status-active);
-      }
-
-      img {
-        display: block;
-        margin: 0 auto;
-        max-width: 100%;
-        height: auto;
-        border-radius: math.div($border-radius, 2);
-      }
-
-      .titre {
-        margin: 10px 0 5px;
-        font-size: 1.2em;
-        color: $gray-darker;
-      }
-
-      .description {
-        color: $gray-dark;
-        font-size: 0.9em;
-        margin: 5px 0;
-        flex-grow: 1;
-      }
-
-      .stock {
-        font-size: 0.9em;
-        margin: 5px 0;
-        
-        // Styles pour le texte de stock selon le statut
-        .alerte {
-          color: $status-out-of-stock;
-          font-weight: bold;
+        >h3 {
+          font-size: 1.2rem;
+          color: #111827;
+          margin: 0 0 1rem 0;
+          padding-bottom: 0.5rem;
+          border-bottom: 2px solid #e0e0e0;
         }
 
-        &.rupture-stock {
-          @include stock-text($status-out-of-stock);
+        // Prix avec sous-sections
+        h4 {
+          font-size: 0.9rem;
+          color: #6b7280;
+          margin: 1rem 0 0.3rem 0;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 600;
+
+          &:first-of-type {
+            margin-top: 0;
+          }
         }
 
-        &.stock-faible {
-          @include stock-text($status-warning-text);
+        p {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #1f2937;
+          margin: 0 0 0.8rem 0;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
         }
 
-        &.inactif {
-          @include stock-text($status-inactive);
+        // Options de visibilité
+        .visibility-option {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-top: 0.8rem;
+
+          &:first-of-type {
+            margin-top: 0.5rem;
+          }
+
+          input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #3b82f6;
+          }
+
+          label {
+            font-size: 0.95rem;
+            color: #374151;
+            font-weight: 500;
+          }
         }
       }
+    }
+  }
 
-      .prix {
-        font-size: 1.3em;
-        font-weight: bold;
-        color: $primary-color;
-        margin-top: 10px;
-        
-        
+  // Actions (boutons en bas)
+  .produit-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e0e0e0;
+
+    a,
+    button,
+    input[type="submit"] {
+      @include button-base;
+    }
+
+    .modifier,
+    .confirmer {
+      @include button-variant($success-color);
+    }
+
+    .annuler {
+      @include button-variant($cancel-color);
+    }
+
+    .supprimer {
+      @include button-variant($danger-color);
+    }
+  }
+
+  // Styles pour les inputs
+  input[type="text"] {
+    @include input-base;
+
+    &:hover {
+      border-color: #bdc3c7;
+      background-color: $white;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      background-color: $white;
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    &::placeholder {
+      color: #bdc3c7;
+    }
+  }
+
+  select {
+    @include input-base;
+
+    &:hover {
+      border-color: #bdc3c7;
+      background-color: $white;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      background-color: $white;
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    &::placeholder {
+      color: #bdc3c7;
+    }
+  }
+
+  //Partie modification / création
+  input[type="file"] {
+    padding: 0.5rem;
+    border: 2px dashed $gray-medium;
+    border-radius: 8px;
+    background-color: $white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+
+    &:hover {
+      border-color: $primary-color;
+      background-color: $white;
+    }
+
+    &::file-selector-button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      background-color: $primary-color;
+      color: $white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-right: 1rem;
+
+      &:hover {
+        background-color: darken($primary-color, 8%);
       }
+    }
+  }
+
+  // Galerie de médias
+  .media-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: $white;
+    border-radius: 8px;
+    border: 2px solid $gray-medium;
+
+    .media-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      margin-right: 10px;
+    }
+
+
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 2px solid $gray-medium;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        border-color: $primary-color;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    button {
+      height: 20px;
+      @include button-variant($danger-color);
+      border-radius: 6px;
+      border: none;
+      transition: all 0.3s ease;
+    }
+
+    .image-delete {
+      @include flex-column
+    }
+
+    p {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #95a5a6;
+      font-style: italic;
+    }
+  }
+
+  .media-upload {
+    label {
+      display: block;
+      font-size: 0.9rem;
+      color: #7f8c8d;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
     }
   }
 }
 
-/* --- Page détail produit --- */
+/* -----------------------------------------
+
+Fin de structure de Consulter, Créer, Modifier produit
+
+------------------------------------------*/
+
+
+
+
+
+/* -----------------------------------------
+
+Structure du tableau de bord
+
+------------------------------------------*/
+
+//Case article 
+.content {
+  display: grid;
+  padding: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  gap: 20px;
+  grid-auto-rows: auto;
+  align-items: start;
+
+  a {
+    display: block;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+
+  article {
+    @include card-style;
+    @include hover-lift;
+
+    .statut-badge {
+      @include status-badge;
+    }
+
+    &.inactif {
+      @include product-status($status-inactive);
+      opacity: 0.6;
+    }
+
+    &.rupture-stock {
+      @include product-status($status-out-of-stock);
+    }
+
+    &.stock-faible {
+      @include product-status($status-low-stock);
+    }
+
+    &.stock-normal {
+      @include product-status($status-active);
+    }
+
+    img {
+      display: block;
+      margin: 0 auto;
+      max-width: 300px;
+      max-height: 250px;
+      width: auto;
+      height: auto;
+      border-radius: math.div($border-radius, 2);
+    }
+
+    .titre {
+      margin: 10px 0 5px;
+      font-size: 1.2em;
+      color: $gray-darker;
+    }
+
+    .description {
+      color: $gray-dark;
+      font-size: 0.9em;
+      margin: 5px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      /* 1 ligne max */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: break-word;
+      /* cette ligne force la coupure */
+    }
+
+    .stock {
+      font-size: 0.9em;
+      margin: 5px 0;
+
+      .alerte {
+        color: $status-out-of-stock;
+        font-weight: bold;
+      }
+
+      &.rupture-stock {
+        @include stock-text($status-out-of-stock);
+      }
+
+      &.stock-faible {
+        @include stock-text($status-warning-text);
+      }
+
+      &.inactif {
+        @include stock-text($status-inactive);
+      }
+    }
+
+    .prix {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: $primary-color;
+      margin-top: 10px;
+
+      &:hover {
+        color: darken-color($primary-color, 15%);
+      }
+    }
+  }
+
+  .creer_produit {
+
+    // Style spécifique pour la carte de création
+    background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+    color: $white;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    border: 3px dashed rgba($white, 0.3);
+    transition: all $transition-speed ease;
+
+    // Animation au survol
+    &:hover {
+      border-color: $white;
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 15px 40px rgba($black, 0.2);
+
+      // Animation du plus
+      p:last-child {
+        transform: rotate(90deg) scale(1.2);
+      }
+    }
+
+    // Effet de brillance au survol
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg,
+          transparent,
+          rgba($white, 0.1),
+          transparent);
+      transform: rotate(45deg);
+      transition: all 0.6s ease;
+    }
+
+    &:hover::before {
+      left: 100%;
+    }
+
+    // Texte "Créer un produit"
+    p:first-child {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 0 0 20px 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba($black, 0.2);
+      z-index: 1;
+    }
+
+    // Le signe "+"
+    p:last-child {
+      font-size: 5em;
+      font-weight: bold;
+      margin: 0;
+      line-height: 1;
+      transition: transform 0.3s ease;
+      text-shadow: 3px 3px 6px rgba($black, 0.3);
+      z-index: 1;
+    }
+  }
+}
+
+/* -----------------------------------------
+
+Fin de structure du tableau de bord
+
+------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+.body {
+  &__creercompte {
+    width: 1440px;
+    height: 1024px;
+    background: linear-gradient(to left, $primary-color, $secondary-color);
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.form {
+  &__creercompte {
+    margin-top: 9%;
+    width: 750px;
+    height: 750px;
+    background-color: white;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 18px;
+    align-items: center;
+
+  }
+}
+
+.input {
+  &__creercompte {
+    padding: 5px;
+    background-color: #D9D9D9;
+    border-radius: 10px;
+    width: 369px;
+    height: 34px;
+
+    &--submit {
+      background: linear-gradient(to left, $primary-color, $secondary-color);
+      border-radius: 10px;
+      width: 207px;
+      height: 34px;
+    }
+  }
+}
+
+
+
+/* -----------------------------------------
+
+Structure du dashboard produit
+
+------------------------------------------*/
+
 .product-detail {
   padding: 20px;
   position: relative;
@@ -233,20 +706,20 @@ main {
     position: relative;
     display: inline-block;
     margin-bottom: 20px;
-    
+
     &.inactif {
       background-color: $status-inactive;
     }
-    
+
     &.rupture-stock {
       background-color: $status-out-of-stock;
     }
-    
+
     &.stock-faible {
       background-color: $status-low-stock;
       color: $black;
     }
-    
+
     &.stock-normal {
       background-color: $status-active;
     }
@@ -254,26 +727,26 @@ main {
 
   .product-info {
     margin-top: 20px;
-    
+
     p {
       margin: 10px 0;
       font-size: 1.1em;
     }
-    
+
     .stock {
       .alerte {
         color: $status-out-of-stock;
         font-weight: bold;
       }
-      
+
       &.rupture-stock {
         @include stock-text($status-out-of-stock);
       }
-      
+
       &.stock-faible {
         @include stock-text($status-warning-text);
       }
-      
+
       &.inactif {
         @include stock-text($status-inactive);
       }
@@ -289,12 +762,21 @@ main {
     text-decoration: none;
     border-radius: math.div($border-radius, 2);
     @include transition(background-color);
-    
+
     &:hover {
       background-color: color.adjust($primary-color, $lightness: -10%);
     }
   }
 }
+
+/* -----------------------------------------
+
+Fin de structure du dashboard produit
+
+------------------------------------------*/
+
+
+
 
 
 // =============================================================================
@@ -317,7 +799,7 @@ main {
   position: absolute;
   top: 30px;
   left: 30px;
-  
+
   img {
     max-width: 150px;
     height: auto;
@@ -337,14 +819,14 @@ main {
 
 .header__connexion {
   margin-bottom: 30px;
-  
+
   h1 {
     color: $black;
     font-size: 2.5em;
     font-weight: bold;
     margin: 0 0 10px 0;
   }
-  
+
   h2 {
     color: $black;
     font-size: 1.5em;
@@ -381,13 +863,13 @@ main {
   background-color: lighten($gray-light, 10%);
   transition: all $transition-speed ease;
   box-sizing: border-box;
-  
+
   &:focus {
     outline: none;
     border-color: $primary-color;
     background-color: $white;
   }
-  
+
   &::placeholder {
     color: $gray-dark;
   }
@@ -399,7 +881,7 @@ main {
   font-size: 0.9em;
   align-self: flex-end;
   margin-top: -10px;
-  
+
   &:hover {
     color: color.adjust($primary-color, $lightness: -15%);
     text-decoration: underline;
@@ -418,12 +900,12 @@ main {
   cursor: pointer;
   transition: all $transition-speed ease;
   margin-top: 10px;
-  
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba($primary-color, 0.3);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -434,7 +916,7 @@ main {
   font-size: 0.9em;
   margin: 10px 0;
   position: relative;
-  
+
   &::before,
   &::after {
     content: '';
@@ -444,11 +926,11 @@ main {
     height: 1px;
     background: $gray-light;
   }
-  
+
   &::before {
     left: 0;
   }
-  
+
   &::after {
     right: 0;
   }
@@ -467,13 +949,13 @@ main {
   text-decoration: none;
   display: block;
   transition: all $transition-speed ease;
-  
+
   &:hover {
     background: $primary-color;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba($primary-color, 0.2);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -486,4 +968,3 @@ main {
   margin-top: 5px;
   display: block;
 }
-

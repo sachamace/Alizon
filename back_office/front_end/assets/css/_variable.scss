@@ -3,10 +3,22 @@ $secondary-color: #A9E5FF;
 $background-color: #e6e6e6;
 $white: #fff;
 $black: #000;
-$gray-light: #ddd;
-$gray-medium: #ccc;
+$gray-light: #fafafa;
+$gray-medium: #e0e0e0;
 $gray-dark: #666;
 $gray-darker: #333;
+$gray-h3-produit: #6b7280;
+$success-color: #27ae60;
+$cancel-color: #95a5a6;
+$danger-color: #ef4444;
+
+
+// Couleurs des statuts
+$status-active: #28a745;
+$status-inactive: #6c757d;
+$status-low-stock: #ffc107;
+$status-out-of-stock: #dc3545;
+$status-warning-text: #856404;
 
 // Couleurs des statuts
 $status-active: #28a745;

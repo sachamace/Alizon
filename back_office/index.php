@@ -1,17 +1,21 @@
-
 <?php
+session_start();
 include 'config.php';
 
-$stmt = $pdo->query("SELECT version();");
-echo "<pre>";
-print_r($stmt->fetch());
-echo "</pre>";
+// Vérifier si l'utilisateur est connecté, sinon rediriger vers la page de connexion
+if (!isset($_SESSION['est_connecte']) || $_SESSION['est_connecte'] !== true) {
+    header("Location: connecter.php");
+    exit();
+}
 
+$pdo->exec("SET search_path TO bigou;");
+
+if (isset($_GET['page'])) {
+    $page = $_GET['page'];
+} else {
+    $page = '';
+}
 ?>
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -29,23 +33,18 @@ echo "</pre>";
         <?php include 'sidebar.php' ?>
 
         <main>
-            <?php include 'header.php' ?>
-            
-            <?php if (isset($_GET['page'])) {
-                $page = $_GET['page'];
-            } else {
-                $page = 'dashboard';
+            <?php include 'topbar.php' ?>
+
+            <?php
+            if ($page !== '') {
+                $file = "content/$page.php";
+                if (file_exists($file)) {
+                    include $file;
+                } else {
+                    echo "<p>Page introuvable</p>";
+                }
             }
-
-            $file = "content/$page.php";
-
-            if (file_exists($file)) {
-                include $file;
-            } else {
-                echo "Page introuvable";
-                print_r($_GET['page']);
-                
-            } ?>
+            ?>
         </main>
     </div>
 </body>

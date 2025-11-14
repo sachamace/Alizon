@@ -17,9 +17,9 @@ try {
 try {
     $stmt = $pdo->prepare("
         SELECT p.id_produit, p.nom_produit, p.description_produit, p.prix_ttc, 
-               p.stock_disponible, p.est_actif, p.seuil_alerte, c.libelle as categorie
+               p.stock_disponible, p.est_actif, p.seuil_alerte, p.categorie,
+               (SELECT chemin_image FROM media_produit WHERE id_produit = p.id_produit LIMIT 1) AS image_path
         FROM public.produit p
-        LEFT JOIN public.categorie c ON p.id_categorie = c.id_categorie
         WHERE p.id_vendeur = ?
         ORDER BY p.est_actif DESC, p.id_produit
     ");
@@ -31,7 +31,12 @@ try {
 ?>
 
 <section class="content">
-    
+    <a href="?page=produit&type=creer">
+        <article class="creer_produit">
+            <p>Créer un produit</p>
+            <p>+</p>
+        </article>
+    </a>
 
     
     <?php if (empty($produits)): ?>
@@ -56,10 +61,12 @@ try {
                 $statut_text = 'Actif';
             }
         ?>
-            <a href="?page=produit&id=<?= $produit['id_produit'] ?>">
+            <a href="?page=produit&id=<?= $produit['id_produit'] ?>&type=consulter">
                 <article class="<?= $class_article ?>">
                     <div class="statut-badge"><?= $statut_text ?></div>
-                    <img src="front_end/assets/images/template.jpg" alt="<?= htmlentities($produit['nom_produit']) ?>" width="350" height="225">
+                    <img src="<?= $produit['image_path'] ? htmlentities($produit['image_path']) : 'front_end/assets/images/template.jpg' ?>" 
+                        alt="<?= htmlentities($produit['nom_produit']) ?>" 
+                        width="350" height="225">
                     <h2 class="titre"><?= htmlentities($produit['nom_produit']) ?></h2>
                     <p class="description"><?= htmlentities($produit['description_produit']) ?></p>
                     <p class="description">Catégorie : <?= htmlentities($produit['categorie']) ?></p>

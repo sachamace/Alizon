@@ -1,7 +1,7 @@
 <aside class="sidebar">
-    <a href="index.php"><img src="front_end/assets/images/logo_Alizon.png" alt="Logo Alizon" class="logo" width="270" height ="115"></a>
+    <a href="index.php"><img src="front_end/assets/images/logo_Alizon.png" alt="Logo Alizon" width="270" height ="115"></a>
 
-    <nav class="menu">
+    <nav>
         <a href="?page=dashboard" <?php if($_GET['page']=='dashboard'){echo ('class="active"');}?>><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                 class="bi bi-display" viewBox="0 0 16 16">
                 <path

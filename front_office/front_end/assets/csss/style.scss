@@ -12,8 +12,17 @@ body {
     font-family: "Space Grotesk", sans-serif;
 
     header {
+body {
+    background-color: #E8E8E8;
+    margin: 0;
+    padding: 0;
+    font-family: "Space Grotesk", sans-serif;
+
+    header {
         height: 127px;
         background-color: #FFFFFF;
+
+        nav {
 
         nav {
             display: flex;
@@ -21,7 +30,13 @@ body {
 
             /* empile les deux nav verticalement */
             nav {
+            flex-direction: column;
+
+            /* empile les deux nav verticalement */
+            nav {
                 display: flex;
+                flex-direction: row;
+                /* aligne le contenu de chaque nav horizontalement */
                 flex-direction: row;
                 /* aligne le contenu de chaque nav horizontalement */
                 align-items: center;
@@ -30,8 +45,13 @@ body {
                 margin-right: 10px;
 
                 &:first-child {
+
+                &:first-child {
                     display: flex;
                     align-items: center;
+
+                    a[href="panier.html"] {
+                        /* Le lien “Panier” seul, collé à droite */
 
                     a[href="panier.html"] {
                         /* Le lien “Panier” seul, collé à droite */
@@ -43,12 +63,20 @@ body {
 
                         &:last-child,
                         :nth-last-child(2) {
+
+                        &:last-child,
+                        :nth-last-child(2) {
                             margin-right: 0;
                         }
 
                         &:nth-child(2) {
+
+                        &:nth-child(2) {
                             margin-left: 42.625px;
                         }
+
+                        &:visited,
+                        &:hover {
 
                         &:visited,
                         &:hover {
@@ -60,7 +88,11 @@ body {
                     }
 
                     form {
+
+                    form {
                         margin-left: 42.625px;
+
+                        input {
 
                         input {
                             width: 1426.15px;
@@ -69,9 +101,12 @@ body {
                             border-color: $primary-color;
                             padding: 10px 10px 10px 40px;
                             background-image: url(../images/magnifying-glass-solid-full\ \(1\).svg);
+                            background-image: url(../images/magnifying-glass-solid-full\ \(1\).svg);
                             background-repeat: no-repeat;
                             background-position: left;
                         }
+
+                        button {
 
                         button {
                             display: none;
@@ -81,9 +116,15 @@ body {
 
                 &:last-child {
                     /* Le deuxième nav du header (celui du bas) */
+
+                &:last-child {
+                    /* Le deuxième nav du header (celui du bas) */
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
+
+                    div {
+                        /* Le conteneur des trois liens à gauche */
 
                     div {
                         /* Le conteneur des trois liens à gauche */
@@ -104,23 +145,33 @@ body {
 
                     a {
                         /* Le lien "Mon Compte" tout à droite */
+
+                    a {
+                        /* Le lien "Mon Compte" tout à droite */
                         margin-left: auto;
                         text-decoration: none;
                         color: rgb(0, 0, 0);
                         font-size: 23px;
                         font-weight: bold;
+                        font-weight: bold;
                     }
                 }
+
+                .notif {
 
                 .notif {
                     width: 54px;
                     height: 54px;
 
                     .icone {
+
+                    .icone {
                         display: inline-block;
                         font-size: 45px;
                         text-align: center;
                         vertical-align: middle;
+                        margin-right: 8px;
+                        /* petit espace avant le texte comme “Panier” */
                         margin-right: 8px;
                         /* petit espace avant le texte comme “Panier” */
                     }

@@ -1,6 +1,7 @@
 // Mixins avec les fonctions Sass
 @use "variable" as *;
 @use 'sass:color';
+
 @mixin flex-column {
   display: flex;
   flex-direction: column;
@@ -23,7 +24,7 @@
 
 @mixin hover-lift {
   @include transition(transform box-shadow);
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 10px rgba($black, 0.15);
@@ -48,6 +49,10 @@
   padding: 15px;
   border-radius: $border-radius;
   @include flex-column;
+  justify-content: space-between;
+  height: 100%; 
+  box-sizing: border-box;
+  overflow: hidden;
   box-shadow: 0 2px 5px rgba($black, 0.1);
   @include transition;
   cursor: pointer;
@@ -86,4 +91,49 @@
 @mixin stock-text($color) {
   color: $color;
   font-weight: bold;
+}
+
+@mixin input-base {
+  width: 100%;
+  padding: 0.50rem 1rem;
+  border: 2px solid $gray-medium;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #2c3e50;
+  background-color: $white;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  @include transition(all);
+}
+
+@mixin button-base {
+  border: none;
+  border-radius: 8px;
+  padding: 0.8em 2em;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  @include transition(all);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+@mixin button-variant($bg-color, $text-color: $white) {
+  background-color: $bg-color;
+  color: $text-color;
+
+  &:hover {
+    background-color: darken($bg-color, 8%);
+  }
 }

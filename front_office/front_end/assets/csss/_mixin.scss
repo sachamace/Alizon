@@ -1,0 +1,89 @@
+// Mixins avec les fonctions Sass
+@use "variables" as *;
+@use 'sass:color';
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin transition($property: all) {
+  transition: $property $transition-speed ease;
+}
+
+@mixin hover-lift {
+  @include transition(transform box-shadow);
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba($black, 0.15);
+  }
+}
+
+@mixin menu-item-active {
+  background: rgba($white, 0.3);
+  border-left: 4px solid $white;
+}
+
+@mixin disabled-state {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: none !important;
+}
+
+@mixin card-style {
+  background-color: $white;
+  border: 1px solid $gray-light;
+  padding: 15px;
+  border-radius: $border-radius;
+  @include flex-column;
+  box-shadow: 0 2px 5px rgba($black, 0.1);
+  @include transition;
+  cursor: pointer;
+  position: relative;
+}
+
+// Mixins pour les statuts des produits
+@mixin status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.8em;
+  font-weight: bold;
+  color: white;
+  z-index: 10;
+}
+
+@mixin product-status($status-color, $border-color: null) {
+  @if $border-color == null {
+    $border-color: $status-color;
+  }
+  
+  border: 2px solid $border-color;
+  
+  .statut-badge {
+    background-color: $status-color;
+    
+    @if $status-color == $status-low-stock {
+      color: $black;
+    }
+  }
+}
+
+@mixin stock-text($color) {
+  color: $color;
+  font-weight: bold;
+}

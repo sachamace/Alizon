@@ -1,8 +1,6 @@
 <?php
     include 'config.php';
     $stmt = $pdo->query("SELECT version();");
-?>
-<?php
     // Init des variables erreur et des valeurs qui seront dans les input du formulaire.
     $erreur_siren ="";
     $erreur_tel ="";
@@ -16,6 +14,7 @@
     $num_entreprise = "" ;
     $mdpconfirm = "";
     $raison_sociale = "" ;
+    $erreur_mail = "";
     // Si le bouton créer compte a été cliqué alors .
     if($_SERVER["REQUEST_METHOD"] === "POST"){
         // Ajout de chaque input à une valeur.
@@ -27,7 +26,35 @@
         $num_entreprise = trim($_POST['nom_entreprise']);
         $raison_sociale = trim($_POST['raison']);
         $fin_raison = $num_entreprise . " " . $raison_sociale;
-
+        // TEST SUR Base de données 
+        // TEST pour le num_siren.
+        $siren_sql = "SELECT num_siren FROM public.compte_vendeur";
+        $stmt_siren = $pdo->query($siren_sql);
+        $tab_num_siren = $stmt_siren->fetchAll(PDO::FETCH_COLUMN, 0);
+        foreach ($tab_num_siren as $siren) {
+            if($num_siren == $siren){
+                $erreur_siren = "Il existe déja !";
+            }
+        }
+        // TEST POUR email
+        $email_sql = "SELECT adresse_mail FROM public.compte_vendeur";
+        $stmt_email= $pdo->query($email_sql);
+        $tab_email = $stmt_email->fetchAll(PDO::FETCH_COLUMN, 0);
+        
+        foreach ($tab_email as $email) {
+            if($mail == $email){
+                $erreur_mail = "Il existe déja !";
+            }
+        }
+        // TEST POUR Numéro de Téléphone
+        $tel_sql = "SELECT num_tel FROM public.compte_vendeur";
+        $stmt_tel= $pdo->query($tel_sql);
+        $tab_tel = $stmt_tel->fetchAll(PDO::FETCH_COLUMN, 0);
+        foreach ($tab_tel as $telephone) {
+            if($tel == $telephone){
+                $erreur_tel = "Il existe déja !";
+            }
+        }
         if (!preg_match("/^[0-9]{9}$/", $num_siren)) {
             $erreur_siren = "Total de chiffre invalides ! Nombre de chiffre qu'on requière = 9";
         }
@@ -48,17 +75,17 @@
             $erreur_confirm,
             $erreur_tel,
             $erreur_mdp,
-            $erreur_raison
+            $erreur_raison,
+            $erreur_mail
         ];
         if(!array_filter($erreurs)){ // array_filter permet de vérifier si y'a des élements dans la array en gros si y'a rien ça fait la condition .
             // La parties pour créer l'identifiants
             //if(){
-                $mdp_hash = password_hash($mdp, PASSWORD_DEFAULT); // Permet le hachage du mot de passe.
                 $sqlident = "INSERT INTO public.identifiants (login,mdp) VALUES (:login, :mdp)";
                 $stmt = $pdo->prepare($sqlident);
                 $stmt->execute([
                     'login' => $mail,
-                    'mdp' => $mdp_hash
+                    'mdp' => $mdp
                 ]);
                 // Partie pour récupérer le numéro de l'identifiants qu'on vient de créer .
                 $id_num_sql = "SELECT id_num FROM public.identifiants WHERE login = :login";
@@ -75,6 +102,8 @@
                     'adresse_mail' => $mail,
                     'id_num' => $id_num
                 ]);
+            // header("Location: connecter.php");
+            // exit();
             //}   
         }
     }
@@ -93,68 +122,102 @@
 
 </head>
 
-<body class="body__creercompte">
-    <form class="form__creercompte" include ="index.php" method="post" enctype = "multipart/form-data">
-        <h2>Créer un compte</h2>
-        <!-- Numéro de Siren -->
-        <input class="input__creercompte" type="text"  name="num_siren" placeholder="Numéro de SIREN *" value ="<?= $num_siren?>"required />
-        <?php
-            if (!empty($erreur_siren)){
-                echo "<span class='error-message'>$erreur_siren</span>";
-            }
-        ?>
-        <br />
-        <!-- Raison Sociale -->
-        <select class="select__raison"  name="raison" value="<?= $raison_sociale?>">
-                <option disabled selected>Raison Sociale</option>
-                <option value="SA">SA</option>
-                <option value="SAS">SAS</option>
-                <option value="SARL">SARL</option>
-                <option value="EURL">EURL</option>
-                <option value="SASU">SASU</option>
-                <option value="SCP">SCP</option>
-        </select>
-        <br />
-        <?php
-            if (!empty($erreur_raison)){
-                echo "<span>$erreur_raison</span>";
-            } 
-        ?>
+<body class="body__connexion">
+    <div class="logo__connexion">
+        <img src="front_end/assets/images/logo_Alizon.png" alt="Logo Alizon" width="150">
+    </div>
+    
+    <div class="container__connexion">
+        <div class="header__connexion">
+            <h2>Créer un compte</h2>
+        </div>
+        <form action ="" class="form__connexion" include ="index.php" method="post" enctype = "multipart/form-data">
+            <div class="input-group">
+                <!-- Numéro de Siren -->
+                <label for="num_siren" class="input-label">Nuémro de SIREN</label>
+                <input class="input__connexion" type="text"  name="num_siren" placeholder="Numéro de SIREN *" value ="<?= $num_siren?>"required />
+                <?php
+                    if (!empty($erreur_siren)){
+                        echo $erreur_siren;
+                    }
+                ?>
+            </div>
+            <!-- Raison Sociale -->
+            <div class="input-group">
+                <label for="raison" class="input-label">Raison Sociale</label>
+                <select class="input__connexion "  name="raison" value="<?= $raison_sociale?>">
+                        <option disabled selected>Raison Sociale</option>
+                        <option value="SA">SA</option>
+                        <option value="SAS">SAS</option>
+                        <option value="SARL">SARL</option>
+                        <option value="EURL">EURL</option>
+                        <option value="SASU">SASU</option>
+                        <option value="SCP">SCP</option>
+                </select>
+                <?php
+                    if (!empty($erreur_raison)){
+                        echo "<span>$erreur_raison</span>";
+                    } 
+                ?>
+            </div>
 
+            <div class="input-group">
+                <!-- Numéro de Téléphone -->
+                <label for="tel" class="input-label">Numéro de Téléphone</label>
+                <input class="input__connexion" type="tel" id="tel" name="tel" placeholder="Numéro de Téléphone *" value ="<?= $tel?>"required />
+                <?php
+                    if (!empty($erreur_tel)){
+                        echo "<span>$erreur_tel</span>";
+                    }
+                ?>
+            </div>
 
-        <!-- Numéro de Téléphone -->
-        <input class="input__creercompte" type="tel" id="tel" name="tel" placeholder="Numéro de Téléphone *" value ="<?= $tel?>"required />
-        <br />
-        <?php
-            if (!empty($erreur_tel)){
-                echo "<span>$erreur_tel</span>";
-            }
-        ?>
-        <!-- Nom de l'entreprise -->
-        <input class="input__creercompte" type="text"  name="nom_entreprise" placeholder="Nom de votre entreprise *" value ="<?= $num_entreprise?>"required />
-        <!-- Email -->
-        <input class="input__creercompte" type="email"  name="email" placeholder="Adresse Mail *" value ="<?= $mail?>"required />
-        <br />
-        <!-- Mot de passe -->
-        <input class="input__creercompte" type="password"  name="motdepasse" placeholder="Mot de passe *" value ="<?= $mdp?>"required />
-        <br />
-        <?php
-            if (!empty($erreur_mdp)){
-                echo "<span>$erreur_mdp</span>";
-            }
-        ?>
-        <!-- Confirmer le mot de passe -->
-        <input class="input__creercompte"  type="password" name="confirm" placeholder="Confirmer le mot de passe *" required />
-        <!-- Bouton de création de compte -->
-        <br />
-        <?php
-            if(!empty($erreur_confirm)){
-                echo "<span>$erreur_confirm</span>";
-            }
-        ?>
-        <input class="input__creercompte--submit" type="submit" value="Créer un compte" />
+            <div class="input-group">
+                <!-- Nom de l'entreprise -->
+                <label for="nom" class="input-label">Nom de votre entreprise</label>
+                <input class="input__connexion" type="text"  name="nom_entreprise" placeholder="Nom de votre entreprise *" value ="<?= $num_entreprise?>"required />
+            </div>
+            
+            <div class="input-group">
+                <!-- Email -->
+                <label for="mail" class="input-label">E-Mail</label>
+                <input class="input__connexion" type="email"  name="email" placeholder="Adresse Mail *" value ="<?= $mail?>"required />
+                <?php
+                    if (!empty($erreur_mail)){
+                        echo "<span>$erreur_mail</span>";
+                    }
+                ?>
+            </div>
+            
+            <div class="input-group">
+                <!-- Mot de passe -->
+                <label for="mdp" class="input-label">Mot de passe</label>
+                <input class="input__connexion" type="password"  name="motdepasse" placeholder="Mot de passe *" value ="<?= $mdp?>"required />
+                <?php
+                    if (!empty($erreur_mdp)){
+                        echo "<span>$erreur_mdp</span>";
+                    }
+                ?>
+            </div>
 
-        <label><a href="connecter.php">Se connecter</a></label>
-    </form>
+            <!-- Confirmer le mot de passe -->
+            <div class="input-group">
+                <label for="confirm" class="input-label">Confirmer le mot de passe</label>
+                <input class="input__connexion"  type="password" name="confirm" placeholder="Confirmer le mot de passe *" required />
+                <!-- Bouton de création de compte -->
+                <?php
+                    if(!empty($erreur_confirm)){
+                        echo "<span>$erreur_confirm</span>";
+                    }
+                ?>
+            </div>
+
+            <button type="submit" class="btn__connexion">Créer un compte</button>
+            
+            <div class="separator"></div>
+            
+            <a href="connecter.php" class="btn__creer-compte">Se connecter</a>
+        </form>
+    </div>
 </body>
 </html>

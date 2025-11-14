@@ -11,8 +11,8 @@
     if($_SERVER["REQUEST_METHOD"]==="POST"){
         $email = trim($_POST['adresse_mail']);
         $mdp = trim($_POST['motdepasse']);
-        $user_sql = $pdo->prepare("SELECT * FROM public.identifiants WHERE login = :login");
-        $user_sql->execute(['login' => $email]);
+        $user_sql = $pdo->prepare("SELECT i.id_num, i.login, i.mdp, cv.id_client FROM public.identifiants i JOIN public.compte_client cv ON i.id_num = cv.id_num WHERE i.login = ?");
+        $user_sql->execute([$email]);
         $user = $user_sql->fetch();
         if($user){
             if(strcmp($mdp,$user['mdp']) == 0){

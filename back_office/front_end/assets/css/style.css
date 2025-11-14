@@ -159,7 +159,7 @@ Structure de Consulter, Créer, Modifier produit
   align-items: center;
   margin-top: 10px;
 }
-.produit-container .produit-content .produit-infos article img {
+.produit-container .produit-content .produit-infos article .produit-images img {
   display: block;
   width: 100%;
   max-width: 150px;
@@ -368,7 +368,7 @@ Structure de Consulter, Créer, Modifier produit
 }
 .produit-container .media-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   margin-bottom: 1rem;
   padding: 1rem;
@@ -376,9 +376,16 @@ Structure de Consulter, Créer, Modifier produit
   border-radius: 8px;
   border: 2px solid #e0e0e0;
 }
+.produit-container .media-gallery .media-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 10px;
+}
 .produit-container .media-gallery img {
   width: 100%;
-  height: 120px;
+  height: auto;
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 6px;
@@ -387,7 +394,7 @@ Structure de Consulter, Créer, Modifier produit
 }
 .produit-container .media-gallery img:hover {
   transform: scale(1.05);
-  border-color: #e74c3c;
+  border-color: #6CD3FF;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 .produit-container .media-gallery button {
@@ -523,11 +530,13 @@ Structure du tableau de bord
   font-size: 0.9em;
   margin: 5px 0;
   display: -webkit-box;
-  -webkit-line-clamp: 1; /* 1 ligne max */
+  -webkit-line-clamp: 1;
+  /* 1 ligne max */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-word; /* cette ligne force la coupure */
+  word-break: break-word;
+  /* cette ligne force la coupure */
 }
 .content article .stock {
   font-size: 0.9em;

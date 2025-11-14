@@ -14,9 +14,13 @@ if (isset($_GET['id']) && isset($_GET['type'])) {
         exit;
     }
 
-    $stmtCat = $pdo->prepare("SELECT libelle FROM categorie WHERE libelle= :libelle");
-    $stmtCat->execute(['libelle' => $produit['categorie']]);
-    $categorie = $stmtCat->fetchColumn();
+    $stmt = $pdo->prepare("SELECT libelle FROM categorie WHERE libelle= :libelle");
+    $stmt->execute(['libelle' => $produit['categorie']]);
+    $categorie = $stmt->fetchColumn();
+
+    $stmt = $pdo->prepare("SELECT * FROM media_produit WHERE id_produit = ?");
+    $stmt->execute([$id]);
+    $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($_GET['type'] == "consulter") {
         include 'produit_consulter.php';

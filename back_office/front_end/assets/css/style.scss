@@ -55,9 +55,9 @@ body {
         @include menu-item-active;
       }
 
-        &.disabled {
-          @include disabled-state;
-        }
+      &.disabled {
+        @include disabled-state;
+      }
     }
   }
 }
@@ -181,17 +181,17 @@ Structure de Consulter, Créer, Modifier produit
           gap: 10px;
           align-items: center;
           margin-top: 10px;
-        }
 
-        // Image média dans la partie gauche
-        img {
-          display: block;
-          width: 100%;
-          max-width: 150px;
-          height: auto;
-          border-radius: 8px;
-          border: 1px solid $gray-medium;
-          margin-top: 0.5rem;
+          // Image média dans la partie gauche
+          img {
+            display: block;
+            width: 100%;
+            max-width: 150px;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid $gray-medium;
+            margin-top: 0.5rem;
+          }
         }
       }
     }
@@ -374,7 +374,7 @@ Structure de Consulter, Créer, Modifier produit
   // Galerie de médias
   .media-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin-bottom: 1rem;
     padding: 1rem;
@@ -382,9 +382,18 @@ Structure de Consulter, Créer, Modifier produit
     border-radius: 8px;
     border: 2px solid $gray-medium;
 
+    .media-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      margin-right: 10px;
+    }
+
+
     img {
       width: 100%;
-      height: 120px;
+      height: auto;
       object-fit: cover;
       border-radius: 6px;
       border: 2px solid $gray-medium;
@@ -392,7 +401,7 @@ Structure de Consulter, Créer, Modifier produit
 
       &:hover {
         transform: scale(1.05);
-        border-color: #e74c3c;
+        border-color: $primary-color;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       }
     }
@@ -401,11 +410,11 @@ Structure de Consulter, Créer, Modifier produit
       height: 20px;
       @include button-variant($danger-color);
       border-radius: 6px;
-      border : none;
+      border: none;
       transition: all 0.3s ease;
     }
 
-    .image-delete{
+    .image-delete {
       @include flex-column
     }
 
@@ -465,28 +474,28 @@ Structure du tableau de bord
 
   article {
     @include card-style;
-    @include hover-lift;  
+    @include hover-lift;
 
-      .statut-badge {
-        @include status-badge;
-      }
+    .statut-badge {
+      @include status-badge;
+    }
 
-      &.inactif {
-        @include product-status($status-inactive);
-        opacity: 0.6;
-      }
+    &.inactif {
+      @include product-status($status-inactive);
+      opacity: 0.6;
+    }
 
-      &.rupture-stock {
-        @include product-status($status-out-of-stock);
-      }
+    &.rupture-stock {
+      @include product-status($status-out-of-stock);
+    }
 
-      &.stock-faible {
-        @include product-status($status-low-stock);
-      }
+    &.stock-faible {
+      @include product-status($status-low-stock);
+    }
 
-      &.stock-normal {
-        @include product-status($status-active);
-      }
+    &.stock-normal {
+      @include product-status($status-active);
+    }
 
     img {
       display: block;
@@ -509,34 +518,36 @@ Structure du tableau de bord
       font-size: 0.9em;
       margin: 5px 0;
       display: -webkit-box;
-      -webkit-line-clamp: 1; /* 1 ligne max */
+      -webkit-line-clamp: 1;
+      /* 1 ligne max */
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
-      word-break: break-word; /* cette ligne force la coupure */
+      word-break: break-word;
+      /* cette ligne force la coupure */
     }
 
-      .stock {
-        font-size: 0.9em;
-        margin: 5px 0;
-        
-        .alerte {
-          color: $status-out-of-stock;
-          font-weight: bold;
-        }
+    .stock {
+      font-size: 0.9em;
+      margin: 5px 0;
 
-        &.rupture-stock {
-          @include stock-text($status-out-of-stock);
-        }
-
-        &.stock-faible {
-          @include stock-text($status-warning-text);
-        }
-
-        &.inactif {
-          @include stock-text($status-inactive);
-        }
+      .alerte {
+        color: $status-out-of-stock;
+        font-weight: bold;
       }
+
+      &.rupture-stock {
+        @include stock-text($status-out-of-stock);
+      }
+
+      &.stock-faible {
+        @include stock-text($status-warning-text);
+      }
+
+      &.inactif {
+        @include stock-text($status-inactive);
+      }
+    }
 
     .prix {
       font-size: 1.3em;
@@ -551,7 +562,7 @@ Structure du tableau de bord
   }
 
   .creer_produit {
-    
+
     // Style spécifique pour la carte de création
     background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
     color: $white;
@@ -561,19 +572,19 @@ Structure du tableau de bord
     position: relative;
     border: 3px dashed rgba($white, 0.3);
     transition: all $transition-speed ease;
-    
+
     // Animation au survol
     &:hover {
       border-color: $white;
       transform: translateY(-8px) scale(1.02);
       box-shadow: 0 15px 40px rgba($black, 0.2);
-      
+
       // Animation du plus
       p:last-child {
         transform: rotate(90deg) scale(1.2);
       }
     }
-    
+
     // Effet de brillance au survol
     &::before {
       content: '';
@@ -582,20 +593,18 @@ Structure du tableau de bord
       left: -50%;
       width: 200%;
       height: 200%;
-      background: linear-gradient(
-        45deg,
-        transparent,
-        rgba($white, 0.1),
-        transparent
-      );
+      background: linear-gradient(45deg,
+          transparent,
+          rgba($white, 0.1),
+          transparent);
       transform: rotate(45deg);
       transition: all 0.6s ease;
     }
-    
+
     &:hover::before {
       left: 100%;
     }
-    
+
     // Texte "Créer un produit"
     p:first-child {
       font-size: 1.5em;
@@ -606,7 +615,7 @@ Structure du tableau de bord
       text-shadow: 2px 2px 4px rgba($black, 0.2);
       z-index: 1;
     }
-    
+
     // Le signe "+"
     p:last-child {
       font-size: 5em;
@@ -697,20 +706,20 @@ Structure du dashboard produit
     position: relative;
     display: inline-block;
     margin-bottom: 20px;
-    
+
     &.inactif {
       background-color: $status-inactive;
     }
-    
+
     &.rupture-stock {
       background-color: $status-out-of-stock;
     }
-    
+
     &.stock-faible {
       background-color: $status-low-stock;
       color: $black;
     }
-    
+
     &.stock-normal {
       background-color: $status-active;
     }
@@ -718,26 +727,26 @@ Structure du dashboard produit
 
   .product-info {
     margin-top: 20px;
-    
+
     p {
       margin: 10px 0;
       font-size: 1.1em;
     }
-    
+
     .stock {
       .alerte {
         color: $status-out-of-stock;
         font-weight: bold;
       }
-      
+
       &.rupture-stock {
         @include stock-text($status-out-of-stock);
       }
-      
+
       &.stock-faible {
         @include stock-text($status-warning-text);
       }
-      
+
       &.inactif {
         @include stock-text($status-inactive);
       }
@@ -753,7 +762,7 @@ Structure du dashboard produit
     text-decoration: none;
     border-radius: math.div($border-radius, 2);
     @include transition(background-color);
-    
+
     &:hover {
       background-color: color.adjust($primary-color, $lightness: -10%);
     }
@@ -790,7 +799,7 @@ Fin de structure du dashboard produit
   position: absolute;
   top: 30px;
   left: 30px;
-  
+
   img {
     max-width: 150px;
     height: auto;
@@ -810,14 +819,14 @@ Fin de structure du dashboard produit
 
 .header__connexion {
   margin-bottom: 30px;
-  
+
   h1 {
     color: $black;
     font-size: 2.5em;
     font-weight: bold;
     margin: 0 0 10px 0;
   }
-  
+
   h2 {
     color: $black;
     font-size: 1.5em;
@@ -854,13 +863,13 @@ Fin de structure du dashboard produit
   background-color: lighten($gray-light, 10%);
   transition: all $transition-speed ease;
   box-sizing: border-box;
-  
+
   &:focus {
     outline: none;
     border-color: $primary-color;
     background-color: $white;
   }
-  
+
   &::placeholder {
     color: $gray-dark;
   }
@@ -872,7 +881,7 @@ Fin de structure du dashboard produit
   font-size: 0.9em;
   align-self: flex-end;
   margin-top: -10px;
-  
+
   &:hover {
     color: color.adjust($primary-color, $lightness: -15%);
     text-decoration: underline;
@@ -891,12 +900,12 @@ Fin de structure du dashboard produit
   cursor: pointer;
   transition: all $transition-speed ease;
   margin-top: 10px;
-  
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba($primary-color, 0.3);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -907,7 +916,7 @@ Fin de structure du dashboard produit
   font-size: 0.9em;
   margin: 10px 0;
   position: relative;
-  
+
   &::before,
   &::after {
     content: '';
@@ -917,11 +926,11 @@ Fin de structure du dashboard produit
     height: 1px;
     background: $gray-light;
   }
-  
+
   &::before {
     left: 0;
   }
-  
+
   &::after {
     right: 0;
   }
@@ -940,13 +949,13 @@ Fin de structure du dashboard produit
   text-decoration: none;
   display: block;
   transition: all $transition-speed ease;
-  
+
   &:hover {
     background: $primary-color;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba($primary-color, 0.2);
   }
-  
+
   &:active {
     transform: translateY(0);
   }

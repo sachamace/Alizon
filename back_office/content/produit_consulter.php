@@ -1,9 +1,3 @@
-<?php 
-    $stmt = $pdo->prepare("SELECT * FROM media_produit WHERE id_produit = ?");
-    $stmt->execute([$id]);
-    $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
 <section class="produit-container">
     <h2>Fiche produit</h2>
 

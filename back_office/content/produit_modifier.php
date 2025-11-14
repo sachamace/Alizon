@@ -1,4 +1,20 @@
 <?php
+if (isset($_POST['delete_image'])) {
+    $id_media = $_POST['delete_image'];
+
+    $stmt = $pdo->prepare("SELECT chemin_image FROM media_produit WHERE id_media = ?");
+    $stmt->execute([$id_media]);
+    $media = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($media && file_exists($media['chemin_image'])) {
+        unlink($media['chemin_image']);
+    }
+
+    $deleteStmt = $pdo->prepare("DELETE FROM media_produit WHERE id_media = ?");
+    $deleteStmt->execute([$id_media]);
+}
+
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $errors = [];
 
@@ -23,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if (empty($errors)) {
-    $stmt = $pdo->prepare("UPDATE produit 
+        $stmt = $pdo->prepare("UPDATE produit 
         SET nom_produit = :nom, 
             description_produit = :description_prod, 
             prix_unitaire_ht = :prix_ht, 
@@ -33,16 +49,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             categorie = :categorie 
         WHERE id_produit = :id_produit");
 
-    $stmt->execute([
-        'id_produit' => $id,
-        'nom' => $nom,
-        'description_prod' => $description,
-        'categorie' => $categorie,
-        'prix_ht' => $prix_ht,
-        'tva' => $tva,
-        'stock' => $stock,
-        'actif' => $actif
-    ]);
+        $stmt->execute([
+            'id_produit' => $id,
+            'nom' => $nom,
+            'description_prod' => $description,
+            'categorie' => $categorie,
+            'prix_ht' => $prix_ht,
+            'tva' => $tva,
+            'stock' => $stock,
+            'actif' => $actif
+        ]);
+
+
+
+
+
+
+
 
         echo "<script>
             window.location.href = 'index.php?page=produit&id=$id&type=consulter';
@@ -92,25 +115,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </select>
                 </article>
                 <article>
-                    <h3>Média</h3>
+                    <h3>Média (3 images maximum)</h3>
 
-                    <div class="media-gallery">
-                        <?php
-                        $imagesPath = "front_end/assets/images_produits/" . $produit['id_produit'];
-                        if (is_dir($imagesPath)) {
-                            $images = glob("$imagesPath/*.{jpg,jpeg,png,webp}", GLOB_BRACE);
-                            foreach ($images as $img) { ?>
-                                <div class='image-delete'>
-                                    <img src='<?php echo htmlentities($img)?>' alt='Image produit'>
-                                    <button type="button" class='supprimer'>Supprimer</button>
+                    <div class="media-gallery" id="mediaGallery">
+                        <?php if (!empty($images)) {
+                            foreach ($images as $image) { ?>
+                                <div class="media-item existing">
+                                    <img src="<?php echo htmlentities($image['chemin_image']); ?>" alt="Image du produit"
+                                        class="produit-image">
+                                    <button type="button" class="delete-btn"
+                                        onclick="deleteImage(<?php echo $image['id_media']; ?>)">Supprimer</button>
                                 </div>
                             <?php }
-                        } else {
-                            echo "<p>Aucune image pour ce produit.</p>";
-                        }
-                        ?>
+                        } else { ?>
+                            <p>Aucune image disponible pour ce produit.</p>
+                        <?php } ?>
                     </div>
-
                     <div class="media-upload">
                         <label for="nouvelle_image">Ajouter une image :</label>
                         <input type="file" name="nouvelle_image[]" id="nouvelle_image" accept="image/*" multiple>
@@ -125,8 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                     <h4>Prix TTC (calculé automatiquement)</h4>
                     <input type="text" id="prix_ttc_produit" name="prix_ttc_produit"
-                        value="<?php echo htmlentities(number_format($produit['prix_ttc'], 2, ',', ' ')) ?>"
-                        readonly>
+                        value="<?php echo htmlentities(number_format($produit['prix_ttc'], 2, ',', ' ')) ?>" readonly>
 
                     <h4>Prix HT</h4>
                     <input type="text" id="prix_unitaire_ht_produit" name="prix_unitaire_ht_produit"
@@ -172,32 +191,70 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </form>
 </section>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const prixHT = document.getElementById('prix_unitaire_ht_produit');
-    const tauxTVA = document.getElementById('taux_tva_produit');
-    const prixTTC = document.getElementById('prix_ttc_produit');
+    document.addEventListener('DOMContentLoaded', function () {
+        const prixHT = document.getElementById('prix_unitaire_ht_produit');
+        const tauxTVA = document.getElementById('taux_tva_produit');
+        const prixTTC = document.getElementById('prix_ttc_produit');
 
-    prixTTC.disabled = true;
-    prixTTC.style.backgroundColor = '#e9ecef';
-    prixTTC.style.cursor = 'not-allowed';
+        prixTTC.disabled = true;
+        prixTTC.style.backgroundColor = '#e9ecef';
+        prixTTC.style.cursor = 'not-allowed';
 
-    function calculerPrixTTC() {
-        let ht = parseFloat(prixHT.value.replace(',', '.').replace(/\s/g, ''));
-        let tva = parseFloat(tauxTVA.value.replace(',', '.').replace(/\s/g, ''));
+        function calculerPrixTTC() {
+            let ht = parseFloat(prixHT.value.replace(',', '.').replace(/\s/g, ''));
+            let tva = parseFloat(tauxTVA.value.replace(',', '.').replace(/\s/g, ''));
 
-        if (!isNaN(ht) && !isNaN(tva) && ht >= 0 && tva >= 0 && tva <= 100) {
-            // Diviser par 100 car c'est maintenant un pourcentage
-            let ttc = ht * (1 + tva / 100);
-            
-            prixTTC.value = ttc.toFixed(2).replace('.', ',');
-        } else {
-            prixTTC.value = '';
+            if (!isNaN(ht) && !isNaN(tva) && ht >= 0 && tva >= 0 && tva <= 100) {
+                // Diviser par 100 car c'est maintenant un pourcentage
+                let ttc = ht * (1 + tva / 100);
+
+                prixTTC.value = ttc.toFixed(2).replace('.', ',');
+            } else {
+                prixTTC.value = '';
+            }
         }
+
+        calculerPrixTTC();
+
+        prixHT.addEventListener('input', calculerPrixTTC);
+        tauxTVA.addEventListener('input', calculerPrixTTC);
+    });
+
+    document.getElementById("nouvelle_image").addEventListener("change", function (e) {
+        const gallery = document.getElementById("mediaGallery");
+        document.querySelectorAll(".media-item.preview").forEach(p => p.remove());
+
+        Array.from(e.target.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const div = document.createElement("div");
+                div.classList.add("media-item", "preview");
+
+                const img = document.createElement("img");
+                img.src = event.target.result;
+                img.classList.add("produit-image");
+
+                const label = document.createElement("span");
+                label.innerText = "Preview";
+                label.classList.add("preview-label");
+
+                div.appendChild(img);
+                div.appendChild(label);
+                gallery.appendChild(div);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    });
+
+    function deleteImage(id) {
+        if (!confirm("Supprimer cette image ?")) return;
+
+        fetch("delete_image.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "delete_image=" + id
+        })
+            .then(() => location.reload());
     }
-
-    calculerPrixTTC();
-
-    prixHT.addEventListener('input', calculerPrixTTC);
-    tauxTVA.addEventListener('input', calculerPrixTTC);
-});
 </script>

@@ -12,17 +12,8 @@ body {
     font-family: "Space Grotesk", sans-serif;
 
     header {
-body {
-    background-color: #E8E8E8;
-    margin: 0;
-    padding: 0;
-    font-family: "Space Grotesk", sans-serif;
-
-    header {
         height: 127px;
         background-color: #FFFFFF;
-
-        nav {
 
         nav {
             display: flex;
@@ -30,13 +21,7 @@ body {
 
             /* empile les deux nav verticalement */
             nav {
-            flex-direction: column;
-
-            /* empile les deux nav verticalement */
-            nav {
                 display: flex;
-                flex-direction: row;
-                /* aligne le contenu de chaque nav horizontalement */
                 flex-direction: row;
                 /* aligne le contenu de chaque nav horizontalement */
                 align-items: center;
@@ -45,15 +30,10 @@ body {
                 margin-right: 10px;
 
                 &:first-child {
-
-                &:first-child {
                     display: flex;
                     align-items: center;
 
-                    a[href="panier.html"] {
-                        /* Le lien “Panier” seul, collé à droite */
-
-                    a[href="panier.html"] {
+                    a[href="panier.php"] {
                         /* Le lien “Panier” seul, collé à droite */
                         margin-left: auto;
                         text-decoration: none;
@@ -63,20 +43,12 @@ body {
 
                         &:last-child,
                         :nth-last-child(2) {
-
-                        &:last-child,
-                        :nth-last-child(2) {
                             margin-right: 0;
                         }
 
                         &:nth-child(2) {
-
-                        &:nth-child(2) {
                             margin-left: 42.625px;
                         }
-
-                        &:visited,
-                        &:hover {
 
                         &:visited,
                         &:hover {
@@ -88,11 +60,7 @@ body {
                     }
 
                     form {
-
-                    form {
                         margin-left: 42.625px;
-
-                        input {
 
                         input {
                             width: 1426.15px;
@@ -101,12 +69,9 @@ body {
                             border-color: $primary-color;
                             padding: 10px 10px 10px 40px;
                             background-image: url(../images/magnifying-glass-solid-full\ \(1\).svg);
-                            background-image: url(../images/magnifying-glass-solid-full\ \(1\).svg);
                             background-repeat: no-repeat;
                             background-position: left;
                         }
-
-                        button {
 
                         button {
                             display: none;
@@ -116,15 +81,9 @@ body {
 
                 &:last-child {
                     /* Le deuxième nav du header (celui du bas) */
-
-                &:last-child {
-                    /* Le deuxième nav du header (celui du bas) */
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-
-                    div {
-                        /* Le conteneur des trois liens à gauche */
 
                     div {
                         /* Le conteneur des trois liens à gauche */
@@ -145,33 +104,23 @@ body {
 
                     a {
                         /* Le lien "Mon Compte" tout à droite */
-
-                    a {
-                        /* Le lien "Mon Compte" tout à droite */
                         margin-left: auto;
                         text-decoration: none;
                         color: rgb(0, 0, 0);
                         font-size: 23px;
                         font-weight: bold;
-                        font-weight: bold;
                     }
                 }
-
-                .notif {
 
                 .notif {
                     width: 54px;
                     height: 54px;
 
                     .icone {
-
-                    .icone {
                         display: inline-block;
                         font-size: 45px;
                         text-align: center;
                         vertical-align: middle;
-                        margin-right: 8px;
-                        /* petit espace avant le texte comme “Panier” */
                         margin-right: 8px;
                         /* petit espace avant le texte comme “Panier” */
                     }
@@ -430,11 +379,11 @@ body {
                 }
 
                 button {
-                    font-size: 2em; // plus grand
-                    background: none; // pas de fond
-                    border: none; // supprime la bordure
-                    cursor: pointer; // curseur main
-                    padding: 0.3em 0.6em; // un peu d’espace autour
+                    font-size: 2em;        // plus grand
+                    background: none;        // pas de fond
+                    border: none;            // supprime la bordure
+                    cursor: pointer;         // curseur main
+                    padding: 0.3em 0.6em;    // un peu d’espace autour
                     transition: transform 0.1s ease, color 0.2s ease;
                     position: relative;
                     top: 0.25em;
@@ -456,7 +405,7 @@ body {
         padding: 1em 2em 2em 2em;
         height: fit-content;
         text-align: center;
-
+        
 
         h4 {
             margin-bottom: 1em;
@@ -499,488 +448,51 @@ body {
     aside h4 {
         font-size: 1.1em;
     }
-
     .panier_actions {
-        margin-top: 1em;
-        display: flex;
-        align-items: center;
-        gap: 5em;
+    margin-top: 1em;
+    display: flex;
+    align-items: center;
+    gap: 5em;
 
-        .en_savoir_plus {
-            text-decoration: none;
-            color: #0077cc;
-            font-weight: 500;
-
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-
-        .btn-supprimer {
-            position: relative;
-            top: 0.5em;
-            background-color: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 0.4em 1em;
-            cursor: pointer;
-
-            &:hover {
-                background-color: #e04848;
-            }
-        }
-    }
-
-    .btn-vider {
-        background-color: #d9534f;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.6em 1.2em;
-        font-size: 1em;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
+    .en_savoir_plus {
+        text-decoration: none;
+        color: #0077cc;
+        font-weight: 500;
 
         &:hover {
-            background-color: #c9302c;
+            text-decoration: underline;
         }
     }
 
-    /* ----- Responsive panier ----- */
-    @media (max-width: 600px) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 1em;
-        section {
-            margin: 1em;
-            article {
-                margin: 0;
-
-                // Pour que .panier_bottom puisse se placer en dessous
-                .panier_info {
-                    display: flex;
-                    flex-direction: column;
-                    flex-wrap: wrap; // permet aux enfants de descendre si besoin
-                    width: 100%;
-                    min-width: 0;
-                    font-size: 0.75em;
-                }
-
-                // Force .panier_bottom à occuper toute la largeur sous l'image
-                .panier_bottom {
-                    flex-basis: 100%; // prend toute la ligne
-                    width: 100%;
-                    margin-left: -2.5em;
-                    margin-top: 0;
-
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }
-
-                // Optionnel mais recommandé : image plus petite
-                img {
-                    width: 50%;
-                    max-width: 120px;
-                    height: auto;
-                }
-            }
-            flex: none;
-            width: 80%;
-        }
-    form {
-        padding: 0;
-        margin: 0;
-
-    }
-    }
-
-}
-
-
-
-
-
-
-
-
-/* --------------- FIN DU SCSS POUR LE PANIER ---------------*/
-
-
-
-
-/* --------------- MAIN du PRODUIT --------------- */
-.main_produit {
-    font-family: "Space Grotesk", sans-serif;
-    padding: 4rem clamp(1rem, 8vw, 10rem);
-    color: #000;
-    margin: 0 auto;
-    box-sizing: border-box;
-
-    @media (max-width: 900px) {
-        padding: 3rem 1rem;
-    }
-
-
-
-    .fiche-produit {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-
-        .fiche-container {
-            display: flex;
-            align-items: flex-start;
-            justify-content: flex-start;
-            gap: 3rem; // espace horizontal stable
-            flex-wrap: nowrap;
-
-            @media (max-width: 900px) {
-                flex-direction: column;
-                align-items: center;
-                justify-content: center; // ← indispensable
-                width: 100%;
-                max-width: 100%;
-                gap: 0;
-            }
-
-            .images-produit {
-                flex: 1 1 28rem;
-
-                @media (max-width: 900px) {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-items: center;
-                    width: 100%;
-                    max-width: 100%;
-                }
-
-
-                .image-principale {
-                    width: 80%;
-                    max-width: 28rem;
-                    min-width: 20rem;
-                    border-radius: 10px;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-                    @media(max-width: 900px) {
-                        min-width: 16rem;
-                        max-width: 16rem;
-                    }
-                }
-
-                .miniatures {
-                    display: flex;
-                    gap: 0.5rem;
-                    margin-top: 1rem;
-
-                    img {
-                        width: 4.5rem;
-                        height: 4.5rem;
-                        object-fit: cover;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        transition: transform 0.2s ease;
-
-                        &:hover {
-                            transform: scale(1.05);
-                        }
-                    }
-
-                    @media (max-width: 900px) {
-                        display: none;
-                    }
-                }
-            }
-
-            .infos-produit {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between; // pousse le bloc des boutons vers le bas
-                min-height: 28rem; // même hauteur que l’image
-                width: auto;
-                margin-left: 5%;
-
-                @media (max-width: 900px) {
-                    margin-left: 0;
-                    min-width: 19rem;
-                    width: 100%;
-                    max-width: 100%;
-                }
-
-
-                .titre-ligne {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-
-                    h1 {
-                        font-size: 1.6rem;
-                        font-weight: 600;
-                    }
-
-                    i {
-                        font-size: 2.5rem;
-                        color: #e87edc;
-                        cursor: pointer;
-                    }
-                }
-
-                .prix {
-                    margin: 1rem 0;
-
-                    .prix-valeur {
-                        background-color: #e87edc;
-                        font-weight: bold;
-                        font-size: 2em;
-                        padding: 0.5rem 1.5rem;
-                        border-radius: 5px;
-                    }
-                }
-
-                .stock-avis {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    margin: 0.5rem 0 1.5rem 0;
-
-                    @media (max-width: 900px) {
-                        flex-wrap: wrap;
-                    }
-
-                    .stock-dispo {
-                        font-size: 1rem;
-                        font-weight: 600;
-
-                        @media (max-width: 900px) {
-                            margin-top: 1em;
-                        }
-                    }
-
-                    .avis {
-                        display: flex;
-                        align-items: center;
-                        gap: 0.5rem;
-
-                        @media (max-width: 900px) {
-                            margin-top: 2em;
-                        }
-
-                        .etoiles {
-                            color: #e87edc;
-                            font-size: 1.2rem;
-                        }
-
-                        a {
-                            color: #8c3bbf;
-                            text-decoration: none;
-                            font-size: 0.9rem;
-
-                            &:hover {
-                                text-decoration: underline;
-                            }
-                        }
-                    }
-                }
-
-
-                .description {
-                    margin-bottom: 1rem;
-                    line-height: 1.5;
-                    font-size: 1.25em;
-                }
-
-                .boutons {
-                    display: flex; // aligne les boutons sur une ligne
-                    justify-content: center; // centre les boutons horizontalement
-                    align-items: center; // aligne verticalement
-                    gap: 5em; // espace entre les deux boutons
-                    padding: 1em 2em 2em 2em;
-                    margin-top: 2rem;
-                    height: fit-content;
-                    text-align: center;
-
-                    @media (max-width: 900px) {
-                        flex-wrap: wrap;
-                    }
-
-                    button {
-                        background: linear-gradient(to left, $primary-color, #FFE0FE);
-                        text-align: center;
-                        padding: 0.5em;
-                        font-size: 2em;
-                        font-weight: 325;
-                        width: 11em;
-                        border-radius: 10px;
-                        cursor: pointer;
-                    }
-                }
-            }
-        }
-    }
-
-    .popup {
-        display: none; // cachée par défaut
-        position: fixed;
-        z-index: 9999;
-        padding-top: 5%;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.8);
-
-        .popup-content {
-            display: block;
-            margin: auto;
-            max-width: 80%;
-            max-height: 80vh;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-        }
-
-        .close {
-            position: absolute;
-            top: 20px;
-            right: 45px;
-            color: white;
-            font-size: 2.5rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
-    }
-
-    /* Séparation entre le produit et les avis */
-    .separateur-avis {
+    .btn-supprimer {
+        position: relative;
+        top: 0.5em;
+        background-color: #ff6b6b;
+        color: white;
         border: none;
-        border-top: 2px solid #000;
-        margin: 3rem 0 2rem 0;
-    }
+        border-radius: 6px;
+        padding: 0.4em 1em;
+        cursor: pointer;
 
-    /* Section des avis */
-    .avis {
-        padding: 1rem 2rem;
-        background-color: #fafafa;
-        border-radius: 10px;
-
-        h1,
-        h2 {
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-            color: #333;
-        }
-
-        /* Chaque avis */
-        .avis-item {
-            padding: 1rem 0;
-            border-bottom: 1px solid #000;
-
-            &:last-child {
-                border-bottom: none;
-            }
-
-            /* En-tête d’un avis : nom + étoiles */
-            .avis-header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-
-                strong {
-                    font-size: 1.1rem;
-                    color: #5a2ca0;
-                }
-
-                .avis-etoiles {
-                    color: #e87edc;
-                    font-size: 1.2rem;
-                }
-            }
-
-            /* Commentaire */
-            .avis-commentaire {
-                margin-top: 0.5rem;
-                font-size: 1rem;
-                line-height: 1.5;
-            }
-        }
-
-        .form-avis {
-            margin-top: 3rem;
-            padding: 1.5rem 2rem;
-            background-color: #f3f3f3;
-            border-radius: 10px;
-
-            h2 {
-                font-size: 1.4rem;
-                color: #5a2ca0;
-                margin-bottom: 1rem;
-            }
-
-            label {
-                display: block;
-                margin-top: 1rem;
-                font-weight: 600;
-                color: #333;
-            }
-
-            select,
-            textarea {
-                width: 100%;
-                padding: 0.8rem;
-                margin-top: 0.5rem;
-                border: 1px solid #ccc;
-                border-radius: 6px;
-                font-size: 1rem;
-                font-family: 'Space Grotesk', sans-serif;
-                background-color: white;
-                transition: border-color 0.3s ease, box-shadow 0.3s ease;
-
-                &:focus {
-                    border-color: #e87edc;
-                    box-shadow: 0 0 5px rgba(232, 126, 220, 0.5);
-                    outline: none;
-                }
-            }
-
-            button {
-                margin-top: 1.5rem;
-                background-color: #5a2ca0;
-                color: #fff;
-                border: none;
-                padding: 0.8rem 1.5rem;
-                border-radius: 10px;
-                cursor: pointer;
-                font-size: 1rem;
-                font-weight: 600;
-                transition: background-color 0.3s ease, transform 0.2s ease;
-
-                &:active {
-                    transform: scale(0.98);
-                }
-            }
-
-            .erreur {
-                color: red;
-                font-weight: 600;
-                margin-bottom: 1rem;
-            }
-        }
-
-    }
-
-    .infos-produit {
-        .avis {
-            width: auto;
+        &:hover {
+            background-color: #e04848;
         }
     }
-
-
 }
 
-/* --------------- FIN DU SCSS POUR LE PRODUIT ---------------*/
+.btn-vider {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: #c9302c;
+    }
+}
+}
+/* --------------- FIN DU SCSS POUR LE PANIER ---------------*/

@@ -83,8 +83,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id_produit = null; // ou une valeur par défaut
     }
     $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
-
-    if ($action === 'panier') { // traitement ajouter panier
+    if ($id_panier == null) {
+        header('Location: seconnecter.php');
+        exit();
+    }
+    else{
+        if ($action === 'panier') { // traitement ajouter panier
         $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');
         $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
         $verif = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -139,12 +143,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($stock_dispo > 0) {
                 $requete_ajout = $pdo->prepare("INSERT INTO panier_produit(id_panier,id_produit,quantite) VALUES(:id_panier, :id_produit, 1);");
                 $requete_ajout->execute([":id_produit"=> $id_produit, ":id_panier"=> $id_panier]);
-                
             }
         }
         header('Location: panier.php');
         exit(); // très important pour arrêter le scrip
         }
+    }
     }
 ?>
 

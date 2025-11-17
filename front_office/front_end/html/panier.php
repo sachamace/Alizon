@@ -199,6 +199,32 @@ try {
     <footer>
 
     </footer>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        // Confirmation pour supprimer un produit
+        document.querySelectorAll(".supprimer-produit").forEach(form => {
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // bloque l’envoi
+                if (confirm("Voulez-vous vraiment supprimer ce produit du panier ?")) {
+                    form.submit(); // envoie seulement si OK
+                }
+            });
+        });
+
+        // Confirmation pour vider tout le panier
+        const viderForm = document.querySelector(".vider-panier");
+        if (viderForm) {
+            viderForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+                if (confirm("Voulez-vous vraiment vider l'intégralité du panier ?")) {
+                    viderForm.submit();
+                }
+            });
+        }
+
+    });
+    </script>
 </body>
 
 </html>

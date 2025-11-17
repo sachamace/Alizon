@@ -107,6 +107,42 @@ body header nav nav .notif .icone {
   /* petit espace avant le texte comme “Panier” */
 }
 
+.div__catalogue div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  gap: 25px;
+  padding: 40px;
+}
+.div__catalogue div article {
+  background-color: #FFFFFF;
+  width: 350px;
+  height: 550px;
+  padding: 20px;
+  margin: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.div__catalogue div article:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.div__catalogue div article img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.div__catalogue div article h2 {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 8px 0 4px 0;
+}
+.div__catalogue div article p {
+  margin: 6px 0;
+}
+
 /* --------------- Connexion + Créer un compte --------------- */
 .body__connexion {
   margin: 0;

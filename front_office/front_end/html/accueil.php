@@ -44,7 +44,7 @@
             </nav>
         </nav>
     </header>
-    <div>
+    <div class="div__catalogue">
         <?php
             // On récupère tout le contenu de la table produit
             $reponse = $pdo->query('SELECT * FROM produit');

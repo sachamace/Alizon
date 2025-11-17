@@ -93,6 +93,9 @@ header nav nav:last-child div a {
   font-weight: 325;
   width: 190px;
   border-radius: 10px;
+  opacity: 0.5; /* rend grisé */
+  pointer-events: none; /* empêche le clic */
+  cursor: not-allowed; /* curseur bloqué */
 }
 header nav nav:last-child a {
   margin-left: auto;

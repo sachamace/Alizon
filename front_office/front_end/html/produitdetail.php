@@ -90,6 +90,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
     else{
+        if ($action === 'supprimer_avis') {
+            $id_client = $_SESSION['id'];
+
+            // Sécurisé : on supprime uniquement si l'avis appartient à l'utilisateur
+            $requete_suppr = $pdo->prepare("
+                DELETE FROM avis 
+                WHERE id_produit = :id_produit AND id_client = :id_client
+            ");
+            $requete_suppr->execute([
+                ':id_produit' => $id_produit,
+                ':id_client' => $id_client  
+            ]);
+
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit();
+        }
         if ($action === 'panier') { // traitement ajouter panier
         $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');
         $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
@@ -290,7 +306,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <strong>' . htmlspecialchars($client['prenom']) . ' ' . htmlspecialchars($client['nom']) . '</strong>
                                 <span class="avis-etoiles">' . $etoiles . '</span>
                             </div>
-                            <p class="avis-commentaire">' . htmlspecialchars($un_avis['description']) . '</p>
+                            <p class="avis-commentaire">' . htmlspecialchars($un_avis['description']) . '</p>';
+                        if ($_SESSION["id"] == $un_avis["id_client"]) {
+                            echo '
+                            <form method="post" style="margin-top:10px;">
+                                <input type="hidden" name="action" value="supprimer_avis">
+                                <button type="submit" class="btn-supprimer-avis">Supprimer mon avis</button>
+                            </form>';
+                        }
+                        echo '
                         </div>';
                     }
                 } else {

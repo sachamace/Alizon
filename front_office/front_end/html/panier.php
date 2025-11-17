@@ -137,7 +137,7 @@ try {
             
                 if ($produit) {
                     $prixtotal += $produit["prix_ttc"] * $article['quantite'];
-                    $taxe += $produit['prix_ttc'] - $produit['prix_unitaire_ht'];
+                    $taxe += ($produit['prix_ttc'] - $produit['prix_unitaire_ht']) * $article["quantite"];
                     $prixht += $produit['prix_unitaire_ht'] * $article['quantite'];
                     echo '
                         <article>
@@ -187,9 +187,9 @@ try {
         <aside>
             <?php
             echo '
-                <h4>Prix total: ' . htmlspecialchars($prixtotal) . '€</h4>
-                <p>prix hors taxe : ' . htmlspecialchars($prixht) . '€ <br>
-                taxe : ' . htmlspecialchars($taxe) . '€ </p>
+                <h4>Prix total: ' . number_format($prixtotal, 2, ',', ' ') . '€</h4>
+                <p>prix hors taxe : ' . number_format($prixht, 2, ',', ' ') . '€ <br>
+                taxe : ' . number_format($taxe, 2, ',', ' ') . '€ </p>
                 <a>Passer au paiement</a> 
                 '
                 ?>

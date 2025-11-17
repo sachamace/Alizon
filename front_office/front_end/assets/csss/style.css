@@ -1,14 +1,29 @@
 @charset "UTF-8";
-/*Le header */
+/*Le header et le footer*/
 body {
   background-color: #E8E8E8;
   margin: 0;
   padding: 0;
   font-family: "Space Grotesk", sans-serif;
+<<<<<<< HEAD
 }
 body header {
   height: 127px;
   background-color: #FFFFFF;
+=======
+  max-width: 1440px;
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+body header {
+  height: 150px;
+  background-color: #FFFFFF;
+  width: 100%;
+  position: fixed;
+>>>>>>> bb58b3e (header + footer)
 }
 body header nav {
   display: flex;
@@ -54,13 +69,14 @@ body header nav nav:first-child form {
 }
 body header nav nav:first-child form input {
   width: 1000px;
-  height: 36.95px;
+  height: 45px;
   border-radius: 25px;
   border-color: #ff6ce2;
   padding: 10px 10px 10px 40px;
   background-image: url(../images/magnifying-glass-solid-full\ \(1\).svg);
   background-repeat: no-repeat;
   background-position: left;
+  opacity: 0.5; /* rend grisé */
 }
 body header nav nav:first-child form button {
   display: none;
@@ -85,6 +101,9 @@ body header nav nav:last-child div a {
   font-weight: 325;
   width: 150px;
   border-radius: 10px;
+  opacity: 0.5; /* rend grisé */
+  pointer-events: none; /* empêche le clic */
+  cursor: not-allowed; /* curseur bloqué */
 }
 body header nav nav:last-child a {
   /* Le lien "Mon Compte" tout à droite */
@@ -98,6 +117,9 @@ body header nav nav:last-child a {
 body header nav nav .notif {
   width: 54px;
   height: 54px;
+  opacity: 0.5; /* rend grisé */
+  pointer-events: none; /* empêche le clic */
+  cursor: not-allowed; /* curseur bloqué */
 }
 body header nav nav .notif .icone {
   display: inline-block;
@@ -107,40 +129,143 @@ body header nav nav .notif .icone {
   margin-right: 8px;
   /* petit espace avant le texte comme “Panier” */
 }
+<<<<<<< HEAD
 
 .div__catalogue {
+=======
+body footer.footer.mobile,
+body footer.footer.tablette {
+  display: none;
+}
+
+/* --- MOBILE --- */
+@media (max-width: 767px) {
+  body {
+    width: 100%;
+  }
+  body header {
+    height: 180px;
+    width: 100vw;
+  }
+  body header nav nav:first-child {
+    flex-direction: column;
+  }
+  body header nav nav:first-child a[href="panier.php"] {
+    display: none;
+  }
+  body header nav nav:first-child form {
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+  body header nav nav:first-child form input {
+    width: 407px;
+  }
+  body header nav nav:last-child div {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+  }
+  body header nav nav:last-child div a {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  body header nav nav:last-child a {
+    display: none;
+  }
+  body header nav nav .notif {
+    display: none;
+  }
+  body footer.footer.mobile {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #fff;
+    position: fixed;
+    bottom: env(safe-area-inset-bottom);
+    left: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 9999;
+    border-top: 1px solid #ddd;
+  }
+  body footer.footer.mobile a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+  }
+  body footer.footer.mobile a img, body footer.footer.mobile a i {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+/* --- TABLETTE --- */
+@media (min-width: 768px) and (max-width: 1024px) {
+  footer.footer.tablette {
+    display: flex;
+    background-color: #000;
+    color: white;
+    padding: 40px;
+    justify-content: space-around;
+  }
+  footer.footer.mobile {
+    display: none;
+  }
+}
+.catalogue {
+>>>>>>> bb58b3e (header + footer)
   display: flex;
   flex-wrap: wrap;
+  flex: 1;
   justify-content: center;
   align-content: flex-start;
   gap: 25px;
-  padding: 40px;
+  padding: 15px;
 }
+<<<<<<< HEAD
 .div__catalogue article {
+=======
+.catalogue article {
+>>>>>>> bb58b3e (header + footer)
   background-color: #FFFFFF;
   width: 350px;
   height: 550px;
   padding: 20px;
   margin: 15px;
+  margin-top: 100px;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+<<<<<<< HEAD
 .div__catalogue article:hover {
   transform: scale(1.02);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 .div__catalogue article img {
+=======
+.catalogue article img {
+>>>>>>> bb58b3e (header + footer)
   width: 100%;
   height: auto;
   border-radius: 8px;
 }
+<<<<<<< HEAD
 .div__catalogue article h2 {
+=======
+.catalogue article h2 {
+>>>>>>> bb58b3e (header + footer)
   font-size: 1.2em;
   font-weight: bold;
   margin: 8px 0 4px 0;
 }
+<<<<<<< HEAD
 .div__catalogue article p {
+=======
+.catalogue article p {
+>>>>>>> bb58b3e (header + footer)
   margin: 6px 0;
 }
 

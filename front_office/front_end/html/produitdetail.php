@@ -1,6 +1,7 @@
 <?php
 include 'config.php';
 include 'session.php';
+include 'sessionindex.php';
 try {
     if (isset($_GET['article'])) {
         $id_produit = $_GET['article'];

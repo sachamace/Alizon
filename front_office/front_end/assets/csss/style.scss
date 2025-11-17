@@ -102,17 +102,19 @@ body{
 
 /***************** DEBUT paiement.php et consulterProfilClient.php*****************/
 
+/* CSS de base : tablette / desktop */
 .body_paiement, .body_profilClient {
-  font-family: "Poppins", sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   background-color: #fff;
   color: #000;
   margin: 0;
   display: flex;
   justify-content: center;
+  padding: 1rem;
 
   .main_paiement, .main_profilClient {
-    width: 390px;
-    padding: 1rem;
+    width: 600px;
+    padding: 2rem;
     box-sizing: border-box;
 
     .commande-header {
@@ -122,14 +124,14 @@ body{
       margin-bottom: 1rem;
 
       h1 {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
         font-weight: 600;
       }
 
       .back-btn {
         background: none;
         border: none;
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         cursor: pointer;
       }
     }
@@ -142,7 +144,7 @@ body{
 
       h2 {
         margin-top: 0;
-        font-size: 1.1rem;
+        font-size: 1.3rem;
         font-weight: 600;
       }
     }
@@ -156,9 +158,9 @@ body{
         .option {
           display: flex;
           align-items: center;
-          gap: 0.6rem;
+          gap: 0.8rem;
           background: #e8e8e8;
-          padding: 0.8rem 1rem;
+          padding: 1rem 1.2rem;
           border-radius: 10px;
           cursor: pointer;
           transition: 0.2s;
@@ -189,7 +191,7 @@ body{
           input[type="email"],
           input[type="month"] {
               width: 100%;
-              padding: 0.6rem;
+              padding: 0.8rem;
               border: none;
               background: #dcdcdc;
               border-radius: 4px;
@@ -224,8 +226,8 @@ body{
         background: #f07ab0;
         border: none;
         border-radius: 10px;
-        padding: 0.8rem;
-        font-size: 1rem;
+        padding: 1rem;
+        font-size: 1.1rem;
         color: #fff;
         cursor: pointer;
         transition: 0.2s ease;
@@ -271,19 +273,19 @@ body{
     .navbar {
       display: flex;
       justify-content: space-around;
-      padding: 0.8rem 0;
+      padding: 1rem 0;
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      max-width: 390px;
+      max-width: 600px;
       background: #fff;
       border-top: 1px solid #eee;
 
       button {
         background: none;
         border: none;
-        font-size: 1.3rem;
+        font-size: 1.5rem;
       }
     }
   }
@@ -291,10 +293,62 @@ body{
 
 #modify, #modify2 {
   position: static;
-  height: 30px;
-  width: 30px;
+  height: 35px;
+  width: 35px;
   cursor: pointer;
   flex-shrink: 0;
+}
+
+/* Media query pour mobiles */
+@media (max-width: 767px) {
+  .body_paiement, .body_profilClient {
+    justify-content: center;
+    padding: 0;
+
+    .main_paiement, .main_profilClient {
+      width: 390px;
+      padding: 1rem;
+
+      .commande-header h1 {
+        font-size: 1.2rem;
+      }
+
+      .bloc h2 {
+        font-size: 1.1rem;
+      }
+
+      .paiement .options .option,
+      .donneePerso .options .option {
+        padding: 0.8rem 1rem;
+        gap: 0.6rem;
+        font-size: 1rem;
+      }
+
+      .paiement .options .formulaire input[type="text"],
+      .paiement .options .formulaire input[type="email"],
+      .paiement .options .formulaire input[type="month"] {
+        padding: 0.6rem;
+      }
+
+      .payer-btn {
+        padding: 0.8rem;
+        font-size: 1rem;
+      }
+    }
+
+    .navbar {
+      max-width: 390px;
+      padding: 0.8rem 0;
+      button {
+        font-size: 1.3rem;
+      }
+    }
+  }
+
+  #modify, #modify2 {
+    height: 30px;
+    width: 30px;
+  }
 }
 
 /***************** FIN paiement.php*****************/

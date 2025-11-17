@@ -44,7 +44,7 @@ try {
         </svg>
 
         <div id="settingsDropdown" class="dropdown-menu">
-            <a href="index.php?page=profil">Consulter Profil</a>
+            <a href="index.php?page=profil&type=consulter">Consulter Profil</a>
             <a href="deconnecter.php" class="logout">Déconnexion</a>
         </div>
     </div>

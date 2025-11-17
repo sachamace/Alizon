@@ -891,7 +891,7 @@ Fin de la structure de Consulter/Modifier Profil
   width: 100%;
   max-width: 400px;
   text-align: center;
-  margin-top: 60px;
+  transform: scale(0.9);
 }
 
 .header__connexion {

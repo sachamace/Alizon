@@ -758,7 +758,7 @@ Fin de structure du dashboard produit
   height: auto;
 }
 
-.container__connexion {
+.container__connexion, .recuperation-container {
   background: #fff;
   border-radius: 20px;
   padding: 40px;
@@ -769,23 +769,23 @@ Fin de structure du dashboard produit
   margin-top: 60px;
 }
 
-.header__connexion {
+.header__connexion, .recuperation-container .header__recuperation {
   margin-bottom: 30px;
 }
-.header__connexion h1 {
+.header__connexion h1, .recuperation-container .header__recuperation h1 {
   color: #000;
   font-size: 2.5em;
   font-weight: bold;
   margin: 0 0 10px 0;
 }
-.header__connexion h2 {
+.header__connexion h2, .recuperation-container .header__recuperation h2 {
   color: #000;
   font-size: 1.5em;
   font-weight: bold;
   margin: 0;
 }
 
-.form__connexion {
+.form__connexion, .recuperation-container .form__recuperation {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -839,7 +839,7 @@ Fin de structure du dashboard produit
   text-decoration: underline;
 }
 
-.btn__connexion {
+.btn__connexion, .btn__link {
   background: linear-gradient(135deg, #6CD3FF 0%, #A9E5FF 100%);
   color: #000;
   border: none;
@@ -852,11 +852,11 @@ Fin de structure du dashboard produit
   transition: all 0.3s ease;
   margin-top: 10px;
 }
-.btn__connexion:hover {
+.btn__connexion:hover, .btn__link:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(108, 211, 255, 0.3);
 }
-.btn__connexion:active {
+.btn__connexion:active, .btn__link:active {
   transform: translateY(0);
 }
 
@@ -909,4 +909,52 @@ Fin de structure du dashboard produit
   font-size: 0.9em;
   margin-top: 5px;
   display: block;
+}
+
+.recuperation-container .form__recuperation {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.recuperation-container .form__recuperation .input-group {
+  width: 100%;
+  text-align: left;
+}
+.recuperation-container .form__recuperation small {
+  color: #666;
+  font-size: 0.8em;
+  display: block;
+  margin-top: 5px;
+}
+
+.succes-message {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #28a745;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.recuperation-links {
+  text-align: center;
+  margin-top: 20px;
+}
+.recuperation-links a {
+  color: #6CD3FF;
+  text-decoration: none;
+}
+.recuperation-links a:hover {
+  color: rgb(31.5, 188.1020408163, 255);
+  text-decoration: underline;
+}
+
+.btn__link {
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+.btn__link:hover {
+  text-decoration: none;
 }/*# sourceMappingURL=style.css.map */

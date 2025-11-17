@@ -7,6 +7,7 @@
 <html lang="fr">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil - MarketPlace</title>
     <meta name="description" content="Ceci est l'accueil de notre market place !">
     <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
@@ -25,7 +26,7 @@
                 <a class="notif" href="notification.php"><i class="fa-regular fa-bell icone"></i></a>
                 <form action="recherche.php" method="get" role="search" aria-label="Site search">
                     <label for="site-search"></label>
-                    <input type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
+                    <input disabled type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
                     <button type="submit">Search</button>
                 </form>
                 <a href="panier.php"><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
@@ -46,6 +47,14 @@
     </header>
     <div class="div__catalogue">
         <?php
+            include 'config.php';
+
+            $stmt = $pdo->query('SELECT p.*, m.chemin_image 
+                FROM produit p 
+                LEFT JOIN media_produit m ON p.id_produit = m.id_produit');
+            echo "<pre>";
+            print_r($stmt->fetch());
+            echo "</pre>";
             // On récupère tout le contenu de la table produit
             $reponse = $pdo->query('SELECT * FROM produit');
             // On affiche chaque entrée une à une
@@ -53,7 +62,7 @@
                 if ($donnees['categorie'] == $_GET['categorie'] || !(isset($_GET['categorie']))){?>
             <a href="produitdetail.php?article=<?php echo $donnees['id_produit']?>" style="text-decoration:none; color:inherit;">
                 <article>
-                    <img src="../assets/images/Tel.jpg" alt="Image du produit" width="350" height="225">
+                    <img src="<?php echo htmlentities($donnees['chemin_image']); ?>" alt="Image du produit" width="350" height="225">
                     <h2 class="titre"><?php echo htmlentities($donnees['nom_produit']) ?></h2>
                     <p class="description"><?php echo htmlentities($donnees['description_produit']) ?></p>
                     <p class="prix"><?php echo htmlentities($donnees['prix_ttc'].'€') ?></p>

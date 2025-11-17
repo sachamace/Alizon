@@ -107,7 +107,7 @@ body header nav nav .notif .icone {
   /* petit espace avant le texte comme “Panier” */
 }
 
-.div__catalogue div {
+.div__catalogue {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -115,7 +115,7 @@ body header nav nav .notif .icone {
   gap: 25px;
   padding: 40px;
 }
-.div__catalogue div article {
+.div__catalogue article {
   background-color: #FFFFFF;
   width: 350px;
   height: 550px;
@@ -125,21 +125,21 @@ body header nav nav .notif .icone {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.div__catalogue div article:hover {
+.div__catalogue article:hover {
   transform: scale(1.02);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
-.div__catalogue div article img {
+.div__catalogue article img {
   width: 100%;
   height: auto;
   border-radius: 8px;
 }
-.div__catalogue div article h2 {
+.div__catalogue article h2 {
   font-size: 1.2em;
   font-weight: bold;
   margin: 8px 0 4px 0;
 }
-.div__catalogue div article p {
+.div__catalogue article p {
   margin: 6px 0;
 }
 

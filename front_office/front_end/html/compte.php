@@ -1,6 +1,7 @@
 <?php
     include 'config.php';
     include 'session.php';
+    include 'sessionindex.php';
     $stmt = $pdo->query("SELECT version();");
 ?>
 <!DOCTYPE html>
@@ -33,11 +34,12 @@
                     <a href="">Artisanat Local</a>
                     <a href="">Décoration Intérieure</a>
                     <a href="">Epicerie FIne</a>
-                    <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
                 </div>
+                <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
                 <?php else: ?><a href="seconnecter.php"></i>S'identifier</a>
                 <?php endif; ?>
             </nav>
+
         </nav>
     </header>
     <div class="mobile-frame">

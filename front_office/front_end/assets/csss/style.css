@@ -279,6 +279,7 @@ body header nav nav .notif .icone {
   align-items: flex-start;
   margin: 3em 5em;
   /* Ajustements globaux */
+  /* ----- Responsive panier ----- */
 }
 .main_panier section,
 .main_panier aside {
@@ -370,7 +371,7 @@ body header nav nav .notif .icone {
   text-align: left;
 }
 .main_panier aside a {
-  background: linear-gradient(to left, #ff6ce2, #FFE0FE);
+  background: #ff6ce2;
   text-align: center;
   padding: 10px;
   font-size: 14px;
@@ -431,5 +432,381 @@ body header nav nav .notif .icone {
 .main_panier .btn-vider:hover {
   background-color: #c9302c;
 }
+@media (max-width: 600px) {
+  .main_panier {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1em;
+  }
+  .main_panier section {
+    margin: 1em;
+    flex: none;
+    width: 80%;
+  }
+  .main_panier section article {
+    margin: 0;
+  }
+  .main_panier section article .panier_info {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    min-width: 0;
+    font-size: 0.75em;
+  }
+  .main_panier section article .panier_bottom {
+    flex-basis: 100%;
+    width: 100%;
+    margin-left: -2.5em;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .main_panier section article img {
+    width: 50%;
+    max-width: 120px;
+    height: auto;
+  }
+  .main_panier form {
+    padding: 0;
+    margin: 0;
+  }
+}
 
+/* --------------- FIN DU SCSS POUR LE PANIER ---------------*/
+/* --------------- MAIN du PRODUIT --------------- */
+.main_produit {
+  font-family: "Space Grotesk", sans-serif;
+  padding: 4rem clamp(1rem, 8vw, 10rem);
+  color: #000;
+  margin: 0 auto;
+  box-sizing: border-box;
+  /* Séparation entre le produit et les avis */
+  /* Section des avis */
+}
+@media (max-width: 900px) {
+  .main_produit {
+    padding: 3rem 1rem;
+  }
+}
+.main_produit .fiche-produit {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+.main_produit .fiche-produit .fiche-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 3rem;
+  flex-wrap: nowrap;
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    gap: 0;
+  }
+}
+.main_produit .fiche-produit .fiche-container .images-produit {
+  flex: 1 1 28rem;
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .images-produit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+.main_produit .fiche-produit .fiche-container .images-produit .image-principale {
+  width: 80%;
+  max-width: 28rem;
+  min-width: 20rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .images-produit .image-principale {
+    min-width: 16rem;
+    max-width: 16rem;
+  }
+}
+.main_produit .fiche-produit .fiche-container .images-produit .miniatures {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.main_produit .fiche-produit .fiche-container .images-produit .miniatures img {
+  width: 4.5rem;
+  height: 4.5rem;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.main_produit .fiche-produit .fiche-container .images-produit .miniatures img:hover {
+  transform: scale(1.05);
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .images-produit .miniatures {
+    display: none;
+  }
+}
+.main_produit .fiche-produit .fiche-container .infos-produit {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 28rem;
+  width: auto;
+  margin-left: 5%;
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .infos-produit {
+    margin-left: 0;
+    min-width: 19rem;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .titre-ligne {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .titre-ligne h1 {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .titre-ligne i {
+  font-size: 2.5rem;
+  color: #e87edc;
+  cursor: pointer;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .prix {
+  margin: 1rem 0;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .prix .prix-valeur {
+  background-color: #e87edc;
+  font-weight: bold;
+  font-size: 2em;
+  padding: 0.5rem 1.5rem;
+  border-radius: 5px;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .stock-avis {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.5rem 0 1.5rem 0;
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .infos-produit .stock-avis {
+    flex-wrap: wrap;
+  }
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .stock-dispo {
+  font-size: 1rem;
+  font-weight: 600;
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .stock-dispo {
+    margin-top: 1em;
+  }
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .avis {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .avis {
+    margin-top: 2em;
+  }
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .avis .etoiles {
+  color: #e87edc;
+  font-size: 1.2rem;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .avis a {
+  color: #8c3bbf;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .avis a:hover {
+  text-decoration: underline;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .description {
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  font-size: 1.25em;
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .boutons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5em;
+  padding: 1em 2em 2em 2em;
+  margin-top: 2rem;
+  height: -moz-fit-content;
+  height: fit-content;
+  text-align: center;
+}
+@media (max-width: 900px) {
+  .main_produit .fiche-produit .fiche-container .infos-produit .boutons {
+    flex-wrap: wrap;
+  }
+}
+.main_produit .fiche-produit .fiche-container .infos-produit .boutons button {
+  background: #ff6ce2;
+  text-align: center;
+  padding: 0.5em;
+  font-size: 2em;
+  font-weight: 325;
+  width: 11em;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.main_produit .popup {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  padding-top: 5%;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+.main_produit .popup .popup-content {
+  display: block;
+  margin: auto;
+  max-width: 80%;
+  max-height: 80vh;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+.main_produit .popup .close {
+  position: absolute;
+  top: 20px;
+  right: 45px;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+.main_produit .separateur-avis {
+  border: none;
+  border-top: 2px solid #000;
+  margin: 3rem 0 2rem 0;
+}
+.main_produit .avis {
+  padding: 1rem 2rem;
+  background-color: #fafafa;
+  border-radius: 10px;
+  /* Chaque avis */
+}
+.main_produit .avis h1,
+.main_produit .avis h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+.main_produit .avis .avis-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid #000;
+  /* En-tête d’un avis : nom + étoiles */
+  /* Commentaire */
+}
+.main_produit .avis .avis-item:last-child {
+  border-bottom: none;
+}
+.main_produit .avis .avis-item .avis-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.main_produit .avis .avis-item .avis-header strong {
+  font-size: 1.1rem;
+  color: #5a2ca0;
+}
+.main_produit .avis .avis-item .avis-header .avis-etoiles {
+  color: #e87edc;
+  font-size: 1.2rem;
+}
+.main_produit .avis .avis-item .avis-commentaire {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.main_produit .avis .form-avis {
+  margin-top: 3rem;
+  padding: 1.5rem 2rem;
+  background-color: #f3f3f3;
+  border-radius: 10px;
+}
+.main_produit .avis .form-avis h2 {
+  font-size: 1.4rem;
+  color: #5a2ca0;
+  margin-bottom: 1rem;
+}
+.main_produit .avis .form-avis label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+.main_produit .avis .form-avis select,
+.main_produit .avis .form-avis textarea {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: "Space Grotesk", sans-serif;
+  background-color: white;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.main_produit .avis .form-avis select:focus,
+.main_produit .avis .form-avis textarea:focus {
+  border-color: #e87edc;
+  box-shadow: 0 0 5px rgba(232, 126, 220, 0.5);
+  outline: none;
+}
+.main_produit .avis .form-avis button {
+  margin-top: 1.5rem;
+  background-color: #5a2ca0;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.main_produit .avis .form-avis button:active {
+  transform: scale(0.98);
+}
+.main_produit .avis .form-avis .erreur {
+  color: red;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.main_produit .infos-produit .avis {
+  width: auto;
+}
+
+/* --------------- FIN DU SCSS POUR LE PRODUIT ---------------*/
 /* --------------- FIN DU SCSS POUR LE PANIER ---------------*//*# sourceMappingURL=style.css.map */

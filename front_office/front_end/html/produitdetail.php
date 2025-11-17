@@ -19,7 +19,7 @@ if (isset($_GET['article'])) {
 } else {
     $id_produit = null; // valeur par défaut
 }
-$id_panier = 2; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
+$id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
 
 $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
 $stmt_stock->execute([':id_produit' => $id_produit]);
@@ -48,7 +48,7 @@ if (count($avis) > 0) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajouter_avis') {
     $note = (int)$_POST['note'];
     $description = trim($_POST['description']);
-    $id_client = 1; // À remplacer par $_SESSION['id_client'] quand tu auras le système de connexion  ATTENTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    $id_client = $_SESSION['id'];
 
     if ($note >= 1 && $note <= 5 && !empty($description)) {
         try {
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $id_produit = null; // ou une valeur par défaut
     }
-    $id_panier = 2; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
+    $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
 
     if ($action === 'panier') { // traitement ajouter panier
         $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');

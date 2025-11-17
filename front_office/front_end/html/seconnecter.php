@@ -14,10 +14,14 @@
         $user_sql = $pdo->prepare("SELECT i.id_num, i.login, i.mdp, cv.id_client FROM public.identifiants i JOIN public.compte_client cv ON i.id_num = cv.id_num WHERE i.login = ?");
         $user_sql->execute([$email]);
         $user = $user_sql->fetch();
+        $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_client = ?");
+        $panier_sql->execute([$user['id_num']]);
+        $panier = $panier_sql->fetch();
         if($user){
             if(strcmp($mdp,$user['mdp']) == 0){
                 $_SESSION['id'] = $user['id_num'];
                 $_SESSION['login'] = $user['login'];
+                $_SESSION['id_panier'] = $panier['id_panier'];
                 header("Location: accueil.php");
                 exit();
             }

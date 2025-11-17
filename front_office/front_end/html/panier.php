@@ -4,7 +4,7 @@ include 'session.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_produit = (int) $_POST['id_produit'];
     $action = $_POST['action'];
-    $id_panier = 2; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
+    $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
 
     // Récupérer la quantité actuelle et le stock disponible
 
@@ -65,7 +65,8 @@ try {
     $stmt2 = $pdo->query("SELECT * FROM produit;");
     $resultats = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
-    $requete_articles = $pdo->query("SELECT * FROM panier_produit WHERE id_panier = 2 ORDER BY id_produit ASC;");
+    $requete_articles = $pdo->prepare("SELECT * FROM panier_produit WHERE id_panier = ? ORDER BY id_produit ASC;");
+    $requete_articles->execute([$_SESSION['id_panier']]);
     $articles = $requete_articles->fetchAll();
 
 } catch (PDOException $e) {

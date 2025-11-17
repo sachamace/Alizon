@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             header("Location: " . $_SERVER['REQUEST_URI']);
             exit();
         } catch (PDOException $e) {
+            $erreur_avis = "Vous avez déjà rentré un avis";
         }
     } else {
         $erreur_avis = "Veuillez entrer une note entre 1 et 5 et une description.";

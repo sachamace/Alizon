@@ -171,25 +171,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header>
         <nav>
             <nav>
-                <a href="accueil.html"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
-                <a class="notif" href="notification.html"><i class="fa-regular fa-bell icone"></i></a>
-                <form action="recherche.html" method="get" role="search" aria-label="Site search">
+                <a href="accueil.php"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
+                <a class="notif" href="notification.php"><i class="fa-regular fa-bell icone"></i></a>
+                <form action="recherche.php" method="get" role="search" aria-label="Site search">
                     <label for="site-search"></label>
                     <input type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
                     <button type="submit">Search</button>
                 </form>
-                <a href="panier.html"><i class="fa-solid fa-cart-shopping icone"></i>Panier</a>
+                <a href="panier.php"><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
             </nav>
             <nav>
                 <div>
-                    <a href="accueil.html">Accueil</a>
-                    <a href="produitTerroir.html">Produit du Terroir</a>
-                    <a href="modeBretonne.html">Mode Bretonne</a>
+                    <a href="produitTerroir.php">Produit du Terroir</a>
+                    <a href="modeBretonne.php">Mode Bretonne</a>
                     <a href="">Artisanat Local</a>
                     <a href="">Décoration Intérieure</a>
                     <a href="">Epicerie FIne</a>
                 </div>
-                <a href="seconnecter.html"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
+                <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
+                <?php else: ?><a href="seconnecter.php"></i>S'identifier</a>
+                <?php endif; ?>
             </nav>
         </nav>
     </header>

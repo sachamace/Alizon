@@ -37,8 +37,8 @@
                     <a href="">Artisanat Local</a>
                     <a href="">Décoration Intérieure</a>
                     <a href="">Epicerie FIne</a>
-                    <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
                 </div>
+                <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
                 <?php else: ?><a href="seconnecter.php"></i>S'identifier</a>
                 <?php endif; ?>
             </nav>
@@ -50,7 +50,7 @@
             $reponse = $pdo->query('SELECT * FROM produit');
             // On affiche chaque entrée une à une
             while ($donnees = $reponse->fetch()){ ?>
-            <a href="produit.php?article=<?php echo $donnees['id_produit']?>" style="text-decoration:none; color:inherit;">
+            <a href="produitdetail.php?article=<?php echo $donnees['id_produit']?>" style="text-decoration:none; color:inherit;">
                 <article>
                     <img src="../assets/images/Tel.jpg" alt="Image du produit" width="350" height="225">
                     <h2 class="titre"><?php echo htmlentities($donnees['nom_produit']) ?></h2>

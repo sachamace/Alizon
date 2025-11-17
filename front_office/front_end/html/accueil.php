@@ -49,7 +49,8 @@
             // On récupère tout le contenu de la table produit
             $reponse = $pdo->query('SELECT * FROM produit');
             // On affiche chaque entrée une à une
-            while ($donnees = $reponse->fetch()){ ?>
+            while ($donnees = $reponse->fetch()){ 
+                if ($donnees['categorie'] == $_GET['categorie'] || !(isset($_GET['categorie']))){?>
             <a href="produitdetail.php?article=<?php echo $donnees['id_produit']?>" style="text-decoration:none; color:inherit;">
                 <article>
                     <img src="../assets/images/Tel.jpg" alt="Image du produit" width="350" height="225">
@@ -60,6 +61,7 @@
             </a>
                 
             <?php
+                }
             }
             $reponse->closeCursor(); // Termine le traitement de la requête
         ?>

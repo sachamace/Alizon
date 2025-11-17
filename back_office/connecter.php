@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             
             <div class="input-group">
                 <label for="email" class="input-label">E-mail</label>
-                <input type="email" id="email" name="email" placeholder="Votre adresse email" required class="input__connexion" value="<?= htmlentities($_POST['email'] ?? '') ?>">
+                <input type="email" id="email" name="email" placeholder="Votre adresse email" required class="input__connexion">
             </div>
             
             <div class="input-group">

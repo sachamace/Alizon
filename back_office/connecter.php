@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <input type="password" id="motdepasse" name="motdepasse" placeholder="Votre mot de passe" required class="input__connexion">
             </div>
             
-            <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+            <a href="recupmdp.php" class="forgot-password">Mot de passe oublié ?</a>
             
             <button type="submit" class="btn__connexion">Se connecter</button>
             

@@ -968,3 +968,56 @@ Fin de structure du dashboard produit
   margin-top: 5px;
   display: block;
 }
+
+// =============================================================================
+// RÉCUPÉRATION DE MOT DE PASSE
+// =============================================================================
+
+.recuperation-container {
+  @extend .container__connexion;
+  
+  .header__recuperation {
+    @extend .header__connexion;
+  }
+  
+  .form__recuperation {
+    @extend .form__connexion;
+    @include form-step;
+  }
+}
+
+// Messages de statut
+.succes-message {
+  @include alert-message($success-bg, $success-border, $success-color);
+  margin-bottom: 20px;
+}
+
+
+
+// Styles spécifiques à la récupération
+.recuperation-links {
+  text-align: center;
+  margin-top: 20px;
+  
+  a {
+    color: $primary-color;
+    text-decoration: none;
+    
+    &:hover {
+      color: color.adjust($primary-color, $lightness: -15%);
+      text-decoration: underline;
+    }
+  }
+}
+
+// Adaptation du bouton pour les liens
+.btn__link {
+  @extend .btn__connexion;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  
+  &:hover {
+    text-decoration: none;
+  }
+}

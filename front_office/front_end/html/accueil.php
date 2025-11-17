@@ -1,8 +1,3 @@
-<?php
-    include 'config.php';
-    include 'sessionindex.php';
-    $stmt = $pdo->query("SELECT version();");
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -33,11 +28,20 @@
             </nav>
             <nav>
                 <div>
-                    <a href="produitTerroir.php">Produit du Terroir</a>
-                    <a href="modeBretonne.php">Mode Bretonne</a>
+                    <a href="produitTerroir.html">Produit du Terroir</a>
+                    <a href="modeBretonne.html">Mode Bretonne</a>
                     <a href="">Artisanat Local</a>
                     <a href="">Décoration Intérieure</a>
                     <a href="">Epicerie FIne</a>
+=======
+                <?php
+                // On récupère tout le contenu de la table produit
+                $categorie = $pdo->query('SELECT * FROM categorie');
+                // On affiche chaque entrée une à une
+                while ($cat = $categorie->fetch()){ ?>
+                    <a href="<?php echo $cat['libelle']?>.php"><?php echo $cat['libelle']?></a>
+                <?php } ?>
+>>>>>>> 8fe94ba (changement catégorie du nav (liaison base de donnée))
                 </div>
                 <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
                 <?php else: ?><a href="seconnecter.php"></i>S'identifier</a>
@@ -75,35 +79,5 @@
             $reponse->closeCursor(); // Termine le traitement de la requête
         ?>
     </div>
-    <footer class="footer mobile">
-        <a><img src="../assets/images/Home-Icon-by-arus-2.jpg"></a>
-        <a><img src="../assets/images/magnifying-glass-solid-full (1).svg"></a>
-        <a href="panier.php"><i class="fa-solid fa-cart-shopping icone" ></i></a>
-        <a class="notif" href="notification.html"><i class="fa-regular fa-bell icone"></i></a>
-        <a href="consulterProfilClient.php"><i class="fa-regular fa-user icone"></i></a>
-    </footer>
-    <footer class="footer tablette">
-        <article>
-            <h3>Informations légale</h3>
-            <p>Mention légales</p>
-            <p>Condition general de vente</p>
-            <p>Politique de confidentialité</p>
-            <p>Droit de rétraction</p>
-            <p>Gestion des cookies</p>
-        </article>
-        <article>
-            <h3>Besoin d’aide ?</h3>
-            <p>Service client</p>
-            <p>Suivi de commande</p>
-            <p>Retours & remboursements</p>
-        </article>
-        <article>
-            <h3>À propos</h3>
-            <p>Qui sommes-nous ?</p>
-            <p>Notre histoire</p>
-            <p>Engagements & valeurs</p>
-            <p>Recrutement</p>
-        </article>
-    </footer>
 </body>
 </html>

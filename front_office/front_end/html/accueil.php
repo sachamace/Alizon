@@ -1,3 +1,8 @@
+<?php
+    include 'config.php';
+    include 'sessionindex.php';
+    $stmt = $pdo->query("SELECT version();");
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -54,9 +59,6 @@
             $stmt = $pdo->query('SELECT p.*, m.chemin_image 
                 FROM produit p 
                 LEFT JOIN media_produit m ON p.id_produit = m.id_produit');
-            echo "<pre>";
-            print_r($stmt->fetch());
-            echo "</pre>";
             // On récupère tout le contenu de la table produit
             $reponse = $pdo->query('SELECT * FROM produit');
             // On affiche chaque entrée une à une

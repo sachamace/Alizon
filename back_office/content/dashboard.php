@@ -38,47 +38,41 @@ try {
         </article>
     </a>
 
-    
-    <?php if (empty($produits)): ?>
-        <p>Aucun produit disponible pour votre compte.</p>
-    <?php else: ?>
-        <?php foreach ($produits as $produit): 
-            // Déterminer la classe CSS en fonction du statut et du stock
-            $class_article = '';
-            $statut_text = '';
-            
-            if (!$produit['est_actif']) {
-                $class_article = 'inactif';
-                $statut_text = 'Inactif';
-            } elseif ($produit['stock_disponible'] <= 0) {
-                $class_article = 'rupture-stock';
-                $statut_text = 'Rupture de stock';
-            } elseif ($produit['stock_disponible'] <= $produit['seuil_alerte']) {
-                $class_article = 'stock-faible';
-                $statut_text = 'Stock faible';
-            } else {
-                $class_article = 'stock-normal';
-                $statut_text = 'Actif';
-            }
+    <?php foreach ($produits as $produit):
+        // Déterminer la classe CSS en fonction du statut et du stock
+        $class_article = '';
+        $statut_text = '';
+
+        if (!$produit['est_actif']) {
+            $class_article = 'inactif';
+            $statut_text = 'Inactif';
+        } elseif ($produit['stock_disponible'] <= 0) {
+            $class_article = 'rupture-stock';
+            $statut_text = 'Rupture de stock';
+        } elseif ($produit['stock_disponible'] <= $produit['seuil_alerte']) {
+            $class_article = 'stock-faible';
+            $statut_text = 'Stock faible';
+        } else {
+            $class_article = 'stock-normal';
+            $statut_text = 'Actif';
+        }
         ?>
-            <a href="?page=produit&id=<?= $produit['id_produit'] ?>&type=consulter">
-                <article class="<?= $class_article ?>">
-                    <div class="statut-badge"><?= $statut_text ?></div>
-                    <img src="<?= $produit['image_path'] ? htmlentities($produit['image_path']) : 'front_end/assets/images/template.jpg' ?>" 
-                        alt="<?= htmlentities($produit['nom_produit']) ?>" 
-                        width="350" height="225">
-                    <h2 class="titre"><?= htmlentities($produit['nom_produit']) ?></h2>
-                    <p class="description"><?= htmlentities($produit['description_produit']) ?></p>
-                    <p class="description">Catégorie : <?= htmlentities($produit['categorie']) ?></p>
-                    <p class="stock <?= $class_article ?>">
-                        Stock : <?= $produit['stock_disponible'] ?> 
-                        <?php if ($produit['stock_disponible'] <= $produit['seuil_alerte'] && $produit['stock_disponible'] > 0): ?>
-                            <span class="alerte">(Seuil: <?= $produit['seuil_alerte'] ?>)</span>
-                        <?php endif; ?>
-                    </p>
-                    <p class="prix"><?= number_format($produit['prix_ttc'], 2, ',', ' ') ?>€</p>
-                </article>
-            </a>
-        <?php endforeach; ?>
-    <?php endif; ?>
+        <a href="?page=produit&id=<?= $produit['id_produit'] ?>&type=consulter">
+            <article class="<?= $class_article ?>">
+                <div class="statut-badge"><?= $statut_text ?></div>
+                <img src="<?= $produit['image_path'] ? htmlentities($produit['image_path']) : 'front_end/assets/images/template.jpg' ?>"
+                    alt="<?= htmlentities($produit['nom_produit']) ?>" width="350" height="225">
+                <h2 class="titre"><?= htmlentities($produit['nom_produit']) ?></h2>
+                <p class="description"><?= htmlentities($produit['description_produit']) ?></p>
+                <p class="description">Catégorie : <?= htmlentities($produit['categorie']) ?></p>
+                <p class="stock <?= $class_article ?>">
+                    Stock : <?= $produit['stock_disponible'] ?>
+                    <?php if ($produit['stock_disponible'] <= $produit['seuil_alerte'] && $produit['stock_disponible'] > 0): ?>
+                        <span class="alerte">(Seuil: <?= $produit['seuil_alerte'] ?>)</span>
+                    <?php endif; ?>
+                </p>
+                <p class="prix"><?= number_format($produit['prix_ttc'], 2, ',', ' ') ?>€</p>
+            </article>
+        </a>
+    <?php endforeach; ?>
 </section>

@@ -1,13 +1,4 @@
 <?php
-session_start();
-include 'config.php';
-
-// Vérifier si le vendeur est connecté
-if (!isset($_SESSION['est_connecte']) || $_SESSION['est_connecte'] !== true) {
-    header("Location: connecter.php");
-    exit();
-}
-
 $id_vendeur_connecte = $_SESSION['vendeur_id'];
 
 try {

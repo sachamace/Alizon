@@ -1428,3 +1428,52 @@ footer.footer.tablette {
 }
 
 /* --------------- FIN DU SCSS POUR LE PRODUIT ---------------*/
+
+
+/* ----------------------- DEBUT SCSS COMPTE -------------------*/
+
+.main_compte {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    padding: 2rem;
+    width: 80%;
+    margin: 8em auto;
+    background-color: white;
+
+    .card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.5rem;
+        border: 2px solid #ff6ad5;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #000;
+        transition: 0.2s;
+
+        img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .text {
+            h3 {
+                margin: 0;
+                font-size: 1.3rem;
+            }
+
+            p {
+                margin: 0.2rem 0 0;
+                font-size: 0.9rem;
+                opacity: 0.8;
+            }
+        }
+
+        &:hover {
+            background: rgba(255, 106, 213, 0.08);
+            transform: translateY(-3px);
+        }
+    }
+}

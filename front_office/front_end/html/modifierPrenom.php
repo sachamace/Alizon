@@ -1,11 +1,5 @@
 <?php 
-session_start();
-
-if (!isset($_SESSION['user'])) {
-    header("Location: consulterProfilClient.php");
-    exit;
-}
-
+include 'session.php';
 $user = $_SESSION['user'];
 $prenomActuel = $user['prenom'];
 $erreur = '';
@@ -22,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Et aussi dans la base
         include 'config.php';
         $stmt = $pdo->prepare("UPDATE compte_client SET prenom = ? WHERE id_client = ?");
-        $stmt->execute([$newPrenom, $_SESSION['id_client']]);
+        $stmt->execute([$newPrenom, $_SESSION['id']]);
 
         header("Location: consulterProfilClient.php");
         exit;

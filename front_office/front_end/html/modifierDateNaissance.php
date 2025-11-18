@@ -1,10 +1,5 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['user'])) {
-    header("Location: consulterProfilClient.php");
-    exit;
-}
+include 'session.php';
 
 $user = $_SESSION['user'];
 $dateActuel = $user['date_naissance'];
@@ -25,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user']['date_naissance'] = $newDate;
             include 'config.php';
             $stmt = $pdo->prepare("UPDATE compte_client SET date_naissance = ? WHERE id_client = ?");
-            $stmt->execute([$newDate, $_SESSION['id_client']]);
+            $stmt->execute([$newDate, $_SESSION['id']]);
             
             header("Location: consulterProfilClient.php");
             exit;

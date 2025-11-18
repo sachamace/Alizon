@@ -22,6 +22,7 @@ body {
     background-color: #FFFFFF;
     width: 100%;
     position: fixed;
+    top: 0;
 
     nav {
       display: flex;
@@ -153,13 +154,13 @@ body {
   margin: 0;
   display: flex;
   justify-content: center;
-  padding: 1rem;
+  padding: 0;
 
   .main_paiement, .main_profilClient {
-    width: 600px;
+    width: 800px;
     padding: 2rem;
     box-sizing: border-box;
-    margin: auto;
+    margin: 10rem auto;
 
     .commande-header {
       display: flex;

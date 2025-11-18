@@ -1,10 +1,5 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['user'])) {
-    header("Location: consulterProfilClient.php");
-    exit;
-}
+include 'session.php';
 
 include 'config.php';
 
@@ -21,11 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // 🔹 Mise à jour de l'email dans compte_client
         $stmt = $pdo->prepare("UPDATE compte_client SET adresse_mail = ? WHERE id_client = ?");
-        $stmt->execute([$newEmail, $_SESSION['id_client']]);
+        $stmt->execute([$newEmail, $_SESSION['id']]);
 
         // 🔹 Mise à jour du login dans identifiants
         $stmt = $pdo->prepare("UPDATE identifiants SET login = ? WHERE id_num = ?");
-        $stmt->execute([$newEmail, $user['id_num']]);
+        $stmt->execute([$newEmail, $_SESSION['id']]);
 
         // 🔹 Recharger les infos depuis la BDD pour mettre la session à jour
         $stmt = $pdo->prepare("
@@ -47,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             LEFT JOIN adresse a ON cc.id_client = a.id_client
             WHERE cc.id_client = ?
         ");
-        $stmt->execute([$_SESSION['id_client']]);
+        $stmt->execute([$_SESSION['id']]);
 
         $_SESSION['user'] = $stmt->fetch(PDO::FETCH_ASSOC);
 

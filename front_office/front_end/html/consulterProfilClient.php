@@ -3,13 +3,8 @@ include 'config.php';
 include 'session.php';
 include 'sessionindex.php';
 
-session_start();
+$id_client_connecte = $_SESSION['id'];
 
-if (!isset($_SESSION['id_client'])) {
-    $_SESSION['id_client'] = 1; 
-}
-
-$id_client_connecte = $_SESSION['id_client'];
 
 try {
     $stmt = $pdo->prepare("
@@ -57,7 +52,7 @@ try {
     <link rel="stylesheet" href="../assets/csss/style.css">
 </head>
 <body class="body_profilClient">
-    <!-- <header>
+    <header>
         <nav>
             <nav>
                 <a href="accueil.php"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
@@ -82,7 +77,7 @@ try {
                 <?php endif; ?>
             </nav>
         </nav>
-    </header> -->
+    </header>
     <main class="main_profilClient">    
         <section class="bloc infoG">
                 <h2>Informations générales</h2>

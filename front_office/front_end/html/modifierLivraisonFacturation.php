@@ -1,10 +1,5 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['user'])) {
-    header("Location: consulterProfilClient.php");
-    exit;
-}
+include 'session.php';
 
 $user = $_SESSION['user'];
 $adresseActuelle = $user['adresse'];
@@ -30,16 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         include 'config.php';
         $stmt = $pdo->prepare("UPDATE adresse SET adresse = ? WHERE id_client = ?");
-        $stmt->execute([$newAdresse, $_SESSION['id_client']]);
+        $stmt->execute([$newAdresse, $_SESSION['id']]);
 
         $stmt = $pdo->prepare("UPDATE adresse SET code_postal = ? WHERE id_client = ?");
-        $stmt->execute([$newCodePostal, $_SESSION['id_client']]);
+        $stmt->execute([$newCodePostal, $_SESSION['id']]);
 
         $stmt = $pdo->prepare("UPDATE adresse SET ville = ? WHERE id_client = ?");
-        $stmt->execute([$newVille, $_SESSION['id_client']]);
+        $stmt->execute([$newVille, $_SESSION['id']]);
 
         $stmt = $pdo->prepare("UPDATE adresse SET pays = ? WHERE id_client = ?");
-        $stmt->execute([$newPays, $_SESSION['id_client']]);
+        $stmt->execute([$newPays, $_SESSION['id']]);
 
         header("Location: consulterProfilClient.php");
         exit;

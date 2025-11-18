@@ -1,11 +1,11 @@
 <?php
     include 'config.php';
-    session_start();
+    include 'session.php';
 /* ---------------------------------------------------
    1. Vérification de la connexion client
 --------------------------------------------------- */
 
-    $id_client_connecte = $_SESSION['id_client'];
+    $id_client_connecte = $_SESSION['id'];
 
 /* ---------------------------------------------------
    2. Récupération de l'adresse du client

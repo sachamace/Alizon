@@ -70,7 +70,7 @@
                     }
                 ?>
             </div>
-            <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+            <a href="recupmdp.php" class="forgot-password">Mot de passe oublié ?</a>
             <button type="submit" class="btn__connexion">Se connecter</button>
             <div class="separator"></div>
             <label><a href="createcompte.php" class="btn__creer-compte">Créer un compte</a></label>

@@ -4,6 +4,12 @@ body {
   margin: 0;
   padding: 0;
   font-family: "Space Grotesk", sans-serif;
+  max-width: 1440px;
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 header {

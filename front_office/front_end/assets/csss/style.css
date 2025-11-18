@@ -1,14 +1,22 @@
 @charset "UTF-8";
-/*Le header */
+/*Le header et le footer*/
 body {
   background-color: #E8E8E8;
   margin: 0;
   padding: 0;
   font-family: "Space Grotesk", sans-serif;
+  max-width: 1440px;
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
+  display: flex;
+  flex-direction: column;
 }
 body header {
-  height: 127px;
+  height: 150px;
   background-color: #FFFFFF;
+  width: 100%;
+  position: fixed;
 }
 body header nav {
   display: flex;
@@ -38,7 +46,7 @@ body header nav nav:first-child a[href="panier.php"] {
 }
 body header nav nav:first-child a[href="panier.php"]:last-child,
 body header nav nav:first-child a[href="panier.php"] :nth-last-child(2) {
-  margin-right: 0;
+  margin-right: 30px;
 }
 body header nav nav:first-child a[href="panier.php"]:nth-child(2) {
   margin-left: 42.625px;
@@ -53,14 +61,16 @@ body header nav nav:first-child form {
   margin-left: 42.625px;
 }
 body header nav nav:first-child form input {
-  width: 1426.15px;
-  height: 36.95px;
+  width: 1000px;
+  height: 45px;
   border-radius: 25px;
   border-color: #ff6ce2;
   padding: 10px 10px 10px 40px;
   background-image: url(../images/magnifying-glass-solid-full\ \(1\).svg);
   background-repeat: no-repeat;
   background-position: left;
+  opacity: 0.5;
+  /* rend grisé */
 }
 body header nav nav:first-child form button {
   display: none;
@@ -83,7 +93,7 @@ body header nav nav:last-child div a {
   padding: 10px;
   font-size: 14px;
   font-weight: 325;
-  width: 203px;
+  width: 200px;
   border-radius: 10px;
 }
 body header nav nav:last-child a {
@@ -93,10 +103,17 @@ body header nav nav:last-child a {
   color: rgb(0, 0, 0);
   font-size: 23px;
   font-weight: bold;
+  margin-right: 8px;
 }
 body header nav nav .notif {
   width: 54px;
   height: 54px;
+  opacity: 0.5;
+  /* rend grisé */
+  pointer-events: none;
+  /* empêche le clic */
+  cursor: not-allowed;
+  /* curseur bloqué */
 }
 body header nav nav .notif .icone {
   display: inline-block;
@@ -106,7 +123,91 @@ body header nav nav .notif .icone {
   margin-right: 8px;
   /* petit espace avant le texte comme “Panier” */
 }
+body footer.footer.mobile,
+body footer.footer.tablette {
+  display: none;
+}
 
+/* --- MOBILE --- */
+@media (max-width: 767px) {
+  body {
+    width: 100%;
+  }
+  body header {
+    height: 180px;
+    width: 100vw;
+  }
+  body header nav nav:first-child {
+    flex-direction: column;
+  }
+  body header nav nav:first-child a[href="panier.php"] {
+    display: none;
+  }
+  body header nav nav:first-child form {
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+  body header nav nav:first-child form input {
+    width: 407px;
+  }
+  body header nav nav:last-child div {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+  }
+  body header nav nav:last-child div a {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  body header nav nav:last-child a {
+    display: none;
+  }
+  body header nav nav .notif {
+    display: none;
+  }
+  body footer.footer.mobile {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #fff;
+    position: fixed;
+    bottom: env(safe-area-inset-bottom);
+    left: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 9999;
+    border-top: 1px solid #ddd;
+  }
+  body footer.footer.mobile a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+  }
+  body footer.footer.mobile a img,
+  body footer.footer.mobile a i {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  body footer.footer.tablette {
+    display: none;
+  }
+}
+/* --- TABLETTE --- */
+@media (min-width: 768px) and (max-width: 1024px) {
+  footer.footer.tablette {
+    display: flex;
+    background-color: #000;
+    color: white;
+    padding: 40px;
+    justify-content: space-around;
+  }
+  footer.footer.mobile {
+    display: none;
+  }
+}
 .div__catalogue {
   display: flex;
   flex-wrap: wrap;
@@ -114,6 +215,7 @@ body header nav nav .notif .icone {
   align-content: flex-start;
   gap: 25px;
   padding: 40px;
+  margin-top: 150px;
 }
 .div__catalogue article {
   background-color: #FFFFFF;
@@ -124,10 +226,6 @@ body header nav nav .notif .icone {
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.div__catalogue article:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 .div__catalogue article img {
   width: 100%;

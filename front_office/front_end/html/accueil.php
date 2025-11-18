@@ -34,7 +34,7 @@
             <nav>
                 <div>
                 <?php
-                // On récupère tout le contenu de la table produit
+                // On récupère tout le contenu de la table catégorie
                 $categorie = $pdo->query('SELECT * FROM categorie');
                 // On affiche chaque entrée une à une
                 while ($cat = $categorie->fetch()){ ?>

@@ -1093,4 +1093,8 @@ body {
             transform: translateY(-3px);
         }
     }
+    @media (max-width: 900px){
+        display: flex;
+        flex-wrap: wrap;
+    }
 }

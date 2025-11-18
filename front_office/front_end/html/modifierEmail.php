@@ -67,11 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="body_profilClient">
   <main class="main_profilClient">
     <section class="bloc donneePerso">
+        <a href="consulterProfilClient.php" class="retour-profil">← Retour au profil</a>
         <h2>Modifier mon adresse e-mail</h2>
         <div class="options">
           <form method="post">
               <label>Nouvel e-mail :</label>
-              <input type="email" name="email" class="option" value="<?= htmlspecialchars($emailActuel) ?>" required>
+              <input type="email" name="email" class="input-modify" value="<?= htmlspecialchars($emailActuel) ?>" required>
 
               <?php if (!empty($erreur)){ ?>
               <p style="color:red;"><?= htmlspecialchars($erreur) ?></p>
@@ -81,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </form>
         </div> 
         
-      <a href="ConsulterProfilClient.php" style="display:block; margin-top:1rem;">← Retour au profil</a>
+      
     </section>
   </main>
 </body>

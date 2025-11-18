@@ -225,6 +225,13 @@ body {
           }
         }
 
+        .input-modify {
+          background: #e8e8e8;
+          padding: 0.8rem;
+          border-radius: 10px;
+          border: 1px solid black;
+        }
+
         .formulaire {
           display: flex;
           flex-direction: column;
@@ -266,6 +273,14 @@ body {
           display: none;
         }
       }
+
+      .retour-profil {
+        display:block; 
+        margin-bottom:1rem; 
+        text-decoration: none; 
+        color: black;
+      }
+      
       .payer-btn {
         margin-top: 1rem;
         width: 100%;

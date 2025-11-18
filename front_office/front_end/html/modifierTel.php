@@ -41,11 +41,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="body_profilClient">
   <main class="main_profilClient">
     <section class="bloc donneePerso">
+      <a href="consulterProfilClient.php" class="retour-profil">← Retour au profil</a>
       <h2>Modifier mon numéro de téléphone :</h2>
         <div class="options">
           <form method="post">
               <label>Nouvel numéro :</label>
-              <input type="tel" name="telephone" class="option" value="<?= htmlspecialchars($numActuel) ?>">
+              <input type="tel" name="telephone" class="input-modify" value="<?= htmlspecialchars($numActuel) ?>">
               
               <?php if ($erreur){ ?>
                   <p style="color:red;"><?= htmlspecialchars($erreur) ?></p>
@@ -54,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <button type="submit" class="payer-btn">Enregistrer</button>
           </form>
         </div>
-      <a href="consulterProfilClient.php" style="display:block; margin-top:1rem;">← Retour au profil</a>
+      
     </section>
   </main>
 </body>

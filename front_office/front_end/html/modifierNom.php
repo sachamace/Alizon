@@ -40,11 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="body_profilClient">
   <main class="main_profilClient">
     <section class="bloc donneePerso">
+      <a href="consulterProfilClient.php" class="retour-profil">← Retour au profil</a>
       <h2>Modifier mon nom</h2>
         <div class="options">
           <form method="POST">
               <label for="nom">Nom :</label>
-              <input type="text" id="nom" name="nom" class="option" value="<?= htmlspecialchars($nomActuel) ?>">
+              <input type="text" id="nom" name="nom" class="input-modify" value="<?= htmlspecialchars($nomActuel) ?>">
 
               <?php if ($erreur){ ?>
                   <p style="color:red;"><?= htmlspecialchars($erreur) ?></p>
@@ -53,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <button type="submit" class="payer-btn">Enregistrer</button>
           </form>
         </div>
-      <a href="consulterProfilClient.php" style="display:block; margin-top:1rem;">← Retour au profil</a>
+      
     </section>
   </main>
 </body>

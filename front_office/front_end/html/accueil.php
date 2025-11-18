@@ -49,7 +49,7 @@
     </header>
     <div class="div__catalogue">
         <?php
-            include 'config.php';
+            
 
             $stmt = $pdo->query('SELECT p.*, m.chemin_image 
                 FROM produit p 

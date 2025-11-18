@@ -1243,4 +1243,50 @@ footer.footer.tablette {
   width: auto;
 }
 
-/* --------------- FIN DU SCSS POUR LE PRODUIT ---------------*//*# sourceMappingURL=style.css.map */
+/* --------------- FIN DU SCSS POUR LE PRODUIT ---------------*/
+/* ----------------------- DEBUT SCSS COMPTE -------------------*/
+.main_compte {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  padding: 2rem;
+  width: 80%;
+  margin: 8em auto;
+  background-color: white;
+}
+.main_compte .card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 2px solid #ff6ad5;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #000;
+  transition: 0.2s;
+}
+.main_compte .card img {
+  width: 50px;
+  height: 50px;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+.main_compte .card .text h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+.main_compte .card .text p {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+.main_compte .card:hover {
+  background: rgba(255, 106, 213, 0.08);
+  transform: translateY(-3px);
+}
+@media (max-width: 900px) {
+  .main_compte {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}/*# sourceMappingURL=style.css.map */

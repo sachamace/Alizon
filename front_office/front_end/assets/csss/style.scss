@@ -162,6 +162,7 @@ body {
     width: 600px;
     padding: 2rem;
     box-sizing: border-box;
+    margin: auto;
 
     .commande-header {
       display: flex;
@@ -373,6 +374,7 @@ body {
     .main_paiement, .main_profilClient {
       width: 390px;
       padding: 1rem;
+      margin: auto;
 
       .commande-header h1 {
         font-size: 1.2rem;

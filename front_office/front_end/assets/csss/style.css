@@ -139,6 +139,7 @@ body header nav nav .notif .icone {
   width: 600px;
   padding: 2rem;
   box-sizing: border-box;
+  margin: auto;
 }
 .body_paiement .main_paiement .commande-header, .body_paiement .main_profilClient .commande-header, .body_profilClient .main_paiement .commande-header, .body_profilClient .main_profilClient .commande-header {
   display: flex;
@@ -334,6 +335,7 @@ body header nav nav .notif .icone {
   .body_paiement .main_paiement, .body_paiement .main_profilClient, .body_profilClient .main_paiement, .body_profilClient .main_profilClient {
     width: 390px;
     padding: 1rem;
+    margin: auto;
   }
   .body_paiement .main_paiement .commande-header h1, .body_paiement .main_profilClient .commande-header h1, .body_profilClient .main_paiement .commande-header h1, .body_profilClient .main_profilClient .commande-header h1 {
     font-size: 1.2rem;

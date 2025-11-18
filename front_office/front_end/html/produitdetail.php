@@ -230,7 +230,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="infos-produit">
                     <div class="titre-ligne">
                         <h1><?= htmlspecialchars($infos['nom_produit']) ?></h1>
-                        <i class="fa-regular fa-heart"></i>
                     </div>
                     
 

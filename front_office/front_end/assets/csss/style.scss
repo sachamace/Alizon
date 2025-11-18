@@ -4,20 +4,26 @@
 @use "variables" as *;
 @use "mixin" as *;
 
-/*Le header */
+/*Le header et le footer*/
 body {
-  background-color: #E8E8E8;
-  margin: 0;
-  padding: 0;
-  font-family: "Space Grotesk", sans-serif;
-
-  header {
-    height: 127px;
-    background-color: #FFFFFF;
-
-    nav {
-      display: flex;
-      flex-direction: column;
+    background-color: #E8E8E8;
+    margin: 0;
+    padding: 0;
+    font-family: "Space Grotesk", sans-serif;
+    max-width: 1440px;
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    header {
+        height: 150px;
+        background-color: #FFFFFF;
+        width: 100%;
+        position: fixed;
+        nav {
+            display: flex;
+            flex-direction: column;
 
       /* empile les deux nav verticalement */
       nav {
@@ -91,16 +97,19 @@ body {
             gap: 16px;
             margin-bottom: 7px;
 
-            a {
-              background: linear-gradient(to left, $primary-color, #FFE0FE);
-              text-align: center;
-              padding: 10px;
-              font-size: 14px;
-              font-weight: 325;
-              width: 203px;
-              border-radius: 10px;
-            }
-          }
+                        a {
+                            background: linear-gradient(to left, $colP, #FFE0FE);
+                            text-align: center;
+                            padding: 10px;
+                            font-size: 14px;
+                            font-weight: 325;
+                            width: 150px;
+                            border-radius: 10px;
+                            opacity: 0.5;            /* rend grisé */
+                            pointer-events: none;    /* empêche le clic */
+                            cursor: not-allowed;     /* curseur bloqué */
+                        }
+                    }
 
           a {
             /* Le lien "Mon Compte" tout à droite */
@@ -112,9 +121,12 @@ body {
           }
         }
 
-        .notif {
-          width: 54px;
-          height: 54px;
+                .notif {
+                    width: 54px;
+                    height: 54px;
+                    opacity: 0.5;            /* rend grisé */
+                    pointer-events: none;    /* empêche le clic */
+                    cursor: not-allowed;     /* curseur bloqué */
 
           .icone {
             display: inline-block;

@@ -150,9 +150,9 @@ body {
 
 /* CSS de base : tablette / desktop */
 .body_paiement, .body_profilClient {
-  font-family: "Space Grotesk", sans-serif;
-  background-color: #fff;
-  color: #000;
+  font-family: $font-family;
+  background-color: $white;
+  color: $black;
   margin: 0;
   display: flex;
   justify-content: center;
@@ -183,8 +183,8 @@ body {
     }
 
     .bloc {
-      border: 1px solid #f0a8d0;
-      border-radius: 10px;
+      border: 1px solid $primary-color;
+      border-radius: $border-radius;
       padding: 1rem;
       margin-bottom: 1rem;
 
@@ -207,7 +207,7 @@ body {
           gap: 0.8rem;
           background: #e8e8e8;
           padding: 1rem 1.2rem;
-          border-radius: 10px;
+          border-radius: $border-radius;
           cursor: pointer;
           transition: 0.2s;
 
@@ -228,17 +228,17 @@ body {
         .input-modify {
           background: #e8e8e8;
           padding: 0.8rem;
-          border-radius: 10px;
-          border: 1px solid black;
+          border-radius: $border-radius;
+          border: 1px solid $black
         }
 
         .formulaire {
           display: flex;
           flex-direction: column;
           gap: 0.6rem;
-          background: #fff;
+          background: $white;
           padding: 1rem;
-          border-radius: 10px;
+          border-radius: $border-radius;
 
           input[type="text"],
           input[type="email"],
@@ -278,18 +278,22 @@ body {
         display:block; 
         margin-bottom:1rem; 
         text-decoration: none; 
-        color: black;
+        color: $black;
+
+        &:hover {
+          font-weight: bold;
+        }
       }
       
       .payer-btn {
         margin-top: 1rem;
         width: 100%;
-        background: #f07ab0;
+        background: $primary-color;
         border: none;
-        border-radius: 10px;
+        border-radius: $border-radius;
         padding: 1rem;
         font-size: 1.1rem;
-        color: #fff;
+        color: $white;
         cursor: pointer;
         transition: 0.2s ease;
 
@@ -326,7 +330,7 @@ body {
 
       .total {
         font-weight: bold;
-        border-top: 1px solid #ccc;
+        border-top: 1px solid $gray-medium;
         padding-top: 0.5rem;
       }
     }
@@ -340,8 +344,8 @@ body {
       left: 0;
       width: 100%;
       max-width: 600px;
-      background: #fff;
-      border-top: 1px solid #eee;
+      background: $white;
+      border-top: 1px solid $gray-medium;
 
       button {
         background: none;

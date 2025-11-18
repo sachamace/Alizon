@@ -1,22 +1,14 @@
 @charset "UTF-8";
-/*Le header et le footer*/
+/*Le header */
 body {
   background-color: #E8E8E8;
   margin: 0;
   padding: 0;
   font-family: "Space Grotesk", sans-serif;
-  max-width: 1440px;
-  width: 100%;
-  min-height: 100vh;
-  height: auto;
-  display: flex;
-  flex-direction: column;
 }
 body header {
-  height: 150px;
+  height: 127px;
   background-color: #FFFFFF;
-  width: 100%;
-  position: fixed;
 }
 body header nav {
   display: flex;
@@ -91,11 +83,8 @@ body header nav nav:last-child div a {
   padding: 10px;
   font-size: 14px;
   font-weight: 325;
-  width: 150px;
+  width: 203px;
   border-radius: 10px;
-  opacity: 0.5; /* rend grisé */
-  pointer-events: none; /* empêche le clic */
-  cursor: not-allowed; /* curseur bloqué */
 }
 body header nav nav:last-child a {
   /* Le lien "Mon Compte" tout à droite */
@@ -108,9 +97,6 @@ body header nav nav:last-child a {
 body header nav nav .notif {
   width: 54px;
   height: 54px;
-  opacity: 0.5; /* rend grisé */
-  pointer-events: none; /* empêche le clic */
-  cursor: not-allowed; /* curseur bloqué */
 }
 body header nav nav .notif .icone {
   display: inline-block;
@@ -157,6 +143,56 @@ body header nav nav .notif .icone {
   margin: 6px 0;
 }
 
+@media screen and (max-width: 428px) {
+  /* S'assure que le container peut utiliser toute la largeur */
+  .div__catalogue {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 10px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+  /* Le lien prend toute la place de sa cellule */
+  .div__catalogue a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+  /* L'article remplit la cellule du grid (PLUS de largeur fixe en px) */
+  .div__catalogue article {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    margin: 0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: transform 0.15s ease;
+    overflow: hidden;
+  }
+  /* Image responsive (ignore width/height en HTML) */
+  .div__catalogue article img {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    -o-object-fit: cover;
+       object-fit: cover;
+    border-radius: 6px;
+  }
+  .div__catalogue article h2 {
+    font-size: 0.85rem;
+    margin: 6px 0 4px;
+    line-height: 1.1;
+  }
+  .div__catalogue article p {
+    font-size: 0.75rem;
+    margin: 4px 0;
+  }
+}
 /* --------------- Connexion + Créer un compte --------------- */
 .body__connexion {
   margin: 0;
@@ -858,5 +894,4 @@ body header nav nav .notif .icone {
   width: auto;
 }
 
-/* --------------- FIN DU SCSS POUR LE PRODUIT ---------------*/
-/* --------------- FIN DU SCSS POUR LE PANIER ---------------*//*# sourceMappingURL=style.css.map */
+/* --------------- FIN DU SCSS POUR LE PRODUIT ---------------*//*# sourceMappingURL=style.css.map */

@@ -33,11 +33,6 @@
             </nav>
             <nav>
                 <div>
-                    <a href="produitTerroir.html">Produit du Terroir</a>
-                    <a href="modeBretonne.html">Mode Bretonne</a>
-                    <a href="">Artisanat Local</a>
-                    <a href="">Décoration Intérieure</a>
-                    <a href="">Epicerie FIne</a>
                 <?php
                 // On récupère tout le contenu de la table produit
                 $categorie = $pdo->query('SELECT * FROM categorie');

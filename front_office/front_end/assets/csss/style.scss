@@ -145,7 +145,7 @@ body {
       }
     }
   }
-
+}
 /***************** DEBUT paiement.php et consulterProfilClient.php*****************/
 
 /* CSS de base : tablette / desktop */
@@ -418,10 +418,9 @@ body {
 
 /***************** FIN paiement.php*****************/
 
-  footer.footer.mobile,
-  footer.footer.tablette {
-    display: none;   // cachés par défaut
-  }
+footer.footer.mobile,
+footer.footer.tablette {
+  display: none;   // cachés par défaut
 }
 
 /* --- MOBILE --- */

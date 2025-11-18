@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8">
   <title>Modifier mon nom</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../assets/csss/style.css">
 </head>
 <body class="body_profilClient">
   <main class="main_profilClient">

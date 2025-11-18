@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8">
   <title>Modifier ma date de naissance</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../assets/csss/style.css">
 </head>
 <body class="body_profilClient">
   <main class="main_profilClient">

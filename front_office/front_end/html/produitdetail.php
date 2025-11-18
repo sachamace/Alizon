@@ -204,8 +204,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // On récupère tout le contenu de la table produit
                 $categorie = $pdo->query('SELECT * FROM categorie');
                 // On affiche chaque entrée une à une
-                while ($cat = $categorie->fetch()){ ?>
-                    <a href="<?php echo $cat['libelle']?>.php"><?php echo $cat['libelle']?></a>
+                while ($cat = $categorie->fetch()){ 
+                    $libelle = urlencode($cat['libelle']); 
+                    ?>
+                    <a href="accueil.php?categorie=<?php echo $libelle; ?>">
+                        <?php echo $cat['libelle']; ?>
+                    </a>
                 <?php } ?>
                 </div>
                 <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>

@@ -167,6 +167,12 @@ body header nav nav .notif .icone {
 .body_paiement .main_paiement .paiement .options .option:hover, .body_paiement .main_paiement .donneePerso .options .option:hover, .body_paiement .main_profilClient .paiement .options .option:hover, .body_paiement .main_profilClient .donneePerso .options .option:hover, .body_profilClient .main_paiement .paiement .options .option:hover, .body_profilClient .main_paiement .donneePerso .options .option:hover, .body_profilClient .main_profilClient .paiement .options .option:hover, .body_profilClient .main_profilClient .donneePerso .options .option:hover {
   background: #dcdcdc;
 }
+.body_paiement .main_paiement .paiement .options .input-modify, .body_paiement .main_paiement .donneePerso .options .input-modify, .body_paiement .main_profilClient .paiement .options .input-modify, .body_paiement .main_profilClient .donneePerso .options .input-modify, .body_profilClient .main_paiement .paiement .options .input-modify, .body_profilClient .main_paiement .donneePerso .options .input-modify, .body_profilClient .main_profilClient .paiement .options .input-modify, .body_profilClient .main_profilClient .donneePerso .options .input-modify {
+  background: #e8e8e8;
+  padding: 0.8rem;
+  border-radius: 10px;
+  border: 1px solid black;
+}
 .body_paiement .main_paiement .paiement .options .formulaire, .body_paiement .main_paiement .donneePerso .options .formulaire, .body_paiement .main_profilClient .paiement .options .formulaire, .body_paiement .main_profilClient .donneePerso .options .formulaire, .body_profilClient .main_paiement .paiement .options .formulaire, .body_profilClient .main_paiement .donneePerso .options .formulaire, .body_profilClient .main_profilClient .paiement .options .formulaire, .body_profilClient .main_profilClient .donneePerso .options .formulaire {
   display: flex;
   flex-direction: column;
@@ -215,6 +221,12 @@ body header nav nav .notif .icone {
 }
 .body_paiement .main_paiement .paiement .options .hidden, .body_paiement .main_paiement .donneePerso .options .hidden, .body_paiement .main_profilClient .paiement .options .hidden, .body_paiement .main_profilClient .donneePerso .options .hidden, .body_profilClient .main_paiement .paiement .options .hidden, .body_profilClient .main_paiement .donneePerso .options .hidden, .body_profilClient .main_profilClient .paiement .options .hidden, .body_profilClient .main_profilClient .donneePerso .options .hidden {
   display: none;
+}
+.body_paiement .main_paiement .paiement .retour-profil, .body_paiement .main_paiement .donneePerso .retour-profil, .body_paiement .main_profilClient .paiement .retour-profil, .body_paiement .main_profilClient .donneePerso .retour-profil, .body_profilClient .main_paiement .paiement .retour-profil, .body_profilClient .main_paiement .donneePerso .retour-profil, .body_profilClient .main_profilClient .paiement .retour-profil, .body_profilClient .main_profilClient .donneePerso .retour-profil {
+  display: block;
+  margin-bottom: 1rem;
+  text-decoration: none;
+  color: black;
 }
 .body_paiement .main_paiement .paiement .payer-btn, .body_paiement .main_paiement .donneePerso .payer-btn, .body_paiement .main_profilClient .paiement .payer-btn, .body_paiement .main_profilClient .donneePerso .payer-btn, .body_profilClient .main_paiement .paiement .payer-btn, .body_profilClient .main_paiement .donneePerso .payer-btn, .body_profilClient .main_profilClient .paiement .payer-btn, .body_profilClient .main_profilClient .donneePerso .payer-btn {
   margin-top: 1rem;

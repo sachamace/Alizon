@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $_SESSION['code_verification'] = $code_verification;
                 $_SESSION['email_recuperation'] = $email;
                 $_SESSION['code_expiration'] = $expiration;
-                $_SESSION['ancien_mdp_hash'] = $utilisateur['mdp']; // Stocker l'ancien hash
+                $_SESSION['ancien_mdp_hash'] = $utilisateur['mdp']; // Stocker l'ancien mot de passe en clair
                 $_SESSION['essais_verification'] = 0; // Réinitialiser les essais
                 
                 // Envoi simple de l'email
@@ -93,15 +93,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $erreur = "Les mots de passe ne correspondent pas.";
             } 
             // Vérifier que ce n'est pas l'ancien mot de passe
-            elseif (isset($_SESSION['ancien_mdp_hash']) && password_verify($nouveau_mdp, $_SESSION['ancien_mdp_hash'])) {
+            elseif (isset($_SESSION['ancien_mdp_hash']) && $nouveau_mdp === $_SESSION['ancien_mdp_hash']) {
                 $erreur = "Vous ne pouvez pas utiliser votre ancien mot de passe. Veuillez en choisir un nouveau.";
             } 
             else {
                 $email = $_SESSION['email_recuperation'];
-                $mdp_hash = password_hash($nouveau_mdp, PASSWORD_DEFAULT);
                 
+                // Stocker le mot de passe en clair dans la base de données
                 $stmt = $pdo->prepare("UPDATE public.identifiants SET mdp = ? WHERE login = ?");
-                $stmt->execute([$mdp_hash, $email]);
+                $stmt->execute([$nouveau_mdp, $email]);
                 
                 // Nettoyer toutes les variables de session
                 unset($_SESSION['code_verification']);
@@ -142,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="succes-message">
                 <?= htmlentities($succes) ?>
             </div>
-            <a href="connecter.php" class="btn__link">Se connecter</a>
+            <a href="seconnecter.php" class="btn__link">Se connecter</a>
         <?php else: ?>
         
         <form class="form__recuperation" method="POST">

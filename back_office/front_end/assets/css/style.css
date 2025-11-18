@@ -752,6 +752,8 @@ Structure de Consulter/Modifier Profil
   border-radius: 12px;
   border: 1px solid #e5e5e5;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  overflow-y: auto;
+  scroll-behavior: smooth;
 }
 .profil-container h2 {
   font-size: 1.4rem;
@@ -854,6 +856,59 @@ Structure de Consulter/Modifier Profil
 }
 .profil-container input[type=text]::placeholder {
   color: #bdc3c7;
+}
+.profil-container .password-edit {
+  display: none;
+  flex-direction: column;
+  gap: 0.5em;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  animation: fadeIn 0.3s ease;
+}
+.profil-container .password-edit label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #5a5a5a;
+  text-transform: uppercase;
+}
+.profil-container .password-edit input {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+.profil-container .password-edit.visible {
+  display: flex;
+}
+.profil-container .password-field {
+  cursor: pointer;
+}
+.profil-container .password-field div {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.5em;
+}
+.profil-container .password-field div svg {
+  transition: transform 0.3s ease;
+}
+.profil-container .password-field div .rotate {
+  transform: rotate(180deg);
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* -----------------------------------------

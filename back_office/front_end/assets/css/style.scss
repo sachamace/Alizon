@@ -794,6 +794,8 @@ Structure de Consulter/Modifier Profil
   border-radius: 12px;
   border: 1px solid #e5e5e5;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  overflow-y: auto;
+  scroll-behavior: smooth;
 
   h2 {
     font-size: 1.4rem;
@@ -841,16 +843,16 @@ Structure de Consulter/Modifier Profil
     }
 
     .modifier,
-    .confirmer{
+    .confirmer {
       @include button-variant($success-color);
     }
 
-    .annuler{
+    .annuler {
       @include button-variant($cancel-color);
     }
   }
 
-  input[type="text"]{
+  input[type="text"] {
     @include input-base;
     width: auto;
 
@@ -870,6 +872,70 @@ Structure de Consulter/Modifier Profil
       color: #bdc3c7;
     }
   }
+
+  .password-edit {
+    display: none;
+    flex-direction: column;
+    gap: 0.5em;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+    animation: fadeIn .3s ease;
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #5a5a5a;
+      text-transform: uppercase;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    &.visible {
+      display: flex;
+    }
+  }
+
+  .password-field {
+    cursor: pointer;
+
+    div{
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 0.5em;
+
+      svg {
+        transition: transform 0.3s ease;
+      }
+
+      .rotate {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
 }
 
 /* -----------------------------------------

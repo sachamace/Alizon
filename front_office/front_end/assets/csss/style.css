@@ -422,7 +422,7 @@ footer.footer.tablette {
   body header nav nav .notif {
     display: none;
   }
-  body footer.footer.mobile {
+  footer.footer.mobile {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -435,33 +435,16 @@ footer.footer.tablette {
     z-index: 9999;
     border-top: 1px solid #ddd;
   }
-  body footer.footer.mobile a {
+  footer.footer.mobile a {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 50px;
     height: 50px;
   }
-  body footer.footer.mobile a img,
-  body footer.footer.mobile a i {
-    max-width: 100%;
-    max-height: 100%;
-  }
-  body footer.footer.tablette {
-    display: none;
-  }
-}
-/* --- TABLETTE --- */
-@media (min-width: 768px) and (max-width: 1024px) {
-  footer.footer.tablette {
-    display: flex;
-    background-color: #000;
-    color: white;
-    padding: 40px;
-    justify-content: space-around;
-  }
-  footer.footer.mobile {
-    display: none;
+  footer.footer.mobile a i {
+    font-size: 24px;
+    color: #000;
   }
 }
 .div__catalogue {

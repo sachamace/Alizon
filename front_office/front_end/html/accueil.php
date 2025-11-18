@@ -34,7 +34,7 @@
             <nav>
                 <div>
                 <?php
-                // On récupère tout le contenu de la table catégorie
+                // On récupère tout le contenu de la table 
                 $categorie = $pdo->query('SELECT * FROM categorie');
                 // On affiche chaque entrée une à une
                 while ($cat = $categorie->fetch()){ ?>
@@ -75,34 +75,13 @@
         ?>
     </div>
     <footer class="footer mobile">
-        <a><img src="../assets/images/Home-Icon-by-arus-2.jpg"></a>
-        <a><img src="../assets/images/magnifying-glass-solid-full (1).svg"></a>
-        <a href="panier.php"><i class="fa-solid fa-cart-shopping icone" ></i></a>
+        <a href="accueil.php"><i class="fa-solid fa-house icone"></i></a>
+        <a class="recherche" href="recherche.php"><i class="fa-solid fa-magnifying-glass icone"></i></a>
+        <a href="panier.php"><i class="fa-solid fa-cart-shopping icone"></i></a>
         <a class="notif" href="notification.html"><i class="fa-regular fa-bell icone"></i></a>
-        <a href="consulterProfilClient.php"><i class="fa-regular fa-user icone"></i></a>
-    </footer>
-    <footer class="footer tablette">
-        <article>
-            <h3>Informations légale</h3>
-            <p>Mention légales</p>
-            <p>Condition general de vente</p>
-            <p>Politique de confidentialité</p>
-            <p>Droit de rétraction</p>
-            <p>Gestion des cookies</p>
-        </article>
-        <article>
-            <h3>Besoin d’aide ?</h3>
-            <p>Service client</p>
-            <p>Suivi de commande</p>
-            <p>Retours & remboursements</p>
-        </article>
-        <article>
-            <h3>À propos</h3>
-            <p>Qui sommes-nous ?</p>
-            <p>Notre histoire</p>
-            <p>Engagements & valeurs</p>
-            <p>Recrutement</p>
-        </article>
+        <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i></a>
+                <?php else: ?><a href="seconnecter.php"><i class="fa-regular fa-user icone"></i></a>
+                <?php endif; ?>
     </footer>
 </body>
 </html>

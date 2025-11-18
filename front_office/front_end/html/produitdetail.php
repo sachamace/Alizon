@@ -193,18 +193,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <a class="notif" href="notification.php"><i class="fa-regular fa-bell icone"></i></a>
                 <form action="recherche.php" method="get" role="search" aria-label="Site search">
                     <label for="site-search"></label>
-                    <input type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
+                    <input disabled type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
                     <button type="submit">Search</button>
                 </form>
                 <a href="panier.php"><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
             </nav>
             <nav>
                 <div>
-                    <a href="produitTerroir.php">Produit du Terroir</a>
-                    <a href="modeBretonne.php">Mode Bretonne</a>
-                    <a href="">Artisanat Local</a>
-                    <a href="">Décoration Intérieure</a>
-                    <a href="">Epicerie FIne</a>
+                <?php
+                // On récupère tout le contenu de la table produit
+                $categorie = $pdo->query('SELECT * FROM categorie');
+                // On affiche chaque entrée une à une
+                while ($cat = $categorie->fetch()){ ?>
+                    <a href="<?php echo $cat['libelle']?>.php"><?php echo $cat['libelle']?></a>
+                <?php } ?>
                 </div>
                 <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
                 <?php else: ?><a href="seconnecter.php"></i>S'identifier</a>

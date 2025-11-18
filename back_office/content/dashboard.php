@@ -38,28 +38,24 @@ try {
         </article>
     </a>
 
-    
-    <?php if (empty($produits)): ?>
-        <p>Aucun produit disponible pour votre compte.</p>
-    <?php else: ?>
-        <?php foreach ($produits as $produit): 
-            // Déterminer la classe CSS en fonction du statut et du stock
-            $class_article = '';
-            $statut_text = '';
-            
-            if (!$produit['est_actif']) {
-                $class_article = 'inactif';
-                $statut_text = 'Inactif';
-            } elseif ($produit['stock_disponible'] <= 0) {
-                $class_article = 'rupture-stock';
-                $statut_text = 'Rupture de stock';
-            } elseif ($produit['stock_disponible'] <= $produit['seuil_alerte']) {
-                $class_article = 'stock-faible';
-                $statut_text = 'Stock faible';
-            } else {
-                $class_article = 'stock-normal';
-                $statut_text = 'Actif';
-            }
+    <?php foreach ($produits as $produit):
+        // Déterminer la classe CSS en fonction du statut et du stock
+        $class_article = '';
+        $statut_text = '';
+
+        if (!$produit['est_actif']) {
+            $class_article = 'inactif';
+            $statut_text = 'Inactif';
+        } elseif ($produit['stock_disponible'] <= 0) {
+            $class_article = 'rupture-stock';
+            $statut_text = 'Rupture de stock';
+        } elseif ($produit['stock_disponible'] <= $produit['seuil_alerte']) {
+            $class_article = 'stock-faible';
+            $statut_text = 'Stock faible';
+        } else {
+            $class_article = 'stock-normal';
+            $statut_text = 'Actif';
+        }
         ?>
             <a href="?page=produit&id=<?= $produit['id_produit'] ?>&type=consulter">
                 <article class="<?= $class_article ?>">

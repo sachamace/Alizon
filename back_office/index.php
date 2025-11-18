@@ -8,8 +8,6 @@ if (!isset($_SESSION['est_connecte']) || $_SESSION['est_connecte'] !== true) {
     exit();
 }
 
-$pdo->exec("SET search_path TO bigou;");
-
 if (isset($_GET['page'])) {
     $page = $_GET['page'];
 } else {

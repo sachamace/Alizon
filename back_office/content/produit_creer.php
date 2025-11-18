@@ -203,7 +203,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <div class="produit-actions">
             <input type="submit" name="confirmer" classe="confirmer" value="Confirmer">
-            <a href="index.php?page=produit" class="annuler">Annuler</a>
+            <a href="index.php?page=dashboard" class="annuler">Annuler</a>
         </div>
     </form>
 </section>

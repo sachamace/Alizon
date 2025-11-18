@@ -103,8 +103,8 @@ body header nav nav .notif .icone {
 /* CSS de base : tablette / desktop */
 .body_paiement, .body_profilClient {
   font-family: "Space Grotesk", sans-serif;
-  background-color: #fff;
-  color: #000;
+  background-color: white;
+  color: black;
   margin: 0;
   display: flex;
   justify-content: center;
@@ -132,8 +132,8 @@ body header nav nav .notif .icone {
   cursor: pointer;
 }
 .body_paiement .main_paiement .bloc, .body_paiement .main_profilClient .bloc, .body_profilClient .main_paiement .bloc, .body_profilClient .main_profilClient .bloc {
-  border: 1px solid #f0a8d0;
-  border-radius: 10px;
+  border: 1px solid #ff6ce2;
+  border-radius: 1em;
   padding: 1rem;
   margin-bottom: 1rem;
 }
@@ -153,7 +153,7 @@ body header nav nav .notif .icone {
   gap: 0.8rem;
   background: #e8e8e8;
   padding: 1rem 1.2rem;
-  border-radius: 10px;
+  border-radius: 1em;
   cursor: pointer;
   transition: 0.2s;
 }
@@ -170,16 +170,16 @@ body header nav nav .notif .icone {
 .body_paiement .main_paiement .paiement .options .input-modify, .body_paiement .main_paiement .donneePerso .options .input-modify, .body_paiement .main_profilClient .paiement .options .input-modify, .body_paiement .main_profilClient .donneePerso .options .input-modify, .body_profilClient .main_paiement .paiement .options .input-modify, .body_profilClient .main_paiement .donneePerso .options .input-modify, .body_profilClient .main_profilClient .paiement .options .input-modify, .body_profilClient .main_profilClient .donneePerso .options .input-modify {
   background: #e8e8e8;
   padding: 0.8rem;
-  border-radius: 10px;
+  border-radius: 1em;
   border: 1px solid black;
 }
 .body_paiement .main_paiement .paiement .options .formulaire, .body_paiement .main_paiement .donneePerso .options .formulaire, .body_paiement .main_profilClient .paiement .options .formulaire, .body_paiement .main_profilClient .donneePerso .options .formulaire, .body_profilClient .main_paiement .paiement .options .formulaire, .body_profilClient .main_paiement .donneePerso .options .formulaire, .body_profilClient .main_profilClient .paiement .options .formulaire, .body_profilClient .main_profilClient .donneePerso .options .formulaire {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  background: #fff;
+  background: white;
   padding: 1rem;
-  border-radius: 10px;
+  border-radius: 1em;
 }
 .body_paiement .main_paiement .paiement .options .formulaire input[type=text],
 .body_paiement .main_paiement .paiement .options .formulaire input[type=email],
@@ -228,15 +228,18 @@ body header nav nav .notif .icone {
   text-decoration: none;
   color: black;
 }
+.body_paiement .main_paiement .paiement .retour-profil:hover, .body_paiement .main_paiement .donneePerso .retour-profil:hover, .body_paiement .main_profilClient .paiement .retour-profil:hover, .body_paiement .main_profilClient .donneePerso .retour-profil:hover, .body_profilClient .main_paiement .paiement .retour-profil:hover, .body_profilClient .main_paiement .donneePerso .retour-profil:hover, .body_profilClient .main_profilClient .paiement .retour-profil:hover, .body_profilClient .main_profilClient .donneePerso .retour-profil:hover {
+  font-weight: bold;
+}
 .body_paiement .main_paiement .paiement .payer-btn, .body_paiement .main_paiement .donneePerso .payer-btn, .body_paiement .main_profilClient .paiement .payer-btn, .body_paiement .main_profilClient .donneePerso .payer-btn, .body_profilClient .main_paiement .paiement .payer-btn, .body_profilClient .main_paiement .donneePerso .payer-btn, .body_profilClient .main_profilClient .paiement .payer-btn, .body_profilClient .main_profilClient .donneePerso .payer-btn {
   margin-top: 1rem;
   width: 100%;
-  background: #f07ab0;
+  background: #ff6ce2;
   border: none;
-  border-radius: 10px;
+  border-radius: 1em;
   padding: 1rem;
   font-size: 1.1rem;
-  color: #fff;
+  color: white;
   cursor: pointer;
   transition: 0.2s ease;
 }
@@ -280,8 +283,8 @@ body header nav nav .notif .icone {
   left: 0;
   width: 100%;
   max-width: 600px;
-  background: #fff;
-  border-top: 1px solid #eee;
+  background: white;
+  border-top: 1px solid #ccc;
 }
 .body_paiement .main_paiement .navbar button, .body_paiement .main_profilClient .navbar button, .body_profilClient .main_paiement .navbar button, .body_profilClient .main_profilClient .navbar button {
   background: none;

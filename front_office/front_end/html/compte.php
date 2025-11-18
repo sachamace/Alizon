@@ -14,45 +14,71 @@
     <link rel="stylesheet" href="../assets/csss/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-<body class="body__compte">
-    <header class="header__compte">
+<body>
+    <header>
         <nav>
             <nav>
                 <a href="accueil.php"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
                 <a class="notif" href="notification.php"><i class="fa-regular fa-bell icone"></i></a>
                 <form action="recherche.php" method="get" role="search" aria-label="Site search">
                     <label for="site-search"></label>
-                    <input type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
+                    <input disabled type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
                     <button type="submit">Search</button>
                 </form>
                 <a href="panier.php"><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
             </nav>
             <nav>
                 <div>
-                    <a href="produitTerroir.php">Produit du Terroir</a>
-                    <a href="modeBretonne.php">Mode Bretonne</a>
-                    <a href="">Artisanat Local</a>
-                    <a href="">Décoration Intérieure</a>
-                    <a href="">Epicerie FIne</a>
+                <?php
+                // On récupère tout le contenu de la table produit
+                $categorie = $pdo->query('SELECT * FROM categorie');
+                // On affiche chaque entrée une à une
+                while ($cat = $categorie->fetch()){ 
+                    $libelle = urlencode($cat['libelle']); 
+                    ?>
+                    <a href="accueil.php?categorie=<?php echo $libelle; ?>">
+                        <?php echo $cat['libelle']; ?>
+                    </a>
+                <?php } ?>
                 </div>
                 <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
                 <?php else: ?><a href="seconnecter.php"></i>S'identifier</a>
                 <?php endif; ?>
             </nav>
-
         </nav>
     </header>
-    <div class="mobile-frame">
-        <div class="account-container">
-            <h2 class = "h2__compte">Votre compte</h2>
-            <hr class = "hr_compte">
-            <div class="btn-list">
-                <div class="btn">Vos infos ➜</div>
-                <div class="btn">Vos commandes ➜</div>
-                <div class="btn">Se déconnecter ➜</div>
-                <div class="btn">Supprimer vos données ➜</div>
+    <main class="main_compte">
+        <a href="#" class="card">
+            <img src="../assets/images/info.png" alt="">
+            <div class="text">
+                <h3>Vos infos</h3>
+                <p>Consulter et modifier mes données, adresse, nom etc…</p>
             </div>
-        </div>
-    </div>
+        </a>
+
+        <a href="#" class="card">
+            <img src="../assets/images/commande.png" alt="">
+            <div class="text">
+                <h3>Vos commandes</h3>
+                <p>Voir, retourner ou acheter à nouveau les articles que vous avez commandé</p>
+            </div>
+        </a>
+
+        <a href="deconnecter.php" class="card">
+            <img src="../assets/images/logout.png" alt="">
+            <div class="text">
+                <h3>Se déconnecter</h3>
+                <p>Déconnecter vous de votre compte</p>
+            </div>
+        </a>
+
+        <a href="#" class="card">
+            <img src="../assets/images/poubelle.png" alt="">
+            <div class="text">
+                <h3>Supprimer vos données</h3>
+                <p>Supprimer toutes les données vous concernant enregistrées sur le site</p>
+            </div>
+        </a>
+    </main>
 </body>
 </html>

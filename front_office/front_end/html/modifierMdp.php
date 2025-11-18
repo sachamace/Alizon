@@ -41,14 +41,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="body_profilClient">
   <main class="main_profilClient">
     <section class="bloc donneePerso">
+      <a href="consulterProfilClient.php" class="retour-profil">← Retour au profil</a>
       <h2>Modifier mon mot de passe :</h2>
       <div class="options">
           <form method="POST">
               <label for="mot_de_passe">Nouveau mot de passe :</label>
-              <input type="password" name="mot_de_passe" id="mot_de_passe" class="option" required><br><br>
+              <input type="password" name="mot_de_passe" id="mot_de_passe" class="input-modify" required><br><br>
 
               <label for="confirmer_mot_de_passe">Confirmer mot de passe :</label>
-              <input type="password" name="confirmer_mot_de_passe" id="confirmer_mot_de_passe" class="option" required><br><br>
+              <input type="password" name="confirmer_mot_de_passe" id="confirmer_mot_de_passe" class="input-modify" required><br><br>
 
               <?php if ($erreur){ ?>
                   <p style="color:red;"><?= htmlspecialchars($erreur) ?></p>
@@ -57,7 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <button type="submit" class="payer-btn">Enregistrer</button>
           </form>
       </div>
-      <a href="ConsulterProfilClient.php" style="display:block; margin-top:1rem;">← Retour au profil</a>
     </section>
   </main>
 </body>

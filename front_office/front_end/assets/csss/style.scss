@@ -515,14 +515,16 @@ footer.footer.tablette {
     height: 60px;
     z-index: 9999;
     border-top: 1px solid #ddd;
-
+    
     a {
       display: flex;
       justify-content: center;
       align-items: center;
       width: 50px;
       height: 50px;
-
+      &.disabled{
+        @include disabled-state;
+      }
       i {
         font-size: 24px;
         color: #000;

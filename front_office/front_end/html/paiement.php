@@ -225,6 +225,5 @@
     </div>
 
 </main>
-<script src="javascript.js"></script>
 </body>
 </html>

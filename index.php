@@ -29,7 +29,7 @@
                     <input disabled type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
                     <button type="submit">Search</button>
                 </form>
-                <a href="front_office/front_end/html/panier.php"><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
+                <a href="front_office/front_end/html/panier.php" data-panier><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
             </nav>
             <nav>
                 <div>

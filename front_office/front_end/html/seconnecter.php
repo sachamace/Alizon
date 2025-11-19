@@ -22,7 +22,7 @@
                 $_SESSION['id'] = $user['id_num'];
                 $_SESSION['login'] = $user['login'];
                 $_SESSION['id_panier'] = $panier['id_panier'];
-                header("Location: accueil.php");
+                header("Location: /index.php");
                 exit();
             }
             else{

@@ -68,7 +68,7 @@ try {
                     <input type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
                     <button type="submit">Search</button>
                 </form>
-                <a href="panier.php"><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
+                <a href="panier.php" data-panier><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
             </nav>
             <nav>
                 <div>

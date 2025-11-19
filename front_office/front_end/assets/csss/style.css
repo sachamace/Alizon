@@ -42,7 +42,7 @@ body header nav nav:first-child {
   display: flex;
   align-items: center;
 }
-body header nav nav:first-child a[href="front_office/front_end/html/panier.php"] {
+body header nav nav:first-child a[data-panier] {
   /* Le lien “Panier” seul, collé à droite */
   margin-left: auto;
   text-decoration: none;
@@ -50,14 +50,14 @@ body header nav nav:first-child a[href="front_office/front_end/html/panier.php"]
   font-size: 23px;
   font-weight: bold;
 }
-body header nav nav:first-child a[href="front_office/front_end/html/panier.php"]:last-child,
-body header nav nav:first-child a[href="front_office/front_end/html/panier.php"] :nth-last-child(2) {
+body header nav nav:first-child a[data-panier]:last-child,
+body header nav nav:first-child a[data-panier] :nth-last-child(2) {
   margin-right: 30px;
 }
-body header nav nav:first-child a[href="front_office/front_end/html/panier.php"]:nth-child(2) {
+body header nav nav:first-child a[data-panier]:nth-child(2) {
   margin-left: 42.625px;
 }
-body header nav nav:first-child a[href="front_office/front_end/html/panier.php"]:visited, body header nav nav:first-child a[href="front_office/front_end/html/panier.php"]:hover {
+body header nav nav:first-child a[data-panier]:visited, body header nav nav:first-child a[data-panier]:hover {
   text-decoration: none;
   color: rgb(0, 0, 0);
   font-size: 23px;
@@ -669,7 +669,7 @@ footer.footer.tablette {
   body header nav nav:first-child {
     flex-direction: column;
   }
-  body header nav nav:first-child a[href="front_office/front_end/html/panier.php"] {
+  body header nav nav:first-child a[data-panier] {
     display: none;
   }
   body header nav nav:first-child form {
@@ -817,6 +817,7 @@ footer.footer.tablette {
   }
   .div__catalogue .description {
     display: -webkit-box;
+    line-clamp: 2;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;

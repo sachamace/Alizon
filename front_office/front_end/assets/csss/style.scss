@@ -44,7 +44,7 @@ body {
           display: flex;
           align-items: center;
 
-          a[href="front_office/front_end/html/panier.php"] {
+          a[data-panier] {
             /* Le lien “Panier” seul, collé à droite */
             margin-left: auto;
             text-decoration: none;
@@ -465,7 +465,7 @@ footer.footer.tablette {
           &:first-child {
             flex-direction: column;
 
-            a[href="front_office/front_end/html/panier.php"] {
+            a[data-panier] {
               display: none;
             }
 
@@ -652,6 +652,7 @@ footer.footer.tablette {
 
     .description {
       display: -webkit-box;
+      line-clamp: 2;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       text-overflow: ellipsis;

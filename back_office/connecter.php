@@ -81,6 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="separator">ou</div>
             
             <a href="creercompte.php" class="btn__creer-compte">Créer Compte</a>
+            <a href="../../front_office/front_end/html/seconnecter.php" class="forgot-password">Coté Client</a>
         </form>
     </div>
 </body>

@@ -224,6 +224,6 @@
     </div>
 
 </main>
-<script src="javascript.js"></script>
+<script src="paiement.js"></script>
 </body>
 </html>

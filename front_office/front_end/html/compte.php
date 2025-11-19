@@ -1,7 +1,6 @@
 <?php
     include 'config.php';
     include 'session.php';
-    include 'sessionindex.php';
     $stmt = $pdo->query("SELECT version();");
 ?>
 <!DOCTYPE html>
@@ -30,7 +29,7 @@
             <nav>
                 <div>
                 <?php
-                // On récupère tout le contenu de la table produit
+                // On récupère tout le contenu de la table 
                 $categorie = $pdo->query('SELECT * FROM categorie');
                 // On affiche chaque entrée une à une
                 while ($cat = $categorie->fetch()){ 
@@ -50,7 +49,7 @@
     <main class="main_compte">
         <h1 class="titre_compte">Votre Compte</h1>
         <div class="cards_container">
-            <a href="infoCompte.php" class="card">
+            <a href="consulterProfilClient.php" class="card">
                 <img src="../assets/images/info.png" alt="">
                 <div class="text">
                     <h3>Vos infos</h3>

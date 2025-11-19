@@ -17,6 +17,7 @@ body header {
   background-color: #FFFFFF;
   width: 100%;
   position: fixed;
+  top: 0;
 }
 body header nav {
   display: flex;
@@ -130,13 +131,13 @@ body header nav nav .notif .icone {
   margin: 0;
   display: flex;
   justify-content: center;
-  padding: 1rem;
+  padding: 0;
 }
 .body_paiement .main_paiement, .body_paiement .main_profilClient, .body_profilClient .main_paiement, .body_profilClient .main_profilClient {
-  width: 600px;
+  width: 800px;
   padding: 2rem;
   box-sizing: border-box;
-  margin: auto;
+  margin: 10rem auto;
 }
 .body_paiement .main_paiement .commande-header, .body_paiement .main_profilClient .commande-header, .body_profilClient .main_paiement .commande-header, .body_profilClient .main_profilClient .commande-header {
   display: flex;
@@ -813,6 +814,8 @@ footer.footer.tablette {
   font-weight: 325;
   width: 203px;
   border-radius: 10px;
+  color: #000;
+  text-decoration: none;
 }
 .main_panier section article img {
   width: 12em;
@@ -1250,7 +1253,7 @@ footer.footer.tablette {
   padding: 2rem;
   padding-top: 0em;
   width: 80%;
-  margin: 10em auto;
+  margin: 15em auto;
   background-color: white;
   display: flex;
   flex-direction: column;

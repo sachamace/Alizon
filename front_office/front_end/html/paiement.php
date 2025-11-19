@@ -145,7 +145,9 @@
 
     <!-- HEADER -->
     <div class="commande-header">
-        <button class="back-btn">←</button>
+        <a href="panier.php">
+            <button class="back-btn">←</button>
+        </a>
         <h1>Paiement</h1>
     </div>
     

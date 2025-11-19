@@ -196,7 +196,7 @@ try {
                 <h4>Prix total: ' . number_format($prixtotal, 2, ',', ' ') . '€</h4>
                 <p>prix hors taxe : ' . number_format($prixht, 2, ',', ' ') . '€ <br>
                 taxe : ' . number_format($taxe, 2, ',', ' ') . '€ </p>
-                <a>Passer au paiement</a> 
+                <a href="paiement.php">Passer au paiement</a> 
                 '
                 ?>
 

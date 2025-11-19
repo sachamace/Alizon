@@ -1541,16 +1541,6 @@ footer.footer.mobile, footer.footer.tablette {
   cursor: pointer;
   font-size: 16px;
   text-decoration: none;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-}
-.compte__button * {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
 }
 .compte__button.disabled {
   opacity: 0.5;
@@ -1561,15 +1551,6 @@ footer.footer.mobile, footer.footer.tablette {
 .compte__button h3 {
   margin: 0;
   font-size: 1.3rem;
-}
-
-.compte__button-text {
-  font-weight: 500;
-}
-
-.compte__button-icon {
-  width: 20px;
-  height: 20px;
 }
 
 .compte__image {

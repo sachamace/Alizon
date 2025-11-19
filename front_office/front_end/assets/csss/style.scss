@@ -1484,14 +1484,7 @@ footer.footer {
   cursor: pointer;
   font-size: 16px;
   text-decoration: none;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-
-  & * {
-    user-select: none;
-  }
-
+  
   &.disabled {
     @include disabled-state;
   }
@@ -1502,14 +1495,7 @@ footer.footer {
   }
 }
 
-.compte__button-text {
-  font-weight: 500;
-}
 
-.compte__button-icon {
-  width: 20px;
-  height: 20px;
-}
 
 .compte__image {
   width: 50px;

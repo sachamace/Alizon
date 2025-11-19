@@ -61,9 +61,9 @@
             if (!preg_match('/^[0-9]{16}$/', $numero)) {
                 $erreurs['carte'] = "Numéro de carte invalide (16 chiffres requis).";
             }
-            else if(!verifLuhn($numero)){
+            /*else if(!verifLuhn($numero)){
                 $erreurs['carte'] = "Numéro de carte invalide (algorithme de luhn).";
-            }
+            }*/
 
             // Vérification CVV (3 chiffres)
             if (!preg_match('/^[0-9]{3}$/', $securite)) {
@@ -72,8 +72,9 @@
 
             // Vérification expiration
             if (!preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])$/', $expiration)) {
-                $erreurs['expiration'] = "Format d’expiration invalide.";
-            } else {
+                $erreurs['expiration'] = "Format invalide (AAAA-MM).";
+            }
+            else {
                 list($annee, $mois) = explode("-", $expiration);
                 $timestampExpiration = mktime(23, 59, 59, $mois + 1, 0, $annee);
                 
@@ -146,82 +147,102 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="../assets/csss/style.css">
-    
+
 </head>
 <body class="body_paiement">
-
-<main class="main_paiement">
-
-    <!-- HEADER -->
-    <div class="commande-header">
-        <a href="panier.php">
-            <button class="back-btn">←</button>
-        </a>
-        <h1>Paiement</h1>
-    </div>
-    
-    <!-- ADRESSE CLIENT -->
-    <div class="bloc recap">
-        <h2>Adresse de livraison</h2>
-
-        <?php if ($client){ ?>
-            <p>
-                <span>Adresse :</span>
-                <span><?= htmlentities($client['adresse']) ?></span>
-            </p>
-            <p>
-                <span>Ville :</span>
-                <span><?= htmlentities($client['code_postal']) ?> <?= htmlentities($client['ville']) ?></span>
-            </p>
-            <p>
-                <span>Pays :</span>
-                <span><?= htmlentities($client['pays']) ?></span>
-            </p>
-        <?php } else { ?>
-            <p>Aucune adresse enregistrée.</p>
-        <?php } ?>
-    </div>
-
-    <!-- FORMULAIRE PAIEMENT -->
-    <form method="POST" class="paiement">
-
-        <div class="bloc">
-            <h2>Méthode de paiement</h2>
-
-            <div class="options">
-
-                <!-- OPTION CARTE -->
-                <label class="option">
-                    <input type="radio" name="paiement" value="carte">
-                    <span>Carte bancaire</span>
-                </label>
-
-                <!-- FORMULAIRE CARTE -->
-                <div class="formulaire" id="form-carte">
-                    <input type="text" name="carte" placeholder="Numéro de carte (16 chiffres)" 
-                           value="<?= htmlentities($numero) ?>">
-                    <p><?= htmlentities($erreurs['carte']) ?></p>
-                    <input type="month" name="expiration"
-                           value="<?= htmlentities($expiration) ?>">
-                    <p><?= htmlentities($erreurs['expiration']) ?></p>
-                    <input type="text" name="cvv" placeholder="CVV" 
-                           value="<?= htmlentities($securite) ?>">
-                    <p><?= htmlentities($erreurs['cvv']) ?></p>
-                    <input type="text" name="nom_titulaire" placeholder="Nom du titulaire"
-                           value="<?= htmlentities($nom) ?>">
-                    <p><?= htmlentities($erreurs['nom']) ?></p>
+    <header>
+        <nav>
+            <nav>
+                <a href="accueil.php"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
+                <a class="notif" href="notification.php"><i class="fa-regular fa-bell icone"></i></a>
+                <form action="recherche.php" method="get" role="search" aria-label="Site search">
+                    <label for="site-search"></label>
+                    <input type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
+                    <button type="submit">Search</button>
+                </form>
+                <a href="panier.php"><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
+            </nav>
+            <nav>
+                <div>
+                    <a href="produitTerroir.php">Produit du Terroir</a>
+                    <a href="modeBretonne.php">Mode Bretonne</a>
+                    <a href="">Artisanat Local</a>
+                    <a href="">Décoration Intérieure</a>
+                    <a href="">Epicerie FIne</a>
                 </div>
+                <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
+                <?php else: ?><a href="seconnecter.php"></i>S'identifier</a>
+                <?php endif; ?>
+            </nav>
+        </nav>
+    </header>
+    <main class="main_paiement">
+        <!-- ADRESSE CLIENT -->
+        <div class="bloc recap">
+            <h2>Adresse de livraison</h2>
 
-                <!-- OPTION PAYPAL -->
-                <label class="option">
-                    <input type="radio" name="paiement" value="paypal" disabled>
-                    <span>PayPal</span>
-                </label>
-
-            </div>
+            <?php if ($client){ ?>
+                <p>
+                    <span>Adresse :</span>
+                    <span><?= htmlentities($client['adresse']) ?></span>
+                </p>
+                <p>
+                    <span>Ville :</span>
+                    <span><?= htmlentities($client['code_postal']) ?> <?= htmlentities($client['ville']) ?></span>
+                </p>
+                <p>
+                    <span>Pays :</span>
+                    <span><?= htmlentities($client['pays']) ?></span>
+                </p>
+            <?php } else { ?>
+                <p>Aucune adresse enregistrée.</p>
+            <?php } ?>
         </div>
 
-        <button type="submit" class="payer-btn">Payer</button>
+        <!-- FORMULAIRE PAIEMENT -->
+        <form method="POST" class="paiement">
+
+            <div class="bloc">
+                <h2>Méthode de paiement</h2>
+
+                <div class="options">
+
+                    <!-- OPTION CARTE -->
+                    <label class="option">
+                        <input type="radio" name="paiement" id="radio-carte" value="carte">
+                        <span>Carte bancaire</span>
+                    </label>
+
+                    <!-- FORMULAIRE CARTE -->
+                    <div class="formulaire hidden" id="form-carte">
+                        <input type="text" name="carte" id ="carte" placeholder="Numéro de carte (16 chiffres)" 
+                            value="<?= htmlentities($numero) ?>">
+                        <p class="required"><?= htmlentities($erreurs['carte'] ?? '') ?></p>
+                        <input type="month" name="expiration" placeholder="AAAA-MM" 
+                            value="<?= htmlentities($expiration) ?>">
+                        <p class="required"><?= htmlentities($erreurs['expiration'] ?? '') ?></p>
+                        <input type="text" name="cvv" placeholder="CVV" 
+                            value="<?= htmlentities($securite) ?>">
+                        <p class="required"><?= htmlentities($erreurs['cvv'] ?? '')?></p>
+                        <input type="text" name="nom_titulaire" placeholder="Nom du titulaire"
+                            value="<?= htmlentities($nom) ?>">
+                        <p class="required"><?= htmlentities($erreurs['nom'] ?? '') ?></p>
+                    </div>
+
+                    <!-- OPTION PAYPAL -->
+                    <label class="option">
+                        <input type="radio" name="paiement" id="radio-paypal" value="paypal" disabled>
+                        <span>PayPal</span>
+                    </label>
+
+                    <div class="formulaire hidden" id="form-paypal">
+                        <p>PayPal est désactivé.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <button type="submit" class="payer-btn">Payer</button>
 
     </form>
 </main>
@@ -230,7 +251,7 @@
 </html>
 
 <?php 
-    function verifLuhn($numero){
+    /*function verifLuhn($numero){
         $sum = 0;
         $shouldDouble = false;
 
@@ -249,5 +270,5 @@
             $shouldDouble = !$shouldDouble;
         }
         return $sum % 10 === 0;
-    }
+    }*/
 ?>

@@ -235,10 +235,15 @@ body {
         }
 
         .input-modify {
-          background: #e8e8e8;
+          background: $white;
           padding: 0.8rem;
           border-radius: $border-radius;
-          border: 1px solid $black
+
+            &:focus {
+              border-color: #e87edc;
+              box-shadow: 0 0 5px rgba(232, 126, 220, 0.5);
+              outline: none;
+            }
         }
 
         .formulaire {
@@ -406,7 +411,7 @@ body {
       .donneePerso .options .option {
         padding: 0.8rem 1rem;
         gap: 0.6rem;
-        font-size: 1rem;
+        font-size: 2rem;
       }
 
       .paiement .options .formulaire input[type="text"],
@@ -438,7 +443,7 @@ body {
   }
 }
 
-/***************** FIN paiement.php*****************/
+/***************** FIN paiement.php et consulterProfilClient.php*****************/
 
 footer.footer.mobile,
 footer.footer.tablette {

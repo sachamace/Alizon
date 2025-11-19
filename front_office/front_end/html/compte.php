@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">
 </head>
 <body>
-    <header>
+    <header class="disabled">
         <nav>
             <nav>
                 <a href="accueil.php"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
@@ -51,42 +51,75 @@
             </nav>
         </nav>
     </header>
-    <main class="main_compte">
-        <h1 class="titre_compte">Votre Compte</h1>
-        <div class="cards_container">
-            <a href="consulterProfilClient.php" class="card">
-                <img src="../assets/images/info.png" alt="">
-                <div class="text">
-                    <h3>Vos infos</h3>
-                    <p>Consulter et modifier mes données, adresse, nom etc…</p>
-                </div>
-            </a>
+<!-- VERSION DESKTOP -->
+<main class="main_compte compte--desktop">
+    <h1 class="titre_compte">Votre Compte</h1>
+    <div class="cards_container">
+        <a href="consulterProfilClient.php" class="card">
+            <img src="../assets/images/info.png" alt="">
+            <div class="text">
+                <h3>Vos infos</h3>
+                <p>Consulter et modifier mes données, adresse, nom etc…</p>
+            </div>
+        </a>
 
-            <a href="#" class="card disabled">
-                <img src="../assets/images/commande.png" alt="">
-                <div class="text">
-                    <h3>Vos commandes</h3>
-                    <p>Voir, retourner ou acheter à nouveau les articles que vous avez commandé</p>
-                </div>
-            </a>
+        <a href="#" class="card disabled">
+            <img src="../assets/images/commande.png" alt="">
+            <div class="text">
+                <h3>Vos commandes</h3>
+                <p>Voir, retourner ou acheter à nouveau les articles que vous avez commandé</p>
+            </div>
+        </a>
 
-            <a href="deconnecter.php" class="card">
-                <img src="../assets/images/logout.png" alt="">
-                <div class="text" >
-                    <h3>Se déconnecter</h3>
-                    <p>Déconnecter vous de votre compte</p>
-                </div>
-            </a>
+        <a href="deconnecter.php" class="card">
+            <img src="../assets/images/logout.png" alt="">
+            <div class="text">
+                <h3>Se déconnecter</h3>
+                <p>Déconnecter vous de votre compte</p>
+            </div>
+        </a>
 
-            <a href="#" class="card disabled">
-                <img src="../assets/images/poubelle.png" alt="">
-                <div class="text">
-                    <h3>Supprimer vos données</h3>
-                    <p>Supprimer toutes les données vous concernant enregistrées sur le site</p>
-                </div>
-            </a>
-        </div>
-    </main>
+        <a href="#" class="card disabled">
+            <img src="../assets/images/poubelle.png" alt="">
+            <div class="text">
+                <h3>Supprimer vos données</h3>
+                <p>Supprimer toutes les données vous concernant enregistrées sur le site</p>
+            </div>
+        </a>
+    </div>
+</main>
+
+<!-- VERSION MOBILE 428px -->
+<main class="compte__mobile compte--mobile">
+    <div class="compte__container">
+        <div class="compte__header">Votre compte</div>
+
+        <a class="compte__button">
+            <img src="../assets/images/info.png" class="compte__image">
+            <span>Vos infos</span>
+            <span>›</span>
+        </a>
+
+        <a class="compte__button disabled">
+            <img src="../assets/images/commande.png" class="compte__image">
+            <span>Vos commandes</span>
+            <span>›</span>
+        </a>
+
+        <a class="compte__button">
+            <img src="../assets/images/logout.png" class="compte__image">
+            <span>Se déconnecter</span>
+            <span>›</span>
+        </a>
+
+        <a class="compte__button disabled">
+            <img src="../assets/images/poubelle.png" class="compte__image">
+            <span>Supprimer vos données</span>
+            <span>›</span>
+        </a>
+    </div>
+</main>
+
     <footer class="footer mobile">
         <a href="accueil.php"><i class="fa-solid fa-house icone"></i></a>
         <a class="recherche disabled" href="recherche.php"><i class="fa-solid fa-magnifying-glass icone"></i></a>

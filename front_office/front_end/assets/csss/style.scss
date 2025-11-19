@@ -23,9 +23,7 @@ body {
     width: 100%;
     position: fixed;
     top: 0;
-    &.disabled{
-      display: none;
-    }
+
     
     nav {
       display: flex;
@@ -1645,3 +1643,24 @@ footer.footer.tablette {
   height: 50px;
   object-fit: contain;
 }
+
+/* Par défaut : desktop visible, mobile caché */
+.compte--mobile {
+    display: none;
+}
+
+/* Pour les écrans mobiles ≤ 428px */
+@media (max-width: 428px) {
+    .compte--desktop {
+        display: none;
+    }
+    header{
+      &.disabled{
+        display: none;
+      }
+    }
+    .compte--mobile {
+        display: block;
+    }
+}
+

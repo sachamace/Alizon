@@ -19,9 +19,6 @@ body header {
   position: fixed;
   top: 0;
 }
-body header.disabled {
-  display: none;
-}
 body header nav {
   display: flex;
   flex-direction: column;
@@ -580,6 +577,7 @@ body header nav nav .notif .icone {
     width: 390px;
     padding: 1rem;
     margin: auto;
+    margin-top: 11em;
   }
   .body_paiement .main_paiement .commande-header h1,
   .body_paiement .main_profilClient .commande-header h1,
@@ -1663,4 +1661,22 @@ footer.footer.tablette {
   height: 50px;
   -o-object-fit: contain;
      object-fit: contain;
+}
+
+/* Par défaut : desktop visible, mobile caché */
+.compte--mobile {
+  display: none;
+}
+
+/* Pour les écrans mobiles ≤ 428px */
+@media (max-width: 428px) {
+  .compte--desktop {
+    display: none;
+  }
+  header.disabled {
+    display: none;
+  }
+  .compte--mobile {
+    display: block;
+  }
 }/*# sourceMappingURL=style.css.map */

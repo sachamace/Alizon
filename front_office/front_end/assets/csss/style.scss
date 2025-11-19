@@ -26,6 +26,7 @@ body {
     &.disabled{
       display: none;
     }
+    
     nav {
       display: flex;
       flex-direction: column;
@@ -1548,15 +1549,6 @@ footer.footer.tablette {
         transform: translateY(-3px);
       }
     }
-
-    @media (max-width: 900px) {
-      display: flex;
-      flex-wrap: wrap;
-
-      .card {
-        max-width: 280px;
-      }
-    }
   }
 }
 
@@ -1609,4 +1601,46 @@ footer.footer.tablette {
   &:hover {
     text-decoration: none;
   }
+}
+// Css coté téléphone compte
+.compte__container {
+    width: auto;
+    padding-bottom: 40px;
+    border-radius: 6px;
+}
+
+.compte__header {
+    padding: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+}
+
+.compte__button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: $primary-color;
+    padding: 14px 16px;
+    margin: 18px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    &.disabled{
+      @include disabled-state;
+    }
+}
+
+.compte__button-text {
+    font-weight: 500;
+}
+
+.compte__button-icon {
+    width: 20px;
+    height: 20px;
+}
+.compte__image{
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
 }

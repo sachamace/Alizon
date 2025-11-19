@@ -1591,15 +1591,6 @@ footer.footer.tablette {
   background: rgba(255, 106, 213, 0.08);
   transform: translateY(-3px);
 }
-@media (max-width: 900px) {
-  .main_compte .cards_container {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .main_compte .cards_container .card {
-    max-width: 280px;
-  }
-}
 
 .succes-message {
   margin-bottom: 20px;
@@ -1625,4 +1616,51 @@ footer.footer.tablette {
 }
 .btn__link:hover {
   text-decoration: none;
+}
+
+.compte__container {
+  width: auto;
+  padding-bottom: 40px;
+  border-radius: 6px;
+}
+
+.compte__header {
+  padding: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+}
+
+.compte__button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ff6ce2;
+  padding: 14px 16px;
+  margin: 18px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.compte__button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: none !important;
+}
+
+.compte__button-text {
+  font-weight: 500;
+}
+
+.compte__button-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.compte__image {
+  width: 50px;
+  height: 50px;
+  -o-object-fit: contain;
+     object-fit: contain;
 }/*# sourceMappingURL=style.css.map */

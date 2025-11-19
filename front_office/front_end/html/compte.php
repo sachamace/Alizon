@@ -48,37 +48,40 @@
         </nav>
     </header>
     <main class="main_compte">
-        <a href="#" class="card">
-            <img src="../assets/images/info.png" alt="">
-            <div class="text">
-                <h3>Vos infos</h3>
-                <p>Consulter et modifier mes données, adresse, nom etc…</p>
-            </div>
-        </a>
+        <h1 class="titre_compte">Votre Compte</h1>
+        <div class="cards_container">
+            <a href="infoCompte.php" class="card">
+                <img src="../assets/images/info.png" alt="">
+                <div class="text">
+                    <h3>Vos infos</h3>
+                    <p>Consulter et modifier mes données, adresse, nom etc…</p>
+                </div>
+            </a>
 
-        <a href="#" class="card">
-            <img src="../assets/images/commande.png" alt="">
-            <div class="text">
-                <h3>Vos commandes</h3>
-                <p>Voir, retourner ou acheter à nouveau les articles que vous avez commandé</p>
-            </div>
-        </a>
+            <a href="#" class="card">
+                <img src="../assets/images/commande.png" alt="">
+                <div class="text">
+                    <h3>Vos commandes</h3>
+                    <p>Voir, retourner ou acheter à nouveau les articles que vous avez commandé</p>
+                </div>
+            </a>
 
-        <a href="deconnecter.php" class="card">
-            <img src="../assets/images/logout.png" alt="">
-            <div class="text">
-                <h3>Se déconnecter</h3>
-                <p>Déconnecter vous de votre compte</p>
-            </div>
-        </a>
+            <a href="deconnecter.php" class="card">
+                <img src="../assets/images/logout.png" alt="">
+                <div class="text">
+                    <h3>Se déconnecter</h3>
+                    <p>Déconnecter vous de votre compte</p>
+                </div>
+            </a>
 
-        <a href="#" class="card">
-            <img src="../assets/images/poubelle.png" alt="">
-            <div class="text">
-                <h3>Supprimer vos données</h3>
-                <p>Supprimer toutes les données vous concernant enregistrées sur le site</p>
-            </div>
-        </a>
+            <a href="#" class="card">
+                <img src="../assets/images/poubelle.png" alt="">
+                <div class="text">
+                    <h3>Supprimer vos données</h3>
+                    <p>Supprimer toutes les données vous concernant enregistrées sur le site</p>
+                </div>
+            </a>
+        </div>
     </main>
 </body>
 </html>

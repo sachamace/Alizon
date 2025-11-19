@@ -1246,15 +1246,29 @@ footer.footer.tablette {
 /* --------------- FIN DU SCSS POUR LE PRODUIT ---------------*/
 /* ----------------------- DEBUT SCSS COMPTE -------------------*/
 .main_compte {
+  gap: 2rem;
+  padding: 2rem;
+  padding-top: 0em;
+  width: 80%;
+  margin: 10em auto;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: #000 solid;
+}
+.main_compte .titre_compte {
+  font-size: 2.2rem;
+  font-weight: 600;
+  text-align: center;
+}
+.main_compte .cards_container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
-  padding: 2rem;
-  width: 80%;
-  margin: 8em auto;
-  background-color: white;
+  width: 100%;
 }
-.main_compte .card {
+.main_compte .cards_container .card {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -1265,28 +1279,31 @@ footer.footer.tablette {
   color: #000;
   transition: 0.2s;
 }
-.main_compte .card img {
+.main_compte .cards_container .card img {
   width: 50px;
   height: 50px;
   -o-object-fit: contain;
      object-fit: contain;
 }
-.main_compte .card .text h3 {
+.main_compte .cards_container .card .text h3 {
   margin: 0;
   font-size: 1.3rem;
 }
-.main_compte .card .text p {
+.main_compte .cards_container .card .text p {
   margin: 0.2rem 0 0;
   font-size: 0.9rem;
   opacity: 0.8;
 }
-.main_compte .card:hover {
+.main_compte .cards_container .card:hover {
   background: rgba(255, 106, 213, 0.08);
   transform: translateY(-3px);
 }
 @media (max-width: 900px) {
-  .main_compte {
+  .main_compte .cards_container {
     display: flex;
     flex-wrap: wrap;
+  }
+  .main_compte .cards_container .card {
+    max-width: 280px;
   }
 }/*# sourceMappingURL=style.css.map */

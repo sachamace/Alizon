@@ -1433,13 +1433,30 @@ footer.footer.tablette {
 /* ----------------------- DEBUT SCSS COMPTE -------------------*/
 
 .main_compte {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
     padding: 2rem;
+    padding-top: 0em;
     width: 80%;
-    margin: 8em auto;
+    margin: 10em auto;
     background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center; // centre le titre
+    border: #000 solid;
+
+
+    .titre_compte {
+        font-size: 2.2rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .cards_container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        width: 100%;
+    
 
     .card {
         display: flex;
@@ -1475,9 +1492,16 @@ footer.footer.tablette {
             background: rgba(255, 106, 213, 0.08);
             transform: translateY(-3px);
         }
+      }
+      @media (max-width: 900px){
+          display: flex;
+          flex-wrap: wrap;
+          .card{
+            max-width: 280px;
+          }
+      }
     }
-    @media (max-width: 900px){
-        display: flex;
-        flex-wrap: wrap;
-    }
+
+
+
 }

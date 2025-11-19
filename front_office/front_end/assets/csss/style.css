@@ -489,6 +489,7 @@ footer.footer.tablette {
     gap: 1.5em;
     max-width: 100%;
     box-sizing: border-box;
+    padding-bottom: 90px;
     /* Le lien prend toute la place de sa cellule */
     /* L'article remplit la cellule du grid (PLUS de largeur fixe en px) */
   }

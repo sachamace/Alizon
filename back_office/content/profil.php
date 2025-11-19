@@ -8,6 +8,10 @@ if (isset($_GET['page']) && $_GET['page'] === 'profil') {
         $stmt->execute(['id' => $id_vendeur_connecte]);
         $profil = $stmt->fetch();
 
+        $stmt = $pdo->prepare("SELECT mdp FROM identifiants WHERE id_num= :id");
+        $stmt->execute(['id' => $profil['id_num']]);
+        $profil_mdp = $stmt->fetchColumn();
+
         if ($type == "consulter") {
             include 'profil_consulter.php';
         } else if ($type == 'modifier') {

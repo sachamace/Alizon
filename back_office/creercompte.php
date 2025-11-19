@@ -3,9 +3,10 @@
     $stmt = $pdo->query("SELECT version();");
     // Init des variables erreur et des valeurs qui seront dans les input du formulaire.
     $erreur_siren ="";
+    $erreur_mail = "";
     $erreur_tel ="";
     $erreur_mdp ="";
-    $erreur_raison ="";
+    $erreur_statut ="";
     $erreur_confirm ="";
     $num_siren = "" ;
     $tel = "" ;
@@ -14,7 +15,8 @@
     $num_entreprise = "" ;
     $mdpconfirm = "";
     $raison_sociale = "" ;
-    $erreur_mail = "";
+    $statut_juridique = "" ;
+    
     // Si le bouton créer compte a été cliqué alors .
     if($_SERVER["REQUEST_METHOD"] === "POST"){
         // Ajout de chaque input à une valeur.
@@ -23,9 +25,8 @@
         $mail = trim($_POST['email']);
         $mdp = trim($_POST['motdepasse']);
         $mdpconfirm = trim($_POST['confirm']);
-        $num_entreprise = trim($_POST['nom_entreprise']);
         $raison_sociale = trim($_POST['raison']);
-        $fin_raison = $num_entreprise . " " . $raison_sociale;
+        $statut_juridique = trim($_POST['statut']);
         // TEST SUR Base de données 
         // TEST pour le num_siren.
         $siren_sql = "SELECT num_siren FROM public.compte_vendeur";
@@ -67,15 +68,15 @@
         if(strcmp($mdp,$mdpconfirm) != 0){
             $erreur_confirm = "La confirmation du mot de passe ne correspond pas au mot de passe que vous avez mis.";
         }
-        if(empty($raison_sociale)){
-            $erreur_raison="Vous n'avez pas sélectionner de raison_sociale.";
+        if(empty($statut_juridique)){
+            $erreur_statut ="Vous n'avez pas sélectionner de raison_sociale.";
         }
         $erreurs = [ // la liste entière des erreurs par ce que y'en a beaucoup 
             $erreur_siren,
             $erreur_confirm,
             $erreur_tel,
             $erreur_mdp,
-            $erreur_raison,
+            $erreur_statut,
             $erreur_mail
         ];
         if(!array_filter($erreurs)){ // array_filter permet de vérifier si y'a des élements dans la array en gros si y'a rien ça fait la condition .
@@ -93,10 +94,11 @@
                 $stmtid->execute(['login' => $mail]);
                 $id_num = (int) $stmtid->fetchColumn();
                 // Partie pour créer le compte vendeur avec toute ces informations.
-                $sqlvendeur = "INSERT INTO public.compte_vendeur (raison_sociale,num_siren,num_tel,adresse_mail,id_num) VALUES (:raison_sociale,:num_siren,:num_tel,:adresse_mail,:id_num)";
+                $sqlvendeur = "INSERT INTO public.compte_vendeur (raison_sociale,statut_juridique,num_siren,num_tel,adresse_mail,id_num) VALUES (:raison_sociale,:statut_juridique,:num_siren,:num_tel,:adresse_mail,:id_num)";
                 $stmtvendeur = $pdo->prepare($sqlvendeur);
                 $stmtvendeur->execute([
-                    'raison_sociale' => $fin_raison,
+                    'raison_sociale' => $raison_sociale,
+                    'statut_juridique' => $statut_juridique,
                     'num_siren' => $num_siren,
                     'num_tel' => $tel,
                     'adresse_mail' => $mail,
@@ -133,6 +135,31 @@
         </div>
         <form action ="" class="form__connexion" include ="index.php" method="post" enctype = "multipart/form-data">
             <div class="input-group">
+                <!-- Raison sociale de l'entreprise -->
+                <label for="raison" class="input-label">Raison sociale</label>
+                <input class="input__connexion" type="text"  name="raison" placeholder="Nom de votre entreprise *" value ="<?= $raison_sociale?>"required />
+            </div>
+
+            <!-- Statut juridique -->
+            <div class="input-group">
+                <label for="statut" class="input-label">Statut juridique</label>
+                <select class="input__connexion "  name="statut" value="<?= $statut_juridique?>">
+                        <option disabled selected>Choisir</option>
+                        <option value="SA">SA</option>
+                        <option value="SAS">SAS</option>
+                        <option value="SARL">SARL</option>
+                        <option value="EURL">EURL</option>
+                        <option value="SASU">SASU</option>
+                        <option value="SCP">SCP</option>
+                </select>
+                <?php
+                    if (!empty($erreur_statut)){
+                        echo "<span>$erreur_statut</span>";
+                    } 
+                ?>
+            </div>
+
+            <div class="input-group">
                 <!-- Numéro de Siren -->
                 <label for="num_siren" class="input-label">Nuémro de SIREN</label>
                 <input class="input__connexion" type="text"  name="num_siren" placeholder="Numéro de SIREN *" value ="<?= $num_siren?>"required />
@@ -142,22 +169,15 @@
                     }
                 ?>
             </div>
-            <!-- Raison Sociale -->
+
             <div class="input-group">
-                <label for="raison" class="input-label">Raison Sociale</label>
-                <select class="input__connexion "  name="raison" value="<?= $raison_sociale?>">
-                        <option disabled selected>Raison Sociale</option>
-                        <option value="SA">SA</option>
-                        <option value="SAS">SAS</option>
-                        <option value="SARL">SARL</option>
-                        <option value="EURL">EURL</option>
-                        <option value="SASU">SASU</option>
-                        <option value="SCP">SCP</option>
-                </select>
+                <!-- Email -->
+                <label for="mail" class="input-label">E-Mail</label>
+                <input class="input__connexion" type="email"  name="email" placeholder="Adresse Mail *" value ="<?= $mail?>"required />
                 <?php
-                    if (!empty($erreur_raison)){
-                        echo "<span>$erreur_raison</span>";
-                    } 
+                    if (!empty($erreur_mail)){
+                        echo "<span>$erreur_mail</span>";
+                    }
                 ?>
             </div>
 
@@ -168,23 +188,6 @@
                 <?php
                     if (!empty($erreur_tel)){
                         echo "<span>$erreur_tel</span>";
-                    }
-                ?>
-            </div>
-
-            <div class="input-group">
-                <!-- Nom de l'entreprise -->
-                <label for="nom" class="input-label">Nom de votre entreprise</label>
-                <input class="input__connexion" type="text"  name="nom_entreprise" placeholder="Nom de votre entreprise *" value ="<?= $num_entreprise?>"required />
-            </div>
-            
-            <div class="input-group">
-                <!-- Email -->
-                <label for="mail" class="input-label">E-Mail</label>
-                <input class="input__connexion" type="email"  name="email" placeholder="Adresse Mail *" value ="<?= $mail?>"required />
-                <?php
-                    if (!empty($erreur_mail)){
-                        echo "<span>$erreur_mail</span>";
                     }
                 ?>
             </div>

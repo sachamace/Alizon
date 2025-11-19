@@ -6,6 +6,16 @@
     </article>
 
     <article>
+        <h3>Statut juridique</h3>
+        <p><?php echo htmlentities($profil["statut_juridique"]) ?></p>
+    </article>
+
+    <article>
+        <h3>Numéro de SIREN</h3>
+        <p><?php echo htmlentities($profil["num_siren"]) ?></p>
+    </article>
+
+    <article>
         <h3>Adresse email</h3>
         <p><?php echo htmlentities($profil["adresse_mail"]) ?></p>
     </article>
@@ -18,11 +28,6 @@
     <article>
         <h3>Numéro de téléphone</h3>
         <p><?php echo htmlentities($profil["num_tel"]) ?></p>
-    </article>
-
-    <article>
-        <h3>Numéro de SIREN</h3>
-        <p><?php echo htmlentities($profil["num_siren"]) ?></p>
     </article>
 
     <div class="btn-modif">

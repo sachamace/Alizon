@@ -562,8 +562,6 @@ Structure du tableau de bord
   }
 
   .creer_produit {
-
-    // Style spécifique pour la carte de création
     background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
     color: $white;
     justify-content: center;
@@ -572,20 +570,18 @@ Structure du tableau de bord
     position: relative;
     border: 3px dashed rgba($white, 0.3);
     transition: all $transition-speed ease;
+    min-height: 350px;
 
-    // Animation au survol
     &:hover {
       border-color: $white;
       transform: translateY(-8px) scale(1.02);
       box-shadow: 0 15px 40px rgba($black, 0.2);
 
-      // Animation du plus
       p:last-child {
         transform: rotate(90deg) scale(1.2);
       }
     }
 
-    // Effet de brillance au survol
     &::before {
       content: '';
       position: absolute;
@@ -605,7 +601,6 @@ Structure du tableau de bord
       left: 100%;
     }
 
-    // Texte "Créer un produit"
     p:first-child {
       font-size: 1.5em;
       font-weight: bold;
@@ -616,7 +611,6 @@ Structure du tableau de bord
       z-index: 1;
     }
 
-    // Le signe "+"
     p:last-child {
       font-size: 5em;
       font-weight: bold;
@@ -854,7 +848,28 @@ Structure de Consulter/Modifier Profil
 
   input[type="text"] {
     @include input-base;
-    width: auto;
+    width: 200px;
+
+    &:hover {
+      border-color: #bdc3c7;
+      background-color: $white;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      background-color: $white;
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    &::placeholder {
+      color: #bdc3c7;
+    }
+  }
+
+  select {
+    @include input-base;
+    width: 200px;
 
     &:hover {
       border-color: #bdc3c7;

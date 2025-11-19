@@ -127,25 +127,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <article>
                     <h3>Nom du produit</h3>
                     <input type="text" id="nom_produit" name="nom_produit"
-                        value="<?php echo htmlentities($produit['nom_produit']) ?>">
+                        value="<?php echo isset($_POST['nom_produit']) ? htmlentities($_POST['nom_produit']) : htmlentities($produit['nom_produit']); ?>">
                 </article>
                 <article>
                     <h3>Description</h3>
                     <input type="text" id="description_produit" name="description_produit"
-                        value="<?php echo htmlentities($produit['description_produit']) ?>">
+                        value="<?php echo isset($_POST['description_produit']) ? htmlentities($_POST['description_produit']) : htmlentities($produit['description_produit']); ?>">
                 </article>
                 <article>
                     <h3>Catégorie</h3>
 
                     <select name="categorie" id="select-categorie">
-                        <option value="<?php echo htmlentities($categorie) ?>"><?php echo htmlentities($categorie) ?>
-                        </option>
                         <?php
                         $stmtAllCat = $pdo->query("SELECT libelle FROM categorie");
-
                         foreach ($stmtAllCat as $cat) { ?>
-                            <option value="<?php echo htmlentities($cat['libelle']) ?>">
-                                <?php echo htmlentities($cat['libelle']) ?>
+                            <option value="<?php echo htmlentities($cat['libelle']); ?>"
+                                <?php echo (isset($_POST['categorie']) && $_POST['categorie'] == $cat['libelle']) ? 'selected' : ''; ?>>
+                                <?php echo htmlentities($cat['libelle']); ?>
                             </option>
                         <?php } ?>
                     </select>
@@ -187,12 +185,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                     <h4>Prix HT</h4>
                     <input type="text" id="prix_unitaire_ht_produit" name="prix_unitaire_ht_produit"
-                        value="<?php echo htmlentities(number_format($produit['prix_unitaire_ht'], 2, ',', ' ')) ?>"
+                        value="<?php echo isset($_POST['prix_unitaire_ht_produit']) ? htmlentities($_POST['prix_unitaire_ht_produit']) : htmlentities(number_format($produit['prix_unitaire_ht'], 2, ',', ' ')); ?>"
                         pattern="^\d+([,]\d{1,2})?$" title="Uniquement chiffres et virgule (ex : 10,50)">
 
                     <h4>TVA (%)</h4>
                     <input type="text" id="taux_tva_produit" name="taux_tva_produit"
-                        value="<?php echo htmlentities(number_format($produit['taux_tva'], 2, ',', '')) ?>"
+                        value="<?php echo isset($_POST['taux_tva_produit']) ? htmlentities($_POST['taux_tva_produit']) : htmlentities(number_format($produit['taux_tva'], 2, ',', '')); ?>"
                         pattern="^(100([.,]0{1,2})?|[0-9]{1,2}([.,]\d{1,2})?)$"
                         title="Uniquement un nombre entre 0 et 100 (ex : 20 ou 5,5)">
                 </article>
@@ -200,7 +198,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <article>
                     <h3>Stock</h3>
                     <input type="text" id="stock_disponible_produit" name="stock_disponible_produit"
-                        value="<?php echo htmlentities($produit['stock_disponible']) ?>" pattern="^\d+$"
+                        value="<?php echo isset($_POST['stock_disponible_produit']) ? htmlentities($_POST['stock_disponible_produit']) : htmlentities($produit['stock_disponible']); ?>"
+                        pattern="^\d+$"
                         title="Uniquement chiffres entiers">
                 </article>
 
@@ -208,12 +207,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <h3>Visibilité</h3>
 
                     <div class="visibility-option">
-                        <input type="radio" id="visible" name="visibilite" value="1" <?php echo $produit['est_actif'] ? 'checked' : '' ?>>
+                        <input type="radio" id="visible" name="visibilite" value="1" <?php echo (isset($_POST['visibilite']) ? $_POST['visibilite'] == "1" : $produit['est_actif']) ? 'checked' : ''; ?>>
                         <label for="visible">Visible</label>
                     </div>
 
                     <div class="visibility-option">
-                        <input type="radio" id="cache" name="visibilite" value="0" <?php echo !$produit['est_actif'] ? 'checked' : '' ?>>
+                        <input type="radio" id="cache" name="visibilite" value="0" <?php echo (isset($_POST['visibilite']) ? $_POST['visibilite'] == "0" : !$produit['est_actif']) ? 'checked' : ''; ?>>
                         <label for="cache">Caché</label>
                     </div>
                 </article>

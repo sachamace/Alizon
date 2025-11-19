@@ -3,7 +3,7 @@ $id_vendeur_connecte = $_SESSION['vendeur_id'];
 
 try {
     $stmt = $pdo->prepare("
-        SELECT cv.id_vendeur, cv.raison_sociale, cv.adresse_mail, i.login 
+        SELECT cv.raison_sociale, cv.statut_juridique, i.login 
         FROM public.compte_vendeur cv 
         JOIN public.identifiants i ON cv.id_num = i.id_num 
         WHERE cv.id_vendeur = ?
@@ -24,7 +24,7 @@ try {
                 viewBox="0 0 16 16">
                 <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
             </svg>
-            <span><?= htmlentities($vendeur['raison_sociale']) ?></span>
+            <span><?= htmlentities($vendeur['raison_sociale']) ?> <?= htmlentities($vendeur['statut_juridique']) ?></span>
         </div>
     </a>
 

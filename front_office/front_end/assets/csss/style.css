@@ -968,7 +968,7 @@ footer.footer.tablette {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin: 3em 5em;
+  margin: 8em 5em;
   /* Ajustements globaux */
   /* ----- Responsive panier ----- */
 }
@@ -1176,12 +1176,14 @@ footer.footer.tablette {
   color: #000;
   margin: 0 auto;
   box-sizing: border-box;
+  margin-top: 8em;
   /* Séparation entre le produit et les avis */
   /* Section des avis */
 }
 @media (max-width: 900px) {
   .main_produit {
     padding: 3rem 1rem;
+    margin-top: 12em;
   }
 }
 .main_produit .fiche-produit {

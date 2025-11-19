@@ -834,7 +834,7 @@ footer.footer.tablette {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin: 3em 5em;
+  margin: 8em 5em;
 
   section,
   aside {
@@ -1092,9 +1092,10 @@ footer.footer.tablette {
   color: #000;
   margin: 0 auto;
   box-sizing: border-box;
-
+  margin-top: 8em;
   @media (max-width: 900px) {
     padding: 3rem 1rem;
+    margin-top: 12em;
   }
 
 

@@ -190,7 +190,7 @@ try {
             }
             ?>
         </section>
-        <form class="vider-panier" method="post" style="text-align:center; margin-top: 2em;">
+        <form class="vider-panier" method="post" style="text-align:center; margin-top: 2.5em;">
             <input type="hidden" name="action" value="vider_panier">
             <input type="hidden" name="id_produit" value="2">
             <button type="submit" class="btn-vider">Vider le panier</button>

@@ -1026,6 +1026,8 @@ footer.footer.tablette {
 
     section {
       margin: 1em;
+      margin-top: 200px;
+      z-index: -9999;
 
       article {
         margin: 0;
@@ -1068,6 +1070,10 @@ footer.footer.tablette {
       padding: 0;
       margin: 0;
 
+    }
+
+    aside{
+      margin-bottom: 80px;
     }
   }
 

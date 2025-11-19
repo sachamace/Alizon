@@ -40,25 +40,27 @@
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Se connecter - Clients</title>
+    <title>Se connecter</title>
+    <meta name="description" content="Ceci est le profil  du compte de notre market place !">
+    <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
     <link rel="stylesheet" href="../assets/csss/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">
 </head>
 
 <body class="body__connexion">
-        <!-- Logo en haut à gauche -->
-    <div class="logo__connexion">
-        <img src="../assets/images/logo_Alizon.png" alt="Logo Alizon" width="150">
-    </div>
     <div class="container__connexion">
         <div class="header__connexion">
-            <h2>Se connecter</h2>
+            <h2>Rebonjour</h2>
         </div>
         <form action =""class="form__connexion"  method="post" enctype = "multipart/form-data">
             <div class="input-group">
                 <label for="email" class="input-label">E-mail</label>
-                <input class="input__connexion" type="email"  name="adresse_mail" placeholder="Adresse de Mail" value ="<?= $email?>"required />
+                <input class="input__connexion" type="email"  name="adresse_mail" placeholder="Votre adresse email" value ="<?= $email?>"required />
                 <?php
                     if (!empty($erreur_ident)){
                         echo "<span class='error-message'>$erreur_ident</span><br />";
@@ -67,7 +69,7 @@
             </div>
             <div class="input-group">
                 <label for="motdepasse" class="input-label">Mot de passe</label>
-                <input class="input__connexion" type="password"  name="motdepasse" placeholder="Mot de passe"required />
+                <input class="input__connexion" type="password"  name="motdepasse" placeholder="Votre mot de passe"required />
                 <?php
                     if (!empty($erreur_mdp)){
                         echo "<span class='error-message'>$erreur_mdp</span><br />";
@@ -76,8 +78,8 @@
             </div>
             <a href="recupmdp.php" class="forgot-password">Mot de passe oublié ?</a>
             <button type="submit" class="btn__connexion">Se connecter</button>
-            <div class="separator"></div>
-            <label><a href="createcompte.php" class="btn__creer-compte">Créer un compte</a></label>
+            <div class="separator"><p>ou</p></div>
+            <label><a href="createcompte.php" class="btn__creer-compte">Créer compte</a></label>
             <a href="../../../back_office/connecter.php" class="forgot-password">Coté Vendeur</a>
         </form>
     </div>

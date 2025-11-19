@@ -661,7 +661,8 @@ footer.footer.tablette {
   justify-content: center;
   align-items: center;
   position: relative;
-  transform: scale(0.75);
+  
+
   // Réduction pour écrans mobiles 428x926 (classe principale)
   @media screen and (max-width: 428px) and (max-height: 926px) {
     transform: scale(0.70); // Réduction d’environ 15 %
@@ -670,7 +671,9 @@ footer.footer.tablette {
 }
 
 // Variante : body__connexion-creercompte
-
+.creercompte{
+  transform: scale(0.75);
+}
 
 
 .container__connexion {
@@ -681,7 +684,6 @@ footer.footer.tablette {
   width: 100%;
   max-width: 400px;
   text-align: center;
-  margin-top: 60px;
 }
 
 .header__connexion {
@@ -756,7 +758,7 @@ footer.footer.tablette {
 }
 
 .btn__connexion {
-  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  background: $primary-color;
   color: $black;
   border: none;
   border-radius: 10px;

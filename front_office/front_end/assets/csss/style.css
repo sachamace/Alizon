@@ -32,6 +32,11 @@ body header nav nav {
   margin-top: 6px;
   margin-left: 30px;
 }
+@media (max-width: 428px) {
+  body header nav nav {
+    margin-left: 0;
+  }
+}
 body header nav nav:first-child {
   display: flex;
   align-items: center;
@@ -103,6 +108,11 @@ body header nav nav:last-child a {
   font-size: 23px;
   font-weight: bold;
   margin-right: 30px;
+}
+@media (max-width: 428px) {
+  body header nav nav:last-child {
+    transform: scale(0.9);
+  }
 }
 body header nav nav .notif {
   width: 54px;

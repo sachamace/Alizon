@@ -574,6 +574,7 @@ Structure du tableau de bord
   position: relative;
   border: 3px dashed rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
+  min-height: 350px;
 }
 .content .creer_produit:hover {
   border-color: #fff;
@@ -839,7 +840,7 @@ Structure de Consulter/Modifier Profil
   background-color: #fff;
   box-sizing: border-box;
   transition: all 0.3s ease;
-  width: auto;
+  width: 200px;
 }
 .profil-container input[type=text]:hover {
   border-color: #bdc3c7;
@@ -855,6 +856,34 @@ Structure de Consulter/Modifier Profil
   color: #bdc3c7;
 }
 .profil-container input[type=text]::placeholder {
+  color: #bdc3c7;
+}
+.profil-container select {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #2c3e50;
+  background-color: #fff;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  width: 200px;
+}
+.profil-container select:hover {
+  border-color: #bdc3c7;
+  background-color: #fff;
+}
+.profil-container select:focus {
+  outline: none;
+  border-color: #6CD3FF;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+.profil-container select::-moz-placeholder {
+  color: #bdc3c7;
+}
+.profil-container select::placeholder {
   color: #bdc3c7;
 }
 .profil-container .password-edit {

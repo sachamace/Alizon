@@ -577,7 +577,11 @@ body header nav nav .notif .icone {
     width: 390px;
     padding: 1rem;
     margin: auto;
+<<<<<<< HEAD
     margin-top: 0;
+=======
+    margin-top: 11em;
+>>>>>>> 2a285ff (image plus reglage du bug panier telephone)
   }
   .body_paiement .main_paiement .commande-header h1,
   .body_paiement .main_profilClient .commande-header h1,
@@ -1152,7 +1156,7 @@ footer.footer.tablette {
   .main_panier section {
     margin: 1em;
     margin-top: 200px;
-    z-index: -9999;
+    z-index: auto;
     flex: none;
     width: 80%;
   }

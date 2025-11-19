@@ -15,17 +15,15 @@ try {
     echo "Erreur SQL : " . $e->getMessage();
 }
 
-if (isset($_GET['article'])) {
-    $id_produit = $_GET['article'];
-} else {
-    $id_produit = null; // valeur par défaut
-}
 $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
-
+// recuperation du stock
 $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
 $stmt_stock->execute([':id_produit' => $id_produit]);
 $stock_dispo = (int) $stmt_stock->fetchColumn();
-
+// recuperation du chemin vers les images
+$requete_img = $pdo->prepare('SELECT * FROM media_produit WHERE id_produit = :id_produit');
+$requete_img->execute([':id_produit' => $id_produit]);
+$img = $requete_img->fetch();
 // php avis du produit
 $requete_avis = $pdo->prepare("
     SELECT * 

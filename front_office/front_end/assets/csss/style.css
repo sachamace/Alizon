@@ -1134,8 +1134,6 @@ footer.footer.tablette {
   }
   .main_panier section {
     margin: 1em;
-    margin-top: 200px;
-    z-index: -9999;
     flex: none;
     width: 80%;
   }
@@ -1167,9 +1165,6 @@ footer.footer.tablette {
   .main_panier form {
     padding: 0;
     margin: 0;
-  }
-  .main_panier aside {
-    margin-bottom: 80px;
   }
 }
 

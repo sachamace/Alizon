@@ -1,6 +1,6 @@
 <?php
-    include 'config.php';
-    include 'sessionindex.php';
+    include 'front_office/front_end/html/config.php';
+    include 'front_office/front_end/html/sessionindex.php';
     $stmt = $pdo->query("SELECT version();");
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
     <title>Accueil - MarketPlace</title>
     <meta name="description" content="Ceci est l'accueil de notre market place !">
     <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
-    <link rel="stylesheet" href="../assets/csss/style.css">
+    <link rel="stylesheet" href="front_office/front_end/assets/csss/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
@@ -22,14 +22,14 @@
     <header>
         <nav>
             <nav>
-                <a href="accueil.php"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
+                <a href="index.php"><img src="front_office/front_end/assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
                 <a class="notif" href="notification.php"><i class="fa-regular fa-bell icone"></i></a>
                 <form action="recherche.php" method="get" role="search" aria-label="Site search">
                     <label for="site-search"></label>
                     <input disabled type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
                     <button type="submit">Search</button>
                 </form>
-                <a href="panier.php"><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
+                <a href="front_office/front_end/html/panier.php"><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
             </nav>
             <nav>
                 <div>
@@ -40,13 +40,13 @@
                 while ($cat = $categorie->fetch()){ 
                     $libelle = urlencode($cat['libelle']); 
                     ?>
-                    <a href="accueil.php?categorie=<?php echo $libelle; ?>">
+                    <a href="index.php?categorie=<?php echo $libelle; ?>">
                         <?php echo $cat['libelle']; ?>
                     </a>
                 <?php } ?>
                 </div>
-                <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
-                <?php else: ?><a href="seconnecter.php"></i>S'identifier</a>
+                <?php if($isLogged):?><a href="front_office/front_end/html/compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
+                <?php else: ?><a href="front_office/front_end/html/seconnecter.php"></i>S'identifier</a>
                 <?php endif; ?>
             </nav>
         </nav>
@@ -63,7 +63,7 @@
             // On affiche chaque entrée une à une
             while ($donnees = $reponse->fetch()){ 
                 if ($donnees['categorie'] == $_GET['categorie'] || !(isset($_GET['categorie']))){?>
-            <a href="produitdetail.php?article=<?php echo $donnees['id_produit']?>" style="text-decoration:none; color:inherit;">
+            <a href="front_office/front_end/html/produitdetail.php?article=<?php echo $donnees['id_produit']?>" style="text-decoration:none; color:inherit;">
                 <article>
                     <?php
                     $requete_img = $pdo->prepare('SELECT * FROM media_produit WHERE id_produit = :id_produit');
@@ -85,12 +85,12 @@
         ?>
     </div>
     <footer class="footer mobile">
-        <a href="accueil.php"><i class="fa-solid fa-house icone"></i></a>
+        <a href="index.php"><i class="fa-solid fa-house icone"></i></a>
         <a class="recherche disabled" href="recherche.php"><i class="fa-solid fa-magnifying-glass icone"></i></a>
-        <a href="panier.php"><i class="fa-solid fa-cart-shopping icone"></i></a>
+        <a href="front_office/front_end/html/panier.php"><i class="fa-solid fa-cart-shopping icone"></i></a>
         <a class="notif disabled" href="notification.html"><i class="fa-regular fa-bell icone"></i></a>
-        <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i></a>
-                <?php else: ?><a href="seconnecter.php"><i class="fa-regular fa-user icone"></i></a>
+        <?php if($isLogged):?><a href="front_office/front_end/html/compte.php"><i class="fa-regular fa-user icone"></i></a>
+                <?php else: ?><a href="front_office/front_end/html/seconnecter.php"><i class="fa-regular fa-user icone"></i></a>
                 <?php endif; ?>
     </footer>
 </body>

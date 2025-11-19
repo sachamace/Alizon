@@ -44,7 +44,7 @@ body {
           display: flex;
           align-items: center;
 
-          a[href="panier.php"] {
+          a[href="front_office/front_end/html/panier.php"] {
             /* Le lien “Panier” seul, collé à droite */
             margin-left: auto;
             text-decoration: none;
@@ -460,7 +460,7 @@ footer.footer.tablette {
           &:first-child {
             flex-direction: column;
 
-            a[href="panier.php"] {
+            a[href="front_office/front_end/html/panier.php"] {
               display: none;
             }
 

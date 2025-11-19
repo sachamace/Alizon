@@ -61,7 +61,7 @@ try {
     <header class="disabled">
         <nav>
             <nav>
-                <a href="accueil.php"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
+                <a href="/index.php"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
                 <a class="notif" href="notification.php"><i class="fa-regular fa-bell icone"></i></a>
                 <form action="recherche.php" method="get" role="search" aria-label="Site search">
                     <label for="site-search"></label>
@@ -111,7 +111,7 @@ try {
         </section>
     </main>
     <footer class="footer mobile">
-        <a href="accueil.php"><i class="fa-solid fa-house icone"></i></a>
+        <a href="/index.php"><i class="fa-solid fa-house icone"></i></a>
         <a class="recherche disabled" href="recherche.php"><i class="fa-solid fa-magnifying-glass icone"></i></a>
         <a href="panier.php"><i class="fa-solid fa-cart-shopping icone"></i></a>
         <a class="notif disabled" href="notification.html"><i class="fa-regular fa-bell icone"></i></a>

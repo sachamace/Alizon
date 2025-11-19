@@ -146,9 +146,13 @@ try {
                     $prixtotal += $produit["prix_ttc"] * $article['quantite'];
                     $taxe += ($produit['prix_ttc'] - $produit['prix_unitaire_ht']) * $article["quantite"];
                     $prixht += $produit['prix_unitaire_ht'] * $article['quantite'];
+                    $requete_img = $pdo->prepare('SELECT * FROM media_produit WHERE id_produit = :id_produit');
+                    $requete_img->execute([':id_produit' => $id_produit]);
+                    $img = $requete_img->fetch();
+                    
                     echo '
                         <article>
-                            <img src="../assets/images/Tel.jpg" alt="' . htmlspecialchars($produit['nom_produit']) . '">
+                            <img src="' . $img["chemin_image"] .'" alt="' . htmlspecialchars($produit['nom_produit']) . '">
                             <div class="panier_info">
                                 <h4>' . htmlspecialchars($produit['nom_produit']) . '</h4>
                                 <p>Prix : ' . number_format($produit['prix_ttc'], 2, ',', ' ') . ' €</p>

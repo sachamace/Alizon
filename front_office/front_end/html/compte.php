@@ -96,26 +96,26 @@
 
         <a href="consulterProfilClient.php" class="compte__button">
             <img src="../assets/images/info.png" class="compte__image">
-            <span>Vos infos</span>
-            <span>›</span>
+            <h3>Vos infos</h3>
+            <h3>›</h3>
         </a>
 
         <a class="compte__button disabled">
             <img src="../assets/images/commande.png" class="compte__image">
-            <span>Vos commandes</span>
-            <span>›</span>
+            <h3>Vos commandes</h3>
+            <h3>›</h3>
         </a>
 
         <a href="deconnecter.php" class="compte__button">
             <img src="../assets/images/logout.png" class="compte__image">
-            <span>Se déconnecter</span>
-            <span>›</span>
+            <h3>Se déconnecter</h3>
+            <h3>›</h3>
         </a>
 
         <a class="compte__button disabled">
             <img src="../assets/images/poubelle.png" class="compte__image">
-            <span>Supprimer vos données</span>
-            <span>›</span>
+            <h3>Supprimer vos données</h3>
+            <h3>›</h3>
         </a>
     </div>
 </main>

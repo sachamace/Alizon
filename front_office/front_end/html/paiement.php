@@ -153,7 +153,7 @@
     <header>
         <nav>
             <nav>
-                <a href="accueil.php"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
+                <a href="/index.php"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
                 <a class="notif" href="notification.php"><i class="fa-regular fa-bell icone"></i></a>
                 <form action="recherche.php" method="get" role="search" aria-label="Site search">
                     <label for="site-search"></label>

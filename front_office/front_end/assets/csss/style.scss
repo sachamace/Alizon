@@ -23,7 +23,9 @@ body {
     width: 100%;
     position: fixed;
     top: 0;
-
+    &.disabled{
+      display: none;
+    }
     nav {
       display: flex;
       flex-direction: column;

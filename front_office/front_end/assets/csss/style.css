@@ -19,6 +19,9 @@ body header {
   position: fixed;
   top: 0;
 }
+body header.disabled {
+  display: none;
+}
 body header nav {
   display: flex;
   flex-direction: column;

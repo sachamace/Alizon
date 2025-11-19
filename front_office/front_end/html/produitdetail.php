@@ -356,6 +356,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <img class="popup-content" id="popup-img" src="">
         </div>
     </main>
+    <footer class="footer mobile">
+        <a href="accueil.php"><i class="fa-solid fa-house icone"></i></a>
+        <a class="recherche" href="recherche.php"><i class="fa-solid fa-magnifying-glass icone"></i></a>
+        <a href="panier.php"><i class="fa-solid fa-cart-shopping icone"></i></a>
+        <a class="notif" href="notification.html"><i class="fa-regular fa-bell icone"></i></a>
+        <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i></a>
+                <?php else: ?><a href="seconnecter.php"><i class="fa-regular fa-user icone"></i></a>
+                <?php endif; ?>
+    </footer>
 
     <script> // PARTI JAVASCRIPT
         // Sélection des éléments

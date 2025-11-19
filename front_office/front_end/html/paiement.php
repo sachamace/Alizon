@@ -61,6 +61,9 @@
             if (!preg_match('/^[0-9]{16}$/', $numero)) {
                 $erreurs['carte'] = "Numéro de carte invalide (16 chiffres requis).";
             }
+            else if(!verifLuhn($numero)){
+                $erreurs['carte'] = "Numéro de carte invalide (algorithme de luhn).";
+            }
 
             // Vérification CVV (3 chiffres)
             if (!preg_match('/^[0-9]{3}$/', $securite)) {
@@ -216,14 +219,29 @@
         <button type="submit" class="payer-btn">Payer</button>
 
     </form>
-
-    <!-- NAVBAR BAS DE PAGE -->
-    <div class="navbar">
-        <button>🏠</button>
-        <button>🛒</button>
-        <button>👤</button>
-    </div>
-
 </main>
 </body>
 </html>
+
+<?php 
+    function verifLuhn($numero){
+        $sum = 0;
+        $shouldDouble = false;
+
+        //Boucle de droite à gauche
+        for($i = strlen($numero) - 1; i >= 0; $i--){
+            $digit = (intval($numero[$i]));
+
+            if($shouldDouble){
+                $digit *= 2;
+                if($digit > 9){
+                    $digit -= 9;
+                }
+            }
+
+            $sum += $digit;
+            $shouldDouble = !$shouldDouble;
+        }
+        return $sum % 10 === 0;
+    }
+?>

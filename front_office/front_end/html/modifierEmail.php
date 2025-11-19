@@ -55,9 +55,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Modifier mon e-mail</title>
-  <link rel="stylesheet" href="../assets/csss/style.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier Email - Compte CLient</title>
+    <meta name="description" content="Page ou tu peux modifier l'email du compte client !">
+    <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
+    <link rel="stylesheet" href="../assets/csss/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">
 </head>
 <body class="body_profilClient">
   <main class="main_profilClient">

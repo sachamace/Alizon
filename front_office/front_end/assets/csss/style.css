@@ -152,7 +152,7 @@ body header nav nav .notif .icone {
   width: 800px;
   padding: 2rem;
   box-sizing: border-box;
-  margin: 10rem auto;
+  margin: 0 auto;
 }
 .body_paiement .main_paiement .commande-header,
 .body_paiement .main_profilClient .commande-header,
@@ -577,7 +577,7 @@ body header nav nav .notif .icone {
     width: 390px;
     padding: 1rem;
     margin: auto;
-    margin-top: 11em;
+    margin-top: 0;
   }
   .body_paiement .main_paiement .commande-header h1,
   .body_paiement .main_profilClient .commande-header h1,

@@ -94,7 +94,7 @@
     <div class="compte__container">
         <div class="compte__header">Votre compte</div>
 
-        <a class="compte__button">
+        <a href="consulterProfilClient.php" class="compte__button">
             <img src="../assets/images/info.png" class="compte__image">
             <span>Vos infos</span>
             <span>›</span>
@@ -106,7 +106,7 @@
             <span>›</span>
         </a>
 
-        <a class="compte__button">
+        <a href="deconnecter.php" class="compte__button">
             <img src="../assets/images/logout.png" class="compte__image">
             <span>Se déconnecter</span>
             <span>›</span>

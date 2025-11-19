@@ -74,6 +74,7 @@
             <button type="submit" class="btn__connexion">Se connecter</button>
             <div class="separator"></div>
             <label><a href="createcompte.php" class="btn__creer-compte">Créer un compte</a></label>
+            <a href="../../../back_office/connecter.php" class="forgot-password">Coté Vendeur</a>
         </form>
     </div>
 </body>

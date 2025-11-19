@@ -127,10 +127,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">
-    <script src="../assets/js/date.js"></script>
+    
 </head>
 
 <body class="body__connexion">
+        <!-- Logo en haut à gauche -->
+    <div class="logo__connexion">
+        <img src="../assets/images/logo_Alizon.png" alt="Logo Alizon" width="150">
+    </div>
     <div class="container__connexion">
         <div class="header__connexion">
             <h2>Créer un compte</h2>
@@ -212,5 +216,6 @@
             <a href="seconnecter.php" class="btn__creer-compte">Se connecter</a>
         </form>
     </div>
+    <script src="../assets/js/date.js"></script>
 </body>
 </html>

@@ -47,6 +47,10 @@
 </head>
 
 <body class="body__connexion">
+        <!-- Logo en haut à gauche -->
+    <div class="logo__connexion">
+        <img src="../assets/images/logo_Alizon.png" alt="Logo Alizon" width="150">
+    </div>
     <div class="container__connexion">
         <div class="header__connexion">
             <h2>Se connecter</h2>

@@ -141,7 +141,7 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="../assets/csss/style.css">
-    <script src="../assets/js/paiement.js"></script>
+    
 </head>
 <body class="body_paiement">
 
@@ -220,6 +220,7 @@
 
     </form>
 </main>
+<script src="../assets/js/paiement.js"></script>
 </body>
 </html>
 

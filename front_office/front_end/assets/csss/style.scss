@@ -1459,7 +1459,6 @@ footer.footer.tablette {
         gap: 2rem;
         width: 100%;
     
-
     .card {
         display: flex;
         align-items: center;
@@ -1489,7 +1488,9 @@ footer.footer.tablette {
                 opacity: 0.8;
             }
         }
-
+        &.disabled {
+          @include disabled-state;
+        }
         &:hover {
             background: rgba(255, 106, 213, 0.08);
             transform: translateY(-3px);

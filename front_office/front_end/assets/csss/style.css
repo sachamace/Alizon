@@ -1297,6 +1297,12 @@ footer.footer.tablette {
   font-size: 0.9rem;
   opacity: 0.8;
 }
+.main_compte .cards_container .card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: none !important;
+}
 .main_compte .cards_container .card:hover {
   background: rgba(255, 106, 213, 0.08);
   transform: translateY(-3px);

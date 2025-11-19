@@ -30,6 +30,7 @@ body header nav nav {
   /* aligne le contenu de chaque nav horizontalement */
   align-items: center;
   margin-top: 6px;
+  margin-left: 30px;
 }
 body header nav nav:first-child {
   display: flex;
@@ -86,12 +87,12 @@ body header nav nav:last-child div {
   margin-bottom: 7px;
 }
 body header nav nav:last-child div a {
-  background: linear-gradient(to left, #ff6ce2, #FFE0FE);
+  background: #ff6ce2;
   text-align: center;
   padding: 10px;
   font-size: 14px;
   font-weight: 325;
-  width: 200px;
+  width: 190px;
   border-radius: 10px;
 }
 body header nav nav:last-child a {
@@ -101,7 +102,7 @@ body header nav nav:last-child a {
   color: rgb(0, 0, 0);
   font-size: 23px;
   font-weight: bold;
-  margin-right: 8px;
+  margin-right: 30px;
 }
 body header nav nav .notif {
   width: 54px;
@@ -799,7 +800,7 @@ footer.footer.tablette {
   margin: 0;
   padding: 0;
   font-family: "Space Grotesk", sans-serif;
-  background: linear-gradient(135deg, #ff6ce2 0%, #FFE0FE 100%);
+  background: #ff6ce2;
   height: 100vh;
   display: flex;
   justify-content: center;

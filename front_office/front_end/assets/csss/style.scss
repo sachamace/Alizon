@@ -27,7 +27,7 @@ body {
     nav {
       display: flex;
       flex-direction: column;
-
+      
       /* empile les deux nav verticalement */
       nav {
         display: flex;
@@ -35,7 +35,7 @@ body {
         /* aligne le contenu de chaque nav horizontalement */
         align-items: center;
         margin-top: 6px;
-
+        margin-left: 30px;
         &:first-child {
           display: flex;
           align-items: center;
@@ -65,7 +65,6 @@ body {
               font-weight: bold;
             }
           }
-
           form {
             margin-left: 42.625px;
 
@@ -100,12 +99,12 @@ body {
             margin-bottom: 7px;
 
             a {
-              background: linear-gradient(to left, $primary-color, #FFE0FE);
+              background: $primary-color;
               text-align: center;
               padding: 10px;
               font-size: 14px;
               font-weight: 325;
-              width: 200px;
+              width: 190px;
               border-radius: 10px;
             }
           }
@@ -117,7 +116,7 @@ body {
             color: rgb(0, 0, 0);
             font-size: 23px;
             font-weight: bold;
-            margin-right: 8px;
+            margin-right: 30px;
           }
         }
 
@@ -655,7 +654,7 @@ footer.footer.tablette {
   margin: 0;
   padding: 0;
   font-family: $font-family;
-  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  background: $primary-color;
   height: 100vh;
   display: flex;
   justify-content: center;

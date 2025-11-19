@@ -69,6 +69,7 @@
                     $requete_img = $pdo->prepare('SELECT * FROM media_produit WHERE id_produit = :id_produit');
                     $requete_img->execute([':id_produit' => $donnees['id_produit']]);
                     $img = $requete_img->fetch();
+                    echo $img['chemin_image'];
                     ?>
                     <img src="<?php echo htmlentities($img['chemin_image']); ?>" alt="Image du produit" width="350" height="225">
                     <h2 class="titre"><?php echo htmlentities($donnees['nom_produit']) ?></h2>

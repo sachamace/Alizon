@@ -782,7 +782,6 @@ footer.footer {
 
         strong {
           font-size: 1.1rem;
-          color: #5a2ca0;
         }
 
         .avis-etoiles {
@@ -806,7 +805,6 @@ footer.footer {
 
       h2 {
         font-size: 1.4rem;
-        color: #5a2ca0;
         margin-bottom: 1rem;
       }
 
@@ -838,8 +836,8 @@ footer.footer {
 
       button {
         margin-top: 1.5rem;
-        background-color: #5a2ca0;
-        color: $white;
+        background-color: $primary-color;
+        color: $black;
         border: none;
         padding: 0.8rem 1.5rem;
         border-radius: 10px;
@@ -1589,7 +1587,7 @@ footer.footer {
       align-items: center;
       width: 50px;
       height: 50px;
-
+      text-decoration: none;
       &.disabled {
         @include disabled-state;
       }

@@ -673,7 +673,6 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .main_produit .avis .avis-item .avis-header strong {
   font-size: 1.1rem;
-  color: #5a2ca0;
 }
 .main_produit .avis .avis-item .avis-header .avis-etoiles {
   color: #e87edc;
@@ -692,7 +691,6 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .main_produit .avis .form-avis h2 {
   font-size: 1.4rem;
-  color: #5a2ca0;
   margin-bottom: 1rem;
 }
 .main_produit .avis .form-avis label {
@@ -721,8 +719,8 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .main_produit .avis .form-avis button {
   margin-top: 1.5rem;
-  background-color: #5a2ca0;
-  color: #fff;
+  background-color: #ff6ce2;
+  color: #000;
   border: none;
   padding: 0.8rem 1.5rem;
   border-radius: 10px;
@@ -1628,6 +1626,7 @@ footer.footer.mobile, footer.footer.tablette {
     align-items: center;
     width: 50px;
     height: 50px;
+    text-decoration: none;
   }
   footer.footer.mobile a.disabled {
     opacity: 0.5;

@@ -961,6 +961,7 @@ footer.footer.mobile, footer.footer.tablette {
   padding: 2rem;
   box-sizing: border-box;
   margin: 0 auto;
+  margin-top: 40px;
 }
 .body_paiement .main_paiement .commande-header,
 .body_paiement .main_profilClient .commande-header,

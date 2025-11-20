@@ -1471,6 +1471,11 @@ footer.footer {
   font-size: 20px;
   font-weight: bold;
   border-bottom: 1px solid #ccc;
+  @media (min-width: 1440px) {
+    &.disabled{
+      display: none;
+    }
+  }
 }
 
 .compte__button {

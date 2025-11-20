@@ -1,6 +1,7 @@
 <?php
     include 'config.php';
     include 'session.php';
+    include 'sessionindex.php';
 /* ---------------------------------------------------
    1. Vérification de la connexion client
 --------------------------------------------------- */
@@ -139,43 +140,46 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-      integrity="sha512-RXf+QSDCUQs6fP0Yk8U58+Z0hx+2b0sVjS3+qz1b1Hcl7uDd+v5b4rVZzS1MqYlIh7uNwT8Z3vJf8F0Ew2p3Mg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-RXf+QSDCUQs6fP0Yk8U58+Z0hx+2b0sVjS3+qz1b1Hcl7uDd+v5b4rVZzS1MqYlIh7uNwT8Z3vJf8F0Ew2p3Mg==" crossorigin="anonymous" referrerpolicy="no-referrer"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">
     <link rel="stylesheet" href="../assets/csss/style.css">
 
 </head>
 <body class="body_paiement">
-    <header>
+    <header class = "disabled">
         <nav>
             <nav>
                 <a href="/index.php"><img src="../assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
                 <a class="notif" href="notification.php"><i class="fa-regular fa-bell icone"></i></a>
                 <form action="recherche.php" method="get" role="search" aria-label="Site search">
                     <label for="site-search"></label>
-                    <input type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
+                    <input disabled type="search" id="site-search" name="q" placeholder="Recherche un produit, une marque..." />
                     <button type="submit">Search</button>
                 </form>
                 <a href="panier.php" data-panier><i class="fa-solid fa-cart-shopping icone" ></i>Panier</a>
             </nav>
             <nav>
                 <div>
-                    <a href="produitTerroir.php">Produit du Terroir</a>
-                    <a href="modeBretonne.php">Mode Bretonne</a>
-                    <a href="">Artisanat Local</a>
-                    <a href="">Décoration Intérieure</a>
-                    <a href="">Epicerie FIne</a>
+                <?php
+                // On récupère tout le contenu de la table produit
+                $categorie = $pdo->query('SELECT * FROM categorie');
+                // On affiche chaque entrée une à une
+                while ($cat = $categorie->fetch()){ 
+                    $libelle = urlencode($cat['libelle']); 
+                    ?>
+                    <a href="/index.php?categorie=<?php echo $libelle; ?>">
+                        <?php echo $cat['libelle']; ?>
+                    </a>
+                <?php } ?>
                 </div>
-                <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
+                <?php if($isLogged):?><a href="compte.php" data><i class="fa-regular fa-user icone"></i>Mon Compte</a>
                 <?php else: ?><a href="seconnecter.php"></i>S'identifier</a>
                 <?php endif; ?>
             </nav>
         </nav>
     </header>
+    <div class="compte__header disabled">Passer la commande</div> 
     <main class="main_paiement">
         <!-- ADRESSE CLIENT -->
         <div class="bloc recap">

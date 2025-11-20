@@ -1530,6 +1530,11 @@ footer.footer.mobile, footer.footer.tablette {
   font-weight: bold;
   border-bottom: 1px solid #ccc;
 }
+@media (min-width: 1440px) {
+  .compte__header.disabled {
+    display: none;
+  }
+}
 
 .compte__button {
   display: flex;

@@ -90,7 +90,7 @@ try {
             </nav>
         </nav>
     </header>
-    <div class="compte__header">Vos données</div> 
+    <div class="compte__header disabled">Vos données</div> 
     <main class="main_profilClient" >
         <section class="bloc infoG">
                 <h2>Informations générales</h2>

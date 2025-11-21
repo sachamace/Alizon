@@ -472,7 +472,6 @@ footer.footer.mobile, footer.footer.tablette {
   max-width: 28rem;
   min-width: 20rem;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 @media (max-width: 900px) {
   .main_produit .fiche-produit .fiche-container .images-produit .image-principale {
@@ -966,7 +965,7 @@ footer.footer.mobile, footer.footer.tablette {
   padding: 2rem;
   box-sizing: border-box;
   margin: 0 auto;
-  margin-top: 40px;
+  margin-top: 150px;
 }
 .body_paiement .main_paiement .commande-header,
 .body_paiement .main_profilClient .commande-header,

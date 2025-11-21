@@ -11,12 +11,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $mdp_nouveau = trim($_POST['mdp_nouveau']);
     $mdp_confirmation = trim($_POST['mdp_confirmation']);
 
+    if (empty($raison_sociale)) {
+        $errors['raison_sociale'] = "Veuillez entrer une raison sociale";
+    }
+
     if (empty($statut_juridique)) {
-        $errors[] = "Veuillez choisir un statut juridique";
+        $errors['statut_juridique'] = "Veuillez choisir un statut juridique";
     }
 
     if (!preg_match("/^[0-9]{9}$/", $num_siren)) {
-        $errors[] = "Total de chiffre invalides ! Nombre de chiffre qu'on requière = 9";
+        $errors['num_siren'] = "Total de chiffre invalides ! Nombre de chiffre qu'on requière = 9";
     }
 
     if ($adresse_mail != $profil['adresse_mail']) {
@@ -25,20 +29,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $tab_email = $stmt_email->fetchAll(PDO::FETCH_COLUMN, 0);
         foreach ($tab_email as $email) {
             if ($adresse_mail == $email) {
-                $errors[] = "L'adresse e-mail existe déja !";
+                $errors['adresse_mail'] = "L'adresse e-mail existe déja !";
             }
         }
         if (!preg_match("/^[a-zA-Z0-9._%+-]+@(gmail\.com|outlook\.com|hotmail\.com|yahoo\.fr|yahoo\.com|orange\.fr|free\.fr|sfr\.fr)$/", $adresse_mail)) {
-            $errors[] = "Email invalide ou domaine non autorisé.(Gmail , Outlook , Yahoo , Orange , free et sfr acceptés.";
+            $errors['adresse_mail'] = "Email invalide ou domaine non autorisé.(Gmail , Outlook , Yahoo , Orange , free et sfr acceptés.";
         }
     }
 
-    if (!empty($mdp_actuel) && !empty($mdp_nouveau) && !empty($mdp_confirmation)) {
-        if ($mdp_actuel != $profil_mdp) {
-            $errors[] = "Le mot de passe actuel n'est pas le bon";
-        }
-        if ($mdp_nouveau != $mdp_confirmation) {
-            $errors[] = "Entrez 2 fois le même nouveau mot de passe";
+    if (!empty($mdp_actuel) || !empty($mdp_nouveau) || !empty($mdp_confirmation)) {
+        if (empty($mdp_actuel) || empty($mdp_nouveau) || empty($mdp_confirmation)) {
+            $errors['mdp_champs'] = "Veuillez remplir les 3 champs du mot de passe";
+        } elseif ($mdp_actuel != $profil_mdp) {
+            $errors['mdp_pas_bon'] = "Le mot de passe actuel n'est pas correct";
+        } elseif ($mdp_nouveau != $mdp_confirmation) {
+            $errors['mdp_confirmation'] = "Entrez 2 fois le même nouveau mot de passe";
         }
     }
 
@@ -48,11 +53,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $tab_tel = $stmt_tel->fetchAll(PDO::FETCH_COLUMN, 0);
         foreach ($tab_tel as $telephone) {
             if ($num_tel == $telephone) {
-                $errors[] = "Le numéro de téléphone existe déja !";
+                $errors['num_tel'] = "Le numéro de téléphone existe déja !";
             }
         }
         if (!preg_match("/^[0-9]{10}$/", $num_tel)) {
-            $errors[] = "Total de chiffres invalides ! Nombre de chiffre qu'on requière = 10";
+            $errors['num_tel'] = "Total de chiffres invalides ! Nombre de chiffre qu'on requière = 10";
         }
     }
 
@@ -89,11 +94,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             window.location.href = 'index.php?page=profil&type=consulter';
         </script>";
         exit();
-    } else {
-        echo "<ul style='color:red'>";
-        foreach ($errors as $err)
-            echo "<li>$err</li>";
-        echo "</ul>";
     }
 }
 ?>
@@ -106,6 +106,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <input type="text" name="raison_sociale" id="raison_sociale"
                 value="<?php echo isset($_POST['raison_sociale']) ? htmlentities($_POST['raison_sociale']) : htmlentities($profil['raison_sociale']); ?>">
         </article>
+        <?php if (isset($errors['raison_sociale'])) { ?>
+            <p class="error"><?php echo $errors['raison_sociale']; ?></p>
+        <?php } ?>
 
         <article>
             <h3>Statut juridique</h3>
@@ -121,18 +124,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </select>
 
         </article>
+        <?php if (isset($errors['statut_juridique'])) { ?>
+            <p class="error"><?php echo $errors['statut_juridique']; ?></p>
+        <?php } ?>
 
         <article>
             <h3>Numéro de SIREN</h3>
             <input type="text" name="num_siren" id="num_siren"
                 value="<?php echo isset($_POST['num_siren']) ? htmlentities($_POST['num_siren']) : htmlentities($profil['num_siren']); ?>">
+
         </article>
+        <?php if (isset($errors['num_siren'])) { ?>
+            <p class="error"><?php echo $errors['num_siren']; ?></p>
+        <?php } ?>
 
         <article>
             <h3>Adresse email</h3>
             <input type="text" name="adresse_mail" id="adresse_mail"
                 value="<?php echo isset($_POST['adresse_mail']) ? htmlentities($_POST['adresse_mail']) : htmlentities($profil['adresse_mail']); ?>">
+
         </article>
+        <?php if (isset($errors['adresse_mail'])) { ?>
+            <p class="error"><?php echo $errors['adresse_mail']; ?></p>
+        <?php } ?>
 
         <article class="password-field" id="toggle-password">
             <h3>Mot de passe</h3>
@@ -149,19 +163,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="password-edit" id="password-edit">
             <label>Mot de passe actuel</label>
             <input type="password" name="mdp_actuel">
+            <?php if (isset($errors['mdp_champs'])) { ?>
+                <p class="error"><?php echo $errors['mdp_champs']; ?></p>
+            <?php } ?>
+            <?php if (isset($errors['mdp_pas_bon'])) { ?>
+                <p class="error"><?php echo $errors['mdp_pas_bon']; ?></p>
+            <?php } ?>
 
             <label>Nouveau mot de passe</label>
             <input type="password" name="mdp_nouveau">
 
             <label>Confirmer le nouveau mot de passe</label>
             <input type="password" name="mdp_confirmation">
+            <?php if (isset($errors['mdp_confirmation'])) { ?>
+                <p class="error"><?php echo $errors['mdp_confirmation']; ?></p>
+            <?php } ?>
         </div>
 
         <article>
             <h3>Numéro de téléphone</h3>
             <input type="text" name="num_tel" id="num_tel"
                 value="<?php echo isset($_POST['num_tel']) ? htmlentities($_POST['num_tel']) : htmlentities($profil['num_tel']); ?>">
+
         </article>
+        <?php if (isset($errors['num_tel'])) { ?>
+            <p class="error"><?php echo $errors['num_tel']; ?></p>
+        <?php } ?>
 
         <div class="btn-modif">
             <input type="submit" name="confirmer" class="confirmer" value="Confirmer">

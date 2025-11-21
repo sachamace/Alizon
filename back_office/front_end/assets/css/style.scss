@@ -175,6 +175,13 @@ Structure de Consulter, Créer, Modifier produit
           font-size: 1rem;
         }
 
+        .error {
+          font-size: 0.85rem !important;
+          color: #e63946 !important;
+          margin-top: 4px !important;
+          font-weight: 500 !important;
+        }
+
         .produit-images {
           display: flex;
           flex-direction: row;
@@ -239,6 +246,13 @@ Structure de Consulter, Créer, Modifier produit
           &:last-child {
             margin-bottom: 0;
           }
+        }
+
+        .error {
+          font-size: 0.85rem !important;
+          color: #e63946 !important;
+          margin-top: 4px !important;
+          font-weight: 500 !important;
         }
 
         // Options de visibilité
@@ -798,6 +812,13 @@ Structure de Consulter/Modifier Profil
     color: #222;
   }
 
+  .error {
+          font-size: 0.85rem !important;
+          color: #e63946 !important;
+          margin-top: 4px !important;
+          font-weight: 500 !important;
+        }
+
   article {
     padding: 1rem 0;
     border-bottom: 1px solid #e5e5e5;
@@ -823,6 +844,7 @@ Structure de Consulter/Modifier Profil
       font-weight: 500;
       color: #222;
     }
+
   }
 
   .btn-modif {
@@ -923,7 +945,7 @@ Structure de Consulter/Modifier Profil
   .password-field {
     cursor: pointer;
 
-    div{
+    div {
       display: flex;
       flex-direction: row;
       align-items: baseline;
@@ -1157,20 +1179,18 @@ Fin de la structure de Consulter/Modifier Profil
 
 .recuperation-container {
   @extend .container__connexion;
-  
+
   .header__recuperation {
     @extend .header__connexion;
   }
-  
+
   .form__recuperation {
     @extend .form__connexion;
-    @include form-step;
   }
 }
 
 // Messages de statut
 .succes-message {
-  @include alert-message($success-bg, $success-border, $success-color);
   margin-bottom: 20px;
 }
 
@@ -1180,11 +1200,11 @@ Fin de la structure de Consulter/Modifier Profil
 .recuperation-links {
   text-align: center;
   margin-top: 20px;
-  
+
   a {
     color: $primary-color;
     text-decoration: none;
-    
+
     &:hover {
       color: color.adjust($primary-color, $lightness: -15%);
       text-decoration: underline;
@@ -1198,7 +1218,7 @@ Fin de la structure de Consulter/Modifier Profil
   text-decoration: none;
   display: block;
   text-align: center;
-  
+
   &:hover {
     text-decoration: none;
   }

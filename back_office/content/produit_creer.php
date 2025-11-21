@@ -10,20 +10,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stock = $_POST['stock_disponible_produit'];
     $actif = $_POST['visibilite'];
 
+    if (empty(trim($nom))) {
+        $errors['nom_produit'] = "Veuillez saisir un nom de produit.";
+    }
+
+    if (empty(trim($description))) {
+        $errors['description_produit'] = "Veuillez saisir une description.";
+    }
+
     if (!preg_match('/^\d+([.,]\d{1,2})?$/', $_POST['prix_unitaire_ht_produit'])) {
-        $errors[] = "Le prix HT doit contenir uniquement des chiffres et une virgule (ex : 10,50).";
+        $errors['prix_ht'] = "Le prix HT doit contenir uniquement des chiffres et une virgule (ex : 10,50).";
     }
 
     if (!preg_match('/^(100([.,]0{1,2})?|[0-9]{1,2}([.,]\d{1,2})?)$/', $_POST['taux_tva_produit'])) {
-        $errors[] = "La TVA doit être un nombre entre 0 et 100 (ex : 20 ou 20,50).";
+        $errors['tva'] = "La TVA doit être un nombre entre 0 et 100 (ex : 20 ou 20,50).";
     }
 
     if (!preg_match('/^\d+$/', $stock)) {
-        $errors[] = "Le stock doit être un nombre entier positif.";
+        $errors['stock'] = "Le stock doit être un nombre entier positif.";
     }
 
     if (empty($categorie)) {
-        $errors[] = "Veuillez sélectionner une catégorie.";
+        $errors['categorie'] = "Veuillez sélectionner une catégorie.";
     }
 
     $newImagesCount = 0;
@@ -32,11 +40,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if ($newImagesCount < 1) {
-        $errors[] = "Vous devez avoir au moins une image pour ce produit.";
+        $errors['images'] = "Vous devez avoir au moins une image pour ce produit.";
     }
 
     if ($newImagesCount > 3) {
-        $errors[] = "Vous ne pouvez pas avoir plus de 3 images par produit.";
+        $errors['images'] = "Vous ne pouvez pas avoir plus de 3 images par produit.";
     }
 
     if (empty($errors)) {
@@ -106,11 +114,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             window.location.href = 'index.php?page=dashboard';
         </script>";
         exit;
-    } else {
-        echo "<ul style='color:red'>";
-        foreach ($errors as $err)
-            echo "<li>$err</li>";
-        echo "</ul>";
     }
 }
 ?>
@@ -126,11 +129,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <article>
                     <h3>Nom du produit</h3>
                     <input type="text" id="nom_produit" name="nom_produit" value="<?php echo $nom ?>">
+                    <?php if (isset($errors['nom_produit'])) { ?>
+                        <p class="error"><?php echo $errors['nom_produit']; ?></p>
+                    <?php } ?>
                 </article>
                 <article>
                     <h3>Description</h3>
                     <input type="text" id="description_produit" name="description_produit"
                         value="<?php echo $description ?>">
+                    <?php if (isset($errors['description_produit'])) { ?>
+                        <p class="error"><?php echo $errors['description_produit']; ?></p>
+                    <?php } ?>
                 </article>
                 <article>
                     <h3>Catégorie</h3>
@@ -146,6 +155,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             </option>
                         <?php } ?>
                     </select>
+
+                    <?php if (isset($errors['categorie'])) { ?>
+                        <p class="error"><?php echo $errors['categorie']; ?></p>
+                    <?php } ?>
                 </article>
                 <article>
                     <h3>Médias (<span id="imageCount">0</span>/3)</h3>
@@ -156,6 +169,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <label for="nouvelle_image">Ajouter images :</label>
                         <input type="file" id="nouvelle_image" name="nouvelle_image" accept="image/*">
                     </div>
+
+                    <?php if (isset($errors['images'])) { ?>
+                        <p class="error"><?php echo $errors['images']; ?></p>
+                    <?php } ?>
                 </article>
             </div>
 
@@ -171,17 +188,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <input type="text" id="prix_unitaire_ht_produit" name="prix_unitaire_ht_produit"
                         value="<?php echo $prix_ht ?>" pattern="^\d+([.,]\d{1,2})?$"
                         title="Uniquement chiffres et virgule (ex : 10,50)">
+                    <?php if (isset($errors['prix_ht'])) { ?>
+                        <p class="error"><?php echo $errors['prix_ht']; ?></p>
+                    <?php } ?>
+
 
                     <h4>TVA (%)</h4>
                     <input type="text" id="taux_tva_produit" name="taux_tva_produit" value="<?php echo $tva ?>"
                         pattern="^(100([.,]0{1,2})?|[0-9]{1,2}([.,]\d{1,2})?)$"
                         title="Uniquement un nombre entre 0 et 100 (ex : 20 ou 5,5)">
+                    <?php if (isset($errors['tva'])) { ?>
+                        <p class="error"><?php echo $errors['tva']; ?></p>
+                    <?php } ?>
                 </article>
 
                 <article>
                     <h3>Stock</h3>
                     <input type="text" id="stock_disponible_produit" name="stock_disponible_produit"
                         value="<?php echo $stock ?>" pattern="^\d+$" title="Uniquement chiffres entiers">
+                    <?php if (isset($errors['stock'])) { ?>
+                        <p class="error"><?php echo $errors['stock']; ?></p>
+                    <?php } ?>
                 </article>
 
                 <article>

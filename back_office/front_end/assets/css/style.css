@@ -152,6 +152,12 @@ Structure de Consulter, Créer, Modifier produit
   margin: 0;
   font-size: 1rem;
 }
+.produit-container .produit-content .produit-infos article .error {
+  font-size: 0.85rem !important;
+  color: #e63946 !important;
+  margin-top: 4px !important;
+  font-weight: 500 !important;
+}
 .produit-container .produit-content .produit-infos article .produit-images {
   display: flex;
   flex-direction: row;
@@ -205,6 +211,12 @@ Structure de Consulter, Créer, Modifier produit
 }
 .produit-container .produit-content .produit-prix-stock article p:last-child {
   margin-bottom: 0;
+}
+.produit-container .produit-content .produit-prix-stock article .error {
+  font-size: 0.85rem !important;
+  color: #e63946 !important;
+  margin-top: 4px !important;
+  font-weight: 500 !important;
 }
 .produit-container .produit-content .produit-prix-stock article .visibility-option {
   display: flex;
@@ -261,12 +273,12 @@ Structure de Consulter, Créer, Modifier produit
 }
 .produit-container .produit-actions .modifier,
 .produit-container .produit-actions .confirmer {
-  background-color: #27ae60;
+  background-color: #28a745;
   color: #fff;
 }
 .produit-container .produit-actions .modifier:hover,
 .produit-container .produit-actions .confirmer:hover {
-  background-color: rgb(31.5295774648, 140.6704225352, 77.6112676056);
+  background-color: rgb(32.115942029, 134.084057971, 55.4);
 }
 .produit-container .produit-actions .annuler {
   background-color: #95a5a6;
@@ -762,6 +774,12 @@ Structure de Consulter/Modifier Profil
   margin-bottom: 1rem;
   color: #222;
 }
+.profil-container .error {
+  font-size: 0.85rem !important;
+  color: #e63946 !important;
+  margin-top: 4px !important;
+  font-weight: 500 !important;
+}
 .profil-container article {
   padding: 1rem 0;
   border-bottom: 1px solid #e5e5e5;
@@ -816,12 +834,12 @@ Structure de Consulter/Modifier Profil
 }
 .profil-container .btn-modif .modifier,
 .profil-container .btn-modif .confirmer {
-  background-color: #27ae60;
+  background-color: #28a745;
   color: #fff;
 }
 .profil-container .btn-modif .modifier:hover,
 .profil-container .btn-modif .confirmer:hover {
-  background-color: rgb(31.5295774648, 140.6704225352, 77.6112676056);
+  background-color: rgb(32.115942029, 134.084057971, 55.4);
 }
 .profil-container .btn-modif .annuler {
   background-color: #95a5a6;
@@ -1120,29 +1138,7 @@ Fin de la structure de Consulter/Modifier Profil
   display: block;
 }
 
-.recuperation-container .form__recuperation {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-.recuperation-container .form__recuperation .input-group {
-  width: 100%;
-  text-align: left;
-}
-.recuperation-container .form__recuperation small {
-  color: #666;
-  font-size: 0.8em;
-  display: block;
-  margin-top: 5px;
-}
-
 .succes-message {
-  background-color: #d4edda;
-  border: 1px solid #c3e6cb;
-  color: #28a745;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 15px;
   margin-bottom: 20px;
 }
 

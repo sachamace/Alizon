@@ -4,8 +4,8 @@ $id_vendeur_connecte = $_SESSION['vendeur_id'];
 try {
     $stmt = $pdo->prepare("
         SELECT cv.raison_sociale, cv.statut_juridique, i.login 
-        FROM public.compte_vendeur cv 
-        JOIN public.identifiants i ON cv.id_num = i.id_num 
+        FROM saedb.compte_vendeur cv 
+        JOIN saedb.identifiants i ON cv.id_num = i.id_num 
         WHERE cv.id_vendeur = ?
     ");
     $stmt->execute([$id_vendeur_connecte]);

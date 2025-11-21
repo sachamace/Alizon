@@ -12,8 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Vérifier si l'email existe dans la table identifiants pour un vendeur
         $stmt = $pdo->prepare("
             SELECT i.id_num, i.login, i.mdp, cv.id_vendeur, cv.raison_sociale 
-            FROM public.identifiants i 
-            JOIN public.compte_vendeur cv ON i.id_num = cv.id_num 
+            FROM saedb.identifiants i 
+            JOIN saedb.compte_vendeur cv ON i.id_num = cv.id_num 
             WHERE i.login = ?
         ");
         $stmt->execute([$email]);

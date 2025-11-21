@@ -6,7 +6,7 @@ $id_vendeur_connecte = $_SESSION['vendeur_id'];
 
 // Récupérer les informations du vendeur
 try {
-    $stmt_vendeur = $pdo->prepare("SELECT raison_sociale FROM public.compte_vendeur WHERE id_vendeur = ?");
+    $stmt_vendeur = $pdo->prepare("SELECT raison_sociale FROM saedb.compte_vendeur WHERE id_vendeur = ?");
     $stmt_vendeur->execute([$id_vendeur_connecte]);
     $info_vendeur = $stmt_vendeur->fetch();
 } catch (PDOException $e) {
@@ -19,7 +19,7 @@ try {
         SELECT p.id_produit, p.nom_produit, p.description_produit, p.prix_ttc, 
                p.stock_disponible, p.est_actif, p.seuil_alerte, p.categorie,
                (SELECT chemin_image FROM media_produit WHERE id_produit = p.id_produit LIMIT 1) AS image_path
-        FROM public.produit p
+        FROM saedb.produit p
         WHERE p.id_vendeur = ?
         ORDER BY p.est_actif DESC, p.id_produit
     ");

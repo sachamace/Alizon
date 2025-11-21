@@ -29,7 +29,7 @@
         $statut_juridique = trim($_POST['statut']);
         // TEST SUR Base de données 
         // TEST pour le num_siren.
-        $siren_sql = "SELECT num_siren FROM public.compte_vendeur";
+        $siren_sql = "SELECT num_siren FROM saedb.compte_vendeur";
         $stmt_siren = $pdo->query($siren_sql);
         $tab_num_siren = $stmt_siren->fetchAll(PDO::FETCH_COLUMN, 0);
         foreach ($tab_num_siren as $siren) {
@@ -38,7 +38,7 @@
             }
         }
         // TEST POUR email
-        $email_sql = "SELECT adresse_mail FROM public.compte_vendeur";
+        $email_sql = "SELECT adresse_mail FROM saedb.compte_vendeur";
         $stmt_email= $pdo->query($email_sql);
         $tab_email = $stmt_email->fetchAll(PDO::FETCH_COLUMN, 0);
         
@@ -48,7 +48,7 @@
             }
         }
         // TEST POUR Numéro de Téléphone
-        $tel_sql = "SELECT num_tel FROM public.compte_vendeur";
+        $tel_sql = "SELECT num_tel FROM saedb.compte_vendeur";
         $stmt_tel= $pdo->query($tel_sql);
         $tab_tel = $stmt_tel->fetchAll(PDO::FETCH_COLUMN, 0);
         foreach ($tab_tel as $telephone) {
@@ -82,19 +82,19 @@
         if(!array_filter($erreurs)){ // array_filter permet de vérifier si y'a des élements dans la array en gros si y'a rien ça fait la condition .
             // La parties pour créer l'identifiants
             //if(){
-                $sqlident = "INSERT INTO public.identifiants (login,mdp) VALUES (:login, :mdp)";
+                $sqlident = "INSERT INTO saedb.identifiants (login,mdp) VALUES (:login, :mdp)";
                 $stmt = $pdo->prepare($sqlident);
                 $stmt->execute([
                     'login' => $mail,
                     'mdp' => $mdp
                 ]);
                 // Partie pour récupérer le numéro de l'identifiants qu'on vient de créer .
-                $id_num_sql = "SELECT id_num FROM public.identifiants WHERE login = :login";
+                $id_num_sql = "SELECT id_num FROM saedb.identifiants WHERE login = :login";
                 $stmtid = $pdo->prepare($id_num_sql);
                 $stmtid->execute(['login' => $mail]);
                 $id_num = (int) $stmtid->fetchColumn();
                 // Partie pour créer le compte vendeur avec toute ces informations.
-                $sqlvendeur = "INSERT INTO public.compte_vendeur (raison_sociale,statut_juridique,num_siren,num_tel,adresse_mail,id_num) VALUES (:raison_sociale,:statut_juridique,:num_siren,:num_tel,:adresse_mail,:id_num)";
+                $sqlvendeur = "INSERT INTO saedb.compte_vendeur (raison_sociale,statut_juridique,num_siren,num_tel,adresse_mail,id_num) VALUES (:raison_sociale,:statut_juridique,:num_siren,:num_tel,:adresse_mail,:id_num)";
                 $stmtvendeur = $pdo->prepare($sqlvendeur);
                 $stmtvendeur->execute([
                     'raison_sociale' => $raison_sociale,

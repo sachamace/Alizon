@@ -1534,6 +1534,10 @@ footer.footer.mobile, footer.footer.tablette {
   font-weight: bold;
   border-bottom: 1px solid #ccc;
 }
+.compte__header a {
+  color: #000;
+  text-decoration: none;
+}
 @media (min-width: 1440px) {
   .compte__header.disabled {
     display: none;

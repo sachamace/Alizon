@@ -317,7 +317,7 @@ function verifLuhn($numero){
                     <!-- OPTION PAYPAL -->
                     <label class="option">
                         <input type="radio" name="paiement" id="radio-paypal" value="paypal" disabled>
-                        <span>PayPal</span>
+                        <span style="opacity: 0.5;">PayPal</span>
                     </label>
 
                     <div class="formulaire hidden" id="form-paypal">

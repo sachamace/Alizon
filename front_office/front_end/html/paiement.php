@@ -28,6 +28,34 @@
         die("Erreur lors de la récupération des infos client : " . $e->getMessage());
     }
 
+    try {
+    // Récupérer les informations sur les articles du panier
+    $stmt = $pdo->prepare("
+        SELECT pp.quantite, p.nom_produit, p.prix_unitaire_ht, p.taux_tva, p.prix_ttc
+        FROM panier_produit pp
+        JOIN produit p ON pp.id_produit = p.id_produit
+        WHERE pp.id_panier = :id_panier
+    ");
+    $stmt->execute([':id_panier' => $_SESSION['id_panier']]);
+    $articles_panier = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Calculer le total HT, TTC et nombre d'articles
+    $total_ht = 0;
+    $total_ttc = 0;
+    $nb_articles = 0;
+    $taxe = 0;
+
+    foreach ($articles_panier as $article) {
+        $total_ht += $article['prix_unitaire_ht'] * $article['quantite'];
+        $total_ttc += $article['prix_ttc'] * $article['quantite'];
+        //taxe = ttc - ht
+        $taxe += ($article['prix_ttc'] - $article['prix_unitaire_ht']) * $article['quantite'];
+        $nb_articles += $article['quantite'];
+    }
+
+} catch (PDOException $e) {
+    die("Erreur lors de la récupération du panier : " . $e->getMessage());
+}
 /* ---------------------------------------------------
    3. Variables par défaut
 --------------------------------------------------- */
@@ -62,9 +90,9 @@
             if (!preg_match('/^[0-9]{16}$/', $numero)) {
                 $erreurs['carte'] = "Numéro de carte invalide (16 chiffres requis).";
             }
-            /*else if(!verifLuhn($numero)){
+            elseif(!verifLuhn($numero)){
                 $erreurs['carte'] = "Numéro de carte invalide (algorithme de luhn).";
-            }*/
+            }
 
             // Vérification CVV (3 chiffres)
             if (!preg_match('/^[0-9]{3}$/', $securite)) {
@@ -126,6 +154,26 @@
     </div>
 <?php }
 
+function verifLuhn($numero){
+    $sum = 0;
+    $shouldDouble = false;
+
+    //Boucle de droite à gauche
+    for($i = strlen($numero) - 1; $i >= 0; $i--){
+        $digit = (intval($numero[$i]));
+
+        if($shouldDouble){
+            $digit *= 2;
+            if($digit > 9){
+                $digit -= 9;
+            }
+        }
+
+        $sum += $digit;
+        $shouldDouble = !$shouldDouble;
+    }
+    return $sum % 10 === 0;
+}
 ?>
 
 
@@ -203,6 +251,39 @@
             <?php } ?>
         </div>
 
+        <div class="bloc recap">
+            <h2>Récapitulatif de la commande</h2>
+
+            <?php if ($articles_panier) { ?>
+                <p>
+                    <span>Articles :</span>
+                    <span><?= $nb_articles ?></span>
+                </p>
+                <div class="liste-produit">
+                    <ul>
+                       <?php foreach ($articles_panier as $article): ?>
+                            <li><?= $article['nom_produit'] ?> — x<?= $article['quantite'] ?></li>
+                        <?php endforeach; ?> 
+                    </ul>
+                    
+                </div>
+                <p>
+                    <span>Total HT :</span>
+                    <span><?= number_format($total_ht, 2, ',', ' ') ?> €</span>
+                </p>
+                <p>
+                    <span>Taxe : :</span>
+                    <span><?= number_format($taxe, 2, ',', ' ') ?> €</span>
+                </p>
+                <p>
+                    <span>Total TTC :</span>
+                    <span><?= number_format($total_ttc, 2, ',', ' ') ?> €</span>
+                </p>
+            <?php } else { ?>
+                <p>Votre panier est vide.</p>
+            <?php } ?>
+        </div>
+
         <!-- FORMULAIRE PAIEMENT -->
         <form method="POST" class="paiement">
 
@@ -253,26 +334,3 @@
 <script src="../assets/js/paiement.js"></script>
 </body>
 </html>
-
-<?php 
-    /*function verifLuhn($numero){
-        $sum = 0;
-        $shouldDouble = false;
-
-        //Boucle de droite à gauche
-        for($i = strlen($numero) - 1; i >= 0; $i--){
-            $digit = (intval($numero[$i]));
-
-            if($shouldDouble){
-                $digit *= 2;
-                if($digit > 9){
-                    $digit -= 9;
-                }
-            }
-
-            $sum += $digit;
-            $shouldDouble = !$shouldDouble;
-        }
-        return $sum % 10 === 0;
-    }*/
-?>

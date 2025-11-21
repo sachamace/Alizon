@@ -20,9 +20,6 @@ $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produ
 $stmt_stock->execute([':id_produit' => $id_produit]);
 $stock_dispo = (int) $stmt_stock->fetchColumn();
 // recuperation du chemin vers les images
-$requete_img = $pdo->prepare('SELECT * FROM media_produit WHERE id_produit = :id_produit');
-$requete_img->execute([':id_produit' => $id_produit]);
-$img = $requete_img->fetch();
 // php avis du produit
 $requete_avis = $pdo->prepare("
     SELECT * 
@@ -221,13 +218,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="fiche-container">
                 <div class="images-produit">
-                    <img src="../assets/images/Tel.jpg" alt="Kouign Amann" class="image-principale">
+                    <?php
+                    $requete_img = $pdo->prepare('SELECT chemin_image FROM media_produit WHERE id_produit = :id_produit LIMIT 1');
+                    $requete_img->execute([':id_produit' => $id_produit]);
+                    $img = $requete_img->fetch();
+                    ?>
+                    <img src="<?= $img['chemin_image'] ? htmlentities($img['chemin_image']) : 'front_end/assets/images_produits/' ?>" alt="Kouign Amann" class="image-principale">
 
                     <div class="miniatures">
-                        <img src="../assets/images/Tel.jpg" alt="Miniature 1">
-                        <img src="../assets/images/Tel.jpg" alt="Miniature 2">
-                        <img src="../assets/images/Tel.jpg" alt="Miniature 3">
-                        <img src="../assets/images/Tel.jpg" alt="Miniature 4">
+                        <?php
+                            $requete_img = $pdo->prepare('SELECT chemin_image FROM media_produit WHERE id_produit = :id_produit');
+                            $requete_img->execute([':id_produit' => $id_produit]);
+                            $img = $requete_img->fetchAll();
+                            $imgprincipale = true;
+
+                            foreach ($img as $minia) {
+                                if ($imgprincipale) {
+                                    $imgprincipale = false;
+                                }
+                                else{
+                                    $chemin = !empty($minia["chemin_image"])
+                                    ? htmlentities($minia["chemin_image"])
+                                    : "front_end/assets/images_produits/default.png"; // mets une image par défaut si tu veux
+
+                                    echo '<img src="' . $chemin . '" alt="Miniature">';
+                                }
+                            }
+                        ?>
+
                     </div>
                 </div>
 

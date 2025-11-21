@@ -11,10 +11,10 @@
     if($_SERVER["REQUEST_METHOD"]==="POST"){
         $email = trim($_POST['adresse_mail']);
         $mdp = trim($_POST['motdepasse']);
-        $user_sql = $pdo->prepare("SELECT i.id_num, i.login, i.mdp, cv.id_client FROM public.identifiants i JOIN public.compte_client cv ON i.id_num = cv.id_num WHERE i.login = ?");
+        $user_sql = $pdo->prepare("SELECT i.id_num, i.login, i.mdp, cv.id_client FROM saedb.identifiants i JOIN saedb.compte_client cv ON i.id_num = cv.id_num WHERE i.login = ?");
         $user_sql->execute([$email]);
         $user = $user_sql->fetch();
-        $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_client = ?");
+        $panier_sql = $pdo->prepare("SELECT id_panier FROM saedb.panier WHERE id_client = ?");
         $panier_sql->execute([$user['id_num']]);
         $panier = $panier_sql->fetch();
         if($user){

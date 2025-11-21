@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($etape === 'email') {
             $email = trim($_POST['email']);
             
-            $stmt = $pdo->prepare("SELECT id_num, mdp FROM saedb.identifiants WHERE login = ?");
+            $stmt = $pdo->prepare("SELECT id_num, mdp FROM public.identifiants WHERE login = ?");
             $stmt->execute([$email]);
             $utilisateur = $stmt->fetch();
             
@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $email = $_SESSION['email_recuperation'];
                 
                 // Stocker le mot de passe en clair dans la base de données
-                $stmt = $pdo->prepare("UPDATE saedb.identifiants SET mdp = ? WHERE login = ?");
+                $stmt = $pdo->prepare("UPDATE public.identifiants SET mdp = ? WHERE login = ?");
                 $stmt->execute([$nouveau_mdp, $email]);
                 
                 // Nettoyer toutes les variables de session

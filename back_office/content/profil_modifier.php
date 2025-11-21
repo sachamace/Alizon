@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if ($adresse_mail != $profil['adresse_mail']) {
-        $email_sql = "SELECT adresse_mail FROM saedb.compte_vendeur";
+        $email_sql = "SELECT adresse_mail FROM public.compte_vendeur";
         $stmt_email = $pdo->query($email_sql);
         $tab_email = $stmt_email->fetchAll(PDO::FETCH_COLUMN, 0);
         foreach ($tab_email as $email) {
@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if ($num_tel != $profil['num_tel']) {
-        $tel_sql = "SELECT num_tel FROM saedb.compte_vendeur";
+        $tel_sql = "SELECT num_tel FROM public.compte_vendeur";
         $stmt_tel = $pdo->query($tel_sql);
         $tab_tel = $stmt_tel->fetchAll(PDO::FETCH_COLUMN, 0);
         foreach ($tab_tel as $telephone) {
@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (empty($errors)) {
         if ($adresse_mail != $profil['adresse_mail']) {
-            $sqlident = "UPDATE saedb.identifiants SET login = :login WHERE id_num = :num";
+            $sqlident = "UPDATE public.identifiants SET login = :login WHERE id_num = :num";
             $stmt = $pdo->prepare($sqlident);
             $stmt->execute([
                 'num' => $profil['id_num'],
@@ -72,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         if (!empty($mdp_actuel) && !empty($mdp_nouveau) && !empty($mdp_confirmation)) {
-            $sqlPass = "UPDATE saedb.identifiants SET mdp = :mdp WHERE id_num = :num";
+            $sqlPass = "UPDATE public.identifiants SET mdp = :mdp WHERE id_num = :num";
             $stmtPass = $pdo->prepare($sqlPass);
             $stmtPass->execute([
                 'num' => $profil['id_num'],
@@ -80,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ]);
         }
 
-        $sqlvendeur = "UPDATE saedb.compte_vendeur SET raison_sociale= :raison_sociale, statut_juridique= :statut_juridique, num_siren= :num_siren, num_tel= :num_tel, adresse_mail= :adresse_mail WHERE id_num= :id_num";
+        $sqlvendeur = "UPDATE public.compte_vendeur SET raison_sociale= :raison_sociale, statut_juridique= :statut_juridique, num_siren= :num_siren, num_tel= :num_tel, adresse_mail= :adresse_mail WHERE id_num= :id_num";
         $stmtvendeur = $pdo->prepare($sqlvendeur);
         $stmtvendeur->execute([
             'raison_sociale' => $raison_sociale,

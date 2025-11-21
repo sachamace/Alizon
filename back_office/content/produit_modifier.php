@@ -80,6 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (!empty($_FILES['nouvelle_image']['name'])) {
 
             $uploadDir = "front_end/assets/images_produits/";
+            $uploadName = "/back_office/front_end/assets/images_produits/";
 
             foreach ($_FILES['nouvelle_image']['name'] as $index => $name) {
 
@@ -90,6 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                     $fileName = uniqid("prod_{$id}_") . "." . $extension;
                     $filePath = $uploadDir . $fileName;
+                    $filePathName = $uploadName . $fileName;
 
                     move_uploaded_file($tmp, $filePath);
 
@@ -97,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 INSERT INTO media_produit (id_produit, chemin_image)
                 VALUES (?, ?)
             ");
-                    $stmt->execute([$id, $filePath]);
+                    $stmt->execute([$id, $filePathName]);
                 }
             }
         }

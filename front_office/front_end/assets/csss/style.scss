@@ -411,11 +411,16 @@ footer.footer {
     margin: 15px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba($black, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     img {
-      width: 100%;
+      width: auto;
       height: auto;
+      max-height: 350px;
+      max-width: 350px;
       border-radius: 8px;
     }
 
@@ -897,6 +902,8 @@ footer.footer {
       img {
         width: 12em;
         height: auto;
+        max-height: 250px;
+        max-width: 12em;
         border-radius: 10px;
         margin-right: 1.5em;
       }

@@ -54,11 +54,6 @@
     <div class="div__catalogue">
         <?php
             
-
-            $stmt = $pdo->query('SELECT p.*, m.chemin_image 
-                FROM produit p 
-                LEFT JOIN media_produit m ON p.id_produit = m.id_produit');
-            
             // On récupère tout le contenu de la table produit
             $reponse = $pdo->query('SELECT * FROM produit');
             // On affiche chaque entrée une à une
@@ -68,11 +63,11 @@
             <a href="front_office/front_end/html/produitdetail.php?article=<?php echo $donnees['id_produit']?>" style="text-decoration:none; color:inherit;">
                 <article>
                     <?php
-                    $requete_img = $pdo->prepare('SELECT * FROM media_produit WHERE id_produit = :id_produit');
+                    $requete_img = $pdo->prepare('SELECT chemin_image FROM media_produit WHERE id_produit = :id_produit LIMIT 1');
                     $requete_img->execute([':id_produit' => $donnees['id_produit']]);
                     $img = $requete_img->fetch();
                     ?>
-                    <img src="<?php htmlentities($img['chemin_image']); ?>" alt="Image du produit" width="350" height="225">
+                    <img src="<?= $img['chemin_image'] ? htmlentities($img['chemin_image']) : 'front_end/assets/images_produits/' ?>" alt="Image du produit" width="350" height="350">
                     <h2 class="titre"><?php echo htmlentities($donnees['nom_produit']) ?></h2>
                     <p class="description"><?php echo htmlentities($donnees['description_produit']) ?></p>
                     <p class="prix"><?php echo htmlentities($donnees['prix_ttc'].'€') ?></p>

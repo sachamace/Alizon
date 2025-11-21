@@ -142,7 +142,7 @@
                 <input class="input__connexion" type="text"  name="nom" placeholder="Nom *" value ="<?= $nom?>"required />
                 <?php
                     if (!empty($erreur_nom)){
-                        echo "<span class='error-message'>$erreur_nom</span><br />";
+                        echo "<span style='color:red'>$erreur_nom</span><br />";
                     }
                 ?>
             </div>
@@ -152,7 +152,7 @@
                 <input class="input__connexion" type="text"  name="prenom" placeholder="Prénom *" value ="<?= $prenom?>"required />
                 <?php
                     if (!empty($erreur_prenom)){
-                        echo "<span class='error-message'>$erreur_prenom</span><br />";
+                        echo "<span style='color:red'>$erreur_prenom</span><br />";
                     }
                 ?>
             </div>
@@ -162,7 +162,7 @@
                 <input class="input__connexion" type="text"  name="adresse_mail" placeholder="Adresse de Mail *" value ="<?= $mail?>"required />
                 <?php
                     if (!empty($erreur_mail)){
-                        echo "<span class='error-message'>$erreur_mail</span><br />";
+                        echo "<span style='color:red'>$erreur_mail</span><br />";
                     }
                 ?>
             </div>
@@ -172,7 +172,7 @@
                 <input class="input__connexion" type="tel"  name="tel" placeholder="Numéro de Téléphone *" value ="<?= $tel?>"required />
                 <?php
                     if (!empty($erreur_tel)){
-                        echo "<span class='error-message'>$erreur_tel</span><br />";
+                        echo "<span style='color:red'>$erreur_tel</span><br />";
                     }
                 ?>
             </div>
@@ -187,7 +187,7 @@
                 <input class="input__connexion" type="password"  name="motdepasse" placeholder="Mot de passe "required />
                 <?php
                     if (!empty($erreur_mdp)){
-                        echo "<span class='error-message'>$erreur_mdp</span><br />";
+                        echo "<span style='color:red'>$erreur_mdp</span><br />";
                     }
                 ?>                
             </div>
@@ -198,7 +198,7 @@
                 <input class="input__connexion"  type="password" name="confirm" placeholder="Confirmer le mot de passe *" required />
                 <?php
                     if (!empty($erreur_confirm)){
-                        echo "<span class='error-message'>$erreur_confirm</span><br />";
+                        echo "<span style='color:red'>$erreur_confirm</span><br />";
                     }
                 ?>
             </div>

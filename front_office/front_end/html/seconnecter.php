@@ -63,7 +63,7 @@
                 <input class="input__connexion" type="email"  name="adresse_mail" placeholder="Votre adresse email" value ="<?= $email?>"required />
                 <?php
                     if (!empty($erreur_ident)){
-                        echo "<span class='error-message'>$erreur_ident</span><br />";
+                        echo "<span style='color:red'>$erreur_ident</span><br />";
                     }
                 ?>
             </div>
@@ -72,7 +72,7 @@
                 <input class="input__connexion" type="password"  name="motdepasse" placeholder="Votre mot de passe"required />
                 <?php
                     if (!empty($erreur_mdp)){
-                        echo "<span class='error-message'>$erreur_mdp</span><br />";
+                        echo "<span style='color:red'>$erreur_mdp</span><br />";
                     }
                 ?>
             </div>

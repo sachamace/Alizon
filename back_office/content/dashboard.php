@@ -60,7 +60,7 @@ try {
             <a href="?page=produit&id=<?= $produit['id_produit'] ?>&type=consulter">
                 <article class="<?= $class_article ?>">
                     <div class="statut-badge"><?= $statut_text ?></div>
-                    <img src="<?= $produit['image_path'] ? htmlentities($produit['image_path']) : 'front_end/assets/images_produits/' ?>" 
+                    <img src="<?= $produit['image_path'] ? htmlentities($produit['image_path']) : 'front_end/assets/images/template.jpg' ?>" 
                         alt="<?= htmlentities($produit['nom_produit']) ?>" 
                         width="350" height="225">
                     <h2 class="titre"><?= htmlentities($produit['nom_produit']) ?></h2>
@@ -76,5 +76,4 @@ try {
                 </article>
             </a>
         <?php endforeach; ?>
-    <?php endif; ?>
 </section>

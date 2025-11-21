@@ -49,7 +49,6 @@ try {
         dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
     });
 
-    // Ferme le menu si on clique ailleurs
     document.addEventListener("click", (e) => {
         if (!settingsBtn.contains(e.target) && !dropdown.contains(e.target)) {
             dropdown.style.display = "none";

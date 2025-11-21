@@ -222,7 +222,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             let tva = parseFloat(tauxTVA.value.replace(',', '.').replace(/\s/g, ''));
 
             if (!isNaN(ht) && !isNaN(tva) && ht >= 0 && tva >= 0 && tva <= 100) {
-                // Diviser par 100 car c'est maintenant un pourcentage
                 let ttc = ht * (1 + tva / 100);
 
                 prixTTC.value = ttc.toFixed(2).replace('.', ',');
@@ -274,7 +273,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             return;
         }
 
-        // Preview
         const reader = new FileReader();
         reader.onload = ev => {
             const div = document.createElement("div");
@@ -288,16 +286,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             btn.classList.add("delete-btn");
             btn.type = "button";
 
-            // Bouton supprimer
             btn.addEventListener("click", function () {
 
-                // Supprimer preview
                 div.remove();
 
-                // Supprimer du tableau
                 newImagesPreview = newImagesPreview.filter(f => f !== file);
 
-                // Supprimer le fichier de son input hidden
                 fileInput.remove();
 
                 updateImageCount();
@@ -309,14 +303,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         };
         reader.readAsDataURL(file);
 
-        // 👉 Création d’un vrai input file qui sera envoyé au serveur
         const fileInput = document.createElement("input");
         fileInput.type = "file";
         fileInput.name = "nouvelle_image[]";
         fileInput.hidden = true;
         document.forms[0].appendChild(fileInput);
 
-        // Hack pour cloner le FileList
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         fileInput.files = dataTransfer.files;
@@ -324,7 +316,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         newImagesPreview.push(file);
         updateImageCount();
 
-        // Reset input principal
         e.target.value = "";
     });
 

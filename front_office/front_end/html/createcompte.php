@@ -191,7 +191,6 @@
                     }
                 ?>                
             </div>
-            <a href="#" class="forgot-password">Mot de passe oublié ?</a>
             <div class="input-group">
                 <!-- Confirmer le mot de passe -->
                  <label for="confirm" class="input-label">Confirmer le mot de passe</label>

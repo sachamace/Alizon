@@ -15,7 +15,7 @@
     try {
         $stmt = $pdo->prepare("
             SELECT adresse, code_postal, ville, pays
-            FROM saedb.adresse a
+            FROM public.adresse a
             WHERE id_client = :id_client
             ORDER BY id_adresse DESC 
             LIMIT 1

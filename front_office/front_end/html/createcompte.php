@@ -30,7 +30,7 @@
         $date = trim($_POST['date_de_naissance']);
         // TEST SUR Base de données 
         // TEST pour le téléphone.
-        $tel_sql = "SELECT num_tel FROM saedb.compte_client";
+        $tel_sql = "SELECT num_tel FROM public.compte_client";
         $stmt_tel = $pdo->query($tel_sql);
         $tab_tel = $stmt_tel->fetchAll(PDO::FETCH_COLUMN, 0);
         foreach ($tab_tel as $num_tel) {
@@ -39,7 +39,7 @@
             }
         }
         // TEST POUR email
-        $email_sql = "SELECT adresse_mail FROM saedb.compte_client";
+        $email_sql = "SELECT adresse_mail FROM public.compte_client";
         $stmt_email= $pdo->query($email_sql);
         $tab_email = $stmt_email->fetchAll(PDO::FETCH_COLUMN, 0);
         
@@ -75,14 +75,14 @@
             $erreur_confirm
         ];
         if(!array_filter($erreurs)){
-            $sqlident = "INSERT INTO saedb.identifiants (login,mdp) VALUES (:login, :mdp)";
+            $sqlident = "INSERT INTO public.identifiants (login,mdp) VALUES (:login, :mdp)";
             $stmtident = $pdo->prepare($sqlident);
             $stmtident->execute([
                 'login' => $mail,
                 'mdp' => $password
             ]);
             // Partie pour récupérer le numéro de l'identifiants qu'on vient de créer .
-            $id_num_sql = "SELECT id_num FROM saedb.identifiants WHERE login = :login";
+            $id_num_sql = "SELECT id_num FROM public.identifiants WHERE login = :login";
             $stmtid = $pdo->prepare($id_num_sql);
             $stmtid->execute(['login' => $mail]);
             $id_num = (int) $stmtid->fetchColumn();
@@ -97,7 +97,7 @@
             else{
                 $majeur = 'false';
             }
-            $sqlclient = "INSERT INTO saedb.compte_client (adresse_mail,est_majeur,date_naissance,nom,prenom,num_tel,id_num) VALUES (:adresse_mail,:est_majeur,:date_naissance,:nom,:prenom,:num_tel,:id_num)";
+            $sqlclient = "INSERT INTO public.compte_client (adresse_mail,est_majeur,date_naissance,nom,prenom,num_tel,id_num) VALUES (:adresse_mail,:est_majeur,:date_naissance,:nom,:prenom,:num_tel,:id_num)";
             $stmtclient = $pdo->prepare($sqlclient);
             $stmtclient->execute([
                 'adresse_mail' => $mail,

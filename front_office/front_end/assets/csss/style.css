@@ -421,7 +421,6 @@ footer.footer.mobile, footer.footer.tablette {
   font-family: "Space Grotesk", sans-serif;
   padding: 4rem clamp(1rem, 8vw, 10rem);
   color: #000;
-  margin-bottom: 80px;
   box-sizing: border-box;
 }
 @media (max-width: 900px) {

@@ -37,8 +37,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $headers = "From: noreply@gmail.com";
                 
                 mail($to, $subject, $message, $headers);
-                
-                header("Location: recupmdp.php?etape=verification");
+                echo "<script>
+                    window.location.href = 'recupmdp.php?etape=verification ';
+                </script>";
                 exit();
             } else {
                 $erreur = "Aucun compte avec cet email.";

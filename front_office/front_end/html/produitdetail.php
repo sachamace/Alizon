@@ -338,12 +338,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <span class="avis-etoiles">' . $etoiles . '</span>
                             </div>
                             <p class="avis-commentaire">' . htmlspecialchars($un_avis['description']) . '</p>';
-                        if ($_SESSION["id"] == $un_avis["id_client"]) {
-                            echo '
-                            <form method="post" style="margin-top:10px;">
-                                <input type="hidden" name="action" value="supprimer_avis">
-                                <button type="submit" class="btn-supprimer-avis">Supprimer mon avis</button>
-                            </form>';
+                        if (isset($_SESSION["id"])){
+                            if ($_SESSION["id"] == $un_avis["id_client"]) {
+                                echo '
+                                <form method="post" style="margin-top:10px;">
+                                    <input type="hidden" name="action" value="supprimer_avis">
+                                    <button type="submit" class="btn-supprimer-avis">Supprimer mon avis</button>
+                                </form>';
+                            }
                         }
                         echo '
                         </div>';

@@ -157,7 +157,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $requete_ajout->execute([":id_produit"=> $id_produit, ":id_panier"=> $id_panier]);
             }
         }
-        header('Location: panier.php');
+        echo "<script>
+            window.location.href = 'panier.php';
+        </script>";
         exit(); // très important pour arrêter le scrip
         }
     }

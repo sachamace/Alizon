@@ -28,7 +28,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION['est_connecte'] = true;
             
             // Redirection vers le tableau de bord
-            header("Location: index.php?page=dashboard");
+            echo "<script>
+                window.location.href = 'index.php?page=dashboard';
+            </script>";
             exit();
         } else {
             // Identifiants incorrects

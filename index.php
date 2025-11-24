@@ -54,8 +54,8 @@
     <div class="div__catalogue">
         <?php
             
-            // On récupère tout le contenu de la table produit
-            $reponse = $pdo->query('SELECT * FROM produit');
+            // On récupère tout le contenu de la table produit disponible
+            $reponse = $pdo->query('SELECT * FROM produit WHERE est_actif = true');
             // On affiche chaque entrée une à une
             while ($donnees = $reponse->fetch()){ 
                 if ((isset($_GET['categorie'])) && $donnees['categorie'] == $_GET['categorie']){?>

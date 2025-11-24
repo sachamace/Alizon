@@ -4,7 +4,9 @@ include 'config.php';
 
 // Vérifier si l'utilisateur est connecté, sinon rediriger vers la page de connexion
 if (!isset($_SESSION['est_connecte']) || $_SESSION['est_connecte'] !== true) {
-    header("Location: connecter.php");
+    echo "<script>
+        window.location.href = 'connecter.php';
+    </script>";
     exit();
 }
 

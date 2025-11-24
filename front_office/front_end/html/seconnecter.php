@@ -15,7 +15,7 @@
         $user_sql->execute([$email]);
         $user = $user_sql->fetch();
 
-        if($user){
+        if($user && $mdp === $user['mdp']){
             $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_client = ?");
             $panier_sql->execute([$user['id_num']]);
             $panier = $panier_sql->fetch();

@@ -127,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="succes-message">
                 <?= htmlentities($succes) ?>
             </div>
-            <a href="connecter.php" class="btn__link">Se connecter</a>
+            <a href="seconnecter.php" class="btn__link">Se connecter</a>
         <?php else: ?>
         
         <form class="form__recuperation" method="POST">

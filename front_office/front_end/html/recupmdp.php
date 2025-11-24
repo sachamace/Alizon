@@ -6,78 +6,67 @@ $erreur = "";
 $succes = "";
 $etape = isset($_GET['etape']) ? $_GET['etape'] : 'email';
 
-// Initialiser le compteur d'essais si pas déjà fait
-if (!isset($_SESSION['essais_verification'])) {
-    $_SESSION['essais_verification'] = 0;
-}
+// Questions de sécurité adaptées aux clients
+$questions_securite = [
+    "Quel est votre nom de famille ?",
+    "Quel est votre prénom ?", 
+    "Quel est votre numéro de téléphone ?",
+    "Quelle est votre date de naissance ? (format JJ/MM/AAAA)"
+];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     try {
         if ($etape === 'email') {
             $email = trim($_POST['email']);
             
-            $stmt = $pdo->prepare("SELECT id_num, mdp FROM public.identifiants WHERE login = ?");
+            // Vérifier si l'email existe et récupérer les infos du client
+            $stmt = $pdo->prepare("
+                SELECT i.id_num, i.mdp, cc.nom, cc.prenom, cc.num_tel, cc.date_naissance
+                FROM public.identifiants i 
+                JOIN public.compte_client cc ON i.id_num = cc.id_num 
+                WHERE i.login = ?
+            ");
             $stmt->execute([$email]);
             $utilisateur = $stmt->fetch();
             
             if ($utilisateur) {
-                $code_verification = sprintf("%06d", mt_rand(1, 999999));
-                $expiration = date('Y-m-d H:i:s', strtotime('+5 minutes'));
-                
-                $_SESSION['code_verification'] = $code_verification;
                 $_SESSION['email_recuperation'] = $email;
-                $_SESSION['code_expiration'] = $expiration;
-                $_SESSION['ancien_mdp_hash'] = $utilisateur['mdp']; // Stocker l'ancien mot de passe en clair
-                $_SESSION['essais_verification'] = 0; // Réinitialiser les essais
+                $_SESSION['ancien_mdp_hash'] = $utilisateur['mdp'];
                 
-                // Envoi simple de l'email
-                $to = $email;
-                $subject = "Code de recuperation Alizon";
-                $message = "Votre code de recuperation est: $code_verification\nValable 5 minutes";
-                $headers = "From: noreply@gmail.com";
+                // Stocker toutes les réponses possibles pour les clients
+                $_SESSION['reponses_correctes'] = [
+                    strtolower(trim($utilisateur['nom'])),
+                    strtolower(trim($utilisateur['prenom'])),
+                    strtolower(trim($utilisateur['num_tel'])),
+                    date('d/m/Y', strtotime($utilisateur['date_naissance']))
+                ];
                 
-                mail($to, $subject, $message, $headers);
-                
-                header("Location: recupmdp.php?etape=verification");
+                echo "<script>
+                    window.location.href = 'recupmdp.php?etape=question';
+                </script>";
                 exit();
             } else {
-                $erreur = "Aucun compte avec cet email.";
+                $erreur = "Aucun compte client avec cet email.";
             }
             
-        } elseif ($etape === 'verification') {
-            // Vérifier si le nombre maximum d'essais est atteint
-            if ($_SESSION['essais_verification'] >= 3) {
-                $erreur = "Nombre maximum d'essais atteint. Veuillez redémarrer la procédure.";
-                unset($_SESSION['code_verification']);
-                unset($_SESSION['email_recuperation']);
-                unset($_SESSION['code_expiration']);
-                unset($_SESSION['essais_verification']);
-                unset($_SESSION['ancien_mdp_hash']);
-            } else {
-                $code_saisi = trim($_POST['code']);
-                
-                if (isset($_SESSION['code_verification']) && 
-                    $_SESSION['code_verification'] === $code_saisi &&
-                    time() <= strtotime($_SESSION['code_expiration'])) {
-                    
-                    $_SESSION['essais_verification'] = 0; // Réinitialiser les essais en cas de succès
-                    header("Location: recupmdp.php?etape=nouveau_mdp");
+        } elseif ($etape === 'question') {
+            $reponse_saisie = strtolower(trim($_POST['reponse_secrete']));
+            $question_choisie = $_POST['question_secrete'];
+            
+            // Trouver l'index de la question choisie
+            $index_question = array_search($question_choisie, $questions_securite);
+            
+            if ($index_question !== false && isset($_SESSION['reponses_correctes'][$index_question])) {
+                if ($reponse_saisie === $_SESSION['reponses_correctes'][$index_question]) {
+                    echo "<script>
+                        window.location.href = 'recupmdp.php?etape=nouveau_mdp';
+                    </script>";
                     exit();
                 } else {
-                    $_SESSION['essais_verification']++;
-                    $essais_restants = 3 - $_SESSION['essais_verification'];
-                    
-                    if ($_SESSION['essais_verification'] >= 3) {
-                        $erreur = "Code invalide. Nombre maximum d'essais atteint. Veuillez redémarrer la procédure.";
-                        unset($_SESSION['code_verification']);
-                        unset($_SESSION['email_recuperation']);
-                        unset($_SESSION['code_expiration']);
-                        unset($_SESSION['essais_verification']);
-                        unset($_SESSION['ancien_mdp_hash']);
-                    } else {
-                        $erreur = "Code invalide ou expiré. Il vous reste $essais_restants essai(s).";
-                    }
+                    $erreur = "Réponse incorrecte. Veuillez réessayer.";
                 }
+            } else {
+                $erreur = "Question invalide.";
             }
             
         } elseif ($etape === 'nouveau_mdp') {
@@ -99,16 +88,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             else {
                 $email = $_SESSION['email_recuperation'];
                 
-                // Stocker le mot de passe en clair dans la base de données
+                // Mettre à jour le mot de passe en clair dans la base de données
                 $stmt = $pdo->prepare("UPDATE public.identifiants SET mdp = ? WHERE login = ?");
                 $stmt->execute([$nouveau_mdp, $email]);
                 
-                // Nettoyer toutes les variables de session
-                unset($_SESSION['code_verification']);
+                // Nettoyer les variables de session
                 unset($_SESSION['email_recuperation']);
-                unset($_SESSION['code_expiration']);
-                unset($_SESSION['essais_verification']);
                 unset($_SESSION['ancien_mdp_hash']);
+                unset($_SESSION['reponses_correctes']);
                 
                 $succes = "Mot de passe modifié avec succès !";
                 $etape = 'termine';
@@ -123,16 +110,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mot de passe oublié</title>
-    <meta name="description" content="Page du mot de passe oublié !">
-    <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
+    <title>Mot de passe oublié - Alizon</title>
     <link rel="stylesheet" href="../assets/csss/style.css">
-    <!--<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">-->
 </head>
 <body class="body__connexion">
     <div class="logo__connexion">
@@ -148,7 +129,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="succes-message">
                 <?= htmlentities($succes) ?>
             </div>
-            <a href="seconnecter.php" class="btn__link">Se connecter</a>
+            <a href="connecter.php" class="btn__link">Se connecter</a>
         <?php else: ?>
         
         <form class="form__recuperation" method="POST">
@@ -161,13 +142,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <label for="email" class="input-label">Votre email</label>
                     <input type="email" id="email" name="email" placeholder="email@exemple.com" required class="input__connexion" value="<?= htmlentities($_POST['email'] ?? '') ?>">
                 </div>
-                <button type="submit" class="btn__connexion">Envoyer le code</button>
+                <button type="submit" class="btn__connexion">Continuer</button>
                 
-            <?php elseif ($etape === 'verification'): ?>
+            <?php elseif ($etape === 'question'): ?>
                 <div class="input-group">
-                    <label for="code" class="input-label">Code reçu par email</label>
-                    <input type="text" id="code" name="code" placeholder="123456" required class="input__connexion" maxlength="6" pattern="[0-9]{6}" title="6 chiffres uniquement">
-                    <small>Code à 6 chiffres - Valable 5 minutes - <?= (3 - $_SESSION['essais_verification']) ?> essai(s) restant(s)</small>
+                    <label for="question_secrete" class="input-label">Choisissez une question de sécurité</label>
+                    <select name="question_secrete" id="question_secrete" required class="input__connexion">
+                        <option value="">-- Sélectionnez une question --</option>
+                        <?php foreach($questions_securite as $question): ?>
+                            <option value="<?= htmlentities($question) ?>"><?= htmlentities($question) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="reponse_secrete" class="input-label">Votre réponse</label>
+                    <input type="text" id="reponse_secrete" name="reponse_secrete" placeholder="Votre réponse" required class="input__connexion">
+                    <small>Répondez avec les informations que vous avez utilisées lors de la création de votre compte</small>
                 </div>
                 <button type="submit" class="btn__connexion">Vérifier</button>
                 
@@ -185,12 +175,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php endif; ?>
             
             <div class="recuperation-links">
-                <a href="seconnecter.php">Retour connexion</a>
-                <?php if ($etape === 'verification' && $_SESSION['essais_verification'] < 3): ?>
-                    <br><a href="recupmdp.php?etape=email">Renvoyer le code</a>
-                <?php elseif ($etape === 'verification' && $_SESSION['essais_verification'] >= 3): ?>
-                    <br><a href="recupmdp.php">Redémarrer la procédure</a>
-                <?php endif; ?>
+                <a href="connecter.php">Retour connexion</a>
             </div>
         </form>
         <?php endif; ?>

@@ -58,7 +58,7 @@
             $reponse = $pdo->query('SELECT * FROM produit');
             // On affiche chaque entrée une à une
             while ($donnees = $reponse->fetch()){ 
-                if ($donnees['categorie'] == $_GET['categorie'] || !(isset($_GET['categorie']))){?>
+                if ((isset($_GET['categorie'])) && $donnees['categorie'] == $_GET['categorie']){?>
                 
             <a href="front_office/front_end/html/produitdetail.php?article=<?php echo $donnees['id_produit']?>" style="text-decoration:none; color:inherit;">
                 <article>

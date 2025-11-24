@@ -104,7 +104,9 @@
                     'adresse_mail' => $mail,
                     'id_num' => $id_num
                 ]);
-            header("Location: connecter.php");
+            echo "<script>
+                window.location.href = 'connecter.php';
+            </script>";
             exit();
             //}   
         }

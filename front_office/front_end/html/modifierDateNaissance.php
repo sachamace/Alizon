@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             include 'config.php';
             $stmt = $pdo->prepare("UPDATE compte_client SET date_naissance = ? WHERE id_client = ?");
             $stmt->execute([$newDate, $_SESSION['id']]);
+            
             echo "<script>
                 window.location.href = 'consulterProfilClient.php';
             </script>";

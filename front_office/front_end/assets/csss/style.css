@@ -423,7 +423,6 @@ footer.footer.mobile, footer.footer.tablette {
   color: #000;
   margin-bottom: 80px;
   box-sizing: border-box;
-  margin-top: 8em;
 }
 @media (max-width: 900px) {
   .main_produit {

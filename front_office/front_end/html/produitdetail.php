@@ -1,5 +1,6 @@
 <?php
 include 'config.php';
+
 include 'sessionindex.php';
 try {
     if (isset($_GET['article'])) {
@@ -13,8 +14,9 @@ try {
 } catch (PDOException $e) {
     echo "Erreur SQL : " . $e->getMessage();
 }
-
-$id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
+if(isset($_SESSION['id_panier'])){
+    $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
+}
 // recuperation du stock
 $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
 $stmt_stock->execute([':id_produit' => $id_produit]);
@@ -59,7 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             ]);
             
             // On recharge la page pour voir le nouvel avis
-            header("Location: " . $_SERVER['REQUEST_URI']);
+            echo "<script>
+                window.location.href = '" . $_SERVER['REQUEST_URI'] . "';
+            </script>";
             exit();
         } catch (PDOException $e) {
             $erreur_avis = "Vous avez déjà rentré un avis";
@@ -80,7 +84,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
     if ($id_panier == null) {
-        header('Location: seconnecter.php');
+        echo "<script>
+            window.location.href = 'seconnecter.php';
+        </script>";
         exit();
     }
     else{
@@ -97,7 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':id_client' => $id_client  
             ]);
 
-            header("Location: " . $_SERVER['REQUEST_URI']);
+            echo "<script>
+                window.location.href = '" . $_SERVER['REQUEST_URI'] . "';
+            </script>";
             exit();
         }
         if ($action === 'panier') { // traitement ajouter panier

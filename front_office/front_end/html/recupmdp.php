@@ -116,9 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <link rel="stylesheet" href="../assets/csss/style.css">
 </head>
 <body class="body__connexion">
-    <div class="logo__connexion">
-        <img src="../assets/images/logo_Alizon.png" alt="Logo Alizon" width="150">
-    </div>
+   
     
     <div class="recuperation-container">
         <div class="header__recuperation">
@@ -175,7 +173,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php endif; ?>
             
             <div class="recuperation-links">
-                <a href="connecter.php">Retour connexion</a>
+                <a href="seconnecter.php">Retour connexion</a>
             </div>
         </form>
         <?php endif; ?>

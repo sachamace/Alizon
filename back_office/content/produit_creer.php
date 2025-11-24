@@ -128,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <h3>Informations générales</h3>
                 <article>
                     <h3>Nom du produit</h3>
-                    <input type="text" id="nom_produit" name="nom_produit" value="<?php echo $nom ?>">
+                    <input type="text" id="nom_produit" name="nom_produit" value="<?php echo isset($_POST['nom_produit']) ? htmlentities($_POST['nom_produit']) : '' ?>">
                     <?php if (isset($errors['nom_produit'])) { ?>
                         <p class="error"><?php echo $errors['nom_produit']; ?></p>
                     <?php } ?>
@@ -136,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <article>
                     <h3>Description</h3>
                     <input type="text" id="description_produit" name="description_produit"
-                        value="<?php echo $description ?>">
+                        value="<?php echo isset($_POST['description_produit']) ? htmlentities($_POST['description_produit']) : '' ?>">
                     <?php if (isset($errors['description_produit'])) { ?>
                         <p class="error"><?php echo $errors['description_produit']; ?></p>
                     <?php } ?>
@@ -186,7 +186,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                     <h4>Prix HT</h4>
                     <input type="text" id="prix_unitaire_ht_produit" name="prix_unitaire_ht_produit"
-                        value="<?php echo $prix_ht ?>" pattern="^\d+([.,]\d{1,2})?$"
+                        value="<?php echo isset($_POST['prix_unitaire_ht_produit']) ? htmlentities($_POST['prix_unitaire_ht_produit']) : '' ?>" 
+                        pattern="^\d+([.,]\d{1,2})?$"
                         title="Uniquement chiffres et virgule (ex : 10,50)">
                     <?php if (isset($errors['prix_ht'])) { ?>
                         <p class="error"><?php echo $errors['prix_ht']; ?></p>
@@ -194,7 +195,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
                     <h4>TVA (%)</h4>
-                    <input type="text" id="taux_tva_produit" name="taux_tva_produit" value="<?php echo $tva ?>"
+                    <input type="text" id="taux_tva_produit" name="taux_tva_produit" 
+                        value="<?php echo isset($_POST['taux_tva_produit']) ? htmlentities($_POST['taux_tva_produit']) : '' ?>"
                         pattern="^(100([.,]0{1,2})?|[0-9]{1,2}([.,]\d{1,2})?)$"
                         title="Uniquement un nombre entre 0 et 100 (ex : 20 ou 5,5)">
                     <?php if (isset($errors['tva'])) { ?>
@@ -205,7 +207,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <article>
                     <h3>Stock</h3>
                     <input type="text" id="stock_disponible_produit" name="stock_disponible_produit"
-                        value="<?php echo $stock ?>" pattern="^\d+$" title="Uniquement chiffres entiers">
+                        value="<?php echo isset($_POST['stock_disponible_produit']) ? htmlentities($_POST['stock_disponible_produit']) : '' ?>" 
+                        pattern="^\d+$" title="Uniquement chiffres entiers">
                     <?php if (isset($errors['stock'])) { ?>
                         <p class="error"><?php echo $errors['stock']; ?></p>
                     <?php } ?>

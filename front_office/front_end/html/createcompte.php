@@ -20,7 +20,6 @@
     $mdpconfirm = "";
     $date = "";
     if($_SERVER["REQUEST_METHOD"] === "POST"){
-        $pseudo = trim($_POST['pseudo']);
         $mail = trim($_POST['adresse_mail']);
         $tel = trim($_POST['tel']);
         $nom = trim($_POST['nom']);

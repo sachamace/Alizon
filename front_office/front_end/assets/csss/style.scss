@@ -511,10 +511,10 @@ footer.footer {
   padding: 4rem clamp(1rem, 8vw, 10rem);
   color: $black;
   box-sizing: border-box;
-
+  margin-top: 125px;
   @media (max-width: 900px) {
     padding: 3rem 1rem;
-    margin-top: 12em;
+    margin-top: 150px;
   }
 
   .fiche-produit {
@@ -549,6 +549,7 @@ footer.footer {
           justify-items: center;
           width: 100%;
           max-width: 100%;
+          flex: none;
         }
 
         .image-principale {

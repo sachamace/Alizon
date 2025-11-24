@@ -422,11 +422,12 @@ footer.footer.mobile, footer.footer.tablette {
   padding: 4rem clamp(1rem, 8vw, 10rem);
   color: #000;
   box-sizing: border-box;
+  margin-top: 125px;
 }
 @media (max-width: 900px) {
   .main_produit {
     padding: 3rem 1rem;
-    margin-top: 12em;
+    margin-top: 150px;
   }
 }
 .main_produit .fiche-produit {
@@ -463,6 +464,7 @@ footer.footer.mobile, footer.footer.tablette {
     justify-items: center;
     width: 100%;
     max-width: 100%;
+    flex: none;
   }
 }
 .main_produit .fiche-produit .fiche-container .images-produit .image-principale {

@@ -221,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </nav>
         </nav>
     </header>
-    <main class="main_produit" style="margin-top: 125px;">
+    <main class="main_produit ">
         <section class="fiche-produit">
 
             <div class="fiche-container">

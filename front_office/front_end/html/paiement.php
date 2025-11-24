@@ -1,7 +1,6 @@
 <?php
     include 'config.php';
     include 'session.php';
-    include 'sessionindex.php';
 /* ---------------------------------------------------
    1. Vérification de la connexion client
 --------------------------------------------------- */

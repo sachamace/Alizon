@@ -1,7 +1,6 @@
 <?php
     include 'config.php';
     include 'session.php';
-    include 'sessionindex.php';
     $stmt = $pdo->query("SELECT version();");
 ?>
 <!DOCTYPE html>

@@ -207,7 +207,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </a>
                 <?php } ?>
                 </div>
-                <a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
+                <?php if($isLogged):?><a href="compte.php"><i class="fa-regular fa-user icone"></i>Mon Compte</a>
+                <?php else: ?><a href="seconnecter.php"></i>S'identifier</a>
+                <?php endif; ?>
             </nav>
         </nav>
     </header>

@@ -35,8 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt = $pdo->prepare("UPDATE adresse SET pays = ? WHERE id_client = ?");
         $stmt->execute([$newPays, $_SESSION['id']]);
-
-        header("Location: consulterProfilClient.php");
+        echo "<script>
+            window.location.href = 'consulterProfilClient.php';
+        </script>";
         exit;
     }
 }

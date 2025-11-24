@@ -108,7 +108,9 @@
                 'num_tel' => $tel,
                 'id_num' => $id_num
             ]);
-            header("Location: seconnecter.php");
+            echo "<script>
+                window.location.href = 'seconnecter.php';
+            </script>";
             exit();
         }
     }

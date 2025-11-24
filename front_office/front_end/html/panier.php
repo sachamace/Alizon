@@ -57,6 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Recharge la page pour voir la quantité mise à jour
     header("Location: " . $_SERVER['PHP_SELF']);
+    echo "<script>
+        window.location.href = ' . $_SERVER['PHP_SELF']';
+    </script>";
     exit();
 }
 

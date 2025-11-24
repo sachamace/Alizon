@@ -46,7 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $_SESSION['user'] = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        header("Location: consulterProfilClient.php");
+                    echo "<script>
+                window.location.href = 'consulterProfilClient.php';
+            </script>";
         exit;
     }
 }

@@ -17,8 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         include 'config.php';
         $stmt = $pdo->prepare("UPDATE compte_client SET prenom = ? WHERE id_client = ?");
         $stmt->execute([$newPrenom, $_SESSION['id']]);
-
-        header("Location: consulterProfilClient.php");
+        echo "<script>
+            window.location.href = 'consulterProfilClient.php';
+        </script>";
         exit;
     }
 }

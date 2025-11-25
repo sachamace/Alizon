@@ -81,16 +81,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $id_produit = null; // ou une valeur par défaut
     }
-    if(isset($_SESSION['id_panier'])){
-        $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
-    }
-    if ($id_panier == null) {
+    if(!isset($_SESSION['id_panier'])) {
         echo "<script>
             window.location.href = 'seconnecter.php';
         </script>";
         exit();
     }
     else{
+        $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
         if ($action === 'supprimer_avis') {
             $id_client = $_SESSION['id'];
 

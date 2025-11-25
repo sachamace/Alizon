@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" name="pays" id="pays" class="input-modify" value="<?= htmlspecialchars($paysActuel) ?>" required><br><br>
 
                 <?php if ($erreur) {?>
-                    <p style="color:red;"><?= htmlspecialchars($erreur) ?></p>
+                    <p style="color:red;"><?= htmlspecialchars($erreurs) ?></p>
                 <?php } ?>
 
                 <button type="submit" class="payer-btn">Enregistrer</button>

@@ -296,7 +296,7 @@ function verifLuhn($numero){
                     <!-- OPTION CARTE -->
                     <label class="option">
                         <input type="radio" name="paiement" id="radio-carte" value="carte">
-                        <span>Carte bancaire</span>
+                        <span style="font-size: 1rem;">Carte bancaire</span>
                     </label>
 
                     <!-- FORMULAIRE CARTE -->
@@ -318,7 +318,7 @@ function verifLuhn($numero){
                     <!-- OPTION PAYPAL -->
                     <label class="option">
                         <input type="radio" name="paiement" id="radio-paypal" value="paypal" disabled>
-                        <span style="opacity: 0.5;">PayPal</span>
+                        <span style="opacity: 0.5; font-size: 1rem;">PayPal</span>
                     </label>
 
                     <div class="formulaire hidden" id="form-paypal">

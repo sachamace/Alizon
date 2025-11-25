@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </script>";
             exit();
         }
-        if ($action === 'panier') { // traitement ajouter panier
+        if ($action === 'panier' && isset($_SESSION['id_panier'])) { // traitement ajouter panier
         $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');
         $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
         $verif = $stmt->fetch(PDO::FETCH_ASSOC);

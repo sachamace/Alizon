@@ -143,7 +143,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
             
             <h2>Commande bien effectuée !</h2>
-            <a href="./paiement.php" style="
+            <a href="/index.php" style="
                 display:inline-block; 
                 margin-top:20px; 
                 padding:20px 20px; 

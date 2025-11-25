@@ -44,9 +44,8 @@ if (count($avis) > 0) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajouter_avis') {
     $note = (int)$_POST['note'];
     $description = trim($_POST['description']);
-    $id_client = $_SESSION['id'];
-
-    if ($note >= 1 && $note <= 5 && !empty($description)) {
+    if ($note >= 1 && $note <= 5 && !empty($description) && isset($_SESSION['id_panier'])) {
+        $id_client = $_SESSION['id'];
         try {
             $requete_ajout_avis = $pdo->prepare("
                 INSERT INTO avis (id_client, id_produit, note, description)

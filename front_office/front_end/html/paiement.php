@@ -251,7 +251,6 @@ function verifLuhn($numero){
 
         <div class="bloc recap">
             <h2>Récapitulatif de la commande</h2>
-
             <?php if ($articles_panier) { ?>
                 <p>
                     <span>Articles :</span>
@@ -259,18 +258,22 @@ function verifLuhn($numero){
                 </p>
                 <div class="liste-produit">
                     <ul>
-                       <?php foreach ($articles_panier as $article): ?>
+                        <?php foreach ($articles_panier as $article): ?>
+                        <p>
                             <li><?= $article['nom_produit'] ?> — x<?= $article['quantite'] ?></li>
-                        <?php endforeach; ?> 
+                            <span>
+                            <?= number_format($article['prix_ttc'], 2, ',', ' ') ?>€ (Total: <?= number_format($article['prix_ttc'] * $article['quantite'], 2, ',', ' ') ?>€)
+                            </span>
+                        </p>
+                        <?php endforeach; ?>
                     </ul>
-                    
                 </div>
                 <p>
                     <span>Total HT :</span>
                     <span><?= number_format($total_ht, 2, ',', ' ') ?> €</span>
                 </p>
                 <p>
-                    <span>Taxe : :</span>
+                    <span>Taxe :</span>
                     <span><?= number_format($taxe, 2, ',', ' ') ?> €</span>
                 </p>
                 <p>

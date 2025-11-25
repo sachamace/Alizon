@@ -6,8 +6,12 @@ const formPaypal = document.getElementById("form-paypal");
 
 const carteInput = document.getElementById('carte');
 
+const btnPayer = document.querySelector(".payer-btn");
+
 let carteVisible = false;
 let paypalVisible = false;
+
+btnPayer.disabled = true;
 
 radioCarte.addEventListener("click", () => {
     if (carteVisible) {
@@ -20,6 +24,13 @@ radioCarte.addEventListener("click", () => {
         radioPaypal.checked = false;
         formPaypal.classList.add("hidden");
         paypalVisible = false;
+    }
+
+    //Si un des 2 forms sont visibles
+    if (carteVisible || paypalVisible) {
+        btnPayer.removeAttribute('disabled');  //On enleve l'attribut disabled et on active le bouton payer
+    } else {
+        btnPayer.disabled = true;   //Sinon on laisse l'attribut
     }
 });
 
@@ -34,6 +45,12 @@ radioPaypal.addEventListener("click", () => {
         radioCarte.checked = false;
         formCarte.classList.add("hidden");
         carteVisible = false;
+    }
+
+    if (carteVisible || paypalVisible) {
+        btnPayer.removeAttribute('disabled');
+    } else {
+        btnPayer.disabled = true;
     }
 });
 

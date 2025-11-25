@@ -223,9 +223,7 @@ function verifLuhn($numero){
         </nav>
     </header>
     <div class="compte__header disabled">
-        <button onclick="history.back();" class="back-button" style="background:none;border:none;cursor:pointer;">
-            <img src="../assets/images/back-arrow.svg" alt="Retour" style="width:32px;height:32px;">
-        </button>
+        <a href="panier.php">←  </a>
     Passer la commande
     </div>
     <main class="main_paiement">

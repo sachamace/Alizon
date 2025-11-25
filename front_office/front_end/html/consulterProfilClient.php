@@ -30,7 +30,9 @@ try {
     $stmt->execute(['id_client' => $id_client_connecte]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
+    if (!$user) {
+        die("Utilisateur introuvable.");
+    }
 
     // 🔹 On met à jour la session uniquement avec les nouvelles données
     //   mais on NE RÉÉCRASE PAS toute la session si elle existe

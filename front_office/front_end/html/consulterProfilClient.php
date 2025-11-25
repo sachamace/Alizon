@@ -79,7 +79,7 @@ try {
                 while ($cat = $categorie->fetch()){ 
                     $libelle = urlencode($cat['libelle']); 
                     ?>
-                    <a href="index.php?categorie=<?php echo $libelle; ?>">
+                    <a href="../../../index.php?categorie=<?php echo $libelle; ?>"">
                         <?php echo $cat['libelle']; ?>
                     </a>
                 <?php } ?>

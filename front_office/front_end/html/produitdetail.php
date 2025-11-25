@@ -1,6 +1,5 @@
 <?php
 include 'config.php';
-
 include 'sessionindex.php';
 try {
     if (isset($_GET['article'])) {
@@ -212,12 +211,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 while ($cat = $categorie->fetch()){ 
                     $libelle = urlencode($cat['libelle']); 
                     ?>
-                    <a href="../../../index.php?categorie=<?php echo $libelle; ?>">
+                    <a href="index.php?categorie=<?php echo $libelle; ?>">
                         <?php echo $cat['libelle']; ?>
                     </a>
                 <?php } ?>
                 </div>
-                <a href="compte.php"><svg class="icone" width="48" height="48" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M144 128a80 80 0 1 1 160 0 80 80 0 1 1 -160 0zm208 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0zM48 480c0-70.7 57.3-128 128-128l96 0c70.7 0 128 57.3 128 128l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8c0-97.2-78.8-176-176-176l-96 0C78.8 304 0 382.8 0 480l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8z"/></svg>Compte</a>
+                <?php if($isLogged):?><a href="front_office/front_end/html/compte.php"><svg class="icone" width="48" height="48" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M144 128a80 80 0 1 1 160 0 80 80 0 1 1 -160 0zm208 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0zM48 480c0-70.7 57.3-128 128-128l96 0c70.7 0 128 57.3 128 128l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8c0-97.2-78.8-176-176-176l-96 0C78.8 304 0 382.8 0 480l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8z"/></svg>Compte</a>
+                <?php else: ?><a href="front_office/front_end/html/seconnecter.php">S'identifier</a>
+                <?php endif; ?>
             </nav>
         </nav>
     </header>

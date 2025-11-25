@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if (!empty($_FILES['nouvelle_image']['name'])) {
 
-            $uploadDir = "front_end/assets/images_produits/";
+            $uploadDir = "/back_office/front_end/assets/images_produits/";
             $uploadName = "/back_office/front_end/assets/images_produits/";
 
             foreach ($_FILES['nouvelle_image']['name'] as $index => $name) {

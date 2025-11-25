@@ -92,7 +92,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                     $tmp = $_FILES['nouvelle_image']['tmp_name'][$index];
                     $extension = pathinfo($name, PATHINFO_EXTENSION);
-                    $id_produit = $pdo->lastInsertId();
 
                     $fileName = uniqid("prod_{$id_produit}_") . "." . $extension;
                     $filePath = $uploadDir . $fileName;

@@ -121,7 +121,10 @@
         }
     }
     //Affichage du modal "Paiement réussi"
-    if ($success){ ?>
+    if ($success){ 
+        $stmt = $pdo->prepare("DELETE FROM panier_produit WHERE id_panier = :id_panier");
+        $stmt->execute([':id_panier' => $_SESSION['id_panier']]);
+        ?>
     <div id="modal-success" style="
         position: fixed;
         top: 0; left: 0; width: 100% ; height: 100%;

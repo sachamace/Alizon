@@ -1530,9 +1530,12 @@ footer.footer.mobile, footer.footer.tablette {
 
 .compte__header {
   padding: 20px;
-  font-size: 20px;
   font-weight: bold;
   border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
 }
 .compte__header a {
   color: #000;

@@ -81,7 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $id_produit = null; // ou une valeur par défaut
     }
-    $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
+    if(isset($_SESSION['id_panier'])){
+        $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
+    }
     if ($id_panier == null) {
         echo "<script>
             window.location.href = 'seconnecter.php';
@@ -107,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </script>";
             exit();
         }
-        if ($action === 'panier' && isset($_SESSION['id_panier'])) { // traitement ajouter panier
+        if ($action === 'panier' ) { // traitement ajouter panier
         $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');
         $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
         $verif = $stmt->fetch(PDO::FETCH_ASSOC);

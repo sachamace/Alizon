@@ -115,9 +115,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
             }
         }
-        if (!move_uploaded_file($tmp, $filePath)) {
-    echo "Erreur upload : " . print_r(error_get_last(), true);
-}
 
 
         echo "<script>

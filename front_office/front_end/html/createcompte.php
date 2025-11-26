@@ -107,6 +107,16 @@
                 'num_tel' => $tel,
                 'id_num' => $id_num
             ]);
+            // 5) Récupération id_client
+            $id_client_sql = "SELECT id_client FROM public.compte_client WHERE id_num = :id_num";
+            $stmtclientid = $pdo->prepare($id_client_sql);
+            $stmtclientid->execute(['id_num' => $id_num]);
+            $id_client = (int) $stmtclientid->fetchColumn();
+            // 6) Création du panier vierge
+            $sqlpanier = "INSERT INTO public.panier (id_client, statut_panier)
+                        VALUES (:id_client, 'en cours')";
+            $stmtpanier = $pdo->prepare($sqlpanier);
+            $stmtpanier->execute(['id_client' => $id_client]);
             echo "<script>
                 window.location.href = 'seconnecter.php';
             </script>";

@@ -1,6 +1,7 @@
 <?php
 include 'config.php';
 include 'sessionindex.php';
+var_dump($_SESSION['id_panier']);
 try {
     if (isset($_GET['article'])) {
         $id_produit = $_GET['article'];
@@ -82,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if(!isset($_SESSION['id_panier'])) {
         echo "<script>
-            window.location.href = 'seconnecter.php';
+           window.location.href = 'seconnecter.php';
         </script>";
         exit();
     }

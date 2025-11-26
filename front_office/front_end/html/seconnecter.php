@@ -14,26 +14,32 @@
         $user_sql = $pdo->prepare("SELECT i.id_num, i.login, i.mdp, cv.id_client FROM public.identifiants i JOIN public.compte_client cv ON i.id_num = cv.id_num WHERE i.login = ?");
         $user_sql->execute([$email]);
         $user = $user_sql->fetch();
-
-        if($user && $mdp === $user['mdp']){
-            $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_client = ?");
-            $panier_sql->execute([$user['id_num']]);
-            $panier = $panier_sql->fetch();
-            if(strcmp($mdp,$user['mdp']) == 0){
-                $_SESSION['id'] = $user['id_num'];
-                $_SESSION['login'] = $user['login'];
-                $_SESSION['id_panier'] = $panier['id_panier'];
-                echo "<script>
-                    window.location.href = '/index.php';
-                </script>";
-                exit();
-            }
-            else{
-                $erreur_mdp = "Mot de passe Incorrect";
-            }
+        // 1) LOGIN INCORRECT
+        if (!$user) {
+            $erreur_ident = "Identifiant incorrect";
         }
-        else{
-            $erreur_ident = "Identifiant Incorrect";
+
+        // 2) MOT DE PASSE INCORRECT
+        elseif ($mdp !== $user['mdp']) {
+            $erreur_mdp = "Mot de passe incorrect";
+        }
+
+        // 3) OK → CONNECTER
+        else {
+
+            // Récup panier
+            $panier_sql = $pdo->prepare("
+                SELECT id_panier FROM public.panier WHERE id_client = ?
+            ");
+            $panier_sql->execute([$user['id_client']]); 
+            $panier = $panier_sql->fetch();
+
+            $_SESSION['id'] = $user['id_num'];
+            $_SESSION['login'] = $user['login'];
+            $_SESSION['id_panier'] = $panier['id_panier'];
+
+            echo "<script>window.location.href = '/index.php';</script>";
+            exit();
         }
 
     }

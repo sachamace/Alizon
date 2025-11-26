@@ -58,7 +58,19 @@
             $reponse = $pdo->query('SELECT * FROM produit WHERE est_actif = true');
             // On affiche chaque entrée une à une
             while ($donnees = $reponse->fetch()){ 
-                if (!isset($_GET['categorie']) || $donnees['categorie'] == $_GET['categorie']){?>
+                if (!isset($_GET['categorie']) || $donnees['categorie'] == $_GET['categorie']){
+                
+                // Récupération du stock pour afficher le statut
+                $stock_dispo = (int) $donnees['stock_disponible'];
+                $stock_class = 'in-stock';
+                
+                if ($stock_dispo <= 0) {
+                    $stock_class = 'out-of-stock';
+                } elseif ($stock_dispo <= 5) {
+                    $stock_class = 'low-stock';
+                }
+                
+                ?>
             <a href="front_office/front_end/html/produitdetail.php?article=<?php echo $donnees['id_produit']?>" style="text-decoration:none; color:inherit;">
                 <article>
                     <?php
@@ -66,10 +78,28 @@
                     $requete_img->execute([':id_produit' => $donnees['id_produit']]);
                     $img = $requete_img->fetch();
                     ?>
-                    <img src="<?= $img['chemin_image'] ? htmlentities($img['chemin_image']) : 'front_end/assets/images_produits/' ?>" alt="Image du produit" width="350" height="350">
-                    <h2 class="titre"><?php echo htmlentities($donnees['nom_produit']) ?></h2>
-                    <p class="description"><?php echo htmlentities($donnees['description_produit']) ?></p>
-                    <p class="prix"><?php echo htmlentities($donnees['prix_ttc'].'€') ?></p>
+                    
+                    <div class="image-container">
+                        <img src="<?= $img['chemin_image'] ? htmlentities($img['chemin_image']) : 'front_end/assets/images_produits/' ?>" alt="Image du produit" width="350" height="350">
+                    </div>
+                    
+                    <div class="product-info">
+                        <h2 class="titre"><?php echo htmlentities($donnees['nom_produit']) ?></h2>
+                        <p class="description"><?php echo htmlentities($donnees['description_produit']) ?></p>
+                        
+                        <div class="price-section">
+                            <p class="prix"><?php echo htmlentities($donnees['prix_ttc'].'€') ?></p>
+                            <span class="stock-info <?php echo $stock_class; ?>">
+                                <?php 
+                                if ($stock_dispo > 0) {
+                                    echo $stock_dispo . ' en stock';
+                                } else {
+                                    echo 'Indisponible';
+                                }
+                                ?>
+                            </span>
+                        </div>
+                    </div>
                 </article>
             </a>
                 

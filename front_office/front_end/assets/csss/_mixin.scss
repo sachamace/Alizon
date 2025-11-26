@@ -87,3 +87,53 @@
   color: $color;
   font-weight: bold;
 }
+
+// NOUVEAUX MIXINS POUR LE CATALOGUE AMÉLIORÉ
+@mixin card-hover-effect {
+  @include transition(transform box-shadow);
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba($black, 0.15);
+  }
+}
+
+@mixin gradient-border($color: $primary-color) {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, $color 0%, lighten($color, 15%) 100%);
+    transform: scaleX(0);
+    transition: transform $transition-speed ease;
+  }
+  
+  &:hover::before {
+    transform: scaleX(1);
+  }
+}
+
+@mixin shine-effect {
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba($white, 0.4),
+      transparent
+    );
+    transition: left 0.8s ease;
+  }
+  
+  &:hover::after {
+    left: 100%;
+  }
+}

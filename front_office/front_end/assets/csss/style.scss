@@ -19,6 +19,12 @@ body {
   height: auto;
   display: flex;
   flex-direction: column;
+  
+  // Amélioration du scroll sur mobile et tablette
+  @media (max-width: 1439px) {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 // =============================================================================
@@ -391,7 +397,7 @@ footer.footer {
 }
 
 // =============================================================================
-// PAGE CATALOGUE
+// PAGE CATALOGUE - VERSION AMÉLIORÉE AVEC CORRECTION MOBILE
 // =============================================================================
 
 .div__catalogue {
@@ -403,18 +409,97 @@ footer.footer {
   padding: 40px;
   margin-top: 150px;
 
+  a {
+    text-decoration: none;
+    color: inherit;
+    @include hover-lift;
+    
+    &:hover {
+      text-decoration: none;
+      color: inherit;
+    }
+  }
+
   article {
-    background-color: $white;
+    background: linear-gradient(135deg, $white 0%, darken($white, 2%) 100%);
     width: 350px;
     height: 550px;
     padding: 20px;
-    margin: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba($black, 0.1);
+    margin: 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba($black, 0.1);
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease forwards;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, $primary-color 0%, lighten($primary-color, 15%) 100%);
+      transform: scaleX(0);
+      transition: transform $transition-speed ease;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba($white, 0.4),
+        transparent
+      );
+      transition: left 0.8s ease;
+    }
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 25px rgba($black, 0.15);
+
+      &::before {
+        transform: scaleX(1);
+      }
+
+      &::after {
+        left: 100%;
+      }
+
+      img {
+        transform: scale(1.05);
+      }
+    }
+
+    // Délai d'animation progressif pour chaque article
+    @for $i from 1 through 20 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.1}s;
+      }
+    }
+
+    // Conteneur d'image avec effet de survol
+    .image-container {
+      position: relative;
+      width: 100%;
+      height: 350px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: $white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     img {
       width: auto;
@@ -422,74 +507,206 @@ footer.footer {
       max-height: 350px;
       max-width: 350px;
       border-radius: 8px;
+      transition: transform 0.4s ease;
+      object-fit: contain;
+    }
+
+
+    .product-info {
+      padding: 15px 5px 5px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     h2 {
       font-size: 1.2em;
-      font-weight: bold;
-      margin: 8px 0 4px 0;
+      font-weight: 700;
+      margin: 12px 0 8px 0;
+      line-height: 1.3;
+      color: $black;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-height: 2.6em;
     }
 
-    p {
-      margin: 6px 0;
+    .description {
+      margin: 8px 0;
+      color: $gray-dark;
+      line-height: 1.4;
+      font-size: 0.95em;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-grow: 1;
+    }
+
+    .price-section {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid $gray-light;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .prix {
+      font-size: 1.4em;
+      font-weight: 800;
+      color: $primary-color;
+      margin: 0;
+    }
+
+    .stock-info {
+      font-size: 0.85em;
+      color: $gray-dark;
+      font-weight: 500;
+      
+      &.in-stock {
+        color: $status-active;
+      }
+      
+      &.low-stock {
+        color: $status-low-stock;
+      }
+      
+      &.out-of-stock {
+        color: $status-out-of-stock;
+      }
     }
   }
 
+  // =========================================================================
+  // VERSION MOBILE (428px) - CORRECTION DES ESPACEMENTS
+  // =========================================================================
   @media screen and (max-width: 428px) {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.5em;
+    column-gap: 20px; // Espace horizontal entre les colonnes
+    row-gap: 35px;    // Espace vertical entre les lignes
     max-width: 100%;
     box-sizing: border-box;
-    padding-bottom: 90px;
+    padding: 30px 10px 100px; // Encore plus réduit pour coller aux bords
+    margin-top: 180px;
+    justify-items: stretch; // Les articles prennent toute la largeur de leur colonne
+    
+    // Amélioration du scroll sur mobile
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    
+    // Style personnalisé pour la scrollbar sur mobile
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: $primary-color;
+      border-radius: 10px;
+      opacity: 0.7;
+    }
 
     a {
       display: block;
       width: 100%;
       height: 100%;
-      text-decoration: none;
-      color: inherit;
+      
+      &:hover {
+        transform: none;
+      }
     }
 
     article {
       height: 100%;
-      width: 170px;
-      padding: 10px;
-      margin: 0;
+      width: 90%; // RÉDUIT: pour tester l'espacement
+      min-width: 0;
+      padding: 10px 8px; // ENCORE RÉDUIT: pour maximiser l'espace entre les articles
+      margin: 0 auto; // Centrer l'article dans sa colonne
       border-radius: 8px;
-      box-shadow: 0 1px 3px rgba($black, 0.08);
-      transition: transform 0.15s ease;
+      box-shadow: 0 2px 6px rgba($black, 0.08);
+      transition: transform 0.2s ease;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      justify-content: space-evenly;
-      align-items: flex-start;
+      justify-content: space-between;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 18px rgba($black, 0.15);
+      }
+
+      &::before {
+        height: 4px;
+      }
+
+      .image-container {
+        height: 140px; // Augmenté de 100px à 140px
+        margin-bottom: 8px;
+        border-radius: 6px;
+        overflow: hidden;
+      }
 
       img {
-        display: block;
-        width: 100px !important;
+        width: 100px !important; // Augmenté de 70px à 100px
         height: auto !important;
-        max-height: 350px;
-        object-fit: cover;
-        border-radius: 6px;
+        max-height: 140px; // Augmenté de 100px à 140px
+        object-fit: contain;
+        border-radius: 5px;
+      }
+
+      .product-info {
+        padding: 6px 2px 2px;
+        gap: 8px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
       }
 
       h2 {
-        font-size: 0.85rem;
-        margin: 6px 0 4px;
-        line-height: 1.1;
+        font-size: 0.88rem;
+        margin: 8px 0 6px;
+        line-height: 1.25;
+        min-height: 2.2em;
+        -webkit-line-clamp: 2;
       }
 
-      p {
-        font-size: 1em;
-        margin: 4px 0;
+      .description {
+        font-size: 0.8em;
+        margin: 6px 0;
+        -webkit-line-clamp: 2;
+        line-height: 1.35;
+        flex-grow: 1;
+      }
+
+      .price-section {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1.5px solid #f0f0f0;
       }
 
       .prix {
-        font-weight: bold;
+        font-size: 1.15em;
+        font-weight: 700;
+      }
+
+      .stock-info {
+        font-size: 0.78em;
+        margin-top: 4px;
       }
     }
 
+    // Masquer certains éléments en mobile pour plus de place
     .description {
       display: -webkit-box;
       line-clamp: 2;
@@ -499,6 +716,77 @@ footer.footer {
       overflow: hidden;
       word-break: break-word;
     }
+  }
+
+  // Version tablette (429px à 1439px) - AMÉLIORATION DU SCROLL
+  @media screen and (min-width: 429px) and (max-width: 1439px) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 35px 25px;
+    margin-top: 160px;
+    
+    // Amélioration du scroll sur tablette
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    
+    // Style personnalisé pour la scrollbar sur tablette
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: $primary-color;
+      border-radius: 10px;
+    }
+
+    article {
+      width: 100%;
+      height: 520px;
+      padding: 20px;
+      
+      .image-container {
+        height: 280px;
+        margin-bottom: 15px;
+      }
+      
+      img {
+        max-height: 280px;
+      }
+      
+      h2 {
+        font-size: 1.1em;
+        margin: 15px 0 10px;
+      }
+      
+      .description {
+        font-size: 0.9em;
+        margin: 10px 0;
+      }
+      
+      .price-section {
+        margin-top: 15px;
+        padding-top: 15px;
+      }
+    }
+  }
+}
+
+// Animation d'apparition progressive des articles
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -514,7 +802,7 @@ footer.footer {
   margin-top: 125px;
   @media (max-width: 900px) {
     padding: 3rem 1rem;
-    margin-top: 150px;
+    margin-top: 180px;
   }
 
   .fiche-produit {
@@ -557,7 +845,6 @@ footer.footer {
           max-width: 28rem;
           min-width: 20rem;
           border-radius: 10px;
-          //box-shadow: 0 2px 8px rgba($black, 0.1);
 
           @media (max-width: 900px) {
             min-width: 16rem;
@@ -1109,7 +1396,7 @@ footer.footer {
 .body_paiement,
 .body_profilClient {
   font-family: $font-family;
-  background-color: #e8e8e8;
+  background-color: $white;
   color: $black;
   margin: 0;
   display: flex;
@@ -1147,7 +1434,6 @@ footer.footer {
       border-radius: $border-radius;
       padding: 1rem;
       margin-bottom: 1rem;
-      background-color: $white;
 
       h2 {
         margin-top: 0;
@@ -1210,19 +1496,11 @@ footer.footer {
           input[type="text"],
           input[type="email"],
           input[type="month"] {
-            width: 95%;
+            width: 100%;
             padding: 0.8rem;
             border: none;
-            background: #ffffff;
-            border: 2px solid $gray-light;
+            background: #dcdcdc;
             border-radius: 4px;
-          
-
-            &:focus {
-              border-color: #e87edc;
-              box-shadow: 0 0 5px rgba(232, 126, 220, 0.5);
-              outline: none;
-            }
           }
 
           label {
@@ -1240,7 +1518,7 @@ footer.footer {
           }
 
           .required {
-            color: red !important;
+            color: red;
           }
         }
 
@@ -1256,7 +1534,7 @@ footer.footer {
         color: $black;
 
         &:hover {
-          font-weight: bold;
+            font-weight: bold;
         }
       }
 
@@ -1517,8 +1795,6 @@ footer.footer {
   }
 }
 
-
-
 .compte__image {
   width: 50px;
   height: 50px;
@@ -1533,7 +1809,7 @@ footer.footer {
 // RESPONSIVE - MOBILE
 // =============================================================================
 
-@media (max-width: 767px) {
+@media (max-width: 428px) {
   body {
     width: 100%;
 

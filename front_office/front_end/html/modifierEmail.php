@@ -1,6 +1,5 @@
 <?php
 include 'session.php';
-
 include 'config.php';
 
 $user = $_SESSION['user'];
@@ -13,14 +12,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
         $erreur = "Adresse e-mail invalide.";
     } else {
+        // ✅ CORRECTION : Utiliser id_client au lieu de id
         $id_client_connecte = $_SESSION['id_client'];
+
         // 🔹 Mise à jour de l'email dans compte_client
         $stmt = $pdo->prepare("UPDATE compte_client SET adresse_mail = ? WHERE id_client = ?");
-        $stmt->execute([$newEmail, $_SESSION['id']]);
+        $stmt->execute([$newEmail, $id_client_connecte]);
 
-        // 🔹 Mise à jour du login dans identifiants
-        $stmt = $pdo->prepare("UPDATE identifiants SET login = ? WHERE id_num = ?");
-        $stmt->execute([$newEmail, $_SESSION['id']]);
+        // 🔹 Récupérer l'id_num pour mettre à jour identifiants
+        $stmt = $pdo->prepare("SELECT id_num FROM compte_client WHERE id_client = ?");
+        $stmt->execute([$id_client_connecte]);
+        $id_num = $stmt->fetchColumn();
+
+        // 🔹 Mise à jour du login dans identifiants (seulement si id_num existe)
+        if ($id_num) {
+            $stmt = $pdo->prepare("UPDATE identifiants SET login = ? WHERE id_num = ?");
+            $stmt->execute([$newEmail, $id_num]);
+        }
 
         // 🔹 Recharger les infos depuis la BDD pour mettre la session à jour
         $stmt = $pdo->prepare("
@@ -46,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $_SESSION['user'] = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                    echo "<script>
+        echo "<script>
                 window.location.href = 'consulterProfilClient.php';
             </script>";
         exit;

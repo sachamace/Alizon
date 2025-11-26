@@ -943,7 +943,6 @@ footer.footer {
         display: flex;
         flex-direction: column;
         padding: 3rem;
-        gap: 2rem;
 
         // Tablette (1440px)
         @media (max-width: 1440px) and (min-width: 429px) {

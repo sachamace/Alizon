@@ -850,7 +850,6 @@ footer.footer.mobile, footer.footer.tablette {
   display: flex;
   flex-direction: column;
   padding: 3rem;
-  gap: 2rem;
 }
 @media (max-width: 1440px) and (min-width: 429px) {
   .main_produit .fiche-produit .fiche-container .infos-produit {

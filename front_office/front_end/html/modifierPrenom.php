@@ -1,4 +1,5 @@
 <?php 
+include 'config.php';
 include 'session.php';
 $user = $_SESSION['user'];
 $prenomActuel = $user['prenom'];
@@ -8,15 +9,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newPrenom = trim($_POST['prenom']);
 
     if (empty($newPrenom)) {
-        $erreur = "Le nom ne peut pas être vide.";
+        $erreur = "Le prénom ne peut pas être vide.";
     } else {
         // Mise à jour dans la SESSION
-        $_SESSION['user']['prenom'] = $newPrenom;
+        $id_client_connecte = $_SESSION['id_client'];
 
         // Et aussi dans la base
-        include 'config.php';
+        
         $stmt = $pdo->prepare("UPDATE compte_client SET prenom = ? WHERE id_client = ?");
-        $stmt->execute([$newPrenom, $_SESSION['id']]);
+        $stmt->execute([$newPrenom, $id_client_connecte]);
         echo "<script>
             window.location.href = 'consulterProfilClient.php';
         </script>";

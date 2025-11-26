@@ -117,6 +117,10 @@
                         VALUES (:id_client, 'en cours')";
             $stmtpanier = $pdo->prepare($sqlpanier);
             $stmtpanier->execute(['id_client' => $id_client]);
+            // 7) Ajouter le numéro_téléphone sur adresse 
+            $sqlpanier = "INSERT INTO public.adresse (num_tel) VALUES (:num_tel)";
+            $stmtpanier = $pdo->prepare($sqlpanier);
+            $stmtpanier->execute(['num_tel' => $num_tel]);
             echo "<script>
                 window.location.href = 'seconnecter.php';
             </script>";

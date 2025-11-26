@@ -1,11 +1,11 @@
 <?php
 include 'session.php';
-
+include 'config.php';
 $user = $_SESSION['user'];
-$adresseActuelle = $user['adresse'];
-$codePostalActuel = $user['code_postal'];
-$villeActuelle = $user['ville'];
-$paysActuel = $user['pays'];
+$adresseActuelle = $user['adresse'] ?? '';
+$codePostalActuel = $user['code_postal'] ?? '';
+$villeActuelle = $user['ville'] ?? '';
+$paysActuel = $user['pays'] ?? '';
 $erreur = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -19,23 +19,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!preg_match('/^\d{5}$/', $newCodePostal)) {
         $erreur = "Le code postal doit contenir 5 chiffres.";
     } else {
-        $_SESSION['user']['adresse'] = $newAdresse;
-        $_SESSION['user']['code_postal'] = $newCodePostal;
-        $_SESSION['user']['ville'] = $newVille;
-        $_SESSION['user']['pays'] = $newPays;
+        $id_client_connecte = $_SESSION['id_client'];
 
-        include 'config.php';
-        $stmt = $pdo->prepare("UPDATE adresse SET adresse = ? WHERE id_client = ?");
-        $stmt->execute([$newAdresse, $_SESSION['id']]);
+        
+        // Vérifier si une adresse existe déjà pour ce client
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM adresse WHERE id_client = ?");
+        $stmt->execute([$id_client_connecte]);
+        $adresseExiste = $stmt->fetchColumn() > 0;
 
-        $stmt = $pdo->prepare("UPDATE adresse SET code_postal = ? WHERE id_client = ?");
-        $stmt->execute([$newCodePostal, $_SESSION['id']]);
-
-        $stmt = $pdo->prepare("UPDATE adresse SET ville = ? WHERE id_client = ?");
-        $stmt->execute([$newVille, $_SESSION['id']]);
-
-        $stmt = $pdo->prepare("UPDATE adresse SET pays = ? WHERE id_client = ?");
-        $stmt->execute([$newPays, $_SESSION['id']]);
+        if ($adresseExiste) {
+            // Mise à jour de l'adresse existante (requête optimisée en 1 seule)
+            $stmt = $pdo->prepare("
+                UPDATE adresse 
+                SET adresse = ?, code_postal = ?, ville = ?, pays = ? 
+                WHERE id_client = ?
+            ");
+            $stmt->execute([$newAdresse, $newCodePostal, $newVille, $newPays, $id_client_connecte]);
+        } else {
+            // Insertion d'une nouvelle adresse
+            $stmt = $pdo->prepare("
+                INSERT INTO adresse (id_client, adresse, code_postal, ville, pays) 
+                VALUES (?, ?, ?, ?, ?)
+            ");
+            $stmt->execute([$id_client_connecte, $newAdresse, $newCodePostal, $newVille, $newPays]);
+        }
+        
         echo "<script>
             window.location.href = 'consulterProfilClient.php';
         </script>";

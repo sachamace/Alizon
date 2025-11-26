@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
         $erreur = "Adresse e-mail invalide.";
     } else {
-
+        $id_client_connecte = $_SESSION['id_client'];
         // 🔹 Mise à jour de l'email dans compte_client
         $stmt = $pdo->prepare("UPDATE compte_client SET adresse_mail = ? WHERE id_client = ?");
         $stmt->execute([$newEmail, $_SESSION['id']]);
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             LEFT JOIN adresse a ON cc.id_client = a.id_client
             WHERE cc.id_client = ?
         ");
-        $stmt->execute([$_SESSION['id']]);
+        $stmt->execute([$id_client_connecte]);
 
         $_SESSION['user'] = $stmt->fetch(PDO::FETCH_ASSOC);
 

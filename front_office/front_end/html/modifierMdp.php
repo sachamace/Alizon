@@ -1,5 +1,6 @@
 <?php
 include 'session.php';
+include 'config.php';
 $user = $_SESSION['user'];
 $erreur = '';
 
@@ -12,12 +13,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($newPassword !== $confirmerPassword) {
         $erreur = "Les mots de passe ne correspondent pas.";
     } else {
-        $_SESSION['user']['mdp'] = $newPassword;
+        $id_client_connecte = $_SESSION['id_client'];
+        
+        // Récupérer l'id_num pour mettre à jour identifiants
+        $stmt = $pdo->prepare("SELECT id_num FROM compte_client WHERE id_client = ?");
+        $stmt->execute([$id_client_connecte]);
+        $id_num = $stmt->fetchColumn();
 
-        // Et aussi dans la base
-        include 'config.php';
-        $stmt = $pdo->prepare("UPDATE identifiants SET mdp = ? WHERE id_num = ?");
-        $stmt->execute([$newPassword, $_SESSION['id']]);
+        // Mise à jour du mot de passe (seulement si id_num existe)
+        if ($id_num) {
+            // ⚠️ ATTENTION : Vous devriez hasher le mot de passe avec password_hash()
+            $stmt = $pdo->prepare("UPDATE identifiants SET mdp = ? WHERE id_num = ?");
+            $stmt->execute([$newPassword, $id_num]);
+        }
         echo "<script>
             window.location.href = 'consulterProfilClient.php';
         </script>";

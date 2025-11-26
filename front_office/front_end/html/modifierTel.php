@@ -1,6 +1,6 @@
 <?php
 include 'session.php';
-
+include 'config.php';
 $user = $_SESSION['user'];
 $numActuel = $user['telephone'];
 $erreur  = '';
@@ -14,12 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     else if (strlen($Newtelephone) !== 10) {
         $erreur = "Le numéro doit contenir 10 chiffres.";
     } else {
-        $_SESSION['user']['telephone'] = $Newtelephone;
+        $id_client_connecte = $_SESSION['id_client'];
 
-        // Et aussi dans la BASE !
-        include 'config.php';
         $stmt = $pdo->prepare("UPDATE compte_client SET num_tel = ? WHERE id_client = ?");
-        $stmt->execute([$Newtelephone, $_SESSION['id']]);
+        $stmt->execute([$Newtelephone, $id_client_connecte]);
         echo "<script>
             window.location.href = 'consulterProfilClient.php';
         </script>";

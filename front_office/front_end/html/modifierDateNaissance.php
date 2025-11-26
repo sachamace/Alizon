@@ -1,6 +1,6 @@
 <?php
 include 'session.php';
-
+include 'config.php';
 $user = $_SESSION['user'];
 $dateActuel = $user['date_naissance'];
 $erreur = '';
@@ -17,10 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($dateSoumise > $dateAujourdHui) {
             $erreur = "La date de naissance ne peut pas être dans le futur.";
         } else {
-            $_SESSION['user']['date_naissance'] = $newDate;
-            include 'config.php';
+            $id_client_connecte = $_SESSION['id_client'];
+            
             $stmt = $pdo->prepare("UPDATE compte_client SET date_naissance = ? WHERE id_client = ?");
-            $stmt->execute([$newDate, $_SESSION['id']]);
+            $stmt->execute([$newDate, $id_client_connecte]);
             
             echo "<script>
                 window.location.href = 'consulterProfilClient.php';

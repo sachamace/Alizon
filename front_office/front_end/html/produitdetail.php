@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             </script>";
             exit();
         } catch (PDOException $e) {
-            $erreur_avis = "Vous avez déjà rentré un avis $id_client";
+            $erreur_avis = "Vous avez déjà rentré un avis";
         }
     } else {
         $erreur_avis = "Veuillez entrer une note entre 1 et 5 et une description.";
@@ -260,16 +260,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="infos-produit">
-                    <div class="titre-ligne">
-                        <h1><?= htmlspecialchars($infos['nom_produit']) ?></h1>
+                    <div class="titre-prix-boutons">
+                        <div class="titre-prix">
+                            <div class="titre-ligne">
+                                <h1><?= htmlspecialchars($infos['nom_produit']) ?></h1>
+                            </div>
+                            
+                            <div class="prix">
+                                <span class="prix-valeur"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</span>
+                            </div>
+                        </div>
+                        <div class="boutons">
+                                <?php echo '
+                                <form action="" method="post" style="display:inline;">
+                                    <input type="hidden" name="action" value="panier">
+                                    <button type="submit">Ajouter au panier</button>
+                                </form>
+                                
+                                <form action="" method="post" style="display:inline;">
+                                    <input type="hidden" name="action" value="payer">
+                                    <button type="submit">Payer maintenant</button>
+                                </form>' ?>
+                        </div>
                     </div>
-                    
-
-                    <div class="prix">
-                        <span class="prix-valeur"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</span>
-                    </div>
-
-
                     <div class="stock-avis">
                         <span class="stock-dispo" style="color: <?= $stock_dispo > 0 ? 'green' : 'red' ?>">
                             <?php
@@ -300,21 +313,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p class="description">
                         <?= htmlspecialchars($infos['description_produit']) ?>
                     </p>
-
-
-
-                    <div class="boutons">
-                            <?php echo '
-                            <form action="" method="post" style="display:inline;">
-                                <input type="hidden" name="action" value="panier">
-                                <button type="submit">Ajouter au panier</button>
-                            </form>
-                            
-                            <form action="" method="post" style="display:inline;">
-                                <input type="hidden" name="action" value="payer">
-                                <button type="submit">Payer maintenant</button>
-                            </form>' ?>
-                    </div>
                 </div>
             </div>
         </section>

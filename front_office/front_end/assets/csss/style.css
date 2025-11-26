@@ -813,6 +813,38 @@ footer.footer.mobile, footer.footer.tablette {
     height: 70px;
   }
 }
+.main_produit .fiche-produit .fiche-container .titre-prix-boutons {
+  display: flex;
+  gap: 2rem;
+}
+@media (max-width: 428px) {
+  .main_produit .fiche-produit .fiche-container .titre-prix-boutons {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+.main_produit .fiche-produit .fiche-container .titre-prix-boutons .titre-prix {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.main_produit .fiche-produit .fiche-container .titre-prix-boutons .titre-prix .titre-ligne h1 {
+  margin: 0;
+}
+.main_produit .fiche-produit .fiche-container .titre-prix-boutons .titre-prix .prix {
+  margin: 0;
+}
+.main_produit .fiche-produit .fiche-container .titre-prix-boutons .boutons {
+  flex-shrink: 0;
+  margin-top: 0;
+}
+@media (max-width: 428px) {
+  .main_produit .fiche-produit .fiche-container .titre-prix-boutons .boutons {
+    width: 100%;
+    min-width: auto;
+  }
+}
 .main_produit .fiche-produit .fiche-container .infos-produit {
   flex: 0 0 50%;
   display: flex;
@@ -1003,6 +1035,7 @@ footer.footer.mobile, footer.footer.tablette {
   .main_produit .fiche-produit .fiche-container .infos-produit .boutons button {
     padding: 1.1rem 1.5rem;
     font-size: 1.05rem;
+    width: 100%;
   }
 }
 .main_produit .popup {
@@ -1511,7 +1544,7 @@ footer.footer.mobile, footer.footer.tablette {
 .body_paiement,
 .body_profilClient {
   font-family: "Space Grotesk", sans-serif;
-  background-color: #fff;
+  background-color: #e8e8e8;
   color: #000;
   margin: 0;
   display: flex;
@@ -1561,6 +1594,7 @@ footer.footer.mobile, footer.footer.tablette {
   border-radius: 1em;
   padding: 1rem;
   margin-bottom: 1rem;
+  background-color: #fff;
 }
 .body_paiement .main_paiement .bloc h2,
 .body_paiement .main_profilClient .bloc h2,
@@ -1693,11 +1727,40 @@ footer.footer.mobile, footer.footer.tablette {
 .body_profilClient .main_profilClient .donneePerso .options .formulaire input[type=text],
 .body_profilClient .main_profilClient .donneePerso .options .formulaire input[type=email],
 .body_profilClient .main_profilClient .donneePerso .options .formulaire input[type=month] {
-  width: 100%;
+  width: 95%;
   padding: 0.8rem;
   border: none;
-  background: #dcdcdc;
+  background: #fff;
   border-radius: 4px;
+  border: 2px solid #ddd;
+}
+.body_paiement .main_paiement .paiement .options .formulaire input[type=text]:focus,
+.body_paiement .main_paiement .paiement .options .formulaire input[type=email]:focus,
+.body_paiement .main_paiement .paiement .options .formulaire input[type=month]:focus,
+.body_paiement .main_paiement .donneePerso .options .formulaire input[type=text]:focus,
+.body_paiement .main_paiement .donneePerso .options .formulaire input[type=email]:focus,
+.body_paiement .main_paiement .donneePerso .options .formulaire input[type=month]:focus,
+.body_paiement .main_profilClient .paiement .options .formulaire input[type=text]:focus,
+.body_paiement .main_profilClient .paiement .options .formulaire input[type=email]:focus,
+.body_paiement .main_profilClient .paiement .options .formulaire input[type=month]:focus,
+.body_paiement .main_profilClient .donneePerso .options .formulaire input[type=text]:focus,
+.body_paiement .main_profilClient .donneePerso .options .formulaire input[type=email]:focus,
+.body_paiement .main_profilClient .donneePerso .options .formulaire input[type=month]:focus,
+.body_profilClient .main_paiement .paiement .options .formulaire input[type=text]:focus,
+.body_profilClient .main_paiement .paiement .options .formulaire input[type=email]:focus,
+.body_profilClient .main_paiement .paiement .options .formulaire input[type=month]:focus,
+.body_profilClient .main_paiement .donneePerso .options .formulaire input[type=text]:focus,
+.body_profilClient .main_paiement .donneePerso .options .formulaire input[type=email]:focus,
+.body_profilClient .main_paiement .donneePerso .options .formulaire input[type=month]:focus,
+.body_profilClient .main_profilClient .paiement .options .formulaire input[type=text]:focus,
+.body_profilClient .main_profilClient .paiement .options .formulaire input[type=email]:focus,
+.body_profilClient .main_profilClient .paiement .options .formulaire input[type=month]:focus,
+.body_profilClient .main_profilClient .donneePerso .options .formulaire input[type=text]:focus,
+.body_profilClient .main_profilClient .donneePerso .options .formulaire input[type=email]:focus,
+.body_profilClient .main_profilClient .donneePerso .options .formulaire input[type=month]:focus {
+  border-color: #e87edc;
+  box-shadow: 0 0 5px rgba(232, 126, 220, 0.5);
+  outline: none;
 }
 .body_paiement .main_paiement .paiement .options .formulaire label,
 .body_paiement .main_paiement .donneePerso .options .formulaire label,

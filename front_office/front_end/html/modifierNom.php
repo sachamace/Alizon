@@ -1,6 +1,6 @@
 <?php 
 include 'session.php';
-
+include 'config.php';
 $user = $_SESSION['user'];
 $nomActuel = $user['nom'];
 $erreur = '';
@@ -12,12 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erreur = "Le nom ne peut pas être vide.";
     } else {
         // Mise à jour dans la SESSION
-        $_SESSION['user']['nom'] = $newNom;
+        $id_client_connecte = $_SESSION['id_client'];
 
         // Et aussi dans la BASE !
-        include 'config.php';
+        
         $stmt = $pdo->prepare("UPDATE compte_client SET nom = ? WHERE id_client = ?");
-        $stmt->execute([$newNom, $_SESSION['id']]);
+        $stmt->execute([$newNom, $id_client_connecte]);
 
         echo "<script>
             window.location.href = 'consulterProfilClient.php';

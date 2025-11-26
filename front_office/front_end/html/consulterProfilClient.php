@@ -24,7 +24,7 @@ try {
         FROM compte_client cc
         LEFT JOIN identifiants id ON cc.id_num = id.id_num
         LEFT JOIN adresse a ON cc.id_client = a.id_client
-        WHERE cc.id_client = :id_client
+        WHERE cc.id_num = :id_client
     ");
 
     $stmt->execute(['id_client' => $id_client_connecte]);

@@ -46,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $note = (int)$_POST['note'];
     $description = trim($_POST['description']);
     if ($note >= 1 && $note <= 5 && !empty($description) && isset($_SESSION['id_panier'])) {
-        $id_client = $_SESSION['id'];
+        $id_client = $_SESSION['id_client'];
+
         try {
             $requete_ajout_avis = $pdo->prepare("
                 INSERT INTO avis (id_client, id_produit, note, description)
@@ -65,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             </script>";
             exit();
         } catch (PDOException $e) {
-            $erreur_avis = "Vous avez déjà rentré un avis";
+            $erreur_avis = "Vous avez déjà rentré un avis $id_client";
         }
     } else {
         $erreur_avis = "Veuillez entrer une note entre 1 et 5 et une description.";
@@ -90,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     else{
         $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
         if ($action === 'supprimer_avis') {
-            $id_client = $_SESSION['id'];
+            $id_client = $_SESSION['id_client'];
 
             // Sécurisé : on supprime uniquement si l'avis appartient à l'utilisateur
             $requete_suppr = $pdo->prepare("
@@ -337,8 +338,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <span class="avis-etoiles">' . $etoiles . '</span>
                             </div>
                             <p class="avis-commentaire">' . htmlspecialchars($un_avis['description']) . '</p>';
-                        if (isset($_SESSION["id"])){
-                            if ($_SESSION["id"] == $un_avis["id_client"]) {
+                        if (isset($_SESSION["id_client"])){
+                            if ($_SESSION["id_client"] == $un_avis["id_client"]) {
                                 echo '
                                 <form method="post" style="margin-top:10px;">
                                     <input type="hidden" name="action" value="supprimer_avis">

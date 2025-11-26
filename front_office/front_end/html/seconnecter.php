@@ -36,6 +36,7 @@
 
             $_SESSION['id'] = $user['id_num'];
             $_SESSION['login'] = $user['login'];
+            $_SESSION['id_client'] = $user['id_client'];
             $_SESSION['id_panier'] = $panier['id_panier'];
 
             echo "<script>window.location.href = '/index.php';</script>";

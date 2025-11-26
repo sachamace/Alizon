@@ -1389,32 +1389,6 @@ Fin de la structure de Consulter/Modifier Profil
   background: #28a745;
 }
 
-@media (max-width: 768px) {
-  .container__creation-compte {
-    margin: 20px;
-    padding: 30px 25px;
-    transform: scale(1);
-  }
-  .header__creation-compte h1 {
-    font-size: 1.8em;
-  }
-  .form-row {
-    grid-template-columns: 1fr !important;
-  }
-}
-@media (max-width: 480px) {
-  .container__creation-compte {
-    margin: 15px;
-    padding: 25px 20px;
-  }
-  .logo__creation-compte {
-    top: 20px;
-    left: 20px;
-  }
-  .logo__creation-compte img {
-    max-width: 120px;
-  }
-}
 .succes-message {
   margin-bottom: 20px;
 }

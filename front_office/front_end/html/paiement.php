@@ -116,9 +116,7 @@
         // Si aucune erreur
         if (empty($erreurs)) {
             $success = true;
-
-            // Ici tu peux créer la commande, enregistrer dans la BDD, etc.
-        }
+        }    
     }
     //Affichage du modal "Paiement réussi"
     if ($success){ 
@@ -298,9 +296,14 @@ function verifLuhn($numero){
 
                     <!-- OPTION CARTE -->
                     <label class="option">
-                        <input type="radio" name="paiement" id="radio-carte" value="carte">
+                        <input type="radio" name="paiement" id="radio-carte" value="carte" <?= empty($articles_panier) ? 'disabled' : '' ?>>
                         <span style="font-size: 1rem;">Carte bancaire</span>
                     </label>
+
+                    <?php if(empty($articles_panier)){ ?>
+                        <?php $erreursPanier = "Votre panier est vide. Impossible de payer."; ?>
+                        <p style="color: red;"><?= htmlentities($erreursPanier) ?></p>
+                    <?php } ?>
 
                     <!-- FORMULAIRE CARTE -->
                     <div class="formulaire hidden" id="form-carte">

@@ -1672,7 +1672,7 @@ footer.footer {
 .body_paiement,
 .body_profilClient {
   font-family: $font-family;
-  background-color: $white;
+  background-color: #e8e8e8;
   color: $black;
   margin: 0;
   display: flex;
@@ -1710,6 +1710,7 @@ footer.footer {
       border-radius: $border-radius;
       padding: 1rem;
       margin-bottom: 1rem;
+      background-color: $white;
 
       h2 {
         margin-top: 0;
@@ -1772,11 +1773,18 @@ footer.footer {
           input[type="text"],
           input[type="email"],
           input[type="month"] {
-            width: 100%;
+            width: 95%;
             padding: 0.8rem;
             border: none;
-            background: #dcdcdc;
+            background: $white;
             border-radius: 4px;
+            border: 2px solid $gray-light;
+
+            &:focus {
+              border-color: #e87edc;
+              box-shadow: 0 0 5px rgba(232, 126, 220, 0.5);
+              outline: none;
+            }
           }
 
           label {

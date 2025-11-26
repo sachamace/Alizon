@@ -6,6 +6,7 @@ $adresseActuelle = $user['adresse'];
 $codePostalActuel = $user['code_postal'];
 $villeActuelle = $user['ville'];
 $paysActuel = $user['pays'];
+$erreur = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newAdresse = trim($_POST['adresse']);
@@ -65,16 +66,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="options">
             <form method="POST">
                 <label for="adresse">Adresse :</label>
-                <input type="text" name="adresse" id="adresse" class="input-modify" value="<?= htmlspecialchars($adresseActuelle ?? '') ?>" required><br><br>
+                <input type="text" name="adresse" id="adresse" class="input-modify" value="<?= htmlspecialchars($adresseActuelle) ?>" required><br><br>
 
                 <label for="code_postal">Code Postal :</label>
-                <input type="text" name="code_postal" id="code_postal" class="input-modify" value="<?= htmlspecialchars($codePostalActuel ?? '') ?>" maxlength="5" required><br><br>
+                <input type="text" name="code_postal" id="code_postal" class="input-modify" value="<?= htmlspecialchars($codePostalActuel) ?>" maxlength="5" required><br><br>
 
                 <label for="ville">Ville :</label>
-                <input type="text" name="ville" id="ville" class="input-modify" value="<?= htmlspecialchars($villeActuelle ?? '') ?>" required><br><br>
+                <input type="text" name="ville" id="ville" class="input-modify" value="<?= htmlspecialchars($villeActuelle) ?>" required><br><br>
 
                 <label for="pays">Pays :</label>
-                <input type="text" name="pays" id="pays" class="input-modify" value="<?= htmlspecialchars($paysActuel ?? '') ?>" required><br><br>
+                <input type="text" name="pays" id="pays" class="input-modify" value="<?= htmlspecialchars($paysActuel) ?>" required><br><br>
 
                 <?php if ($erreur) {?>
                     <p style="color:red;"><?= htmlspecialchars($erreurs) ?></p>

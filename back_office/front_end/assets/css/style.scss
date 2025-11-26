@@ -5,8 +5,6 @@
 @use "variable" as *;
 @use "mixin" as *;
 
-
-
 /* -----------------------------------------
 
 Structure du site
@@ -97,14 +95,6 @@ main {
 Fin de la structure du site
 
 ------------------------------------------*/
-
-
-
-
-
-
-
-
 
 /* -----------------------------------------
 
@@ -457,10 +447,6 @@ Fin de structure de Consulter, Créer, Modifier produit
 
 ------------------------------------------*/
 
-
-
-
-
 /* -----------------------------------------
 
 Structure du tableau de bord
@@ -643,10 +629,6 @@ Fin de structure du tableau de bord
 
 ------------------------------------------*/
 
-
-
-
-
 /* -----------------------------------------
 
 Structure du dashboard produit
@@ -731,11 +713,6 @@ Fin de structure du dashboard produit
 
 ------------------------------------------*/
 
-
-
-
-
-
 /* -----------------------------------------
 
 Structure de la roue cranté consulter/déconnecter
@@ -776,17 +753,11 @@ Structure de la roue cranté consulter/déconnecter
   }
 }
 
-
-
 /* -----------------------------------------
 
 Fin de la structure de la roue cranté consulter/déconnecter
 
 ------------------------------------------*/
-
-
-
-
 
 /* -----------------------------------------
 
@@ -981,8 +952,6 @@ Fin de la structure de Consulter/Modifier Profil
 
 ------------------------------------------*/
 
-
-
 // =============================================================================
 // PAGE DE CONNEXION
 // =============================================================================
@@ -1165,12 +1134,309 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Messages d'erreur
 .error-message {
   color: $status-out-of-stock;
   font-size: 0.9em;
   margin-top: 5px;
   display: block;
+}
+
+// =============================================================================
+// PAGE DE CRÉATION DE COMPTE
+// =============================================================================
+
+.body__creation-compte {
+  margin: 0;
+  padding: 0;
+  font-family: $font-family;
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.logo__creation-compte {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+
+  img {
+    max-width: 150px;
+    height: auto;
+  }
+}
+
+.container__creation-compte {
+  background: $white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 15px 35px rgba($black, 0.1);
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  transform: scale(0.95);
+  animation: fadeInUp 0.6s ease-out;
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(0.95);
+    }
+  }
+}
+
+.header__creation-compte {
+  margin-bottom: 30px;
+  text-align: center;
+
+  h1 {
+    color: $black;
+    font-size: 2.2em;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  h2 {
+    color: $gray-darker;
+    font-size: 1.3em;
+    font-weight: 500;
+    margin: 0;
+    opacity: 0.8;
+  }
+}
+
+.form__creation-compte {
+  @include flex-column;
+  gap: 1.5rem;
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.input-group {
+  width: 100%;
+  text-align: left;
+  position: relative;
+
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+.input-label {
+  display: block;
+  color: $gray-darker;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input__creation-compte {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid $gray-medium;
+  border-radius: 10px;
+  font-size: 1em;
+  font-family: $font-family;
+  background-color: $white;
+  transition: all $transition-speed ease;
+  box-sizing: border-box;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    background-color: $white;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+  }
+
+  &::placeholder {
+    color: $gray-dark;
+    opacity: 0.7;
+  }
+
+  &:hover {
+    border-color: color.adjust($primary-color, $lightness: -10%);
+  }
+}
+
+.select__creation-compte {
+  @extend .input__creation-compte;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 16px) center;
+  padding-right: 40px;
+}
+
+.error-message {
+  color: $danger-color;
+  font-size: 0.8em;
+  margin-top: 6px;
+  display: block;
+  font-weight: 500;
+  padding-left: 4px;
+  animation: shake 0.5s ease-in-out;
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+}
+
+.btn__creation-compte {
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  color: $black;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 20px;
+  font-size: 1.1em;
+  font-weight: 600;
+  font-family: $font-family;
+  cursor: pointer;
+  transition: all $transition-speed ease;
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba($primary-color, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba($white, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+}
+
+.separator {
+  color: $gray-medium;
+  font-size: 0.9em;
+  margin: 20px 0;
+  position: relative;
+  text-align: center;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background: $gray-medium;
+  }
+
+  &::before {
+    left: 0;
+  }
+
+  &::after {
+    right: 0;
+  }
+}
+
+.btn__connecter-compte {
+  background: $white;
+  color: $black;
+  border: 2px solid $primary-color;
+  border-radius: 10px;
+  padding: 14px 20px;
+  font-size: 1.1em;
+  font-weight: 600;
+  font-family: $font-family;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  transition: all $transition-speed ease;
+  text-align: center;
+
+  &:hover {
+    background: $primary-color;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba($primary-color, 0.2);
+    color: $white;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+
+// Animation pour les champs valides
+.input__creation-compte:valid {
+  border-color: $success-color;
+  
+  & + .password-strength::before {
+    background: $success-color;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .container__creation-compte {
+    margin: 20px;
+    padding: 30px 25px;
+    transform: scale(1);
+  }
+  
+  .header__creation-compte h1 {
+    font-size: 1.8em;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .container__creation-compte {
+    margin: 15px;
+    padding: 25px 20px;
+  }
+  
+  .logo__creation-compte {
+    top: 20px;
+    left: 20px;
+    
+    img {
+      max-width: 120px;
+    }
+  }
 }
 
 // =============================================================================
@@ -1193,8 +1459,6 @@ Fin de la structure de Consulter/Modifier Profil
 .succes-message {
   margin-bottom: 20px;
 }
-
-
 
 // Styles spécifiques à la récupération
 .recuperation-links {

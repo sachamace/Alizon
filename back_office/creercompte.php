@@ -121,31 +121,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord - Alizon</title>
+    <title>Créer un compte - Alizon</title>
     <link rel="stylesheet" href="front_end/assets/css/style.css">
-
 </head>
 
-<body class="body__connexion">
-    <div class="logo__connexion">
+<body class="body__creation-compte">
+    <div class="logo__creation-compte">
         <img src="front_end/assets/images/logo_Alizon.png" alt="Logo Alizon" width="150">
     </div>
     
-    <div class="container__connexion">
-        <div class="header__connexion">
-            <h2>Créer un compte</h2>
+    <div class="container__creation-compte">
+        <div class="header__creation-compte">
+            <h1>Rejoignez Alizon</h1>
+            <h2>Créer votre compte vendeur</h2>
         </div>
-        <form action ="" class="form__connexion" include ="index.php" method="post" enctype = "multipart/form-data">
+        <form action="" class="form__creation-compte" method="post" enctype="multipart/form-data">
+            <!-- Raison sociale de l'entreprise -->
             <div class="input-group">
-                <!-- Raison sociale de l'entreprise -->
                 <label for="raison" class="input-label">Raison sociale</label>
-                <input class="input__connexion" type="text"  name="raison" placeholder="Nom de votre entreprise *" value ="<?= $raison_sociale?>"required />
+                <input class="input__creation-compte" type="text" name="raison" placeholder="Nom de votre entreprise *" value="<?= $raison_sociale?>" required />
             </div>
 
-            <!-- Statut juridique -->
-            <div class="input-group">
-                <label for="statut" class="input-label">Statut juridique</label>
-                <select class="input__connexion "  name="statut" value="<?= $statut_juridique?>">
+            <div class="form-row">
+                <!-- Statut juridique -->
+                <div class="input-group">
+                    <label for="statut" class="input-label">Statut juridique</label>
+                    <select class="select__creation-compte" name="statut" value="<?= $statut_juridique?>">
                         <option disabled selected>Choisir</option>
                         <option value="SA">SA</option>
                         <option value="SAS">SAS</option>
@@ -153,75 +154,66 @@
                         <option value="EURL">EURL</option>
                         <option value="SASU">SASU</option>
                         <option value="SCP">SCP</option>
-                </select>
-                <?php
-                    if (!empty($erreur_statut)){
-                        echo "<span>$erreur_statut</span>";
-                    } 
-                ?>
-            </div>
+                    </select>
+                    <?php if (!empty($erreur_statut)): ?>
+                        <span class="error-message"><?= $erreur_statut ?></span>
+                    <?php endif; ?>
+                </div>
 
-            <div class="input-group">
                 <!-- Numéro de Siren -->
-                <label for="num_siren" class="input-label">Nuémro de SIREN</label>
-                <input class="input__connexion" type="text"  name="num_siren" placeholder="Numéro de SIREN *" value ="<?= $num_siren?>"required />
-                <?php
-                    if (!empty($erreur_siren)){
-                        echo $erreur_siren;
-                    }
-                ?>
+                <div class="input-group">
+                    <label for="num_siren" class="input-label">Numéro de SIREN</label>
+                    <input class="input__creation-compte" type="text" name="num_siren" placeholder="Numéro de SIREN *" value="<?= $num_siren?>" required />
+                    <?php if (!empty($erreur_siren)): ?>
+                        <span class="error-message"><?= $erreur_siren ?></span>
+                    <?php endif; ?>
+                </div>
             </div>
 
+            <!-- Email -->
             <div class="input-group">
-                <!-- Email -->
                 <label for="mail" class="input-label">E-Mail</label>
-                <input class="input__connexion" type="email"  name="email" placeholder="Adresse Mail *" value ="<?= $mail?>"required />
-                <?php
-                    if (!empty($erreur_mail)){
-                        echo "<span>$erreur_mail</span>";
-                    }
-                ?>
+                <input class="input__creation-compte" type="email" name="email" placeholder="Adresse Mail *" value="<?= $mail?>" required />
+                <?php if (!empty($erreur_mail)): ?>
+                    <span class="error-message"><?= $erreur_mail ?></span>
+                <?php endif; ?>
             </div>
 
+            <!-- Numéro de Téléphone -->
             <div class="input-group">
-                <!-- Numéro de Téléphone -->
                 <label for="tel" class="input-label">Numéro de Téléphone</label>
-                <input class="input__connexion" type="tel" id="tel" name="tel" placeholder="Numéro de Téléphone *" value ="<?= $tel?>"required />
-                <?php
-                    if (!empty($erreur_tel)){
-                        echo "<span>$erreur_tel</span>";
-                    }
-                ?>
+                <input class="input__creation-compte" type="tel" id="tel" name="tel" placeholder="Numéro de Téléphone *" value="<?= $tel?>" required />
+                <?php if (!empty($erreur_tel)): ?>
+                    <span class="error-message"><?= $erreur_tel ?></span>
+                <?php endif; ?>
             </div>
-            
-            <div class="input-group">
+
+            <div class="form-row">
                 <!-- Mot de passe -->
-                <label for="mdp" class="input-label">Mot de passe</label>
-                <input class="input__connexion" type="password"  name="motdepasse" placeholder="Mot de passe *" value ="<?= $mdp?>"required />
-                <?php
-                    if (!empty($erreur_mdp)){
-                        echo "<span>$erreur_mdp</span>";
-                    }
-                ?>
+                <div class="input-group">
+                    <label for="mdp" class="input-label">Mot de passe</label>
+                    <input class="input__creation-compte" type="password" name="motdepasse" placeholder="Mot de passe *" value="<?= $mdp?>" required />
+                    <div class="password-strength"></div>
+                    <?php if (!empty($erreur_mdp)): ?>
+                        <span class="error-message"><?= $erreur_mdp ?></span>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Confirmer le mot de passe -->
+                <div class="input-group">
+                    <label for="confirm" class="input-label">Confirmer le mot de passe</label>
+                    <input class="input__creation-compte" type="password" name="confirm" placeholder="Confirmer le mot de passe *" required />
+                    <?php if (!empty($erreur_confirm)): ?>
+                        <span class="error-message"><?= $erreur_confirm ?></span>
+                    <?php endif; ?>
+                </div>
             </div>
 
-            <!-- Confirmer le mot de passe -->
-            <div class="input-group">
-                <label for="confirm" class="input-label">Confirmer le mot de passe</label>
-                <input class="input__connexion"  type="password" name="confirm" placeholder="Confirmer le mot de passe *" required />
-                <!-- Bouton de création de compte -->
-                <?php
-                    if(!empty($erreur_confirm)){
-                        echo "<span>$erreur_confirm</span>";
-                    }
-                ?>
-            </div>
-
-            <button type="submit" class="btn__connexion">Créer un compte</button>
+            <button type="submit" class="btn__creation-compte">Créer mon compte</button>
             
-            <div class="separator"></div>
+            <div class="separator">Déjà un compte ?</div>
             
-            <a href="connecter.php" class="btn__creer-compte">Se connecter</a>
+            <a href="connecter.php" class="btn__connecter-compte">Se connecter</a>
         </form>
     </div>
 </body>

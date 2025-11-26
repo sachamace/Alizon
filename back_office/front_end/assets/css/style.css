@@ -1138,6 +1138,283 @@ Fin de la structure de Consulter/Modifier Profil
   display: block;
 }
 
+.body__creation-compte {
+  margin: 0;
+  padding: 0;
+  font-family: "Space Grotesk", sans-serif;
+  background: linear-gradient(135deg, #6CD3FF 0%, #A9E5FF 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.logo__creation-compte {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+}
+.logo__creation-compte img {
+  max-width: 150px;
+  height: auto;
+}
+
+.container__creation-compte {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  transform: scale(0.95);
+  animation: fadeInUp 0.6s ease-out;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(0.95);
+  }
+}
+
+.header__creation-compte {
+  margin-bottom: 30px;
+  text-align: center;
+}
+.header__creation-compte h1 {
+  color: #000;
+  font-size: 2.2em;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  background: linear-gradient(135deg, #6CD3FF 0%, #A9E5FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header__creation-compte h2 {
+  color: #333;
+  font-size: 1.3em;
+  font-weight: 500;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.form__creation-compte {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.form__creation-compte .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 480px) {
+  .form__creation-compte .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.input-group {
+  width: 100%;
+  text-align: left;
+  position: relative;
+}
+.input-group.full-width {
+  grid-column: 1/-1;
+}
+
+.input-label {
+  display: block;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input__creation-compte, .select__creation-compte {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1em;
+  font-family: "Space Grotesk", sans-serif;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+.input__creation-compte:focus, .select__creation-compte:focus {
+  outline: none;
+  border-color: #6CD3FF;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(108, 211, 255, 0.1);
+}
+.input__creation-compte::-moz-placeholder, .select__creation-compte::-moz-placeholder {
+  color: #666;
+  opacity: 0.7;
+}
+.input__creation-compte::placeholder, .select__creation-compte::placeholder {
+  color: #666;
+  opacity: 0.7;
+}
+.input__creation-compte:hover, .select__creation-compte:hover {
+  border-color: rgb(57, 195.7346938776, 255);
+}
+
+.select__creation-compte {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 16px) center;
+  padding-right: 40px;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.8em;
+  margin-top: 6px;
+  display: block;
+  font-weight: 500;
+  padding-left: 4px;
+  animation: shake 0.5s ease-in-out;
+}
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.btn__creation-compte {
+  background: linear-gradient(135deg, #6CD3FF 0%, #A9E5FF 100%);
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 20px;
+  font-size: 1.1em;
+  font-weight: 600;
+  font-family: "Space Grotesk", sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.btn__creation-compte:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(108, 211, 255, 0.3);
+}
+.btn__creation-compte:active {
+  transform: translateY(0);
+}
+.btn__creation-compte::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+.btn__creation-compte:hover::before {
+  left: 100%;
+}
+
+.separator {
+  color: #e0e0e0;
+  font-size: 0.9em;
+  margin: 20px 0;
+  position: relative;
+  text-align: center;
+}
+.separator::before, .separator::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 45%;
+  height: 1px;
+  background: #e0e0e0;
+}
+.separator::before {
+  left: 0;
+}
+.separator::after {
+  right: 0;
+}
+
+.btn__connecter-compte {
+  background: #fff;
+  color: #000;
+  border: 2px solid #6CD3FF;
+  border-radius: 10px;
+  padding: 14px 20px;
+  font-size: 1.1em;
+  font-weight: 600;
+  font-family: "Space Grotesk", sans-serif;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+.btn__connecter-compte:hover {
+  background: #6CD3FF;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(108, 211, 255, 0.2);
+  color: #fff;
+}
+.btn__connecter-compte:active {
+  transform: translateY(0);
+}
+
+.input__creation-compte:valid, .select__creation-compte:valid {
+  border-color: #28a745;
+}
+.input__creation-compte:valid + .password-strength::before, .select__creation-compte:valid + .password-strength::before {
+  background: #28a745;
+}
+
+@media (max-width: 768px) {
+  .container__creation-compte {
+    margin: 20px;
+    padding: 30px 25px;
+    transform: scale(1);
+  }
+  .header__creation-compte h1 {
+    font-size: 1.8em;
+  }
+  .form-row {
+    grid-template-columns: 1fr !important;
+  }
+}
+@media (max-width: 480px) {
+  .container__creation-compte {
+    margin: 15px;
+    padding: 25px 20px;
+  }
+  .logo__creation-compte {
+    top: 20px;
+    left: 20px;
+  }
+  .logo__creation-compte img {
+    max-width: 120px;
+  }
+}
 .succes-message {
   margin-bottom: 20px;
 }

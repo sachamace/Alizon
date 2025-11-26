@@ -715,19 +715,18 @@ footer.footer.mobile, footer.footer.tablette {
   padding: 4rem clamp(1rem, 8vw, 10rem);
   color: #000;
   box-sizing: border-box;
-  margin-top: 125px;
   background: #e8e8e8;
 }
 @media (max-width: 1440px) and (min-width: 429px) {
   .main_produit {
     padding: 3rem 2rem;
-    margin-top: 150px;
+    margin-top: 100px;
   }
 }
 @media (max-width: 428px) {
   .main_produit {
     padding: 2rem 1rem;
-    margin-top: 180px;
+    margin-top: 150px;
   }
 }
 .main_produit .fiche-produit {

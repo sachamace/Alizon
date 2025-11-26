@@ -804,12 +804,13 @@ footer.footer {
   // Tablette (1440px)
   @media (max-width: 1440px) and (min-width: 429px) {
     padding: 3rem 2rem;
+    margin-top: 100px;
   }
   
   // Téléphone (428px)
   @media (max-width: 428px) {
     padding: 2rem 1rem;
-    margin-top: 24px;
+    margin-top: 150px;
   }
 
   .fiche-produit {

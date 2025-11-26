@@ -776,7 +776,7 @@ footer.footer.mobile, footer.footer.tablette {
 }
 @media (max-width: 1440px) and (min-width: 429px) {
   .main_produit .fiche-produit .fiche-container .images-produit .image-principale {
-    max-width: 10%;
+    max-width: 250px;
   }
 }
 @media (max-width: 428px) {

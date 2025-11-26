@@ -283,6 +283,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </form>' ?>
                         </div>
                     </div>
+                    <p class="description">
+                        <?= htmlspecialchars($infos['description_produit']) ?>
+                    </p>
                     <div class="stock-avis">
                         <span class="stock-dispo" style="color: <?= $stock_dispo > 0 ? 'green' : 'red' ?>">
                             <?php
@@ -310,9 +313,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <p class="description">
-                        <?= htmlspecialchars($infos['description_produit']) ?>
-                    </p>
+
                 </div>
             </div>
         </section>

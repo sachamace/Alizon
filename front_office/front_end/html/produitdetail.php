@@ -1,7 +1,6 @@
 <?php
 include 'config.php';
 include 'sessionindex.php';
-var_dump($_SESSION['id_panier']);
 try {
     if (isset($_GET['article'])) {
         $id_produit = $_GET['article'];

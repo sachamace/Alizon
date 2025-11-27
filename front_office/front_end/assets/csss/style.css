@@ -699,13 +699,13 @@ footer.footer.mobile, footer.footer.tablette {
 @media (max-width: 1440px) and (min-width: 429px) {
   .main_produit {
     padding: 3rem 2rem;
-    margin-top: 100px;
+    margin-top: 150px;
   }
 }
 @media (max-width: 428px) {
   .main_produit {
     padding: 2rem 1rem;
-    margin-top: 150px;
+    margin-top: 160px;
   }
 }
 .main_produit .fiche-produit {

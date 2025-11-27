@@ -696,7 +696,7 @@ footer.footer.mobile, footer.footer.tablette {
   box-sizing: border-box;
   background: #e8e8e8;
 }
-@media (max-width: 1440px) and (min-width: 429px) {
+@media (max-width: 1440px) {
   .main_produit {
     padding: 3rem 2rem;
     margin-top: 150px;

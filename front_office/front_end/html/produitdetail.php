@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </nav>
         </nav>
     </header>
-    <main class="main_produit ">
+    <main class="main_produit" style="padding-top: 50px;">
         <section class="fiche-produit">
 
             <div class="fiche-container">
@@ -339,7 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if (isset($_SESSION["id_client"])){
                             if ($_SESSION["id_client"] == $un_avis["id_client"]) {
                                 echo '
-                                <form method="post" style="margin-top:10px;">
+                                <form method="post">
                                     <input type="hidden" name="action" value="supprimer_avis">
                                     <button type="submit" class="btn-supprimer-avis">Supprimer mon avis</button>
                                 </form>';

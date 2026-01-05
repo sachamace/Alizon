@@ -1417,12 +1417,15 @@ footer.footer.mobile, footer.footer.tablette {
   text-align: left;
 }
 .main_panier aside a {
+  display: inline-block;
+  white-space: nowrap;
+  width: 203px;
+  min-width: 203px;
   background: #ff6ce2;
   text-align: center;
   padding: 10px;
   font-size: 14px;
   font-weight: 325;
-  width: 203px;
   border-radius: 10px;
   color: #000;
   text-decoration: none;

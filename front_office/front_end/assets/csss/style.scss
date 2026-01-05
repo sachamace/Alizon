@@ -1557,15 +1557,20 @@ footer.footer {
     }
 
     a {
-      background: $primary-color;
-      text-align: center;
-      padding: 10px;
-      font-size: 14px;
-      font-weight: 325;
-      width: 203px;
-      border-radius: 10px;
-      color: $black;
-      text-decoration: none;
+        display: inline-block; 
+        white-space: nowrap; 
+
+        width: 203px;     
+        min-width: 203px; 
+
+        background: $primary-color;
+        text-align: center;
+        padding: 10px;
+        font-size: 14px;
+        font-weight: 325;
+        border-radius: 10px;
+        color: $black;
+        text-decoration: none;
     }
   }
 

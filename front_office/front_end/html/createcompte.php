@@ -53,8 +53,9 @@
         if(!preg_match("/^[a-zA-Z0-9._%+-]+@(gmail\.com|outlook\.com|hotmail\.com|yahoo\.fr|yahoo\.com|orange\.fr|free\.fr|sfr\.fr)$/",$mail)){
             $erreur_mail = "Email invalide ou domaine non autorisé.(Gmail , Outlook , Yahoo , Orange , free et sfr acceptés.";
         }
-        if(!preg_match("/^.{12,}$/",$password)){
-            $erreur_mdp = "Nombre de caractère trop petit ! Minimum = 12";
+        // Vérification : 12 chars min + 1 min + 1 MAJ + 1 spécial
+        if(!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{12,}$/", $password)){
+            $erreur_mdp = "Le mot de passe doit faire 12 caractères minimum et contenir au moins une majuscule, une minuscule et un caractère spécial.";
         }
         if(!preg_match("/^[a-zA-ZÀ-ÿ]+([ -][a-zA-ZÀ-ÿ]+)?$/",$nom)){
             $erreur_nom= "Nom invalides ! (Lettres , '-' et un espace acceptés).";
@@ -199,25 +200,34 @@
             <div class="input-group">
                 <!-- Mot de passe -->
                 <label for="mdp" class="input-label">Mot de passe</label>
-                <input class="input__connexion" type="password"  name="motdepasse" placeholder="Mot de passe "required />
+                <input id="mdp" class="input__connexion" type="password"  name="motdepasse" placeholder="Mot de passe "required />
                 <?php
                     if (!empty($erreur_mdp)){
                         echo "<span style='color:red'>$erreur_mdp</span><br />";
                     }
-                ?>                
+                ?>
+                <div id="message-box">
+                    <ul>
+                        <li id="length" class="validation-item">12 caractères minimum</li>
+                        <li id="lowercase" class="validation-item">Une minuscule</li>
+                        <li id="uppercase" class="validation-item">Une majuscule</li>
+                        <li id="special" class="validation-item">Un caractère spécial</li>
+                    </ul>
+                </div>                
             </div>
             <div class="input-group">
                 <!-- Confirmer le mot de passe -->
-                 <label for="confirm" class="input-label">Confirmer le mot de passe</label>
-                <input class="input__connexion"  type="password" name="confirm" placeholder="Confirmer le mot de passe *" required />
+                <label for="confirm" class="input-label">Confirmer le mot de passe</label>
+                
+                <input class="input__connexion" type="password" id="confirm" name="confirm" placeholder="Confirmer le mot de passe *" required />
+                
+                <span id="match-message" style="font-size: 0.8em; display:none;"></span>
                 <?php
                     if (!empty($erreur_confirm)){
                         echo "<span style='color:red'>$erreur_confirm</span><br />";
                     }
                 ?>
             </div>
-
-
 
             <button type="submit" class="btn__connexion">Créer un compte</button>
             
@@ -227,5 +237,6 @@
         </form>
     </div>
     <script src="../assets/js/date.js"></script>
+    <script src="../assets/js/normalisation.js" ></script>
 </body>
 </html>

@@ -192,21 +192,36 @@
                 <!-- Mot de passe -->
                 <div class="input-group">
                     <label for="mdp" class="input-label">Mot de passe</label>
-                    <input class="input__creation-compte" type="password" name="motdepasse" placeholder="Mot de passe *" value="<?= $mdp?>" required />
-                    <div class="password-strength"></div>
-                    <?php if (!empty($erreur_mdp)): ?>
-                        <span class="error-message"><?= $erreur_mdp ?></span>
-                    <?php endif; ?>
+                    <input id="mdp" class="input__connexion" type="password"  name="motdepasse" placeholder="Mot de passe "required />
+                    <?php
+                        if (!empty($erreur_mdp)){
+                            echo "<span style='color:red'>$erreur_mdp</span><br />";
+                        }
+                    ?>
+                    <div id="message-box">
+                        <ul>
+                            <li id="length" class="validation-item">12 caractères minimum</li>
+                            <li id="lowercase" class="validation-item">Une minuscule</li>
+                            <li id="uppercase" class="validation-item">Une majuscule</li>
+                            <li id="special" class="validation-item">Un caractère spécial</li>
+                        </ul>
+                    </div> 
                 </div>
 
                 <!-- Confirmer le mot de passe -->
-                <div class="input-group">
-                    <label for="confirm" class="input-label">Confirmer le mot de passe</label>
-                    <input class="input__creation-compte" type="password" name="confirm" placeholder="Confirmer le mot de passe *" required />
-                    <?php if (!empty($erreur_confirm)): ?>
-                        <span class="error-message"><?= $erreur_confirm ?></span>
-                    <?php endif; ?>
-                </div>
+            <div class="input-group">
+                <!-- Confirmer le mot de passe -->
+                <label for="confirm" class="input-label">Confirmer le mot de passe</label>
+                
+                <input class="input__connexion" type="password" id="confirm" name="confirm" placeholder="Confirmer le mot de passe *" required />
+                
+                <span id="match-message" style="font-size: 0.8em; display:none;"></span>
+                <?php
+                    if (!empty($erreur_confirm)){
+                        echo "<span style='color:red'>$erreur_confirm</span><br />";
+                    }
+                ?>
+            </div>
             </div>
 
             <button type="submit" class="btn__creation-compte">Créer mon compte</button>
@@ -216,5 +231,6 @@
             <a href="connecter.php" class="btn__connecter-compte">Se connecter</a>
         </form>
     </div>
+    <script src="/front_office/front_end/assets/js/normalisation.js" ></script>
 </body>
 </html>

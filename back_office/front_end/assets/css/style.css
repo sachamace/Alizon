@@ -1413,4 +1413,48 @@ Fin de la structure de Consulter/Modifier Profil
 }
 .btn__link:hover {
   text-decoration: none;
+}
+
+/* Boite des critères */
+#message-box {
+  display: none; /* Caché par défaut, s'affiche au clic */
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+}
+
+#message-box p {
+  margin: 0 0 5px 0;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+#message-box ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+/* Style des items */
+.validation-item {
+  list-style: none;
+  font-size: 0.85em;
+  margin-bottom: 3px;
+  color: #ff4d4d; /* Rouge par défaut */
+  transition: color 0.3s;
+}
+
+/* Quand c'est valide */
+.validation-item.valid {
+  color: #2ecc71; /* Vert */
+}
+
+/* Les petites icônes avant le texte */
+.validation-item:before {
+  content: "✖ ";
+}
+
+.validation-item.valid:before {
+  content: "✔ ";
 }/*# sourceMappingURL=style.css.map */

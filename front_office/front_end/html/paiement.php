@@ -143,16 +143,23 @@
             
             <h2>Commande bien effectuée !</h2>
             <a href="/index.php" style="
-                display:inline-block; 
                 margin-top:20px; 
                 padding:20px 20px; 
                 background:#f07ab0; 
                 color:white; 
                 text-decoration:none; 
                 border-radius:5px;
-                ">Voir ma commande</a>
+                pointer-events: none;
+                opacity: 0;
+                ">V</a>
         </div>
     </div>
+    <script>
+        // Clic => redirection
+        document.getElementById('modal-success').addEventListener('click', function () {
+            window.location.href = '/index.php';
+        });
+    </script>
 <?php }
 
 function verifLuhn($numero){

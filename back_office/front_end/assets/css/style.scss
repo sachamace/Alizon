@@ -81,6 +81,55 @@ body {
     color: $black;
     text-decoration: none;
   }
+
+  // Lien du profil
+  .profil-link {
+    @include transition(transform);
+    
+    &:hover {
+      transform: scale(1.02);
+    }
+    
+    div {
+      @include flex-center;
+      gap: 10px;
+    }
+  }
+
+  // Bouton de déconnexion
+  .btn-deconnexion {
+    @include flex-center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+    color: $black;
+    font-weight: 600;
+    font-size: 1.1em;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    @include transition(all);
+    box-shadow: 0 2px 8px rgba($primary-color, 0.2);
+    
+    svg {
+      transition: transform $transition-speed ease;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba($primary-color, 0.4);
+      border-color: $primary-color;
+      
+      svg {
+        transform: translateX(3px);
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba($primary-color, 0.2);
+    }
+  }
 }
 
 /* Structure du main */

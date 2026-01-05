@@ -16,10 +16,13 @@ try {
 // Récupérer les produits du vendeur connecté
 try {
     $stmt = $pdo->prepare("
-        SELECT p.id_produit, p.nom_produit, p.description_produit, p.prix_ttc, 
+        SELECT p.id_produit, p.nom_produit, p.description_produit, 
+               p.prix_unitaire_ht,
+               ROUND(p.prix_unitaire_ht * (1 + t.taux / 100), 2) AS prix_ttc,
                p.stock_disponible, p.est_actif, p.seuil_alerte, p.categorie,
                (SELECT chemin_image FROM media_produit WHERE id_produit = p.id_produit LIMIT 1) AS image_path
         FROM public.produit p
+        LEFT JOIN public.taux_tva t ON p.id_taux_tva = t.id_taux_tva
         WHERE p.id_vendeur = ?
         ORDER BY p.est_actif DESC, p.id_produit
     ");

@@ -5,7 +5,15 @@ if (isset($_GET['page']) && $_GET['page'] === 'produit') {
         $type = $_GET['type'];
         $id_vendeur_connecte = $_SESSION['vendeur_id'];
 
-        $stmt = $pdo->prepare("SELECT * FROM produit WHERE id_produit= :id");
+        $stmt = $pdo->prepare("
+            SELECT p.*, 
+                   ROUND(p.prix_unitaire_ht * (1 + t.taux / 100), 2) AS prix_ttc,
+                   t.taux AS taux_tva,
+                   t.nom_tva
+            FROM produit p
+            LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
+            WHERE p.id_produit = :id
+        ");
         $stmt->execute(['id' => $id]);
         $produit = $stmt->fetch();
 

@@ -731,6 +731,7 @@ footer.footer.mobile, footer.footer.tablette {
 .main_produit .fiche-produit .fiche-container .images-produit .image-principale {
   width: 100%;
   max-width: 450px;
+  max-height: 600px;
   border-radius: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   background: #fff;

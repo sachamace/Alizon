@@ -72,6 +72,7 @@ try {
     $requete_articles = $pdo->prepare("SELECT * FROM panier_produit WHERE id_panier = ? ORDER BY id_produit ASC;");
     $requete_articles->execute([$_SESSION['id_panier']]);
     $articles = $requete_articles->fetchAll();
+    $panierVide = empty($articles);
 
 } catch (PDOException $e) {
     echo "Erreur SQL : " . $e->getMessage();
@@ -128,85 +129,94 @@ try {
         </nav>
     </header>
     <main class="main_panier">
-        <section>
-            <?php
-            // On suppose que $articles contient les lignes de panier_produit
-            // et que on veux afficher les infos du produit lié
-            $prixtotal = 0;
-            $taxe = 0;
-            $prixht = 0;
+        <?php if ($panierVide) : ?>
 
-            foreach ($articles as $article) {
-                // On récupère les infos du produit associé
-                $id_produit = (int) $article['id_produit'];
-                $produit = $pdo->query("SELECT * FROM produit WHERE id_produit = $id_produit")->fetch(PDO::FETCH_ASSOC);
-
-                // Vérifie qu'on a bien trouvé le produit
-            
-                if ($produit) {
-                    $prixtotal += $produit["prix_ttc"] * $article['quantite'];
-                    $taxe += ($produit['prix_ttc'] - $produit['prix_unitaire_ht']) * $article["quantite"];
-                    $prixht += $produit['prix_unitaire_ht'] * $article['quantite'];
-                    $requete_img = $pdo->prepare('SELECT * FROM media_produit WHERE id_produit = :id_produit');
-                    $requete_img->execute([':id_produit' => $id_produit]);
-                    $img = $requete_img->fetch();
-                    
-                    echo '
-                        <article>
-                            <img src="' . $img["chemin_image"] .'" alt="' . htmlspecialchars($produit['nom_produit']) . '">
-                            <div class="panier_info">
-                                <h4>' . htmlspecialchars($produit['nom_produit']) . '</h4>
-                                <p>Prix : ' . number_format($produit['prix_ttc'], 2, ',', ' ') . ' €</p>
-                                <p>Stock disponible : ' . htmlspecialchars($produit['stock_disponible']) . '</p>
-                                <p>' . htmlspecialchars($produit['description_produit']) . '</p>
-                                <div class="panier_bottom">
-                                    <div class="panier_quantite">
-                                        <form action="" method="post" style="display:inline;">
-                                            <input type="hidden" name="action" value="moins">
-                                            <input type="hidden" name="id_produit" value="' . $produit["id_produit"] . '">
-                                            <button type="submit">-</button>
-                                        </form>
-
-                                        <p>' . htmlspecialchars($article["quantite"]) . '</p>
-
-                                        <form action="" method="post" style="display:inline;">
-                                            <input type="hidden" name="action" value="plus">
-                                            <input type="hidden" name="id_produit" value="' . $produit["id_produit"] . '">
-                                            <button type="submit">+</button>
-                                        </form>
-                                    </div>
-                                    <div class="panier_actions">
-                                        <a href="produitdetail.php?article=' . $produit["id_produit"] . '" class="en_savoir_plus">En savoir plus</a>
-
-                                        <form class="supprimer-produit" method="post">
-                                            <input type="hidden" name="action" value="supprimer_produit">
-                                            <input type="hidden" name="id_produit" value="' . $produit["id_produit"] . '">
-                                            <button type="submit" class="btn-supprimer">Supprimer</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>  
-                        </article>';
-                }
-            }
-            ?>
+        <section class="panier-vide">
+            <h2>Votre panier est vide</h2>
+            <a href="../../../index.php" class="btn-retour">Retour à la boutique</a>
         </section>
-        <form class="vider-panier" method="post" style="text-align:center; margin-top: 2.5em;">
-            <input type="hidden" name="action" value="vider_panier">
-            <input type="hidden" name="id_produit" value="2">
-            <button type="submit" class="btn-vider">Vider le panier</button>
-        </form>
-        <aside>
-            <?php
-            echo '
-                <h4>Prix total: ' . number_format($prixtotal, 2, ',', ' ') . '€</h4>
-                <p>prix hors taxe : ' . number_format($prixht, 2, ',', ' ') . '€ <br>
-                taxe : ' . number_format($taxe, 2, ',', ' ') . '€ </p>
-                <a href="paiement.php">Passer au paiement</a> 
-                '
-                ?>
 
-        </aside>
+        <?php else : ?>
+            <section>
+                <?php
+                // On suppose que $articles contient les lignes de panier_produit
+                // et que on veux afficher les infos du produit lié
+                $prixtotal = 0;
+                $taxe = 0;
+                $prixht = 0;
+
+                foreach ($articles as $article) {
+                    // On récupère les infos du produit associé
+                    $id_produit = (int) $article['id_produit'];
+                    $produit = $pdo->query("SELECT * FROM produit WHERE id_produit = $id_produit")->fetch(PDO::FETCH_ASSOC);
+
+                    // Vérifie qu'on a bien trouvé le produit
+                
+                    if ($produit) {
+                        $prixtotal += $produit["prix_ttc"] * $article['quantite'];
+                        $taxe += ($produit['prix_ttc'] - $produit['prix_unitaire_ht']) * $article["quantite"];
+                        $prixht += $produit['prix_unitaire_ht'] * $article['quantite'];
+                        $requete_img = $pdo->prepare('SELECT * FROM media_produit WHERE id_produit = :id_produit');
+                        $requete_img->execute([':id_produit' => $id_produit]);
+                        $img = $requete_img->fetch();
+                        
+                        echo '
+                            <article>
+                                <img src="' . $img["chemin_image"] .'" alt="' . htmlspecialchars($produit['nom_produit']) . '">
+                                <div class="panier_info">
+                                    <h4>' . htmlspecialchars($produit['nom_produit']) . '</h4>
+                                    <p>Prix : ' . number_format($produit['prix_ttc'], 2, ',', ' ') . ' €</p>
+                                    <p>Stock disponible : ' . htmlspecialchars($produit['stock_disponible']) . '</p>
+                                    <p>' . htmlspecialchars($produit['description_produit']) . '</p>
+                                    <div class="panier_bottom">
+                                        <div class="panier_quantite">
+                                            <form action="" method="post" style="display:inline;">
+                                                <input type="hidden" name="action" value="moins">
+                                                <input type="hidden" name="id_produit" value="' . $produit["id_produit"] . '">
+                                                <button type="submit">-</button>
+                                            </form>
+
+                                            <p>' . htmlspecialchars($article["quantite"]) . '</p>
+
+                                            <form action="" method="post" style="display:inline;">
+                                                <input type="hidden" name="action" value="plus">
+                                                <input type="hidden" name="id_produit" value="' . $produit["id_produit"] . '">
+                                                <button type="submit">+</button>
+                                            </form>
+                                        </div>
+                                        <div class="panier_actions">
+                                            <a href="produitdetail.php?article=' . $produit["id_produit"] . '" class="en_savoir_plus">En savoir plus</a>
+
+                                            <form class="supprimer-produit" method="post">
+                                                <input type="hidden" name="action" value="supprimer_produit">
+                                                <input type="hidden" name="id_produit" value="' . $produit["id_produit"] . '">
+                                                <button type="submit" class="btn-supprimer">Supprimer</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>  
+                            </article>';
+                    }
+                }
+                ?>
+            </section>
+            <form class="vider-panier" method="post" style="text-align:center; margin-top: 2.5em;">
+                <input type="hidden" name="action" value="vider_panier">
+                <input type="hidden" name="id_produit" value="2">
+                <button type="submit" class="btn-vider">Vider le panier</button>
+            </form>
+            <aside>
+                <?php
+                echo '
+                    <h4>Prix total: ' . number_format($prixtotal, 2, ',', ' ') . '€</h4>
+                    <p>prix hors taxe : ' . number_format($prixht, 2, ',', ' ') . '€ <br>
+                    taxe : ' . number_format($taxe, 2, ',', ' ') . '€ </p>
+                    <a href="paiement.php">Passer au paiement</a> 
+                    '
+                    ?>
+
+            </aside>
+        <?php endif; ?>
     </main>
     <footer class="footer mobile">
         <a href="/index.php"><svg class="icone" width="48" height="48" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M277.8 8.6c-12.3-11.4-31.3-11.4-43.5 0l-224 208c-9.6 9-12.8 22.9-8 35.1S18.8 272 32 272l16 0 0 176c0 35.3 28.7 64 64 64l288 0c35.3 0 64-28.7 64-64l0-176 16 0c13.2 0 25-8.1 29.8-20.3s1.6-26.2-8-35.1l-224-208zM240 320l32 0c26.5 0 48 21.5 48 48l0 96-128 0 0-96c0-26.5 21.5-48 48-48z"/></svg></a>

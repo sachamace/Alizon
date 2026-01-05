@@ -4,18 +4,13 @@ body {
   margin: 0;
   padding: 0;
   font-family: "Space Grotesk", sans-serif;
-  max-width: 1440px;
   width: 100%;
   min-height: 100vh;
   height: auto;
   display: flex;
   flex-direction: column;
-}
-@media (max-width: 1439px) {
-  body {
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-  }
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 header {
@@ -143,7 +138,7 @@ footer.footer.mobile, footer.footer.tablette {
   align-items: center;
   position: relative;
 }
-@media screen and (max-width: 428px) and (max-height: 926px) {
+@media (max-width: 428px) and (max-height: 926px) {
   .body__connexion {
     transform: scale(0.7);
     transform-origin: center center;
@@ -330,8 +325,9 @@ footer.footer.mobile, footer.footer.tablette {
   justify-content: center;
   align-content: flex-start;
   gap: 25px;
-  padding: 40px;
-  margin-top: 150px;
+  padding-top: 40px;
+  margin: 150px auto 50px auto;
+  width: 100%;
 }
 .div__catalogue a {
   text-decoration: none;
@@ -515,7 +511,7 @@ footer.footer.mobile, footer.footer.tablette {
 .div__catalogue article .stock-info.out-of-stock {
   color: #dc3545;
 }
-@media screen and (max-width: 428px) {
+@media (max-width: 428px) {
   .div__catalogue {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr);
@@ -631,7 +627,7 @@ footer.footer.mobile, footer.footer.tablette {
     word-break: break-word;
   }
 }
-@media screen and (min-width: 429px) and (max-width: 1439px) {
+@media (min-width: 429px) and (max-width: 430px) {
   .div__catalogue {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -695,12 +691,7 @@ footer.footer.mobile, footer.footer.tablette {
   color: #000;
   box-sizing: border-box;
   background: #e8e8e8;
-}
-@media (max-width: 1440px) {
-  .main_produit {
-    padding: 3rem 2rem;
-    margin-top: 150px;
-  }
+  margin-top: 150px;
 }
 @media (max-width: 428px) {
   .main_produit {
@@ -720,11 +711,7 @@ footer.footer.mobile, footer.footer.tablette {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   overflow: hidden;
-}
-@media (max-width: 1440px) {
-  .main_produit .fiche-produit .fiche-container {
-    flex-direction: column;
-  }
+  flex-direction: column;
 }
 .main_produit .fiche-produit .fiche-container .images-produit {
   flex: 0 0 50%;
@@ -734,11 +721,7 @@ footer.footer.mobile, footer.footer.tablette {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-@media (max-width: 1440px) and (min-width: 429px) {
-  .main_produit .fiche-produit .fiche-container .images-produit {
-    padding: 2.5rem;
-  }
+  padding: 2.5rem;
 }
 @media (max-width: 428px) {
   .main_produit .fiche-produit .fiche-container .images-produit {
@@ -752,11 +735,6 @@ footer.footer.mobile, footer.footer.tablette {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   background: #fff;
   padding: 1.5rem;
-}
-@media (max-width: 1440px) and (min-width: 429px) {
-  .main_produit .fiche-produit .fiche-container .images-produit .image-principale {
-    max-width: 250px;
-  }
 }
 @media (max-width: 428px) {
   .main_produit .fiche-produit .fiche-container .images-produit .image-principale {
@@ -829,11 +807,6 @@ footer.footer.mobile, footer.footer.tablette {
   flex-direction: column;
   padding: 3rem;
 }
-@media (max-width: 1440px) and (min-width: 429px) {
-  .main_produit .fiche-produit .fiche-container .infos-produit {
-    padding: 2.5rem;
-  }
-}
 @media (max-width: 428px) {
   .main_produit .fiche-produit .fiche-container .infos-produit {
     padding: 2rem 1.5rem;
@@ -852,11 +825,6 @@ footer.footer.mobile, footer.footer.tablette {
   color: #000;
   line-height: 1.2;
   margin: 0;
-}
-@media (max-width: 1440px) and (min-width: 429px) {
-  .main_produit .fiche-produit .fiche-container .infos-produit .titre-ligne h1 {
-    font-size: 2.1rem;
-  }
 }
 @media (max-width: 428px) {
   .main_produit .fiche-produit .fiche-container .infos-produit .titre-ligne h1 {
@@ -890,11 +858,6 @@ footer.footer.mobile, footer.footer.tablette {
   padding: 0.2rem 1rem 0.3rem;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(255, 108, 226, 0.25);
-}
-@media (max-width: 1440px) and (min-width: 429px) {
-  .main_produit .fiche-produit .fiche-container .infos-produit .prix .prix-valeur {
-    font-size: 2.6em;
-  }
 }
 @media (max-width: 428px) {
   .main_produit .fiche-produit .fiche-container .infos-produit .prix .prix-valeur {
@@ -972,12 +935,6 @@ footer.footer.mobile, footer.footer.tablette {
   background: #fafafa;
   border-radius: 12px;
   border-left: 5px solid #ff6ce2;
-}
-@media (max-width: 1440px) and (min-width: 429px) {
-  .main_produit .fiche-produit .fiche-container .infos-produit .description {
-    font-size: 1.05rem;
-    padding: 1.3rem;
-  }
 }
 @media (max-width: 428px) {
   .main_produit .fiche-produit .fiche-container .infos-produit .description {
@@ -1061,11 +1018,6 @@ footer.footer.mobile, footer.footer.tablette {
   border-radius: 16px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
-@media (max-width: 1440px) and (min-width: 429px) {
-  .main_produit .avis {
-    padding: 2rem;
-  }
-}
 @media (max-width: 428px) {
   .main_produit .avis {
     padding: 1.5rem;
@@ -1077,13 +1029,6 @@ footer.footer.mobile, footer.footer.tablette {
   font-size: 1.8rem;
   color: #000;
   font-weight: 600;
-}
-@media (max-width: 1440px) and (min-width: 429px) {
-  .main_produit .avis h1,
-  .main_produit .avis h2 {
-    font-size: 1.6rem;
-    margin-bottom: 1.8rem;
-  }
 }
 @media (max-width: 428px) {
   .main_produit .avis h1,
@@ -1101,12 +1046,6 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .main_produit .avis .avis-item:last-child {
   margin-bottom: 0;
-}
-@media (max-width: 1440px) and (min-width: 429px) {
-  .main_produit .avis .avis-item {
-    padding: 1.3rem;
-    margin-bottom: 1.3rem;
-  }
 }
 @media (max-width: 428px) {
   .main_produit .avis .avis-item {
@@ -1185,12 +1124,6 @@ footer.footer.mobile, footer.footer.tablette {
   background: #f8f8f8;
   border-radius: 12px;
 }
-@media (max-width: 1440px) and (min-width: 429px) {
-  .main_produit .avis .form-avis {
-    margin-top: 2.5rem;
-    padding: 1.8rem;
-  }
-}
 @media (max-width: 428px) {
   .main_produit .avis .form-avis {
     margin-top: 2rem;
@@ -1202,11 +1135,6 @@ footer.footer.mobile, footer.footer.tablette {
   margin-bottom: 1.5rem;
   color: #000;
   font-weight: 600;
-}
-@media (max-width: 1440px) and (min-width: 429px) {
-  .main_produit .avis .form-avis h2 {
-    font-size: 1.4rem;
-  }
 }
 @media (max-width: 428px) {
   .main_produit .avis .form-avis h2 {

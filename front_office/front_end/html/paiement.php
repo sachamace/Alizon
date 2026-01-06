@@ -119,19 +119,117 @@
 
         }
 
-        // Si aucune erreur
+        // Si aucune erreur de validation de formulaire
         if (empty($erreurs)) {
-            $success = true;
-
-            header("Location: confirmation_achat.php");
-            exit();
+            // ⚠️ VÉRIFICATION FINALE DU STOCK AVANT VALIDATION
+            try {
+                $stmt_verif_stock = $pdo->prepare("
+                    SELECT pp.id_produit, pp.quantite, p.nom_produit, p.stock_disponible
+                    FROM panier_produit pp
+                    JOIN produit p ON pp.id_produit = p.id_produit
+                    WHERE pp.id_panier = :id_panier
+                ");
+                $stmt_verif_stock->execute([':id_panier' => $_SESSION['id_panier']]);
+                $articles_a_verifier = $stmt_verif_stock->fetchAll(PDO::FETCH_ASSOC);
+                
+                // Vérifier chaque article
+                foreach ($articles_a_verifier as $article) {
+                    if ($article['quantite'] > $article['stock_disponible']) {
+                        $erreurs['stock'] = "Stock insuffisant pour " . htmlentities($article['nom_produit']) . 
+                                           " (demandé: " . $article['quantite'] . ", disponible: " . $article['stock_disponible'] . ")";
+                        break; // Arrêter à la première erreur
+                    }
+                }
+            } catch (PDOException $e) {
+                $erreurs['stock'] = "Erreur lors de la vérification du stock.";
+            }
+            
+            // Si toujours aucune erreur après vérification stock
+            if (empty($erreurs)) {
+                $success = true;
+            }
         }    
     }
     //Affichage du modal "Paiement réussi"
     if ($success){ 
-        $stmt = $pdo->prepare("DELETE FROM panier_produit WHERE id_panier = :id_panier");
-        $stmt->execute([':id_panier' => $_SESSION['id_panier']]);
-    ?> <?php }
+        // 🔹 DÉCRÉMENTATION DU STOCK AVANT DE VIDER LE PANIER
+        try {
+            // Récupérer tous les articles du panier avec leurs quantités
+            $stmt_articles = $pdo->prepare("
+                SELECT id_produit, quantite 
+                FROM panier_produit 
+                WHERE id_panier = :id_panier
+            ");
+            $stmt_articles->execute([':id_panier' => $_SESSION['id_panier']]);
+            $articles_a_traiter = $stmt_articles->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Pour chaque article du panier, décrémenter le stock
+            foreach ($articles_a_traiter as $article) {
+                $stmt_update_stock = $pdo->prepare("
+                    UPDATE produit 
+                    SET stock_disponible = stock_disponible - :quantite 
+                    WHERE id_produit = :id_produit 
+                    AND stock_disponible >= :quantite
+                ");
+                $stmt_update_stock->execute([
+                    ':quantite' => $article['quantite'],
+                    ':id_produit' => $article['id_produit']
+                ]);
+                
+                // Vérifier si le stock a bien été mis à jour
+                if ($stmt_update_stock->rowCount() == 0) {
+                    // Stock insuffisant - ne devrait pas arriver si validation OK avant
+                    throw new Exception("Stock insuffisant pour le produit ID " . $article['id_produit']);
+                }
+            }
+            
+            // ✅ Stock mis à jour avec succès, maintenant on vide le panier
+            $stmt = $pdo->prepare("DELETE FROM panier_produit WHERE id_panier = :id_panier");
+            $stmt->execute([':id_panier' => $_SESSION['id_panier']]);
+            
+        } catch (Exception $e) {
+            // En cas d'erreur, on affiche un message et on arrête
+            die("Erreur lors de la mise à jour du stock : " . $e->getMessage());
+        }
+        ?>
+    <div id="modal-success" style="
+        position: fixed;
+        top: 0; left: 0; width: 100% ; height: 100%;
+        background: rgba(0,0,0,0.6); 
+        display: flex; justify-content: center; align-items: center;
+        z-index: 9999; 
+        backdrop-filter: blur(2px);">
+
+        <div style="
+            background: white; 
+            padding: 30px; 
+            text-align: center; 
+            border-radius: 10px; 
+            width: 200px; 
+            border: 2px solid #f0a8d0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            
+            <h2>Commande bien effectuée !</h2>
+            <a href="/index.php" style="
+                margin-top:20px; 
+                padding:20px 20px; 
+                background:#f07ab0; 
+                color:white; 
+                text-decoration:none; 
+                border-radius:5px;
+                pointer-events: none;
+                opacity: 0;
+                ">V
+            </a>
+        </div>
+    </div>
+    <script>
+        // Clic => redirection
+        document.getElementById('modal-success').addEventListener('click', function () {
+            window.location.href = '/index.php';
+        });
+    </script>
+<?php }
 
 function verifLuhn($numero){
     $sum = 0;
@@ -157,18 +255,136 @@ function verifLuhn($numero){
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page de paiement - Compte CLient</title>
+    <title>Page de paiement - Compte Client</title>
     <meta name="description" content="Page lors du paiement de ton panier coté client!">
     <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
-    <!--<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">-->
-    <link rel="stylesheet" href="../assets/csss/style.css">
+    
+    <!-- Cache-buster : force le rechargement du CSS -->
+    <link rel="stylesheet" href="../assets/csss/style.css?v=<?php echo time(); ?>" id="main-css">
+    
+    <!-- Styles de secours pour la page de paiement -->
+    <style>
+        .main_paiement {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .bloc {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .bloc h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #f0a8d0;
+            padding-bottom: 10px;
+        }
+        
+        .bloc p {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .liste-produit ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .liste-produit li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .paiement {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .options {
+            margin: 20px 0;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 10px;
+        }
+        
+        .formulaire {
+            margin-top: 15px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .formulaire.hidden {
+            display: none;
+        }
+        
+        .formulaire input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        .payer-btn {
+            background: #f0a8d0;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .payer-btn:hover {
+            background: #e897c1;
+        }
+        
+        .required {
+            color: red;
+            font-size: 12px;
+            margin: 5px 0;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            color: #c62828;
+        }
+    </style>
 
 </head>
 <body class="body_paiement">
@@ -209,15 +425,12 @@ function verifLuhn($numero){
                 <div class="liste-produit">
                     <ul>
                         <?php foreach ($articles_panier as $article): ?>
-                        <li>
-                            <div class="produit-ligne">
-                                <span class="produit-nom"><?= htmlentities($article['nom_produit']) ?> × <?= $article['quantite'] ?></span>
-                                <span class="produit-prix">
-                                    <?= number_format($article['prix_ttc'], 2, ',', ' ') ?> €
-                                    <small>(Total: <?= number_format($article['prix_ttc'] * $article['quantite'], 2, ',', ' ') ?> €)</small>
-                                </span>
-                            </div>
-                        </li>
+                        <p>
+                            <li><?= $article['nom_produit'] ?> — x<?= $article['quantite'] ?></li>
+                            <span>
+                            <?= number_format($article['prix_ttc'], 2, ',', ' ') ?>€ (Total: <?= number_format($article['prix_ttc'] * $article['quantite'], 2, ',', ' ') ?>€)
+                            </span>
+                        </p>
                         <?php endforeach; ?>
                     </ul>
                 </div>
@@ -243,6 +456,16 @@ function verifLuhn($numero){
 
             <div class="bloc">
                 <h2>Méthode de paiement</h2>
+                
+                <!-- ERREUR DE STOCK -->
+                <?php if(isset($erreurs['stock'])){ ?>
+                    <div style="background: #ffebee; border: 1px solid #f44336; padding: 15px; border-radius: 5px; margin-bottom: 20px; color: #c62828;">
+                        <strong>⚠️ Erreur de stock :</strong><br>
+                        <?= htmlentities($erreurs['stock']) ?>
+                        <br><br>
+                        <a href="panier.php" style="color: #c62828; text-decoration: underline;">Retourner au panier pour ajuster les quantités</a>
+                    </div>
+                <?php } ?>
 
                 <div class="options">
 
@@ -271,10 +494,6 @@ function verifLuhn($numero){
                         <input type="text" name="nom_titulaire" placeholder="Nom du titulaire"
                             value="<?= htmlentities($nom) ?>">
                         <p class="required"><?= htmlentities($erreurs['nom'] ?? '') ?></p>
-
-                        <div class="securite-info">
-                            <p>🔒 Paiement 100% sécurisé</p>
-                        </div>
                     </div>
 
                     <!-- OPTION PAYPAL -->
@@ -290,7 +509,7 @@ function verifLuhn($numero){
                 </div>
             </div>
 
-            <button type="submit" class="payer-btn">Payer <?= number_format($total_ttc, 2, ',', ' ') ?> €</button>
+            <button type="submit" class="payer-btn">Payer</button>
 
     </form>
 </main>

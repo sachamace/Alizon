@@ -25,8 +25,15 @@
     <div class="div__catalogue">
         <?php
             
-            // On récupère tout le contenu de la table produit disponible
-            $reponse = $pdo->query('SELECT * FROM produit WHERE est_actif = true');
+            // On récupère tout le contenu de la table produit disponible AVEC le calcul du prix TTC
+            $reponse = $pdo->query('
+                SELECT p.*, 
+                       ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc
+                FROM produit p
+                LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
+                WHERE p.est_actif = true
+            ');
+            
             // On affiche chaque entrée une à une
             while ($donnees = $reponse->fetch()){ 
                 if (!isset($_GET['categorie']) || $donnees['categorie'] == $_GET['categorie']){
@@ -59,7 +66,7 @@
                         <p class="description"><?php echo htmlentities($donnees['description_produit']) ?></p>
                         
                         <div class="price-section">
-                            <p class="prix"><?php echo htmlentities($donnees['prix_ttc'].'€') ?></p>
+                            <p class="prix"><?php echo number_format($donnees['prix_ttc'], 2, ',', ' ') . '€' ?></p>
                             <span class="stock-info <?php echo $stock_class; ?>">
                                 <?php 
                                 if ($stock_dispo > 0) {

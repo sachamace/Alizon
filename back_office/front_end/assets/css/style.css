@@ -76,6 +76,47 @@ body {
   color: #000;
   text-decoration: none;
 }
+.topbar .profil-link {
+  transition: transform 0.3s ease;
+}
+.topbar .profil-link:hover {
+  transform: scale(1.02);
+}
+.topbar .profil-link div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.topbar .btn-deconnexion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #6CD3FF 0%, #A9E5FF 100%);
+  color: #000;
+  font-weight: 600;
+  font-size: 1.1em;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(108, 211, 255, 0.2);
+}
+.topbar .btn-deconnexion svg {
+  transition: transform 0.3s ease;
+}
+.topbar .btn-deconnexion:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 211, 255, 0.4);
+  border-color: #6CD3FF;
+}
+.topbar .btn-deconnexion:hover svg {
+  transform: translateX(3px);
+}
+.topbar .btn-deconnexion:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(108, 211, 255, 0.2);
+}
 
 /* Structure du main */
 main {

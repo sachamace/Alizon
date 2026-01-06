@@ -42,16 +42,8 @@
                 <h4>Prix HT</h4>
                 <p><?php echo htmlentities(number_format($produit['prix_unitaire_ht'], 2, ',', ' ')) ?> €</p>
 
-                <?php if ($produit['poids_unite'] && $produit['unite_mesure']): ?>
-                    <h4>Prix au <?php echo htmlentities($produit['unite_mesure']); ?></h4>
-                    <?php 
-                    $prix_par_unite = $produit['prix_ttc'] / $produit['poids_unite'];
-                    ?>
-                    <p><?php echo number_format($prix_par_unite, 2, ',', ' '); ?> €/<?php echo htmlentities($produit['unite_mesure']); ?></p>
-                <?php endif; ?>
-
                 <h4>TVA</h4>
-                <p><?php echo htmlentities($produit['nom_tva']) ?> - <?php echo htmlentities(number_format($produit['taux_tva'], 2, ',', '')) ?>%</p>
+                <p><?php echo htmlentities($produit['taux_tva']) ?>%</p>
             </article>
 
             <article>

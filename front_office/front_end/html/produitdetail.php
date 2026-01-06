@@ -444,6 +444,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 popup.style.display = 'none';
             }
         });
+
+        // popup signalement
+        const boutton_signalement =document.querySelector('.btn-signaler-avis');
+        const popupSignalement = document.getElementById('popup-signalement');
+        const closeBtn2 = document.querySelector('.popup .close');
+
+        boutton_signalement.addEventListener('click', () => {
+            popupSignalement.style.display = 'block';
+        })
+
+        closeBtn.addEventListener('click', () => {
+            popupSignalement.style.display = 'none';
+        });
+
+        // Quand on clique en dehors de l’image
+        popup.addEventListener('click', (event) => {
+            if (event.target === popup) {
+                popupSignalement.style.display = 'none';
+            }
+        });
+
     </script>
     <script src="../assets/js/noteEtoile.js"></script>
 </body>

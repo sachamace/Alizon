@@ -2,7 +2,7 @@
 session_start();
 require 'config.php';
 
-if (!isset($_SESSION['id_client']) || !isset($_SESSION['derniere_commande'])) {
+if (!isset($_SESSION['id_client'])) {
     header("Location: index.php");
     exit();
 }
@@ -39,6 +39,7 @@ $numero_commande = "CMD-" . date('Ymd') . "-" . str_pad($commande['id_commande']
             border-radius: 20px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
+            margin-top: 200px;
         }
 
         .success-icon {
@@ -75,11 +76,11 @@ $numero_commande = "CMD-" . date('Ymd') . "-" . str_pad($commande['id_commande']
         }
 
         .client-info {
-            background: #f0f9ff;
+            background: rgba(255, 108, 226, 0.2);
             padding: 1.5rem;
             border-radius: 12px;
             margin: 2rem 0;
-            border-left: 4px solid #6CD3FF;
+            border-left: 4px solid #ff6ce2;
         }
 
         .client-info p {
@@ -100,7 +101,7 @@ $numero_commande = "CMD-" . date('Ymd') . "-" . str_pad($commande['id_commande']
             color: #333;
             margin-bottom: 1.5rem;
             font-size: 1.3rem;
-            border-bottom: 2px solid #6CD3FF;
+            border-bottom: 2px solid #ff6ce2;
             padding-bottom: 0.5rem;
         }
 
@@ -123,7 +124,7 @@ $numero_commande = "CMD-" . date('Ymd') . "-" . str_pad($commande['id_commande']
         }
 
         .order-details .total {
-            background: #6CD3FF;
+            background: rgba(255, 108, 226, 0.2);
             margin: 1rem -2rem -2rem -2rem;
             padding: 1.5rem 2rem;
             border-radius: 0 0 12px 12px;
@@ -167,13 +168,13 @@ $numero_commande = "CMD-" . date('Ymd') . "-" . str_pad($commande['id_commande']
         }
 
         .btn-primary {
-            background: #6CD3FF;
+            background: #ff6ce2;
             color: #000;
             box-shadow: 0 4px 15px rgba(108, 211, 255, 0.3);
         }
 
         .btn-primary:hover {
-            background: #5bc3ef;
+            background: #ff6ce2;
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(108, 211, 255, 0.4);
         }

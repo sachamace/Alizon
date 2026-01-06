@@ -147,12 +147,14 @@
             // Si toujours aucune erreur après vérification stock
             if (empty($erreurs)) {
                 $success = true;
+
+                header("Location: confirmation_achat.php");
+                exit();
             }
         }    
     }
-    //Affichage du modal "Paiement réussi"
     if ($success){ 
-        // 🔹 DÉCRÉMENTATION DU STOCK AVANT DE VIDER LE PANIER
+        // DÉCRÉMENTATION DU STOCK AVANT DE VIDER LE PANIER
         try {
             // Récupérer tous les articles du panier avec leurs quantités
             $stmt_articles = $pdo->prepare("
@@ -182,8 +184,6 @@
                     throw new Exception("Stock insuffisant pour le produit ID " . $article['id_produit']);
                 }
             }
-            
-            // ✅ Stock mis à jour avec succès, maintenant on vide le panier
             $stmt = $pdo->prepare("DELETE FROM panier_produit WHERE id_panier = :id_panier");
             $stmt->execute([':id_panier' => $_SESSION['id_panier']]);
             
@@ -191,45 +191,7 @@
             // En cas d'erreur, on affiche un message et on arrête
             die("Erreur lors de la mise à jour du stock : " . $e->getMessage());
         }
-        ?>
-    <div id="modal-success" style="
-        position: fixed;
-        top: 0; left: 0; width: 100% ; height: 100%;
-        background: rgba(0,0,0,0.6); 
-        display: flex; justify-content: center; align-items: center;
-        z-index: 9999; 
-        backdrop-filter: blur(2px);">
-
-        <div style="
-            background: white; 
-            padding: 30px; 
-            text-align: center; 
-            border-radius: 10px; 
-            width: 200px; 
-            border: 2px solid #f0a8d0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-            
-            <h2>Commande bien effectuée !</h2>
-            <a href="/index.php" style="
-                margin-top:20px; 
-                padding:20px 20px; 
-                background:#f07ab0; 
-                color:white; 
-                text-decoration:none; 
-                border-radius:5px;
-                pointer-events: none;
-                opacity: 0;
-                ">V
-            </a>
-        </div>
-    </div>
-    <script>
-        // Clic => redirection
-        document.getElementById('modal-success').addEventListener('click', function () {
-            window.location.href = '/index.php';
-        });
-    </script>
-<?php }
+        ?> <?php }
 
 function verifLuhn($numero){
     $sum = 0;

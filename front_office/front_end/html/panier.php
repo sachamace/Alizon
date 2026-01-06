@@ -139,7 +139,7 @@ try {
                                 <img src="' . $img["chemin_image"] .'" alt="' . htmlspecialchars($produit['nom_produit']) . '">
                                 <div class="panier_info">
                                     <h4>' . htmlspecialchars($produit['nom_produit']) . '</h4>
-                                    <p>Prix : ' . number_format($produit['prix_ttc'], 2, ',', ' ') . ' €</p>
+                                    <p>Prix : ' . number_format($produit['prix_ttc'], 2, '.', ' ') . ' €</p>
                                     <p>Stock disponible : ' . htmlspecialchars($produit['stock_disponible']) . '</p>
                                     <p>' . htmlspecialchars($produit['description_produit']) . '</p>
                                     <div class="panier_bottom">
@@ -182,9 +182,9 @@ try {
             <aside>
                 <?php
                 echo '
-                    <h4>Prix total: ' . number_format($prixtotal, 2, ',', ' ') . '€</h4>
-                    <p>prix hors taxe : ' . number_format($prixht, 2, ',', ' ') . '€ <br>
-                    taxe : ' . number_format($taxe, 2, ',', ' ') . '€ </p>
+                    <h4>Prix total: ' . number_format($prixtotal, 2, '.', ' ') . '€</h4>
+                    <p>prix hors taxe : ' . number_format($prixht, 2, '.', ' ') . '€ <br>
+                    taxe : ' . number_format($taxe, 2, '.', ' ') . '€ </p>
                     <a href="paiement.php">Passer au paiement</a> 
                     '
                     ?>

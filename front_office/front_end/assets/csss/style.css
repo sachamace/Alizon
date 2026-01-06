@@ -1045,6 +1045,10 @@ footer.footer.mobile, footer.footer.tablette {
   border-radius: 12px;
   border-left: 4px solid #ff6ce2;
 }
+.main_produit .avis .avis-item .avis-button {
+  display: flex;
+  gap: 1em;
+}
 .main_produit .avis .avis-item:last-child {
   margin-bottom: 0;
 }
@@ -1101,7 +1105,7 @@ footer.footer.mobile, footer.footer.tablette {
     line-height: 1.6;
   }
 }
-.main_produit .avis .avis-item .btn-supprimer-avis {
+.main_produit .avis .avis-item .btn-supprimer-avis, .main_produit .avis .avis-item .btn-signaler-avis {
   margin-top: 1rem;
   background: #ff5555;
   color: #fff;
@@ -1113,7 +1117,7 @@ footer.footer.mobile, footer.footer.tablette {
   font-weight: 600;
 }
 @media (max-width: 428px) {
-  .main_produit .avis .avis-item .btn-supprimer-avis {
+  .main_produit .avis .avis-item .btn-supprimer-avis, .main_produit .avis .avis-item .btn-signaler-avis {
     padding: 0.6rem 1.2rem;
     font-size: 0.85rem;
     width: 100%;

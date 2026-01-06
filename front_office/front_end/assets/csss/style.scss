@@ -1161,6 +1161,11 @@ footer.footer {
       background: #fafafa;
       border-radius: 12px;
       border-left: 4px solid $primary-color;
+      
+      .avis-button {
+        display: flex;
+        gap: 1em;
+      }
 
       &:last-child {
         margin-bottom: 0;
@@ -1224,7 +1229,7 @@ footer.footer {
         }
       }
       
-      .btn-supprimer-avis {
+      .btn-supprimer-avis, .btn-signaler-avis {
         margin-top: 1rem;
         background: #ff5555;
         color: $white;

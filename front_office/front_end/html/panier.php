@@ -120,9 +120,17 @@ try {
                 $prixht = 0;
 
                 foreach ($articles as $article) {
-                    // On récupère les infos du produit associé
+                    // On récupère les infos du produit associé avec calcul du prix TTC
                     $id_produit = (int) $article['id_produit'];
-                    $produit = $pdo->query("SELECT * FROM produit WHERE id_produit = $id_produit")->fetch(PDO::FETCH_ASSOC);
+                    $stmt_produit = $pdo->prepare("
+                        SELECT p.*, 
+                               ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc
+                        FROM produit p
+                        LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
+                        WHERE p.id_produit = ?
+                    ");
+                    $stmt_produit->execute([$id_produit]);
+                    $produit = $stmt_produit->fetch(PDO::FETCH_ASSOC);
 
                     // Vérifie qu'on a bien trouvé le produit
                 
@@ -139,7 +147,7 @@ try {
                                 <img src="' . $img["chemin_image"] .'" alt="' . htmlspecialchars($produit['nom_produit']) . '">
                                 <div class="panier_info">
                                     <h4>' . htmlspecialchars($produit['nom_produit']) . '</h4>
-                                    <p>Prix : ' . number_format($produit['prix_ttc'], 2, '.', ' ') . ' €</p>
+                                    <p>Prix : ' . number_format($produit['prix_ttc'], 2, ',', ' ') . ' €</p>
                                     <p>Stock disponible : ' . htmlspecialchars($produit['stock_disponible']) . '</p>
                                     <p>' . htmlspecialchars($produit['description_produit']) . '</p>
                                     <div class="panier_bottom">
@@ -182,9 +190,9 @@ try {
             <aside>
                 <?php
                 echo '
-                    <h4>Prix total: ' . number_format($prixtotal, 2, '.', ' ') . '€</h4>
-                    <p>prix hors taxe : ' . number_format($prixht, 2, '.', ' ') . '€ <br>
-                    taxe : ' . number_format($taxe, 2, '.', ' ') . '€ </p>
+                    <h4>Prix total: ' . number_format($prixtotal, 2, ',', ' ') . '€</h4>
+                    <p>prix hors taxe : ' . number_format($prixht, 2, ',', ' ') . '€ <br>
+                    taxe : ' . number_format($taxe, 2, ',', ' ') . '€ </p>
                     <a href="paiement.php">Passer au paiement</a> 
                     '
                     ?>

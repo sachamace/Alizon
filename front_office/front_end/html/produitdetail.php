@@ -7,7 +7,16 @@ try {
     } else {
         $id_produit = null; // ou une valeur par défaut
     }
-    $stmt2 = $pdo->query("SELECT * FROM produit WHERE id_produit = $id_produit;");
+    
+    // Requête avec calcul du prix TTC
+    $stmt2 = $pdo->prepare("
+        SELECT p.*, 
+               ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc
+        FROM produit p
+        LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
+        WHERE p.id_produit = ?
+    ");
+    $stmt2->execute([$id_produit]);
     $infos = $stmt2->fetch(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
@@ -286,7 +295,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             
                             <div class="prix">
-                                <span class="prix-valeur"><?= number_format($infos['prix_ttc'], 2, '.', ' ') ?>€</span>
+                                <span class="prix-valeur"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</span>
                             </div>
                         </div>
                         <div class="boutons">
@@ -356,7 +365,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <span class="avis-etoiles">' . $etoiles . '</span>
                             </div>
                             <p class="avis-commentaire">' . htmlspecialchars($un_avis['description']) . '</p>';
-                        echo '<div class="avis-button">';
                         if (isset($_SESSION["id_client"])){
                             if ($_SESSION["id_client"] == $un_avis["id_client"]) {
                                 echo '
@@ -365,20 +373,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <button type="submit" class="btn-supprimer-avis">Supprimer mon avis</button>
                                 </form>';
                             }
-                            else{
-                                ?>
-                                <button class="btn-signaler-avis">Signaler cet avis</button>
-                                <?php
-                            }
                         }
-                        else{
-                            ?>
-                            <button class="btn-signaler-avis">Signaler cet avis</button>
-                            <?php
-                        }
-                        
                         echo '
-                            </div>
                         </div>';
                     }
                 } else {
@@ -417,30 +413,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <span class="close">&times;</span>
             <img class="popup-content" id="popup-img" src="">
         </div>
-        <div id="popup-signalement" class="popup">
-            <span class="close">&times;</span>
-            <form action="" method="post">
-                <input type="hidden" name="action" value="signaler_avis">
-                
-                <label for="raison">Raison du signalement ?</label>
-                <select name="raison" id="raison" required>
-                    <option value="">-- Sélectionnez --</option>
-                    <option value="spam">Spam ou publicité</option>
-                    <option value="haine">Contenu haineux ou offensant</option>
-                    <option value="sexuel">Contenu à caractère sexuel ou violent</option>
-                    <option value="hors-sujet">Hors sujet</option>
-                    <option value="autre">Autre</option>
-                </select>
-
-                <label for="details">Précisions (optionnel) :</label>
-                <textarea name="details" id="details" rows="3" placeholder="Expliquez le problème..."></textarea>
-
-                <div class="actions">
-                    <button type="button" class="btn-cancel" onclick="closePopup()">Annuler</button>
-                    <button type="submit" class="btn-confirm">Signaler</button>
-                </div>
-            </form>
-        </div>
     </main>
     <footer class="footer mobile">
         <?php include 'footer.php'?>
@@ -472,15 +444,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 popup.style.display = 'none';
             }
         });
-
-        // popup signalement
-        const boutton_signalement =document.querySelector('.btn-signaler-avis');
-        const popupSignalement = document.getElementById('popup-signalement');
-
-        boutton_signalement.addEventListener('click', () => {
-            popupSignalement.style.display = 'block';
-        })
-
     </script>
     <script src="../assets/js/noteEtoile.js"></script>
 </body>

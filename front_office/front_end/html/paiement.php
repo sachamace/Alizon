@@ -29,11 +29,16 @@
     }
 
     try {
-    // Récupérer les informations sur les articles du panier
+    // Récupérer les informations sur les articles du panier avec calcul du prix TTC
     $stmt = $pdo->prepare("
-        SELECT pp.quantite, p.nom_produit, p.prix_unitaire_ht, p.taux_tva, p.prix_ttc
+        SELECT pp.quantite, 
+               p.nom_produit, 
+               p.prix_unitaire_ht,
+               t.taux AS taux_tva,
+               ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc
         FROM panier_produit pp
         JOIN produit p ON pp.id_produit = p.id_produit
+        LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
         WHERE pp.id_panier = :id_panier
     ");
     $stmt->execute([':id_panier' => $_SESSION['id_panier']]);

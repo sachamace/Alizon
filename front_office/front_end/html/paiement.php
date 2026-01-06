@@ -151,7 +151,8 @@
                 border-radius:5px;
                 pointer-events: none;
                 opacity: 0;
-                ">V</a>
+                ">V
+            </a>
         </div>
     </div>
     <script>

@@ -188,6 +188,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">-->
+    <style>
+        .rating-container {
+            margin: 1rem 0;
+        }
+
+        .rating-container label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .stars-rating {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .star {
+            font-size: 2.5rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .star.active {
+            color: #ffd700;
+            animation: starPulse 0.3s ease;
+        }
+
+        .star.hover {
+            color: #ffed4e;
+        }
+
+        @keyframes starPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .rating-text {
+            margin-left: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #666;
+            min-width: 150px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -328,18 +377,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <?php if (isset($erreur_avis)) echo "<p class='erreur'>$erreur_avis</p>"; ?>
 
-                <form action="" method="post">
+                <form action="" method="post" id="avisForm">
                     <input type="hidden" name="action" value="ajouter_avis">
+                    <input type="hidden" name="note" id="noteInput" value="">
 
-                    <label for="note">Note (1 à 5) :</label>
-                    <select name="note" id="note" required>
-                        <option value="">-- Sélectionnez --</option>
-                        <option value="1">★☆☆☆☆ - 1</option>
-                        <option value="2">★★☆☆☆ - 2</option>
-                        <option value="3">★★★☆☆ - 3</option>
-                        <option value="4">★★★★☆ - 4</option>
-                        <option value="5">★★★★★ - 5</option>
-                    </select>
+                    <div class="rating-container">
+                        <label>Votre note :</label>
+                        <div class="stars-rating">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                            <span class="rating-text" id="ratingText">Sélectionnez une note</span>
+                        </div>
+                    </div>
 
                     <label for="description">Votre avis :</label>
                     <textarea name="description" id="description" rows="4" placeholder="Partagez votre expérience..." required></textarea>
@@ -384,4 +436,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         });
     </script>
+    <script src="../assets/js/noteEtoile.js"></script>
 </body>

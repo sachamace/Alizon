@@ -122,51 +122,16 @@
         // Si aucune erreur
         if (empty($erreurs)) {
             $success = true;
+
+            header("Location: confirmation_achat.php");
+            exit();
         }    
     }
     //Affichage du modal "Paiement réussi"
     if ($success){ 
         $stmt = $pdo->prepare("DELETE FROM panier_produit WHERE id_panier = :id_panier");
         $stmt->execute([':id_panier' => $_SESSION['id_panier']]);
-        ?>
-    <div id="modal-success" style="
-        position: fixed;
-        top: 0; left: 0; width: 100% ; height: 100%;
-        background: rgba(0,0,0,0.6); 
-        display: flex; justify-content: center; align-items: center;
-        z-index: 9999; 
-        backdrop-filter: blur(2px);">
-
-        <div style="
-            background: white; 
-            padding: 30px; 
-            text-align: center; 
-            border-radius: 10px; 
-            width: 200px; 
-            border: 2px solid #f0a8d0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-            
-            <h2>Commande bien effectuée !</h2>
-            <a href="/index.php" style="
-                margin-top:20px; 
-                padding:20px 20px; 
-                background:#f07ab0; 
-                color:white; 
-                text-decoration:none; 
-                border-radius:5px;
-                pointer-events: none;
-                opacity: 0;
-                ">V
-            </a>
-        </div>
-    </div>
-    <script>
-        // Clic => redirection
-        document.getElementById('modal-success').addEventListener('click', function () {
-            window.location.href = '/index.php';
-        });
-    </script>
-<?php }
+    ?> <?php }
 
 function verifLuhn($numero){
     $sum = 0;
@@ -244,12 +209,15 @@ function verifLuhn($numero){
                 <div class="liste-produit">
                     <ul>
                         <?php foreach ($articles_panier as $article): ?>
-                        <p>
-                            <li><?= $article['nom_produit'] ?> — x<?= $article['quantite'] ?></li>
-                            <span>
-                            <?= number_format($article['prix_ttc'], 2, ',', ' ') ?>€ (Total: <?= number_format($article['prix_ttc'] * $article['quantite'], 2, ',', ' ') ?>€)
-                            </span>
-                        </p>
+                        <li>
+                            <div class="produit-ligne">
+                                <span class="produit-nom"><?= htmlentities($article['nom_produit']) ?> × <?= $article['quantite'] ?></span>
+                                <span class="produit-prix">
+                                    <?= number_format($article['prix_ttc'], 2, ',', ' ') ?> €
+                                    <small>(Total: <?= number_format($article['prix_ttc'] * $article['quantite'], 2, ',', ' ') ?> €)</small>
+                                </span>
+                            </div>
+                        </li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
@@ -303,6 +271,10 @@ function verifLuhn($numero){
                         <input type="text" name="nom_titulaire" placeholder="Nom du titulaire"
                             value="<?= htmlentities($nom) ?>">
                         <p class="required"><?= htmlentities($erreurs['nom'] ?? '') ?></p>
+
+                        <div class="securite-info">
+                            <p>🔒 Paiement 100% sécurisé</p>
+                        </div>
                     </div>
 
                     <!-- OPTION PAYPAL -->
@@ -318,7 +290,7 @@ function verifLuhn($numero){
                 </div>
             </div>
 
-            <button type="submit" class="payer-btn">Payer</button>
+            <button type="submit" class="payer-btn">Payer <?= number_format($total_ttc, 2, ',', ' ') ?> €</button>
 
     </form>
 </main>

@@ -1,39 +1,38 @@
+
 <?php
-    include 'config.php';
-    include 'session.php';
-    include 'sessionindex.php';
+include 'config.php';
+include 'session.php';
+include 'sessionindex.php';
+
 /* ---------------------------------------------------
    1. Vérification de la connexion client
 --------------------------------------------------- */
-
-    $id_client_connecte = $_SESSION['id'];
+$id_client_connecte = $_SESSION['id'];
 
 /* ---------------------------------------------------
    2. Récupération de l'adresse du client
 --------------------------------------------------- */
+try {
+    $stmt = $pdo->prepare("
+        SELECT adresse, code_postal, ville, pays
+        FROM public.adresse a
+        WHERE id_client = :id_client
+        ORDER BY id_adresse DESC 
+        LIMIT 1
+    ");
+    $stmt->execute(['id_client' => $id_client_connecte]);
+    $client = $stmt->fetch();
+} catch (PDOException $e) {
+    die("Erreur lors de la récupération des infos client : " . $e->getMessage());
+}
 
-    try {
-        $stmt = $pdo->prepare("
-            SELECT adresse, code_postal, ville, pays
-            FROM public.adresse a
-            WHERE id_client = :id_client
-            ORDER BY id_adresse DESC 
-            LIMIT 1
-        ");
-        $stmt->execute(['id_client' => $id_client_connecte]);
-        $client = $stmt->fetch();
-
-
-    } catch (PDOException $e) {
-        die("Erreur lors de la récupération des infos client : " . $e->getMessage());
-    }
-
-    try {
+try {
     // Récupérer les informations sur les articles du panier avec calcul du prix TTC
     $stmt = $pdo->prepare("
         SELECT pp.quantite, 
                p.nom_produit, 
                p.prix_unitaire_ht,
+               p.id_produit,
                t.taux AS taux_tva,
                ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc
         FROM panier_produit pp
@@ -53,157 +52,173 @@
     foreach ($articles_panier as $article) {
         $total_ht += $article['prix_unitaire_ht'] * $article['quantite'];
         $total_ttc += $article['prix_ttc'] * $article['quantite'];
-        //taxe = ttc - ht
         $taxe += ($article['prix_ttc'] - $article['prix_unitaire_ht']) * $article['quantite'];
         $nb_articles += $article['quantite'];
     }
-
 } catch (PDOException $e) {
     die("Erreur lors de la récupération du panier : " . $e->getMessage());
 }
+
 /* ---------------------------------------------------
    3. Variables par défaut
 --------------------------------------------------- */
-
-    $erreurs = [];
-    $success = false;
-
-    $numero = "";
-    $securite = "";
-    $expiration = "";
-    $nom = "";
-    $email = "";
-    $message = "";
+$erreurs = [];
+$numero = "";
+$securite = "";
+$expiration = "";
+$nom = "";
 
 /* ---------------------------------------------------
    4. Traitement du formulaire
 --------------------------------------------------- */
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Vérification du type de paiement
+    $type_paiement = $_POST['paiement'] ?? null;
 
-    if($_SERVER['REQUEST_METHOD'] === 'POST'){
-        // Vérification du type de paiement
-        $type_paiement = $_POST['paiement'] ?? null;
+    if ($type_paiement === "carte") {
+        // Récupération des données
+        $numero = str_replace(' ', '', $_POST['carte'] ?? '');
+        $securite = str_replace('-', '', $_POST['cvv'] ?? '');
+        $expiration = $_POST['expiration'] ?? '';
+        $nom = $_POST['nom_titulaire'] ?? '';
 
-        if ($type_paiement === "carte") {
-
-            // Récupération des données
-            $numero = str_replace(' ', '', $_POST['carte'] ?? '');  // ?? '' : renvoie une chaine vide si le champ concerné est vide
-            $securite = str_replace('-', '', $_POST['cvv'] ?? '');
-            $expiration = $_POST['expiration'] ?? '';
-            $nom = $_POST['nom_titulaire'] ?? '';
-
-            // Vérification numéro de carte (16 chiffres)
-            if (!preg_match('/^[0-9]{16}$/', $numero)) {
-                $erreurs['carte'] = "Numéro de carte invalide (16 chiffres requis).";
-            }
-            elseif(!verifLuhn($numero)){
-                $erreurs['carte'] = "Numéro de carte invalide (algorithme de luhn).";
-            }
-
-            // Vérification CVV (3 chiffres)
-            if (!preg_match('/^[0-9]{3}$/', $securite)) {
-                $erreurs['cvv'] = "CVV invalide (3 chiffres).";
-            }
-
-            // Vérification expiration
-            if (!preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])$/', $expiration)) {
-                $erreurs['expiration'] = "Format invalide (AAAA-MM).";
-            }
-            else {
-                list($annee, $mois) = explode("-", $expiration);
-                $timestampExpiration = mktime(23, 59, 59, $mois + 1, 0, $annee);
-                
-                if ($timestampExpiration < time()) {
-                    $erreurs['expiration'] = "Votre carte est expirée.";
-                }
-            }
-
+        // Vérification numéro de carte (16 chiffres)
+        if (!preg_match('/^[0-9]{16}$/', $numero)) {
+            $erreurs['carte'] = "Numéro de carte invalide (16 chiffres requis).";
+        } elseif (!verifLuhn($numero)) {
+            $erreurs['carte'] = "Numéro de carte invalide (algorithme de Luhn).";
         }
 
-        // Si aucune erreur de validation de formulaire
-        if (empty($erreurs)) {
-            // ⚠️ VÉRIFICATION FINALE DU STOCK AVANT VALIDATION
-            try {
-                $stmt_verif_stock = $pdo->prepare("
-                    SELECT pp.id_produit, pp.quantite, p.nom_produit, p.stock_disponible
-                    FROM panier_produit pp
-                    JOIN produit p ON pp.id_produit = p.id_produit
-                    WHERE pp.id_panier = :id_panier
-                ");
-                $stmt_verif_stock->execute([':id_panier' => $_SESSION['id_panier']]);
-                $articles_a_verifier = $stmt_verif_stock->fetchAll(PDO::FETCH_ASSOC);
-                
-                // Vérifier chaque article
-                foreach ($articles_a_verifier as $article) {
-                    if ($article['quantite'] > $article['stock_disponible']) {
-                        $erreurs['stock'] = "Stock insuffisant pour " . htmlentities($article['nom_produit']) . 
-                                           " (demandé: " . $article['quantite'] . ", disponible: " . $article['stock_disponible'] . ")";
-                        break; // Arrêter à la première erreur
-                    }
-                }
-            } catch (PDOException $e) {
-                $erreurs['stock'] = "Erreur lors de la vérification du stock.";
-            }
-            
-            // Si toujours aucune erreur après vérification stock
-            if (empty($erreurs)) {
-                $success = true;
+        // Vérification CVV (3 chiffres)
+        if (!preg_match('/^[0-9]{3}$/', $securite)) {
+            $erreurs['cvv'] = "CVV invalide (3 chiffres).";
+        }
 
-                header("Location: confirmation_achat.php");
-                exit();
-            }
-        }    
-    }
-    if ($success){ 
-        // DÉCRÉMENTATION DU STOCK AVANT DE VIDER LE PANIER
-        try {
-            // Récupérer tous les articles du panier avec leurs quantités
-            $stmt_articles = $pdo->prepare("
-                SELECT id_produit, quantite 
-                FROM panier_produit 
-                WHERE id_panier = :id_panier
-            ");
-            $stmt_articles->execute([':id_panier' => $_SESSION['id_panier']]);
-            $articles_a_traiter = $stmt_articles->fetchAll(PDO::FETCH_ASSOC);
+        // Vérification expiration
+        if (!preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])$/', $expiration)) {
+            $erreurs['expiration'] = "Format invalide (AAAA-MM).";
+        } else {
+            list($annee, $mois) = explode("-", $expiration);
+            $timestampExpiration = mktime(23, 59, 59, $mois + 1, 0, $annee);
             
-            // Pour chaque article du panier, décrémenter le stock
-            foreach ($articles_a_traiter as $article) {
+            if ($timestampExpiration < time()) {
+                $erreurs['expiration'] = "Votre carte est expirée.";
+            }
+        }
+    }
+
+    // Si aucune erreur de validation de formulaire
+    if (empty($erreurs)) {
+        // VÉRIFICATION FINALE DU STOCK AVANT VALIDATION
+        try {
+            $stmt_verif_stock = $pdo->prepare("
+                SELECT pp.id_produit, pp.quantite, p.nom_produit, p.stock_disponible
+                FROM panier_produit pp
+                JOIN produit p ON pp.id_produit = p.id_produit
+                WHERE pp.id_panier = :id_panier
+            ");
+            $stmt_verif_stock->execute([':id_panier' => $_SESSION['id_panier']]);
+            $articles_a_verifier = $stmt_verif_stock->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Vérifier chaque article
+            foreach ($articles_a_verifier as $article) {
+                if ($article['quantite'] > $article['stock_disponible']) {
+                    $erreurs['stock'] = "Stock insuffisant pour " . htmlentities($article['nom_produit']) . 
+                                       " (demandé: " . $article['quantite'] . ", disponible: " . $article['stock_disponible'] . ")";
+                    break;
+                }
+            }
+        } catch (PDOException $e) {
+            $erreurs['stock'] = "Erreur lors de la vérification du stock.";
+        }
+        
+        //SI TOUT EST OK : CRÉER LA COMMANDE ET TRAITER LE PAIEMENT
+        if (empty($erreurs)) {
+            try {
+                // DÉBUT DE LA TRANSACTION
+                $pdo->beginTransaction();
+
+                // CRÉER LA COMMANDE
+                $stmt_commande = $pdo->prepare("
+                    INSERT INTO commande (id_client, date_commande, montant_total_ht, montant_total_ttc, statut)
+                    VALUES (:id_client, NOW(), :montant_ht, :montant_ttc, 'validée')
+                    RETURNING id_commande
+                ");
+                $stmt_commande->execute([
+                    ':id_client' => $id_client_connecte,
+                    ':montant_ht' => $total_ht,
+                    ':montant_ttc' => $total_ttc
+                ]);
+                $id_commande = $stmt_commande->fetchColumn();
+
+                // INSÉRER LES LIGNES DE COMMANDE
+                $stmt_ligne = $pdo->prepare("
+                    INSERT INTO ligne_commande (id_commande, id_produit, quantite, prix_unitaire_ht, prix_unitaire_ttc)
+                    VALUES (:id_commande, :id_produit, :quantite, :prix_ht, :prix_ttc)
+                ");
+                
+                foreach ($articles_panier as $article) {
+                    $stmt_ligne->execute([
+                        ':id_commande' => $id_commande,
+                        ':id_produit' => $article['id_produit'],
+                        ':quantite' => $article['quantite'],
+                        ':prix_ht' => $article['prix_unitaire_ht'],
+                        ':prix_ttc' => $article['prix_ttc']
+                    ]);
+                }
+
+                // DÉCRÉMENTER LE STOCK
                 $stmt_update_stock = $pdo->prepare("
                     UPDATE produit 
                     SET stock_disponible = stock_disponible - :quantite 
                     WHERE id_produit = :id_produit 
                     AND stock_disponible >= :quantite
                 ");
-                $stmt_update_stock->execute([
-                    ':quantite' => $article['quantite'],
-                    ':id_produit' => $article['id_produit']
-                ]);
                 
-                // Vérifier si le stock a bien été mis à jour
-                if ($stmt_update_stock->rowCount() == 0) {
-                    // Stock insuffisant - ne devrait pas arriver si validation OK avant
-                    throw new Exception("Stock insuffisant pour le produit ID " . $article['id_produit']);
+                foreach ($articles_panier as $article) {
+                    $stmt_update_stock->execute([
+                        ':quantite' => $article['quantite'],
+                        ':id_produit' => $article['id_produit']
+                    ]);
+                    
+                    if ($stmt_update_stock->rowCount() == 0) {
+                        throw new Exception("Stock insuffisant pour le produit ID " . $article['id_produit']);
+                    }
                 }
-            }
-            $stmt = $pdo->prepare("DELETE FROM panier_produit WHERE id_panier = :id_panier");
-            $stmt->execute([':id_panier' => $_SESSION['id_panier']]);
-            
-        } catch (Exception $e) {
-            // En cas d'erreur, on affiche un message et on arrête
-            die("Erreur lors de la mise à jour du stock : " . $e->getMessage());
-        }
-        ?> <?php }
 
-function verifLuhn($numero){
+                // VIDER LE PANIER
+                $stmt_vider = $pdo->prepare("DELETE FROM panier_produit WHERE id_panier = :id_panier");
+                $stmt_vider->execute([':id_panier' => $_SESSION['id_panier']]);
+
+                // VALIDER LA TRANSACTION
+                $pdo->commit();
+
+                // SAUVEGARDER L'ID DE COMMANDE EN SESSION
+                $_SESSION['derniere_commande'] = $id_commande;
+
+                // REDIRECTION VERS LA PAGE DE CONFIRMATION
+                header("Location: confirmation_achat.php");
+                exit();
+
+            } catch (Exception $e) {
+                // ANNULER LA TRANSACTION EN CAS D'ERREUR
+                $pdo->rollBack();
+                $erreurs['general'] = "Erreur lors du traitement de la commande : " . $e->getMessage();
+            }
+        }
+    }
+}
+
+function verifLuhn($numero) {
     $sum = 0;
     $shouldDouble = false;
 
-    //Boucle de droite à gauche
-    for($i = strlen($numero) - 1; $i >= 0; $i--){
+    for ($i = strlen($numero) - 1; $i >= 0; $i--) {
         $digit = (intval($numero[$i]));
 
-        if($shouldDouble){
+        if ($shouldDouble) {
             $digit *= 2;
-            if($digit > 9){
+            if ($digit > 9) {
                 $digit -= 9;
             }
         }
@@ -215,32 +230,26 @@ function verifLuhn($numero){
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de paiement - Compte Client</title>
-    <meta name="description" content="Page lors du paiement de ton panier coté client!">
+    <meta name="description" content="Page lors du paiement de ton panier côté client!">
     <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
-    
-    <!-- Cache-buster : force le rechargement du CSS -->
     <link rel="stylesheet" href="../assets/csss/style.css?v=<?php echo time(); ?>" id="main-css">
-
-
 </head>
 <body class="body_paiement">
-    <header class = "disabled">
+    <header class="disabled">
         <?php include 'header.php'?>
     </header>
-    <div class="compte__header disabled"><a href="panier.php">←  </a>Passer la commande</div>
+    <div class="compte__header disabled"><a href="panier.php">← </a>Passer la commande</div>
     <main class="main_paiement">
         <!-- ADRESSE CLIENT -->
         <div class="bloc recap">
             <h2>Adresse de livraison</h2>
-
-            <?php if ($client){ ?>
+            <?php if ($client) { ?>
                 <p>
                     <span>Adresse :</span>
                     <span><?= htmlentities($client['adresse']) ?></span>
@@ -269,7 +278,7 @@ function verifLuhn($numero){
                     <ul>
                         <?php foreach ($articles_panier as $article): ?>
                         <p>
-                            <li><?= $article['nom_produit'] ?> — x<?= $article['quantite'] ?></li>
+                            <li><?= htmlentities($article['nom_produit']) ?> – x<?= $article['quantite'] ?></li>
                             <span>
                             <?= number_format($article['prix_ttc'], 2, ',', ' ') ?>€ (Total: <?= number_format($article['prix_ttc'] * $article['quantite'], 2, ',', ' ') ?>€)
                             </span>
@@ -296,12 +305,19 @@ function verifLuhn($numero){
 
         <!-- FORMULAIRE PAIEMENT -->
         <form method="POST" class="paiement">
-
             <div class="bloc">
                 <h2>Méthode de paiement</h2>
                 
+                <!-- ERREUR GÉNÉRALE -->
+                <?php if (isset($erreurs['general'])) { ?>
+                    <div style="background: #ffebee; border: 1px solid #f44336; padding: 15px; border-radius: 5px; margin-bottom: 20px; color: #c62828;">
+                        <strong>⚠️ Erreur :</strong><br>
+                        <?= htmlentities($erreurs['general']) ?>
+                    </div>
+                <?php } ?>
+                
                 <!-- ERREUR DE STOCK -->
-                <?php if(isset($erreurs['stock'])){ ?>
+                <?php if (isset($erreurs['stock'])) { ?>
                     <div style="background: #ffebee; border: 1px solid #f44336; padding: 15px; border-radius: 5px; margin-bottom: 20px; color: #c62828;">
                         <strong>⚠️ Erreur de stock :</strong><br>
                         <?= htmlentities($erreurs['stock']) ?>
@@ -311,21 +327,19 @@ function verifLuhn($numero){
                 <?php } ?>
 
                 <div class="options">
-
                     <!-- OPTION CARTE -->
                     <label class="option">
                         <input type="radio" name="paiement" id="radio-carte" value="carte" <?= empty($articles_panier) ? 'disabled' : '' ?>>
                         <span style="font-size: 1rem;">Carte bancaire</span>
                     </label>
 
-                    <?php if(empty($articles_panier)){ ?>
-                        <?php $erreursPanier = "Votre panier est vide. Impossible de payer."; ?>
-                        <p style="color: red;"><?= htmlentities($erreursPanier) ?></p>
+                    <?php if (empty($articles_panier)) { ?>
+                        <p style="color: red;">Votre panier est vide. Impossible de payer.</p>
                     <?php } ?>
 
                     <!-- FORMULAIRE CARTE -->
                     <div class="formulaire hidden" id="form-carte">
-                        <input type="text" name="carte" id ="carte" placeholder="Numéro de carte (16 chiffres)" 
+                        <input type="text" name="carte" id="carte" placeholder="Numéro de carte (16 chiffres)" 
                             value="<?= htmlentities($numero) ?>">
                         <p class="required"><?= htmlentities($erreurs['carte'] ?? '') ?></p>
                         <input type="month" name="expiration" placeholder="AAAA-MM" 
@@ -333,10 +347,9 @@ function verifLuhn($numero){
                         <p class="required"><?= htmlentities($erreurs['expiration'] ?? '') ?></p>
                         <input type="text" name="cvv" placeholder="CVV" 
                             value="<?= htmlentities($securite) ?>">
-                        <p class="required"><?= htmlentities($erreurs['cvv'] ?? '')?></p>
+                        <p class="required"><?= htmlentities($erreurs['cvv'] ?? '') ?></p>
                         <input type="text" name="nom_titulaire" placeholder="Nom du titulaire"
                             value="<?= htmlentities($nom) ?>">
-                        <p class="required"><?= htmlentities($erreurs['nom'] ?? '') ?></p>
                     </div>
 
                     <!-- OPTION PAYPAL -->
@@ -348,17 +361,15 @@ function verifLuhn($numero){
                     <div class="formulaire hidden" id="form-paypal">
                         <p>PayPal est désactivé.</p>
                     </div>
-
                 </div>
             </div>
 
             <button type="submit" class="payer-btn">Payer</button>
-
-    </form>
-</main>
+        </form>
+    </main>
     <footer class="footer mobile">
         <?php include 'footer.php'?>
     </footer>
-<script src="../assets/js/paiement.js"></script>
+    <script src="../assets/js/paiement.js"></script>
 </body>
 </html>

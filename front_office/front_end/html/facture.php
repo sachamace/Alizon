@@ -6,7 +6,7 @@ require 'vendor/autoload.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-if (!isset($_SESSION['id_client']) || !isset($_SESSION['id_panier'])) {
+if (!isset($_SESSION['id_client'])) {
     die("Accès interdit - Vous devez être connecté");
 }
 
@@ -332,19 +332,16 @@ $html .= "
 </html>
 ";
 
-// 📌 Configuration et génération du PDF
+// configuration et génération du PDF
 $options = new Options();
-$options->set('isHtml5ParserEnabled', true);
 $options->set('isRemoteEnabled', true);
-$options->set('defaultFont', 'DejaVu Sans');
 
 $dompdf = new Dompdf($options);
 $dompdf->loadHtml($html);
 $dompdf->setPaper('A4', 'portrait');
 $dompdf->render();
 
-// 📌 Téléchargement du PDF
+// Téléchargement du PDF
 $nom_fichier = "facture_{$numero_facture}_" . date('Ymd') . ".pdf";
-$dompdf->stream($nom_fichier, ["Attachment" => true]);
-exit;
+$dompdf->stream($nom_fichier);
 ?>

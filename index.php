@@ -12,11 +12,11 @@
     <meta name="description" content="Ceci est l'accueil de notre market place !">
     <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
     <link rel="stylesheet" href="front_office/front_end/assets/csss/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!--<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">-->
-
 </head>
 <body>
     <header>
@@ -24,7 +24,23 @@
     </header>
     <div class="div__catalogue">
         <?php
-            
+            $tri = $_GET['tri'] ?? '';
+            switch ($tri) {
+                case 'prix_asc':
+                    $orderBy = 'prix_ttc ASC';
+                    break;
+                case 'prix_desc':
+                    $orderBy = 'prix_ttc DESC';
+                    break;
+                case 'note_asc':
+                    $orderBy = 'note_produit ASC';
+                    break;
+                case 'note_desc':
+                    $orderBy = 'note_produit DESC';
+                    break;
+                default:
+                    $orderBy = 'id_produit ASC';
+            }
             // On récupère tout le contenu de la table produit disponible AVEC le calcul du prix TTC
             if (isset($_GET['search'])){
                 $sql = "SELECT p.*, 
@@ -107,9 +123,63 @@
             }
             $reponse->closeCursor(); // Termine le traitement de la requête
         ?>
+        <aside id="filtre">
+            <form action="" method="get" id="tri-form">
+                <?php if (isset($_GET['categorie'])): ?>
+                    <input type="hidden" name="categorie" value="<?= htmlspecialchars($_GET['categorie']) ?>">
+                <?php endif; ?>
+                <label for="tri">Trier par :</label>
+                <select name="tri" id="tri" onchange="this.form.submit()">
+                    <option value="">-- Sélectionner --</option>
+                    <option value="prix_asc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'prix_asc') echo 'selected'; ?>>Prix croissant</option>
+                    <option value="prix_desc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'prix_desc') echo 'selected'; ?>>Prix décroissant</option>
+                    <option value="note_asc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'note_asc') echo 'selected'; ?>>Note 1-5</option>
+                    <option value="note_desc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'note_desc') echo 'selected'; ?>>Note 5-1</option>
+                </select>
+                <br><label for="prixMin">Prix Min :</label>
+                    <input type="number" id="prixMinInput" name="prixMin" min="0" max="1000" value="0">
+                <label for="prixMax">Prix Max :</label>
+                    <input type="number" id="prixMaxInput" name="prixMax" min="0" max="1000" value="0">
+                <fieldset>
+                    <legend>Vendeurs :</legend>
+                    <?php
+                    $vendeurs = $pdo->query('SELECT * FROM compte_vendeur');
+                    while ($vendeur = $vendeurs->fetch()){?>
+                        <input type="checkbox" id="<?php echo $vendeur['id_vendeur'];?>" name="<?php echo $vendeur['raison_sociale'];?>"/>
+                        <label for="<?php echo $vendeur['raison_sociale'];?>"><?php echo $vendeur['raison_sociale'];?></label><br>
+                    <?php } ?>
+                </fieldset>
+                <fieldset>
+                    <legend>Notes :</legend>
+                    <div>
+                        <input type="checkbox" id="1" name="1"/>
+                            <label for="1">★</label><br>
+                        <input type="checkbox" id="2" name="2"/>
+                            <label for="2">★★</label><br>
+                        <input type="checkbox" id="3" name="3"/>
+                            <label for="3">★★★</label><br>
+                        <input type="checkbox" id="4" name="4"/>
+                            <label for="4">★★★★</label><br>
+                        <input type="checkbox" id="5" name="5"/>
+                            <label for="5">★★★★★</label>
+                </fieldset>
+                <button type="submit">Appliquer les filtres</button>
+                <button type="button" id="resetAllFilters">Réinitialiser les filtres</button>
+            </form>
+        </aside>
     </div>
     <footer class="footer mobile">
         <?php include 'front_office/front_end/html/footer.php'?>
     </footer>
+    <script>
+        $(function(){
+            $('#openFilter').on('click', function(e){
+            e.preventDefault();
+            $('#filtre').toggle();
+            const expanded = $(this).attr('aria-expanded') === 'true' ? 'false' : 'true';
+            $(this).attr('aria-expanded', expanded);
+            });
+        });
+    </script>
 </body>
 </html>

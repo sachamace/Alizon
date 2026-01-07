@@ -24,7 +24,23 @@
     </header>
     <div class="div__catalogue">
         <?php
-            
+            $tri = $_GET['tri'] ?? '';
+            switch ($tri) {
+                case 'prix_asc':
+                    $orderBy = 'prix_ttc ASC';
+                    break;
+                case 'prix_desc':
+                    $orderBy = 'prix_ttc DESC';
+                    break;
+                case 'note_asc':
+                    $orderBy = 'note_produit ASC';
+                    break;
+                case 'note_desc':
+                    $orderBy = 'note_produit DESC';
+                    break;
+                default:
+                    $orderBy = 'id_produit ASC';
+            }
             // On récupère tout le contenu de la table produit disponible AVEC le calcul du prix TTC
             if (isset($_GET['search'])){
                 $sql = "SELECT p.*, 

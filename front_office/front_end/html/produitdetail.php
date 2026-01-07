@@ -498,7 +498,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // injecte l'id du client dans le  formulaire
                 document.getElementById('input_id_client_cible').value = idClient;
-                popupSignalement.style.display = 'flex';4
+                popupSignalement.style.display = 'flex';
             });
         });
 

@@ -549,18 +549,19 @@ footer.footer {
       }
     }
   }
-  aside {
-    background-color: $gray-light;
-    box-shadow: 0 2px 8px rgba($black, 0.1);
-    position: fixed;
-    top: 150px;
-    left: 0;
-    z-index: 999999999;
-    padding: 10px;
-    height: calc(100% - 150px);
-    input{
-        margin: 20px;
-    }
+  aside { //filtre
+      display: none;
+      background-color: $gray-light;
+      box-shadow: 0 2px 8px rgba($black, 0.1);
+      position: fixed;
+      top: 150px;
+      left: 0;
+      z-index: 999999999;
+      padding: 10px;
+      height: calc(100% - 150px);
+      input{
+          margin: 20px;
+      }
   }
 
   // =========================================================================

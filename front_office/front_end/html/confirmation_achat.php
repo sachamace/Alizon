@@ -1,26 +1,84 @@
 <?php
 session_start();
 require 'config.php';
+include 'session.php';
+include 'sessionindex.php';
 
-if (!isset($_SESSION['id_client'])) {
+// Vérifier que l'utilisateur est connecté
+if (!isset($_SESSION['id'])) {
     header("Location: index.php");
     exit();
 }
 
-$id_client = $_SESSION['id_client'];
-$commande = $_SESSION['derniere_commande'];
+// Vérifier qu'une commande vient d'être passée
+if (!isset($_SESSION['derniere_commande'])) {
+    header("Location: index.php");
+    exit();
+}
 
-// Récupération des informations client
-$stmt_client = $pdo->prepare("
-    SELECT prenom, nom, adresse_mail 
-    FROM compte_client 
-    WHERE id_client = :id_client
-");
-$stmt_client->execute([':id_client' => $id_client]);
-$client = $stmt_client->fetch(PDO::FETCH_ASSOC);
+$id_client_connecte = $_SESSION['id'];
+$id_panier_commande = $_SESSION['derniere_commande']; // C'est l'ID du panier transformé en commande
+
+try {
+    // Récupération des informations client
+    $stmt_client = $pdo->prepare("
+        SELECT prenom, nom, adresse_mail 
+        FROM compte_client 
+        WHERE id_client = :id_client
+    ");
+    $stmt_client->execute([':id_client' => $id_client_connecte]);
+    $client = $stmt_client->fetch(PDO::FETCH_ASSOC);
+
+    if (!$client) {
+        die("Client introuvable");
+    }
+} catch (PDOException $e) {
+    die("Erreur lors de la récupération des infos client : " . $e->getMessage());
+}
+
+try {
+    // Récupération des informations du panier/commande
+    $stmt_commande = $pdo->prepare("
+        SELECT date_commande, montant_total_ht, montant_total_ttc, nb_articles, statut_commande
+        FROM panier
+        WHERE id_panier = :id_panier AND id_client = :id_client
+    ");
+    $stmt_commande->execute([
+        ':id_panier' => $id_panier_commande,
+        ':id_client' => $id_client_connecte
+    ]);
+    $commande = $stmt_commande->fetch(PDO::FETCH_ASSOC);
+
+    if (!$commande) {
+        die("Commande introuvable");
+    }
+
+    // Récupérer les articles de la commande
+    $stmt_articles = $pdo->prepare("
+        SELECT pp.quantite, 
+               p.nom_produit, 
+               p.prix_unitaire_ht,
+               p.taux_tva,
+               p.prix_ttc
+        FROM panier_produit pp
+        JOIN produit p ON pp.id_produit = p.id_produit
+        WHERE pp.id_panier = :id_panier
+    ");
+    $stmt_articles->execute([':id_panier' => $id_panier_commande]);
+    $articles_panier = $stmt_articles->fetchAll(PDO::FETCH_ASSOC);
+
+    // Calculer la taxe totale
+    $taxe = 0;
+    foreach ($articles_panier as $article) {
+        $taxe += ($article['prix_ttc'] - $article['prix_unitaire_ht']) * $article['quantite'];
+    }
+
+} catch (PDOException $e) {
+    die("Erreur lors de la récupération du panier : " . $e->getMessage());
+}
 
 // Générer le numéro de commande
-$numero_commande = "CMD-" . date('Ymd') . "-" . str_pad($commande['id_commande'], 5, '0', STR_PAD_LEFT);
+$numero_commande = "CMD-" . date('Ymd', strtotime($commande['date_commande'])) . "-" . str_pad($id_panier_commande, 5, '0', STR_PAD_LEFT);
 ?>
 
 <!DOCTYPE html>
@@ -132,19 +190,6 @@ $numero_commande = "CMD-" . date('Ymd') . "-" . str_pad($commande['id_commande']
             font-weight: 700;
         }
 
-        .email-confirmation {
-            background: #e8f5e9;
-            padding: 1.2rem;
-            border-radius: 8px;
-            margin: 2rem 0;
-            color: #2e7d32;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
         .buttons-group {
             display: flex;
             gap: 1rem;
@@ -243,37 +288,47 @@ $numero_commande = "CMD-" . date('Ymd') . "-" . str_pad($commande['id_commande']
             <p>Merci <?= htmlspecialchars($client['prenom']) ?> ! Votre commande a été validée avec succès.</p>
 
             <div class="client-info">
-                <p>👤 <strong><?= htmlspecialchars($client['prenom']) ?> <?= htmlspecialchars($client['nom']) ?></strong></p>
-                <p>📧 <?= htmlspecialchars($client['adresse_mail']) ?></p>
+                <p><strong><?= htmlspecialchars($client['prenom']) ?> <?= htmlspecialchars($client['nom']) ?></strong></p>
+                <p><?= htmlspecialchars($client['adresse_mail']) ?></p>
             </div>
 
             <div class="order-details">
-                <h3>📦 Détails de la commande</h3>
+                <h3>Détails de la commande</h3>
                 <p>
                     <strong>Numéro de commande :</strong>
-                    <span><?= $numero_commande ?></span>
-                </p>
+                    <span><?= htmlspecialchars($numero_commande) ?></span>
+                </p>   
                 <p>
                     <strong>Nombre d'articles :</strong>
-                    <span><?= $commande['nb_articles'] ?></span>
+                    <span><?= htmlspecialchars($commande['nb_articles']) ?></span>
                 </p>
                 <p>
                     <strong>Date :</strong>
-                    <span><?= date('d/m/Y à H:i') ?></span>
+                    <span><?= date('d/m/Y à H:i', strtotime($commande['date_commande'])) ?></span>
+                </p>
+                <p>
+                    <strong>Statut :</strong>
+                    <span><?= htmlspecialchars($commande['statut_commande']) ?></span>
+                </p>
+                <p>
+                    <strong>Total HT :</strong>
+                    <span><?= number_format($commande['montant_total_ht'], 2, ',', ' ') ?> €</span>
+                </p>
+                <p>
+                    <strong>TVA :</strong>
+                    <span><?= number_format($taxe, 2, ',', ' ') ?> €</span>
                 </p>
                 <p class="total">
-                    <strong>Montant total :</strong>
-                    <span><?= number_format($commande['montant'], 2, ',', ' ') ?> €</span>
+                    <strong>Montant total TTC :</strong>
+                    <span><?= number_format($commande['montant_total_ttc'], 2, ',', ' ') ?> €</span>
                 </p>
             </div> 
 
             <div class="buttons-group">
-                <a href="facture.php?id_commande=<?= $commande['id_commande'] ?>" class="btn btn-primary" target="_blank">
-                    Télécharger la facture
+                <a href="facture.php?id=<?= $id_panier_commande ?>" class="btn btn-primary" target="_blank">
+                    📄 Télécharger la facture
                 </a>
-                <a href="index.php" class="btn btn-secondary">
-                    Retour à l'accueil
-                </a>
+                <a href="index.php" class="btn btn-secondary">🏠 Retour à l'accueil</a>
             </div>
         </div>
     </main>

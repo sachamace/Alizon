@@ -1,6 +1,11 @@
-// Mixins avec les fonctions Sass
+// =============================================================================
+// MIXINS - ALIZON MARKETPLACE
+// =============================================================================
+
 @use "variables" as *;
 @use 'sass:color';
+
+// Flexbox
 @mixin flex-column {
   display: flex;
   flex-direction: column;
@@ -9,6 +14,7 @@
 @mixin flex-center {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 @mixin flex-between {
@@ -17,24 +23,22 @@
   justify-content: space-between;
 }
 
+// Transitions
 @mixin transition($property: all) {
   transition: $property $transition-speed ease;
 }
 
+// Effets de survol
 @mixin hover-lift {
   @include transition(transform box-shadow);
   
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 10px rgba($black, 0.15);
+    box-shadow: $box-shadow-hover;
   }
 }
 
-@mixin menu-item-active {
-  background: rgba($white, 0.3);
-  border-left: 4px solid $white;
-}
-
+// États désactivés
 @mixin disabled-state {
   opacity: 0.5;
   cursor: not-allowed;
@@ -42,98 +46,80 @@
   background: none !important;
 }
 
-@mixin card-style {
-  background-color: $white;
-  border: 1px solid $gray-light;
+// Boutons
+@mixin button-base {
   padding: 15px;
+  border: none;
   border-radius: $border-radius;
-  @include flex-column;
-  box-shadow: 0 2px 5px rgba($black, 0.1);
-  @include transition;
+  font-size: 1.1em;
+  font-weight: bold;
+  font-family: $font-family;
   cursor: pointer;
-  position: relative;
-}
-
-// Mixins pour les statuts des produits
-@mixin status-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 0.8em;
-  font-weight: bold;
-  color: white;
-  z-index: 10;
-}
-
-@mixin product-status($status-color, $border-color: null) {
-  @if $border-color == null {
-    $border-color: $status-color;
-  }
+  @include transition;
   
-  border: 2px solid $border-color;
-  
-  .statut-badge {
-    background-color: $status-color;
-    
-    @if $status-color == $status-low-stock {
-      color: $black;
-    }
+  &:active {
+    transform: translateY(0);
   }
 }
 
-@mixin stock-text($color) {
-  color: $color;
-  font-weight: bold;
-}
-
-// NOUVEAUX MIXINS POUR LE CATALOGUE AMÉLIORÉ
-@mixin card-hover-effect {
-  @include transition(transform box-shadow);
+@mixin button-primary {
+  @include button-base;
+  background: $primary-color;
+  color: $black;
   
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 25px rgba($black, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba($primary-color, 0.3);
   }
 }
 
-@mixin gradient-border($color: $primary-color) {
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, $color 0%, lighten($color, 15%) 100%);
-    transform: scaleX(0);
-    transition: transform $transition-speed ease;
-  }
+@mixin button-secondary {
+  @include button-base;
+  background: $white;
+  color: $black;
+  border: 2px solid $primary-color;
   
-  &:hover::before {
-    transform: scaleX(1);
+  &:hover {
+    background: $primary-color;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba($primary-color, 0.2);
   }
 }
 
-@mixin shine-effect {
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba($white, 0.4),
-      transparent
-    );
-    transition: left 0.8s ease;
+// Inputs
+@mixin input-base {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid $gray-light;
+  border-radius: $border-radius;
+  font-size: 1em;
+  font-family: $font-family;
+  background-color: lighten($gray-light, 10%);
+  @include transition;
+  box-sizing: border-box;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    background-color: $white;
   }
   
-  &:hover::after {
-    left: 100%;
+  &::placeholder {
+    color: $gray-dark;
   }
+}
+
+// Cards
+@mixin card {
+  background: $white;
+  border-radius: $border-radius;
+  padding: $spacing-lg;
+  box-shadow: $box-shadow;
+}
+
+// Container
+@mixin container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
 }

@@ -90,14 +90,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $id_produit = null; // ou une valeur par défaut
     }
-    if(!isset($_SESSION['id_panier'])) {
+    if(!isset($_SESSION['id_panier']) && $action !== "signaler_avis") {
         echo "<script>
            window.location.href = 'seconnecter.php';
         </script>";
         exit();
     }
     else{
-        $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
+        $id_panier = $_SESSION['id_panier'];
         if ($action === 'supprimer_avis') {
             $id_client = $_SESSION['id_client'];
 
@@ -365,6 +365,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <span class="avis-etoiles">' . $etoiles . '</span>
                             </div>
                             <p class="avis-commentaire">' . htmlspecialchars($un_avis['description']) . '</p>';
+                        
+                        echo '<div class="avis-button">';
                         if (isset($_SESSION["id_client"])){
                             if ($_SESSION["id_client"] == $un_avis["id_client"]) {
                                 echo '
@@ -373,8 +375,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <button type="submit" class="btn-supprimer-avis">Supprimer mon avis</button>
                                 </form>';
                             }
+                            else{
+                                ?>
+                                <button class="btn-signaler-avis" id-client="<?= $un_avis['id_client'] ?>">Signaler cet avis</button>
+                                <?php
+                            }
                         }
+                        else{
+                            ?>
+                            <button class="btn-signaler-avis">Signaler cet avis</button>
+                            <?php
+                        }
+                        
                         echo '
+                            </div>
                         </div>';
                     }
                 } else {
@@ -413,12 +427,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <span class="close">&times;</span>
             <img class="popup-content" id="popup-img" src="">
         </div>
+        <div id="popup-signalement" class="popup">
+            <span class="close">&times;</span>
+            <form action="" method="post">
+                <input type="hidden" name="action" value="signaler_avis">
+                <input type="hidden" name="id_client_cible" id="input_id_client_cible" value="">
+                
+                <label for="raison">Raison du signalement ?</label>
+                <select name="raison" id="raison" class="input-style" required>
+                    <option value="">-- Sélectionnez --</option>
+                    <option value="spam">Spam ou publicité</option>
+                    <option value="haine">Contenu haineux ou offensant</option>
+                    <option value="sexuel">Contenu à caractère sexuel ou violent</option>
+                    <option value="hors-sujet">Hors sujet</option>
+                    <option value="autre">Autre</option>
+                </select>
+
+                <label for="details">Précisions (optionnel) :</label>
+                <textarea name="details" id="details" class="input-style" rows="4" placeholder="Expliquez le problème..."></textarea>
+                <label class="form_communaute">Nous vérifierons si cet avis est conforme aux règles de notre communauté. Si ce n'est pas le cas, nous le supprimerons.</label>
+
+                <div class="actions">
+                    <button type="button" class="btn-cancel" onclick="closePopup()">Annuler</button>
+                    <button type="submit" class="btn-confirm">Signaler</button>
+                </div>
+            </form>
+        </div>
     </main>
     <footer class="footer mobile">
         <?php include 'footer.php'?>
     </footer>
 
-    <script> // PARTI JAVASCRIPT
+    <script>
         // Sélection des éléments
         const miniatures = document.querySelectorAll('.miniatures img');
         const popup = document.getElementById('popup-image');
@@ -446,24 +486,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
 
         // popup signalement
-        const boutton_signalement =document.querySelector('.btn-signaler-avis');
+        const boutonsSignalement = document.querySelectorAll('.btn-signaler-avis');
         const popupSignalement = document.getElementById('popup-signalement');
-        const closeBtn2 = document.querySelector('.popup .close');
+        const closeBtnSignalement = popupSignalement.querySelector('.close');
+        const cancelBtnSignalement = popupSignalement.querySelector('.btn-cancel');
 
-        boutton_signalement.addEventListener('click', () => {
-            popupSignalement.style.display = 'block';
-        })
 
-        closeBtn.addEventListener('click', () => {
+        boutonsSignalement.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idClient = btn.getAttribute('data-id-client');
+
+                // injecte l'id du client dans le  formulaire
+                document.getElementById('input_id_client_cible').value = idClient;
+                popupSignalement.style.display = 'flex';4
+            });
+        });
+
+        function fermerSignalement() {
             popupSignalement.style.display = 'none';
-        });
+        }
 
-        // Quand on clique en dehors de l’image
-        popup.addEventListener('click', (event) => {
-            if (event.target === popup) {
-                popupSignalement.style.display = 'none';
-            }
-        });
+        closeBtnSignalement.addEventListener('click', fermerSignalement);
+        if(cancelBtnSignalement) {
+            cancelBtnSignalement.addEventListener('click', fermerSignalement);
+        }
 
     </script>
     <script src="../assets/js/noteEtoile.js"></script>

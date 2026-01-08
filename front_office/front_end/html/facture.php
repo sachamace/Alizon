@@ -380,5 +380,5 @@ $dompdf->render();
 
 // Téléchargement du PDF
 $nom_fichier = "facture_{$numero_facture}.pdf";
-$dompdf->stream($nom_fichier, array("Attachment" => false));
+$dompdf->stream($nom_fichier, array("Attachment" => true));
 ?>

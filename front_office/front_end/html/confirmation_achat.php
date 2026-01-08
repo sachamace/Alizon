@@ -17,7 +17,7 @@ if (!isset($_SESSION['derniere_commande'])) {
 }
 
 $id_client_connecte = $_SESSION['id'];
-$id_panier_commande = $_SESSION['derniere_commande']; // C'est l'ID du panier transformé en commande
+$id_commande = $_SESSION['derniere_commande'];
 
 try {
     // Récupération des informations client
@@ -32,19 +32,15 @@ try {
     if (!$client) {
         die("Client introuvable");
     }
-} catch (PDOException $e) {
-    die("Erreur lors de la récupération des infos client : " . $e->getMessage());
-}
 
-try {
-    // Récupération des informations du panier/commande
+    // Récupération des informations de la commande
     $stmt_commande = $pdo->prepare("
-        SELECT date_commande, montant_total_ht, montant_total_ttc, nb_articles, statut_commande
-        FROM panier
-        WHERE id_panier = :id_panier AND id_client = :id_client
+        SELECT id_commande, date_commande, montant_total_ht, montant_total_ttc, statut
+        FROM commande
+        WHERE id_commande = :id_commande AND id_client = :id_client
     ");
     $stmt_commande->execute([
-        ':id_panier' => $id_panier_commande,
+        ':id_commande' => $id_commande,
         ':id_client' => $id_client_connecte
     ]);
     $commande = $stmt_commande->fetch(PDO::FETCH_ASSOC);
@@ -53,32 +49,33 @@ try {
         die("Commande introuvable");
     }
 
-    // Récupérer les articles de la commande
-    $stmt_articles = $pdo->prepare("
-        SELECT pp.quantite, 
+    // Récupération des lignes de commande avec la vue produit_avec_prix
+    $stmt_lignes = $pdo->prepare("
+        SELECT lc.quantite, 
                p.nom_produit, 
-               p.prix_unitaire_ht,
-               p.taux_tva,
-               p.prix_ttc
-        FROM panier_produit pp
-        JOIN produit p ON pp.id_produit = p.id_produit
-        WHERE pp.id_panier = :id_panier
+               lc.prix_unitaire_ht,
+               lc.prix_unitaire_ttc
+        FROM ligne_commande lc
+        JOIN produit p ON lc.id_produit = p.id_produit
+        WHERE lc.id_commande = :id_commande
     ");
-    $stmt_articles->execute([':id_panier' => $id_panier_commande]);
-    $articles_panier = $stmt_articles->fetchAll(PDO::FETCH_ASSOC);
+    $stmt_lignes->execute([':id_commande' => $id_commande]);
+    $articles_commande = $stmt_lignes->fetchAll(PDO::FETCH_ASSOC);
 
-    // Calculer la taxe totale
+    $nb_articles = 0;
     $taxe = 0;
-    foreach ($articles_panier as $article) {
-        $taxe += ($article['prix_ttc'] - $article['prix_unitaire_ht']) * $article['quantite'];
+
+    foreach ($articles_commande as $article) {
+        $taxe += ($article['prix_unitaire_ttc'] - $article['prix_unitaire_ht']) * $article['quantite'];
+        $nb_articles += $article['quantite'];
     }
 
 } catch (PDOException $e) {
-    die("Erreur lors de la récupération du panier : " . $e->getMessage());
+    die("Erreur lors de la récupération des données : " . $e->getMessage());
 }
 
 // Générer le numéro de commande
-$numero_commande = "CMD-" . date('Ymd', strtotime($commande['date_commande'])) . "-" . str_pad($id_panier_commande, 5, '0', STR_PAD_LEFT);
+$numero_commande = "CMD-" . date('Ymd', strtotime($commande['date_commande'])) . "-" . str_pad($commande['id_commande'], 5, '0', STR_PAD_LEFT);
 ?>
 
 <!DOCTYPE html>
@@ -300,7 +297,7 @@ $numero_commande = "CMD-" . date('Ymd', strtotime($commande['date_commande'])) .
                 </p>   
                 <p>
                     <strong>Nombre d'articles :</strong>
-                    <span><?= htmlspecialchars($commande['nb_articles']) ?></span>
+                    <span><?= htmlspecialchars($nb_articles) ?></span>
                 </p>
                 <p>
                     <strong>Date :</strong>
@@ -308,7 +305,7 @@ $numero_commande = "CMD-" . date('Ymd', strtotime($commande['date_commande'])) .
                 </p>
                 <p>
                     <strong>Statut :</strong>
-                    <span><?= htmlspecialchars($commande['statut_commande']) ?></span>
+                    <span><?= htmlspecialchars($commande['statut']) ?></span>
                 </p>
                 <p>
                     <strong>Total HT :</strong>
@@ -325,10 +322,10 @@ $numero_commande = "CMD-" . date('Ymd', strtotime($commande['date_commande'])) .
             </div> 
 
             <div class="buttons-group">
-                <a href="facture.php?id=<?= $id_panier_commande ?>" class="btn btn-primary" target="_blank">
+                <a href="facture.php?id=<?= $commande['id_commande'] ?>" class="btn btn-primary" target="_blank">
                     📄 Télécharger la facture
                 </a>
-                <a href="index.php" class="btn btn-secondary">🏠 Retour à l'accueil</a>
+                <a href="/index.php" class="btn btn-secondary">🏠 Retour à l'accueil</a>
             </div>
         </div>
     </main>

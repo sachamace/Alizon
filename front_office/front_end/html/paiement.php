@@ -1,4 +1,3 @@
-
 <?php
 include 'config.php';
 include 'session.php';
@@ -27,17 +26,16 @@ try {
 }
 
 try {
-    // Récupérer les informations sur les articles du panier avec calcul du prix TTC
+    // Utiliser la VUE produit_avec_prix qui calcule automatiquement le prix_ttc
     $stmt = $pdo->prepare("
         SELECT pp.quantite, 
                p.nom_produit, 
                p.prix_unitaire_ht,
                p.id_produit,
-               t.taux AS taux_tva,
-               ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc
+               p.taux_tva,
+               p.prix_ttc
         FROM panier_produit pp
-        JOIN produit p ON pp.id_produit = p.id_produit
-        LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
+        JOIN produit_avec_prix p ON pp.id_produit = p.id_produit
         WHERE pp.id_panier = :id_panier
     ");
     $stmt->execute([':id_panier' => $_SESSION['id_panier']]);
@@ -109,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Si aucune erreur de validation de formulaire
     if (empty($erreurs)) {
-        // VÉRIFICATION FINALE DU STOCK AVANT VALIDATION
+        // ⚠️ VÉRIFICATION FINALE DU STOCK AVANT VALIDATION
         try {
             $stmt_verif_stock = $pdo->prepare("
                 SELECT pp.id_produit, pp.quantite, p.nom_produit, p.stock_disponible
@@ -132,13 +130,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $erreurs['stock'] = "Erreur lors de la vérification du stock.";
         }
         
-        //SI TOUT EST OK : CRÉER LA COMMANDE ET TRAITER LE PAIEMENT
+        // ✅ SI TOUT EST OK : CRÉER LA COMMANDE ET TRAITER LE PAIEMENT
         if (empty($erreurs)) {
             try {
-                // DÉBUT DE LA TRANSACTION
+                // 🔥 DÉBUT DE LA TRANSACTION
                 $pdo->beginTransaction();
 
-                // CRÉER LA COMMANDE
+                // 1️⃣ CRÉER LA COMMANDE
                 $stmt_commande = $pdo->prepare("
                     INSERT INTO commande (id_client, date_commande, montant_total_ht, montant_total_ttc, statut)
                     VALUES (:id_client, NOW(), :montant_ht, :montant_ttc, 'validée')
@@ -151,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
                 $id_commande = $stmt_commande->fetchColumn();
 
-                // INSÉRER LES LIGNES DE COMMANDE
+                // 2️⃣ INSÉRER LES LIGNES DE COMMANDE
                 $stmt_ligne = $pdo->prepare("
                     INSERT INTO ligne_commande (id_commande, id_produit, quantite, prix_unitaire_ht, prix_unitaire_ttc)
                     VALUES (:id_commande, :id_produit, :quantite, :prix_ht, :prix_ttc)
@@ -167,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ]);
                 }
 
-                // DÉCRÉMENTER LE STOCK
+                // 3️⃣ DÉCRÉMENTER LE STOCK
                 $stmt_update_stock = $pdo->prepare("
                     UPDATE produit 
                     SET stock_disponible = stock_disponible - :quantite 
@@ -186,22 +184,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
 
-                // VIDER LE PANIER
+                // 4️⃣ VIDER LE PANIER
                 $stmt_vider = $pdo->prepare("DELETE FROM panier_produit WHERE id_panier = :id_panier");
                 $stmt_vider->execute([':id_panier' => $_SESSION['id_panier']]);
 
-                // VALIDER LA TRANSACTION
+                // 🔥 VALIDER LA TRANSACTION
                 $pdo->commit();
 
-                // SAUVEGARDER L'ID DE COMMANDE EN SESSION
+                // ✅ SAUVEGARDER L'ID DE COMMANDE EN SESSION
                 $_SESSION['derniere_commande'] = $id_commande;
 
-                // REDIRECTION VERS LA PAGE DE CONFIRMATION
+                // 🎉 REDIRECTION VERS LA PAGE DE CONFIRMATION
                 header("Location: confirmation_achat.php");
                 exit();
 
             } catch (Exception $e) {
-                // ANNULER LA TRANSACTION EN CAS D'ERREUR
+                // ❌ ANNULER LA TRANSACTION EN CAS D'ERREUR
                 $pdo->rollBack();
                 $erreurs['general'] = "Erreur lors du traitement de la commande : " . $e->getMessage();
             }

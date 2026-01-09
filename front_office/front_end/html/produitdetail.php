@@ -22,6 +22,8 @@ try {
 } catch (PDOException $e) {
     echo "Erreur SQL : " . $e->getMessage();
 }
+
+// pose des variables 
 if(isset($_SESSION['id_panier'])){
     $id_panier = $_SESSION['id_panier'];
 }

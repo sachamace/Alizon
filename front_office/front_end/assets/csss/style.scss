@@ -1291,7 +1291,13 @@ footer.footer {
         }
       }
       
-      .btn-supprimer-avis, .btn-signaler-avis {
+      .btn-signaler-avis {
+        border: none;
+        background-color: #fafafa;
+        cursor: pointer;
+      }
+
+      .btn-supprimer-avis {
         margin-top: 1rem;
         background: #ff5555;
         color: $white;
@@ -1301,7 +1307,7 @@ footer.footer {
         cursor: pointer;
         font-size: 0.9rem;
         font-weight: 600;
-        
+
         // Téléphone (428px)
         @media (max-width: 428px) {
           padding: 0.6rem 1.2rem;

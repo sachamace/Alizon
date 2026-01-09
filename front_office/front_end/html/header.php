@@ -8,14 +8,10 @@
         
 
         $recherche = htmlspecialchars(string: $_POST['texte-recherche']);
-        
-        
-        /*$sql = "SELECT * FROM produit WHERE nom_produit LIKE :query OR description_produit LIKE :query";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(['query' => '%' . $recherche . '%']);
-        $resultats = $stmt->fetchAll(PDO::FETCH_ASSOC);*/
         if ($pageActuelle === 'index.php' && $categorie !== null) {
-            header('Location: ' . $_SERVER['REQUEST_URI'] . '&search=' . $recherche);
+            $cheminActuel = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+            $nomFichier = basename($cheminActuel);
+            header('Location: ' . $nomFichier . '?categorie=' . urlencode($categorie) . '&search=' . urlencode($recherche));
             exit();
         }
         else{

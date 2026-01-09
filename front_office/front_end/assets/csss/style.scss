@@ -1295,6 +1295,11 @@ footer.footer {
         border: none;
         background-color: #fafafa;
         cursor: pointer;
+
+        &:disabled {
+          pointer-events: none;
+          cursor: not-allowed;
+        }
       }
 
       .btn-supprimer-avis {

@@ -1171,6 +1171,10 @@ footer.footer.mobile, footer.footer.tablette {
   background-color: #fafafa;
   cursor: pointer;
 }
+.main_produit .avis .avis-item .btn-signaler-avis:disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+}
 .main_produit .avis .avis-item .btn-supprimer-avis {
   margin-top: 1rem;
   background: #ff5555;

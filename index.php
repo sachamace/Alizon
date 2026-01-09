@@ -48,7 +48,8 @@
                 FROM produit p
                 LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
                 WHERE p.est_actif = true 
-                AND (LOWER(p.nom_produit) LIKE LOWER(:query) OR LOWER(p.description_produit) LIKE LOWER(:query))";
+                AND (LOWER(p.nom_produit) LIKE LOWER(:query) OR LOWER(p.description_produit) LIKE LOWER(:query))
+                ORDER BY " . $orderBy;
 
                 // 2. On prépare cette grosse requête
                 $stmt = $pdo->prepare($sql);

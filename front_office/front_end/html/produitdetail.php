@@ -22,8 +22,10 @@ try {
 } catch (PDOException $e) {
     echo "Erreur SQL : " . $e->getMessage();
 }
+
+// pose des variables 
 if(isset($_SESSION['id_panier'])){
-    $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
+    $id_panier = $_SESSION['id_panier'];
 }
 // recuperation du stock
 $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
@@ -80,9 +82,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $erreur_avis = "Veuillez entrer une note entre 1 et 5 et une description.";
     }
 }
+// traitement formulaire signalement
+else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'signaler_avis') {
+    $id_client_avis = $_POST['id_client_cible'];
+    if (!isset($_SESSION['avis_signales'])){
+        $_SESSION['avis_signales'] = [$id_client_avis];
+    }
+    else {
+        $_SESSION['avis_signales'][] = $id_client_avis;
+    }
+    $requete_signalement = $pdo->prepare("
+        UPDATE avis 
+        SET nbr_signalement = nbr_signalement + 1
+        WHERE id_client = :id_client
+        AND id_produit = :id_produit
+    ");
+    $requete_signalement->execute([
+            ':id_client'  => $id_client_avis,
+            ':id_produit' => $id_produit
+        ]);
+
+}
 
 // traitement des autres actions
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     
     $action = $_POST['action'];
     if (isset($_GET['article'])) {
@@ -353,6 +376,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (count($avis) > 0) {
                     foreach ($avis as $un_avis) {
                         $id_client = (int) $un_avis['id_client'];
+                        $est_signale = isset($_SESSION['avis_signales']) && in_array($id_cible, $_SESSION['avis_signales']);
+                        // Si signalé : Remplissage ROUGE, Bordure ROUGE
+                        // Si pas signalé : Remplissage BLANC, Bordure NOIRE (pour qu'on voie la forme)
+                        $couleur_fill   = $est_signale ? 'red' : 'white';
+                        $couleur_stroke = $est_signale ? 'red' : 'black';
                         $client = $pdo->query("SELECT * FROM compte_client WHERE id_client = $id_client")->fetch(PDO::FETCH_ASSOC);
                         // Génération des étoiles selon la note
                         $note = (int)$un_avis['note'];
@@ -377,13 +405,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             }
                             else{
                                 ?>
-                                <button class="btn-signaler-avis" id-client="<?= $un_avis['id_client'] ?>">Signaler cet avis</button>
+                                <button class="btn-signaler-avis" data-id-client="<?= $un_avis['id_client'] ?>">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" 
+                                        fill="<?= $couleur_fill ?>" 
+                                        stroke="<?= $couleur_stroke ?>" 
+                                        stroke-width="2" 
+                                        stroke-linecap="round" 
+                                        stroke-linejoin="round">
+                                        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                        <line x1="4" y1="22" x2="4" y2="15"></line>
+                                    </svg>
+                                </button>
                                 <?php
                             }
                         }
                         else{
                             ?>
-                            <button class="btn-signaler-avis">Signaler cet avis</button>
+                            <button class="btn-signaler-avis" data-id-client="<?= $un_avis['id_client'] ?>">
+                                <svg width="24" height="24" viewBox="0 0 24 24" 
+                                    fill="<?= $couleur_fill ?>" 
+                                    stroke="<?= $couleur_stroke ?>" 
+                                    stroke-width="2" 
+                                    stroke-linecap="round" 
+                                    stroke-linejoin="round">
+                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                    <line x1="4" y1="22" x2="4" y2="15"></line>
+                                </svg>
+                            </button>
                             <?php
                         }
                         
@@ -494,7 +542,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         boutonsSignalement.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const idClient = btn.getAttribute('data-id-client');
+                const idClient = e.currentTarget.getAttribute('data-id-client');
 
                 // injecte l'id du client dans le  formulaire
                 document.getElementById('input_id_client_cible').value = idClient;

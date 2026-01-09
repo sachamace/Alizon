@@ -68,7 +68,8 @@
                     FROM produit p
                     LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
                     WHERE p.est_actif = true
-                ');
+                    ORDER BY ' . $orderBy
+                );
             }
             $tri = $_GET['tri'] ?? '';
             switch ($tri) {

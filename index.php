@@ -24,6 +24,36 @@
     </header>
     <div class="div__catalogue">
         <?php
+            
+            // On récupère tout le contenu de la table produit disponible AVEC le calcul du prix TTC
+            if (isset($_GET['search'])){
+                $sql = "SELECT p.*, 
+                    ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc
+                FROM produit p
+                LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
+                WHERE p.est_actif = true 
+                AND (p.nom_produit LIKE :query OR p.description_produit LIKE :query)";
+
+                // 2. On prépare cette grosse requête
+                $stmt = $pdo->prepare($sql);
+
+                // 3. On l'exécute avec le mot-clé
+                $stmt->execute(['query' => '%' . urldecode($_GET['search']) . '%']);
+
+                // C'EST ICI LA CLÉ :
+                // Après le execute(), $stmt se comporte EXACTEMENT comme le retour de $pdo->query().
+                // Tu peux donc l'utiliser directement dans ton foreach ou le stocker dans $reponse
+                $reponse = $stmt;
+            }
+            else{
+                $reponse = $pdo->query('
+                    SELECT p.*, 
+                        ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc
+                    FROM produit p
+                    LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
+                    WHERE p.est_actif = true
+                ');
+            }
             $tri = $_GET['tri'] ?? '';
             switch ($tri) {
                 case 'prix_asc':

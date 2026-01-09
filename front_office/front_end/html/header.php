@@ -5,7 +5,6 @@
     if (isset($_POST['texte-recherche']) && !empty($_POST['texte-recherche'])) {
         $pageActuelle = basename($_SERVER['SCRIPT_NAME']);
         $categorie = isset($_GET['categorie']) ? $_GET['categorie'] : null;
-        
 
         $recherche = htmlspecialchars(string: $_POST['texte-recherche']);
         if ($pageActuelle === 'index.php' && $categorie !== null) {

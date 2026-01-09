@@ -376,11 +376,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 if (count($avis) > 0) {
                     foreach ($avis as $un_avis) {
                         $id_client = (int) $un_avis['id_client'];
-                        $est_signale = isset($_SESSION['avis_signales']) && in_array($id_cible, $_SESSION['avis_signales']);
+                        $est_signale = isset($_SESSION['avis_signales']) && in_array($id_client, $_SESSION['avis_signales']);
                         // Si signalé : Remplissage ROUGE, Bordure ROUGE
                         // Si pas signalé : Remplissage BLANC, Bordure NOIRE (pour qu'on voie la forme)
                         $couleur_fill   = $est_signale ? 'red' : 'white';
                         $couleur_stroke = $est_signale ? 'red' : 'black';
+                        $deactiver = $est_signale ? 'disabled' : '';
                         $client = $pdo->query("SELECT * FROM compte_client WHERE id_client = $id_client")->fetch(PDO::FETCH_ASSOC);
                         // Génération des étoiles selon la note
                         $note = (int)$un_avis['note'];
@@ -405,7 +406,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                             }
                             else{
                                 ?>
-                                <button class="btn-signaler-avis" data-id-client="<?= $un_avis['id_client'] ?>">
+                                <button class="btn-signaler-avis" 
+                                data-id-client="<?= $un_avis['id_client'] ?>"
+                                <?= $deactiver ?>>
                                     <svg width="24" height="24" viewBox="0 0 24 24" 
                                         fill="<?= $couleur_fill ?>" 
                                         stroke="<?= $couleur_stroke ?>" 
@@ -421,7 +424,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         }
                         else{
                             ?>
-                            <button class="btn-signaler-avis" data-id-client="<?= $un_avis['id_client'] ?>">
+                            <button class="btn-signaler-avis" 
+                            data-id-client="<?= $un_avis['id_client'] ?>"
+                            <?= $deactiver ?>>
                                 <svg width="24" height="24" viewBox="0 0 24 24" 
                                     fill="<?= $couleur_fill ?>" 
                                     stroke="<?= $couleur_stroke ?>" 

@@ -48,7 +48,8 @@
                 FROM produit p
                 LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
                 WHERE p.est_actif = true 
-                AND (p.nom_produit LIKE :query OR p.description_produit LIKE :query)";
+                AND (p.nom_produit LIKE :query OR p.description_produit LIKE :query)
+                ORDER BY " . $orderBy;
 
                 // 2. On prépare cette grosse requête
                 $stmt = $pdo->prepare($sql);
@@ -68,16 +69,10 @@
                     FROM produit p
                     LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
                     WHERE p.est_actif = true
-                ');
+                    ORDER BY ' . $orderBy
+                );
             }
-            $reponse = $pdo->query('
-                SELECT p.*, 
-                       ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc
-                FROM produit p
-                LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
-                WHERE p.est_actif = true
-                ORDER BY ' . $orderBy . '
-            ');
+            
             
             // On affiche chaque entrée une à une
             while ($donnees = $reponse->fetch()){ 

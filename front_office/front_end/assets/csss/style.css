@@ -511,6 +511,20 @@ footer.footer.mobile, footer.footer.tablette {
 .div__catalogue article .stock-info.out-of-stock {
   color: #dc3545;
 }
+.div__catalogue aside {
+  display: none;
+  background-color: #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 150px;
+  left: 0;
+  z-index: 999999999;
+  padding: 10px;
+  height: calc(100% - 150px);
+}
+.div__catalogue aside input {
+  margin: 20px;
+}
 @media (max-width: 428px) {
   .div__catalogue {
     display: grid !important;

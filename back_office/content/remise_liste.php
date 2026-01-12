@@ -89,6 +89,7 @@ try {
                         <?= htmlentities($remise['nom_remise'] ?: 'Remise sans nom') ?>
                     </h3>
                     
+<<<<<<< HEAD
                     <!-- Afficher le type d'application -->
                     <div class="remise-type-application">
                         <?php if ($remise['type_application'] === 'Produit spécifique' && $remise['nom_produit']): ?>
@@ -102,12 +103,25 @@ try {
                         <?php endif; ?>
                     </div>
                     
+=======
+>>>>>>> aef5c3a (remise cote back office)
                     <?php if ($remise['code_promo']): ?>
                         <div class="remise-code">
                             Code: <strong><?= htmlentities($remise['code_promo']) ?></strong>
                         </div>
                     <?php endif; ?>
                     
+<<<<<<< HEAD
+=======
+                    <div class="remise-produit">
+                        <?php if ($remise['nom_produit']): ?>
+                            Sur: <?= htmlentities($remise['nom_produit']) ?>
+                        <?php else: ?>
+                            Sur: Tous les produits
+                        <?php endif; ?>
+                    </div>
+                    
+>>>>>>> aef5c3a (remise cote back office)
                     <div class="remise-dates">
                         <div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
@@ -126,6 +140,7 @@ try {
                             Achat min: <?= number_format($remise['condition_min_achat'], 2, ',', ' ') ?>€
                         </div>
                     <?php endif; ?>
+<<<<<<< HEAD
                     
                     <!-- Pour les remises avec produits multiples, afficher un badge -->
                     <?php if ($remise['nb_produits_associes'] > 0): ?>
@@ -146,3 +161,10 @@ try {
         </div>
     <?php endif; ?>
 </section>
+=======
+                </article>
+            </a>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</section>
+>>>>>>> aef5c3a (remise cote back office)

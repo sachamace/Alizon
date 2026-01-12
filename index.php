@@ -33,46 +33,28 @@
                     $orderBy = 'prix_ttc DESC';
                     break;
                 case 'note_asc':
-                    $orderBy = 'note_produit ASC';
+                    $orderBy = 'note_moyenne ASC NULLS LAST';
                     break;
                 case 'note_desc':
-                    $orderBy = 'note_produit DESC';
+                    $orderBy = 'note_moyenne DESC NULLS LAST';
                     break;
                 default:
                     $orderBy = 'id_produit ASC';
             }
-            // On récupère tout le contenu de la table produit disponible AVEC le calcul du prix TTC
-            if (isset($_GET['search'])){
-                $sql = "SELECT p.*, 
-                    ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc
+
+            $sql = "
+                SELECT p.*, 
+                    ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc,
+                    AVG(a.note) AS note_moyenne
                 FROM produit p
                 LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
-                WHERE p.est_actif = true 
-                AND (p.nom_produit LIKE :query OR p.description_produit LIKE :query)
-                ORDER BY " . $orderBy;
+                LEFT JOIN avis a ON p.id_produit = a.id_produit
+                GROUP BY p.id_produit, t.taux
+                ORDER BY $orderBy
+            ";
 
-                // 2. On prépare cette grosse requête
-                $stmt = $pdo->prepare($sql);
-
-                // 3. On l'exécute avec le mot-clé
-                $stmt->execute(['query' => '%' . urldecode($_GET['search']) . '%']);
-
-                // C'EST ICI LA CLÉ :
-                // Après le execute(), $stmt se comporte EXACTEMENT comme le retour de $pdo->query().
-                // Tu peux donc l'utiliser directement dans ton foreach ou le stocker dans $reponse
-                $reponse = $stmt;
-            }
-            else{
-                $reponse = $pdo->query('
-                    SELECT p.*, 
-                        ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc
-                    FROM produit p
-                    LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
-                    WHERE p.est_actif = true
-                    ORDER BY ' . $orderBy
-                );
-            }
-            
+            $reponse = $pdo->prepare($sql);
+            $reponse->execute($params);
             
             // On affiche chaque entrée une à une
             while ($donnees = $reponse->fetch()){ 
@@ -140,9 +122,9 @@
                     <option value="note_desc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'note_desc') echo 'selected'; ?>>Note 5-1</option>
                 </select>
                 <br><label for="prixMin">Prix Min :</label>
-                    <input type="number" id="prixMinInput" name="prixMin" min="0" max="1000" value="0">
+                    <input type="number" id="prixMinInput" name="prixMin" min="0" max="1000" value="<?php echo $_GET['prixMin']?>">
                 <label for="prixMax">Prix Max :</label>
-                    <input type="number" id="prixMaxInput" name="prixMax" min="0" max="1000" value="0">
+                    <input type="number" id="prixMaxInput" name="prixMax" min="0" max="1000" value="<?php echo $_GET['prixMax']?>">
                 <fieldset>
                     <legend>Vendeurs :</legend>
                     <?php
@@ -166,7 +148,6 @@
                         <input type="checkbox" id="5" name="5"/>
                             <label for="5">★★★★★</label>
                 </fieldset>
-                <button type="submit">Appliquer les filtres</button>
                 <button type="button" id="resetAllFilters">Réinitialiser les filtres</button>
             </form>
         </aside>
@@ -181,6 +162,18 @@
             $('#filtre').toggle();
             const expanded = $(this).attr('aria-expanded') === 'true' ? 'false' : 'true';
             $(this).attr('aria-expanded', expanded);
+            });
+        });
+        $(function(){
+            $('#tri, input[type="checkbox"]').on('change', function() {
+                $('#tri-form').submit();
+            });
+            let timeout = null;
+            $('#prixMinInput, #prixMaxInput').on('keyup input', function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(function() {
+                    $('#tri-form').submit();
+                }, 800);
             });
         });
     </script>

@@ -323,9 +323,9 @@ $numero_commande = "CMD-" . date('Ymd', strtotime($commande['date_commande'])) .
 
             <div class="buttons-group">
                 <a href="facture.php?id=<?= $commande['id_commande'] ?>" class="btn btn-primary" target="_blank">
-                    📄 Télécharger la facture
+                    Télécharger la facture
                 </a>
-                <a href="/index.php" class="btn btn-secondary">🏠 Retour à l'accueil</a>
+                <a href="/index.php" class="btn btn-secondary">Retour à l'accueil</a>
             </div>
         </div>
     </main>

@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Si aucune erreur de validation de formulaire
     if (empty($erreurs)) {
-        // ⚠️ VÉRIFICATION FINALE DU STOCK AVANT VALIDATION
+        //VÉRIFICATION FINALE DU STOCK AVANT VALIDATION
         try {
             $stmt_verif_stock = $pdo->prepare("
                 SELECT pp.id_produit, pp.quantite, p.nom_produit, p.stock_disponible
@@ -130,13 +130,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $erreurs['stock'] = "Erreur lors de la vérification du stock.";
         }
         
-        // ✅ SI TOUT EST OK : CRÉER LA COMMANDE ET TRAITER LE PAIEMENT
+        //SI TOUT EST OK : CRÉER LA COMMANDE ET TRAITER LE PAIEMENT
         if (empty($erreurs)) {
             try {
-                // 🔥 DÉBUT DE LA TRANSACTION
+                //DÉBUT DE LA TRANSACTION
                 $pdo->beginTransaction();
 
-                // 1️⃣ CRÉER LA COMMANDE
+                //CRÉER LA COMMANDE
                 $stmt_commande = $pdo->prepare("
                     INSERT INTO commande (id_client, date_commande, montant_total_ht, montant_total_ttc, statut)
                     VALUES (:id_client, NOW(), :montant_ht, :montant_ttc, 'validée')
@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
                 $id_commande = $stmt_commande->fetchColumn();
 
-                // 2️⃣ INSÉRER LES LIGNES DE COMMANDE
+                //INSÉRER LES LIGNES DE COMMANDE
                 $stmt_ligne = $pdo->prepare("
                     INSERT INTO ligne_commande (id_commande, id_produit, quantite, prix_unitaire_ht, prix_unitaire_ttc)
                     VALUES (:id_commande, :id_produit, :quantite, :prix_ht, :prix_ttc)
@@ -165,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ]);
                 }
 
-                // 3️⃣ DÉCRÉMENTER LE STOCK
+                //DÉCRÉMENTER LE STOCK
                 $stmt_update_stock = $pdo->prepare("
                     UPDATE produit 
                     SET stock_disponible = stock_disponible - :quantite 
@@ -184,22 +184,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
 
-                // 4️⃣ VIDER LE PANIER
+                //VIDER LE PANIER
                 $stmt_vider = $pdo->prepare("DELETE FROM panier_produit WHERE id_panier = :id_panier");
                 $stmt_vider->execute([':id_panier' => $_SESSION['id_panier']]);
 
-                // 🔥 VALIDER LA TRANSACTION
+                //VALIDER LA TRANSACTION
                 $pdo->commit();
 
-                // ✅ SAUVEGARDER L'ID DE COMMANDE EN SESSION
+                //SAUVEGARDER L'ID DE COMMANDE EN SESSION
                 $_SESSION['derniere_commande'] = $id_commande;
 
-                // 🎉 REDIRECTION VERS LA PAGE DE CONFIRMATION
+                // REDIRECTION VERS LA PAGE DE CONFIRMATION
                 header("Location: confirmation_achat.php");
                 exit();
 
             } catch (Exception $e) {
-                // ❌ ANNULER LA TRANSACTION EN CAS D'ERREUR
+                //ANNULER LA TRANSACTION EN CAS D'ERREUR
                 $pdo->rollBack();
                 $erreurs['general'] = "Erreur lors du traitement de la commande : " . $e->getMessage();
             }
@@ -309,7 +309,7 @@ function verifLuhn($numero) {
                 <!-- ERREUR GÉNÉRALE -->
                 <?php if (isset($erreurs['general'])) { ?>
                     <div style="background: #ffebee; border: 1px solid #f44336; padding: 15px; border-radius: 5px; margin-bottom: 20px; color: #c62828;">
-                        <strong>⚠️ Erreur :</strong><br>
+                        <strong>Erreur :</strong><br>
                         <?= htmlentities($erreurs['general']) ?>
                     </div>
                 <?php } ?>
@@ -317,7 +317,7 @@ function verifLuhn($numero) {
                 <!-- ERREUR DE STOCK -->
                 <?php if (isset($erreurs['stock'])) { ?>
                     <div style="background: #ffebee; border: 1px solid #f44336; padding: 15px; border-radius: 5px; margin-bottom: 20px; color: #c62828;">
-                        <strong>⚠️ Erreur de stock :</strong><br>
+                        <strong>Erreur de stock :</strong><br>
                         <?= htmlentities($erreurs['stock']) ?>
                         <br><br>
                         <a href="panier.php" style="color: #c62828; text-decoration: underline;">Retourner au panier pour ajuster les quantités</a>

@@ -17,6 +17,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $categorie = ($type_application === 'categorie') ? $_POST['categorie'] : null;
     $produits_ids = ($type_application === 'produits') ? ($_POST['produits'] ?? []) : [];
     
+    // Validation : vérifier que les champs numériques ne contiennent que des chiffres et virgules/points
+    if (!empty($_POST['valeur_remise']) && !preg_match('/^[0-9.,]+$/', $_POST['valeur_remise'])) {
+        $erreurs['valeur_remise'] = "La valeur ne peut contenir que des chiffres";
+    }
+    if (!empty($_POST['condition_min_achat']) && !preg_match('/^[0-9.,]+$/', $_POST['condition_min_achat'])) {
+        $erreurs['condition_min_achat'] = "Le montant ne peut contenir que des chiffres";
+    }
+    
     // Validations
     if (empty($nom_remise)) {
         $erreurs['nom_remise'] = "Le nom de la remise est obligatoire";
@@ -169,6 +177,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                        value="<?= isset($_POST['condition_min_achat']) ? $_POST['condition_min_achat'] : '0' ?>" 
                        step="0.01" min="0" placeholder="0">
                 <small>Laissez 0 pour aucune condition minimum</small>
+                <?php if (isset($erreurs['condition_min_achat'])): ?>
+                    <span class="error"><?= $erreurs['condition_min_achat'] ?></span>
+                <?php endif; ?>
             </div>
         </div>
 

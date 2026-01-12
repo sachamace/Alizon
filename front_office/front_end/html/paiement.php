@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $erreurs['stock'] = "Erreur lors de la vérification du stock.";
         }
         
-        // ✅ SI TOUT EST OK : CRÉER LA COMMANDE ET TRAITER LE PAIEMENT
+        //SI TOUT EST OK : CRÉER LA COMMANDE ET TRAITER LE PAIEMENT
         if (empty($erreurs)) {
             try {
                 //DÉBUT DE LA TRANSACTION
@@ -194,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 //SAUVEGARDER L'ID DE COMMANDE EN SESSION
                 $_SESSION['derniere_commande'] = $id_commande;
 
-                // 🎉 REDIRECTION VERS LA PAGE DE CONFIRMATION
+                // REDIRECTION VERS LA PAGE DE CONFIRMATION
                 header("Location: confirmation_achat.php");
                 exit();
 

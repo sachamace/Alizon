@@ -82,7 +82,6 @@ body {
     text-decoration: none;
   }
 
-  // Lien du profil
   .profil-link {
     @include transition(transform);
     
@@ -96,7 +95,6 @@ body {
     }
   }
 
-  // Bouton de déconnexion
   .btn-deconnexion {
     @include flex-center;
     gap: 10px;
@@ -165,14 +163,12 @@ Structure de Consulter, Créer, Modifier produit
     margin-bottom: 2rem;
   }
 
-  // Grille principale
   .produit-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
     flex: 1;
 
-    // Partie gauche - Informations générales + Média
     .produit-infos {
       background-color: $gray-light;
       border: 1px solid $gray-medium;
@@ -228,7 +224,6 @@ Structure de Consulter, Créer, Modifier produit
           align-items: center;
           margin-top: 10px;
 
-          // Image média dans la partie gauche
           img {
             display: block;
             width: 100%;
@@ -242,7 +237,6 @@ Structure de Consulter, Créer, Modifier produit
       }
     }
 
-    // Partie droite - Prix, Stock, Visibilité
     .produit-prix-stock {
       display: flex;
       flex-direction: column;
@@ -262,7 +256,6 @@ Structure de Consulter, Créer, Modifier produit
           border-bottom: 2px solid #e0e0e0;
         }
 
-        // Prix avec sous-sections
         h4 {
           font-size: 0.9rem;
           color: #6b7280;
@@ -294,7 +287,6 @@ Structure de Consulter, Créer, Modifier produit
           font-weight: 500 !important;
         }
 
-        // Options de visibilité
         .visibility-option {
           display: flex;
           align-items: center;
@@ -321,7 +313,6 @@ Structure de Consulter, Créer, Modifier produit
     }
   }
 
-  // Actions (boutons en bas)
   .produit-actions {
     display: flex;
     justify-content: center;
@@ -350,7 +341,6 @@ Structure de Consulter, Créer, Modifier produit
     }
   }
 
-  // Styles pour les inputs
   input[type="text"] {
     @include input-base;
 
@@ -391,7 +381,6 @@ Structure de Consulter, Créer, Modifier produit
     }
   }
 
-  //Partie modification / création
   input[type="file"] {
     padding: 0.5rem;
     border: 2px dashed $gray-medium;
@@ -424,7 +413,6 @@ Structure de Consulter, Créer, Modifier produit
     }
   }
 
-  // Galerie de médias
   .media-gallery {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -442,7 +430,6 @@ Structure de Consulter, Créer, Modifier produit
       justify-content: space-between;
       margin-right: 10px;
     }
-
 
     img {
       width: 100%;
@@ -502,7 +489,6 @@ Structure du tableau de bord
 
 ------------------------------------------*/
 
-//Case article 
 .content {
   display: grid;
   padding: 20px;
@@ -1001,10 +987,6 @@ Fin de la structure de Consulter/Modifier Profil
 
 ------------------------------------------*/
 
-// =============================================================================
-// PAGE DE CONNEXION
-// =============================================================================
-
 .body__connexion {
   margin: 0;
   padding: 0;
@@ -1189,10 +1171,6 @@ Fin de la structure de Consulter/Modifier Profil
   margin-top: 5px;
   display: block;
 }
-
-// =============================================================================
-// PAGE DE CRÉATION DE COMPTE
-// =============================================================================
 
 .body__creation-compte {
   margin: 0;
@@ -1445,8 +1423,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-
-// Animation pour les champs valides
 .input__creation-compte:valid {
   border-color: $success-color;
   
@@ -1454,11 +1430,6 @@ Fin de la structure de Consulter/Modifier Profil
     background: $success-color;
   }
 }
-
-
-// =============================================================================
-// RÉCUPÉRATION DE MOT DE PASSE
-// =============================================================================
 
 .recuperation-container {
   @extend .container__connexion;
@@ -1472,12 +1443,10 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Messages de statut
 .succes-message {
   margin-bottom: 20px;
 }
 
-// Styles spécifiques à la récupération
 .recuperation-links {
   text-align: center;
   margin-top: 20px;
@@ -1493,7 +1462,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Adaptation du bouton pour les liens
 .btn__link {
   @extend .btn__connexion;
   text-decoration: none;
@@ -1533,16 +1501,8 @@ Fin de la structure de Consulter/Modifier Profil
 .validation-item:before { content: "✖ "; }
 .validation-item.valid:before { content: "✔ "; }
 
-/// ============================================
-// SYSTÈME DE REMISES - STYLE DASHBOARD
-// ============================================
-
-// Style identique au dashboard des produits
 .content {
-  // Les règles de base existent déjà dans style.scss
-  // On ajoute juste les règles spécifiques aux remises
 
-  // Carte pour créer une remise (même style que créer_produit)
   .creer_remise {
     background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
     color: $white;
@@ -1607,7 +1567,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 
-  // Carte remise (même structure qu'article)
   .remise-card-wrapper {
     display: block;
     height: 100%;
@@ -1632,7 +1591,6 @@ Fin de la structure de Consulter/Modifier Profil
       box-shadow: 0 12px 24px rgba($black, 0.15);
     }
 
-    // Badge de statut
     .statut-badge {
       position: absolute;
       top: 15px;
@@ -1648,7 +1606,6 @@ Fin de la structure de Consulter/Modifier Profil
       box-shadow: 0 2px 8px rgba($black, 0.15);
     }
 
-    // Statuts différents
     &.remise-active {
       border: 2px solid $status-active;
 
@@ -1683,7 +1640,6 @@ Fin de la structure de Consulter/Modifier Profil
       }
     }
 
-    // Valeur de la remise (comme le prix)
     .remise-valeur {
       font-size: 3em;
       font-weight: bold;
@@ -1692,7 +1648,6 @@ Fin de la structure de Consulter/Modifier Profil
       text-align: center;
     }
 
-    // Nom de la remise (comme le titre)
     .remise-nom {
       margin: 10px 0 5px;
       font-size: 1.2em;
@@ -1701,7 +1656,6 @@ Fin de la structure de Consulter/Modifier Profil
       text-align: center;
     }
 
-    // Code promo
     .remise-code {
       text-align: center;
       padding: 10px;
@@ -1719,7 +1673,6 @@ Fin de la structure de Consulter/Modifier Profil
       }
     }
 
-    // Produit concerné (comme description)
     .remise-produit {
       color: $gray-dark;
       font-size: 0.9em;
@@ -1733,7 +1686,6 @@ Fin de la structure de Consulter/Modifier Profil
       word-break: break-word;
     }
 
-    // Dates
     .remise-dates {
       display: flex;
       justify-content: space-between;
@@ -1763,7 +1715,6 @@ Fin de la structure de Consulter/Modifier Profil
       }
     }
 
-    // Condition minimum
     .remise-condition {
       font-size: 0.8em;
       color: $gray-dark;
@@ -1773,10 +1724,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 }
-
-// ============================================
-// FORMULAIRES DE REMISE
-// ============================================
 
 .remise-form-container {
   background-color: $white;
@@ -1793,7 +1740,6 @@ Fin de la structure de Consulter/Modifier Profil
     margin-bottom: 2rem;
   }
 
-  // Style des sections du formulaire
   .form-section {
     background-color: $gray-light;
     border: 1px solid $gray-medium;
@@ -1810,7 +1756,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 
-  // Style des inputs (même que produit)
   .input-group {
     margin-bottom: 1.5rem;
 
@@ -1896,7 +1841,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 
-  // Deux colonnes côte à côte
   .form-row {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1907,7 +1851,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 
-  // Boutons d'action (même style que produit)
   .form-actions {
     display: flex;
     justify-content: center;
@@ -1959,7 +1902,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Message d'erreur
 .error-message {
   color: $danger-color;
   background: lighten($danger-color, 35%);
@@ -1969,10 +1911,6 @@ Fin de la structure de Consulter/Modifier Profil
   margin-bottom: 1rem;
   font-weight: 500;
 }
-
-// ============================================
-// PAGE DÉTAILS DE REMISE
-// ============================================
 
 .remise-detail-container {
   background-color: $white;
@@ -2105,7 +2043,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 
-  // Boutons d'action
   .remise-actions {
     display: flex;
     justify-content: center;
@@ -2150,7 +2087,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Timeline des dates
 .periode-timeline {
   padding: 1.5rem 0;
 
@@ -2218,7 +2154,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Boutons d'actions en bas de la page (comme les produits)
 .remise-actions {
   display: flex;
   justify-content: center;
@@ -2233,7 +2168,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Bouton retour
 .btn-retour {
   display: inline-flex;
   align-items: center;
@@ -2257,7 +2191,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Header des pages
 .remise-detail-header,
 .remise-form-header {
   display: flex;
@@ -2280,7 +2213,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Bouton modifier dans le header
 .btn-modifier {
   display: inline-flex;
   align-items: center;
@@ -2305,11 +2237,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// ============================================
-// STYLES AMÉLIORÉS POUR LA PAGE DE CONSULTATION
-// ============================================
-
-// Section valeur améliorée
 .section-valeur {
   background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($secondary-color, 0.05) 100%) !important;
   border: 2px solid $primary-color !important;
@@ -2349,7 +2276,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Lignes d'information avec icônes
 .info-ligne {
   display: flex;
   align-items: flex-start;
@@ -2407,7 +2333,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Description
 .description-text {
   font-size: 1rem;
   line-height: 1.7;
@@ -2419,7 +2344,6 @@ Fin de la structure de Consulter/Modifier Profil
   border-left: 4px solid $primary-color;
 }
 
-// Période visuelle améliorée
 .periode-visuelle {
   display: flex;
   align-items: center;
@@ -2500,7 +2424,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Section info simple
 .section-info {
   .info-simple {
     display: flex;
@@ -2527,7 +2450,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Section danger
 .section-danger {
   border: 2px solid $danger-color !important;
   background: lighten($danger-color, 45%) !important;
@@ -2548,15 +2470,9 @@ Fin de la structure de Consulter/Modifier Profil
     font-size: 0.95rem;
   }
 }// ============================================
-// SYSTÈME DE REMISES - STYLE DASHBOARD
-// ============================================
 
-// Style identique au dashboard des produits
 .content {
-  // Les règles de base existent déjà dans style.scss
-  // On ajoute juste les règles spécifiques aux remises
 
-  // Carte pour créer une remise (même style que créer_produit)
   .creer_remise {
     background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
     color: $white;
@@ -2621,7 +2537,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 
-  // Carte remise (même structure qu'article)
   .remise-card-wrapper {
     display: block;
     height: 100%;
@@ -2646,7 +2561,6 @@ Fin de la structure de Consulter/Modifier Profil
       box-shadow: 0 12px 24px rgba($black, 0.15);
     }
 
-    // Badge de statut
     .statut-badge {
       position: absolute;
       top: 15px;
@@ -2662,7 +2576,6 @@ Fin de la structure de Consulter/Modifier Profil
       box-shadow: 0 2px 8px rgba($black, 0.15);
     }
 
-    // Statuts différents
     &.remise-active {
       border: 2px solid $status-active;
 
@@ -2697,7 +2610,6 @@ Fin de la structure de Consulter/Modifier Profil
       }
     }
 
-    // Valeur de la remise (comme le prix)
     .remise-valeur {
       font-size: 3em;
       font-weight: bold;
@@ -2706,7 +2618,6 @@ Fin de la structure de Consulter/Modifier Profil
       text-align: center;
     }
 
-    // Nom de la remise (comme le titre)
     .remise-nom {
       margin: 10px 0 5px;
       font-size: 1.2em;
@@ -2715,7 +2626,6 @@ Fin de la structure de Consulter/Modifier Profil
       text-align: center;
     }
 
-    // Code promo
     .remise-code {
       text-align: center;
       padding: 10px;
@@ -2733,7 +2643,6 @@ Fin de la structure de Consulter/Modifier Profil
       }
     }
 
-    // Produit concerné (comme description)
     .remise-produit {
       color: $gray-dark;
       font-size: 0.9em;
@@ -2747,7 +2656,6 @@ Fin de la structure de Consulter/Modifier Profil
       word-break: break-word;
     }
 
-    // Dates
     .remise-dates {
       display: flex;
       justify-content: space-between;
@@ -2777,7 +2685,6 @@ Fin de la structure de Consulter/Modifier Profil
       }
     }
 
-    // Condition minimum
     .remise-condition {
       font-size: 0.8em;
       color: $gray-dark;
@@ -2787,10 +2694,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 }
-
-// ============================================
-// FORMULAIRES DE REMISE
-// ============================================
 
 .remise-form-container {
   background-color: $white;
@@ -2807,7 +2710,6 @@ Fin de la structure de Consulter/Modifier Profil
     margin-bottom: 2rem;
   }
 
-  // Style des sections du formulaire
   .form-section {
     background-color: $gray-light;
     border: 1px solid $gray-medium;
@@ -2824,7 +2726,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 
-  // Style des inputs (même que produit)
   .input-group {
     margin-bottom: 1.5rem;
 
@@ -2910,7 +2811,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 
-  // Deux colonnes côte à côte
   .form-row {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -2921,7 +2821,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 
-  // Boutons d'action (même style que produit)
   .form-actions {
     display: flex;
     justify-content: center;
@@ -2973,7 +2872,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Message d'erreur
 .error-message {
   color: $danger-color;
   background: lighten($danger-color, 35%);
@@ -2983,10 +2881,6 @@ Fin de la structure de Consulter/Modifier Profil
   margin-bottom: 1rem;
   font-weight: 500;
 }
-
-// ============================================
-// PAGE DÉTAILS DE REMISE
-// ============================================
 
 .remise-detail-container {
   background-color: $white;
@@ -3119,7 +3013,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 
-  // Boutons d'action
   .remise-actions {
     display: flex;
     justify-content: center;
@@ -3164,7 +3057,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Timeline des dates
 .periode-timeline {
   padding: 1.5rem 0;
 
@@ -3232,7 +3124,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Boutons d'actions en bas de la page (comme les produits)
 .remise-actions {
   display: flex;
   justify-content: center;
@@ -3247,7 +3138,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Bouton retour
 .btn-retour {
   display: inline-flex;
   align-items: center;
@@ -3271,7 +3161,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Header des pages
 .remise-detail-header,
 .remise-form-header {
   display: flex;
@@ -3294,7 +3183,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Bouton modifier dans le header
 .btn-modifier {
   display: inline-flex;
   align-items: center;
@@ -3319,11 +3207,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// ============================================
-// STYLES AMÉLIORÉS POUR LA PAGE DE CONSULTATION
-// ============================================
-
-// Section valeur améliorée
 .section-valeur {
   background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($secondary-color, 0.05) 100%) !important;
   border: 2px solid $primary-color !important;
@@ -3363,7 +3246,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Lignes d'information avec icônes
 .info-ligne {
   display: flex;
   align-items: flex-start;
@@ -3421,7 +3303,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Description
 .description-text {
   font-size: 1rem;
   line-height: 1.7;
@@ -3433,7 +3314,6 @@ Fin de la structure de Consulter/Modifier Profil
   border-left: 4px solid $primary-color;
 }
 
-// Période visuelle améliorée
 .periode-visuelle {
   display: flex;
   align-items: center;
@@ -3514,7 +3394,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Section info simple
 .section-info {
   .info-simple {
     display: flex;
@@ -3541,7 +3420,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Section danger
 .section-danger {
   border: 2px solid $danger-color !important;
   background: lighten($danger-color, 45%) !important;
@@ -3562,13 +3440,9 @@ Fin de la structure de Consulter/Modifier Profil
     font-size: 0.95rem;
   }
 }
-// ============================================
-// STYLES POUR LES REMISES SUR LES PRODUITS (DASHBOARD)
-// ============================================
 
 .content {
   article {
-    // Badge remise (en haut à gauche)
     .remise-badge {
       position: absolute;
       top: 10px;
@@ -3584,7 +3458,6 @@ Fin de la structure de Consulter/Modifier Profil
       letter-spacing: 0.5px;
     }
 
-    // Produit avec remise active
     &.has-remise {
       border: 2px solid #ff6b6b;
 
@@ -3593,7 +3466,6 @@ Fin de la structure de Consulter/Modifier Profil
       }
     }
 
-    // Container pour les prix (original + remise)
     .prix-container {
       display: flex;
       align-items: center;
@@ -3617,7 +3489,6 @@ Fin de la structure de Consulter/Modifier Profil
       }
     }
 
-    // Nom de la remise sous les prix
     .remise-nom {
       font-size: 0.85em;
       color: #ff6b6b;
@@ -3628,12 +3499,8 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 }
-// ============================================
-// AFFICHAGE DES REMISES DANS LA CONSULTATION PRODUIT
-// ============================================
 
 .produit-container {
-  // Badge remise dans la consultation
   .prix-avec-remise {
     display: flex;
     align-items: center;
@@ -3664,7 +3531,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 
-  // Prix avec remise (gros et rouge)
   .prix-final-consultation {
     font-size: 1.8em;
     font-weight: 800;
@@ -3672,7 +3538,6 @@ Fin de la structure de Consulter/Modifier Profil
     margin: 0.5rem 0;
   }
 
-  // Prix original barré
   .prix-original-consultation {
     font-size: 1.2em;
     color: $gray-dark;
@@ -3681,7 +3546,6 @@ Fin de la structure de Consulter/Modifier Profil
     margin: 0.5rem 0 1.5rem;
   }
 
-  // Section info remise
   .remise-info-consultation {
     background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(238, 90, 111, 0.05) 100%);
     border: 2px solid #ff6b6b;
@@ -3742,10 +3606,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// ============================================
-// STYLES POUR STOCK DANS CONSULTATION PRODUIT
-// ============================================
-
 .produit-container {
   .produit-infos {
     .stock-display {
@@ -3785,10 +3645,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 }
-
-// ============================================
-// HUB PROMOTION/REMISE
-// ============================================
 
 .promo-hub-container {
   padding: 1rem 2rem 2rem;
@@ -3950,10 +3806,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// ============================================
-// HEADER PRODUITS EN PROMOTION
-// ============================================
-
 .produits-promo-header {
   display: flex;
   justify-content: space-between;
@@ -4048,10 +3900,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// ============================================
-// HEADER LISTE DES REMISES
-// ============================================
-
 .remise-liste-header {
   display: flex;
   justify-content: space-between;
@@ -4071,12 +3919,8 @@ Fin de la structure de Consulter/Modifier Profil
     font-size: 0.95rem;
   }
 }
-// ============================================
-// STYLES POUR SÉLECTION MULTIPLE PRODUITS/CATÉGORIES
-// ============================================
 
 .remise-form {
-  // Groupe de radio buttons stylisés
   .radio-group {
     display: flex;
     flex-direction: column;
@@ -4133,7 +3977,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 
-  // Sections d'application
   .application-section {
     margin-top: 1.5rem;
     padding: 1.5rem;
@@ -4164,7 +4007,6 @@ Fin de la structure de Consulter/Modifier Profil
     }
   }
 
-  // Sélection de produits avec checkboxes
   .produits-selection {
     .selection-header {
       display: flex;
@@ -4209,7 +4051,6 @@ Fin de la structure de Consulter/Modifier Profil
       background: $white;
       padding: 0.5rem;
 
-      // Scrollbar personnalisée
       &::-webkit-scrollbar {
         width: 8px;
       }
@@ -4277,7 +4118,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Responsive
 @media (max-width: 768px) {
   .remise-form {
     .produits-selection {
@@ -4297,11 +4137,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// ============================================
-// STYLES POUR VALIDATION FORMULAIRE REMISES
-// ============================================
-
-// Messages d'erreur inline
 .error-inline {
   color: $danger-color;
   font-size: 0.9rem;
@@ -4311,7 +4146,6 @@ Fin de la structure de Consulter/Modifier Profil
   animation: slideDown 0.3s ease;
 }
 
-// Messages d'erreur en container
 .error-container {
   color: $danger-color;
   font-size: 0.9rem;
@@ -4332,7 +4166,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Input avec erreur
 input.error,
 select.error,
 textarea.error {
@@ -4345,7 +4178,6 @@ textarea.error {
   }
 }
 
-// Animation slide down
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -4357,7 +4189,6 @@ textarea.error {
   }
 }
 
-// Compteur de produits sélectionnés
 .produits-count {
   margin-top: 0.5rem;
   font-weight: 600;

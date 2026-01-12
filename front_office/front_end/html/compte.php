@@ -34,7 +34,7 @@
                 </div>
             </a>
 
-            <a href="#" class="card disabled">
+            <a href="commande.php" class="card">
                 <img src="../assets/images/commande.png" alt="">
                 <div class="text">
                     <h3>Vos commandes</h3>
@@ -71,7 +71,7 @@
                 <h3>›</h3>
             </a>
 
-            <a class="compte__button disabled">
+            <a class="compte__button">
                 <img src="../assets/images/commande.png" class="compte__image">
                 <h3>Vos commandes</h3>
                 <h3>›</h3>

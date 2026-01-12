@@ -34,6 +34,43 @@ if (isset($_GET['page']) && $_GET['page'] === 'produit') {
         $stmtCheck->execute([$id]);
         $imageCount = $stmtCheck->fetchColumn();
 
+        // Récupérer les remises actives pour ce produit
+        $stmtRemises = $pdo->prepare("
+            SELECT r.id_remise, r.nom_remise, r.type_remise, r.valeur_remise, 
+                   r.date_debut, r.date_fin
+            FROM remise r
+            WHERE r.id_vendeur = :id_vendeur
+              AND r.est_actif = true
+              AND CURRENT_DATE BETWEEN r.date_debut AND r.date_fin
+              AND (r.id_produit = :id_produit OR r.id_produit IS NULL)
+            ORDER BY r.id_produit DESC NULLS LAST
+            LIMIT 1
+        ");
+        $stmtRemises->execute([
+            'id_vendeur' => $id_vendeur_connecte,
+            'id_produit' => $id
+        ]);
+        $remise_active = $stmtRemises->fetch();
+
+        // Calculer le prix avec remise si applicable
+        $prix_final = $produit['prix_ttc'];
+        $prix_ht_final = $produit['prix_unitaire_ht'];
+        
+        if ($remise_active) {
+            if ($remise_active['type_remise'] === 'pourcentage') {
+                $prix_final = $produit['prix_ttc'] * (1 - $remise_active['valeur_remise'] / 100);
+                $prix_ht_final = $produit['prix_unitaire_ht'] * (1 - $remise_active['valeur_remise'] / 100);
+            } else {
+                $prix_final = $produit['prix_ttc'] - $remise_active['valeur_remise'];
+                // Calculer le HT proportionnellement
+                $ratio = $prix_final / $produit['prix_ttc'];
+                $prix_ht_final = $produit['prix_unitaire_ht'] * $ratio;
+            }
+            // S'assurer que les prix ne soient pas négatifs
+            if ($prix_final < 0) $prix_final = 0;
+            if ($prix_ht_final < 0) $prix_ht_final = 0;
+        }
+
         if ($_GET['page'] == "produit" && $_GET['type'] == "consulter") {
             include 'produit_consulter.php';
         } else if ($_GET['page'] == "produit" && $_GET['type'] == 'modifier') {

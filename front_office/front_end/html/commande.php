@@ -35,9 +35,12 @@
     <link rel="stylesheet" href="../assets/csss/style.css">
     <style>
         .commandes-container {
+            display: flex;
+            flex-wrap: wrap;
             max-width: 1200px;
             margin: 2rem auto;
-            padding: 0 1rem;
+            padding: 150px 1rem 0 1rem;
+            gap: 20px;
         }
 
         .commande-vide {
@@ -59,6 +62,8 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             margin-bottom: 1.5rem;
             padding: 1.5rem;
+            box-sizing: border-box;
+            width: calc(50% - 20px);
             transition: transform 0.2s;
         }
 
@@ -280,6 +285,10 @@
         }
 
         @media (max-width: 768px) {
+            .commande-card {
+                width: 100%;
+            }
+
             .commande-info {
                 grid-template-columns: 1fr;
             }

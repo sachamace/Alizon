@@ -73,6 +73,11 @@
             }
             
             // On affiche chaque entrée une à une
+            if (!($reponse->fetch())){
+                ?>
+                <h2>Nous n'avons pas trouvé ce que vous cherchez.</h2>
+                <?php
+            }
             while ($donnees = $reponse->fetch()){ 
                 if (!isset($_GET['categorie']) || $donnees['categorie'] == $_GET['categorie']){
                 

@@ -4,16 +4,20 @@
     include 'sessionindex.php';
 
     $id_client_connecte = $_SESSION['id'];
+    
     try {
-        // Récupération des informations de la commande
+        // Récupération de TOUTES les commandes du client (pas une seule)
         $stmt_commande = $pdo->prepare("
             SELECT id_commande, date_commande, montant_total_ht, montant_total_ttc, statut
             FROM commande
             WHERE id_client = :id_client
             ORDER BY date_commande DESC
         ");
-        $stmt_commande->execute([':id_client' => $id_client_connecte]);
-        $commandes = $stmt_commande->fetch(PDO::FETCH_ASSOC);
+        $stmt_commande->execute([
+            ':id_client' => $id_client_connecte
+        ]);
+        $commandes = $stmt_commande->fetchAll(PDO::FETCH_ASSOC);
+        
     }
     catch (PDOException $e) {
         die("Erreur lors de la récupération des commandes : " . $e->getMessage());
@@ -85,7 +89,7 @@
             font-weight: 600;
         }
 
-        .statut-validee {
+        .statut-validée {
             background: #d4edda;
             color: #155724;
         }
@@ -95,12 +99,27 @@
             color: #856404;
         }
 
+        .statut-en-préparation {
+            background: #fff3cd;
+            color: #856404;
+        }
+
         .statut-expediee {
             background: #d1ecf1;
             color: #0c5460;
         }
 
+        .statut-expédiée {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
         .statut-livree {
+            background: #c3e6cb;
+            color: #155724;
+        }
+
+        .statut-livrée {
             background: #c3e6cb;
             color: #155724;
         }
@@ -299,7 +318,7 @@
                 
                 // Récupérer les produits de cette commande
                 $stmt_produits = $pdo->prepare("
-                    SELECT lc.quantite, lc.prix_unitaire_ttc,
+                    SELECT lc.quantite, lc.prix_unitaire_ttc, lc.prix_unitaire_ht,
                            p.nom_produit, p.id_produit,
                            m.chemin_image
                     FROM ligne_commande lc
@@ -313,7 +332,7 @@
                 $nb_articles = 0;
                 $taxe = 0;
 
-                foreach ($articles_commande as $article) {
+                foreach ($produits as $article) {
                     $taxe += ($article['prix_unitaire_ttc'] - $article['prix_unitaire_ht']) * $article['quantite'];
                     $nb_articles += $article['quantite'];
                 }

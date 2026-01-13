@@ -1,3 +1,4 @@
+
 <?php
 include 'config.php';
 
@@ -22,14 +23,24 @@ try {
                p.stock_disponible, p.est_actif, p.seuil_alerte, p.categorie,
                (SELECT chemin_image FROM media_produit WHERE id_produit = p.id_produit LIMIT 1) AS image_path,
                -- Remise spécifique au produit
-               r.id_remise, r.nom_remise, r.type_remise, r.valeur_remise, r.code_promo
+               r.id_remise, r.nom_remise, r.type_remise, r.valeur_remise, r.code_promo,
+               r.categorie as remise_categorie
         FROM public.produit p
         LEFT JOIN public.taux_tva t ON p.id_taux_tva = t.id_taux_tva
         LEFT JOIN public.remise r ON (
-            (r.id_produit = p.id_produit OR r.id_produit IS NULL)
-            AND r.id_vendeur = p.id_vendeur
+            r.id_vendeur = p.id_vendeur
             AND r.est_actif = true
             AND CURRENT_DATE BETWEEN r.date_debut AND r.date_fin
+            AND (
+                -- Cas 1: Remise sur CE produit spécifique (via id_produit)
+                r.id_produit = p.id_produit
+                -- Cas 2: Remise sur CE produit spécifique (via table remise_produit)
+                OR EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise AND rp.id_produit = p.id_produit)
+                -- Cas 3: Remise sur TOUS les produits (pas de produit spécifique, pas de catégorie)
+                OR (r.id_produit IS NULL AND r.categorie IS NULL AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+                -- Cas 4: Remise sur CATÉGORIE spécifique (pas de produit spécifique, catégorie correspond)
+                OR (r.id_produit IS NULL AND r.categorie = p.categorie AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+            )
         )
         WHERE p.id_vendeur = ?
         ORDER BY p.est_actif DESC, p.id_produit

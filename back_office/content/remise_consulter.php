@@ -76,13 +76,37 @@
             <article class="detail-section">
                 <h3>Application</h3>
                 <div class="detail-row">
-                    <span class="detail-label">Produit concerné</span>
+                    <span class="detail-label">S'applique sur</span>
                     <span class="detail-value">
-                        <?php if ($remise['nom_produit']): ?>
-                            <?= htmlentities($remise['nom_produit']) ?>
-                        <?php else: ?>
-                            <em>Tous les produits</em>
-                        <?php endif; ?>
+                        <?php
+                        // Vérifier si la remise s'applique sur une catégorie
+                        if (!empty($remise['categorie'])) {
+                            echo '<strong>Catégorie :</strong> ' . htmlentities($remise['categorie']);
+                        }
+                        // Sinon vérifier si c'est sur des produits spécifiques
+                        else {
+                            // Récupérer les produits de la table remise_produit
+                            $stmtProduits = $pdo->prepare("
+                                SELECT p.nom_produit 
+                                FROM remise_produit rp
+                                JOIN produit p ON rp.id_produit = p.id_produit
+                                WHERE rp.id_remise = ?
+                            ");
+                            $stmtProduits->execute([$remise['id_remise']]);
+                            $produits_remise = $stmtProduits->fetchAll();
+                            
+                            if (!empty($produits_remise)) {
+                                echo '<strong>Produits spécifiques :</strong><br>';
+                                echo '<ul style="margin: 0.5rem 0 0 1.5rem;">';
+                                foreach ($produits_remise as $prod) {
+                                    echo '<li>' . htmlentities($prod['nom_produit']) . '</li>';
+                                }
+                                echo '</ul>';
+                            } else {
+                                echo '<em>Tous les produits</em>';
+                            }
+                        }
+                        ?>
                     </span>
                 </div>
             </article>

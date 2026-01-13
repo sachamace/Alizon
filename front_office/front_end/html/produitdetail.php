@@ -5,31 +5,73 @@ try {
     if (isset($_GET['article'])) {
         $id_produit = $_GET['article'];
     } else {
-        $id_produit = null; // ou une valeur par défaut
+        $id_produit = null;
     }
     
-    // Requête avec calcul du prix TTC
+    // Requête avec calcul du prix TTC ET remises actives
     $stmt2 = $pdo->prepare("
         SELECT p.*, 
-               ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc
+               ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc,
+               r.id_remise, 
+               r.nom_remise, 
+               r.type_remise, 
+               r.valeur_remise,
+               r.date_debut,
+               r.date_fin
         FROM produit p
         LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
+        LEFT JOIN remise r ON (
+            r.id_vendeur = p.id_vendeur
+            AND r.est_actif = true
+            AND CURRENT_DATE BETWEEN r.date_debut AND r.date_fin
+            AND (
+                -- Cas 1: Remise sur CE produit spécifique (via id_produit)
+                r.id_produit = p.id_produit
+                -- Cas 2: Remise sur CE produit spécifique (via table remise_produit)
+                OR EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise AND rp.id_produit = p.id_produit)
+                -- Cas 3: Remise sur TOUS les produits (pas de produit spécifique, pas de catégorie)
+                OR (r.id_produit IS NULL AND r.categorie IS NULL AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+                -- Cas 4: Remise sur CATÉGORIE spécifique (pas de produit spécifique, catégorie correspond)
+                OR (r.id_produit IS NULL AND r.categorie = p.categorie AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+            )
+        )
         WHERE p.id_produit = ?
     ");
     $stmt2->execute([$id_produit]);
     $infos = $stmt2->fetch(PDO::FETCH_ASSOC);
+    
+    // Calculer le prix avec remise si applicable
+    $prix_final = $infos['prix_ttc'];
+    $prix_ht_final = $infos['prix_unitaire_ht'];
+    $a_une_remise = false;
+    
+    if ($infos['id_remise']) {
+        $a_une_remise = true;
+        if ($infos['type_remise'] === 'pourcentage') {
+            $prix_final = $infos['prix_ttc'] * (1 - $infos['valeur_remise'] / 100);
+            $prix_ht_final = $infos['prix_unitaire_ht'] * (1 - $infos['valeur_remise'] / 100);
+        } else {
+            $prix_final = $infos['prix_ttc'] - $infos['valeur_remise'];
+            $ratio = $prix_final / $infos['prix_ttc'];
+            $prix_ht_final = $infos['prix_unitaire_ht'] * $ratio;
+        }
+        if ($prix_final < 0) $prix_final = 0;
+        if ($prix_ht_final < 0) $prix_ht_final = 0;
+    }
 
 } catch (PDOException $e) {
     echo "Erreur SQL : " . $e->getMessage();
 }
+
 if(isset($_SESSION['id_panier'])){
-    $id_panier = $_SESSION['id_panier']; // à remplacer par $_SESSION['id_panier'] si on veux le rendre dynamique
+    $id_panier = $_SESSION['id_panier'];
 }
+
 // recuperation du stock
 $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
 $stmt_stock->execute([':id_produit' => $id_produit]);
 $stock_dispo = (int) $stmt_stock->fetchColumn();
-// recuperation du chemin vers les images
+
 // php avis du produit
 $requete_avis = $pdo->prepare("
     SELECT * 
@@ -47,8 +89,9 @@ if (count($avis) > 0) {
     foreach ($avis as $un_avis) {
         $total_notes += (int)$un_avis['note'];
     }
-    $moyenne = round($total_notes / count($avis)); // arrondi à l'entier le plus proche
+    $moyenne = round($total_notes / count($avis));
 }
+
 // Traitement du formulaire d'avis
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajouter_avis') {
     $note = (int)$_POST['note'];
@@ -68,7 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 ':description' => $description
             ]);
             
-            // On recharge la page pour voir le nouvel avis
             echo "<script>
                 window.location.href = '" . $_SERVER['REQUEST_URI'] . "';
             </script>";
@@ -88,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_GET['article'])) {
         $id_produit = $_GET['article'];
     } else {
-        $id_produit = null; // ou une valeur par défaut
+        $id_produit = null;
     }
     if(!isset($_SESSION['id_panier']) && $action !== "signaler_avis") {
         echo "<script>
@@ -101,7 +143,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($action === 'supprimer_avis') {
             $id_client = $_SESSION['id_client'];
 
-            // Sécurisé : on supprime uniquement si l'avis appartient à l'utilisateur
             $requete_suppr = $pdo->prepare("
                 DELETE FROM avis 
                 WHERE id_produit = :id_produit AND id_client = :id_client
@@ -116,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </script>";
             exit();
         }
-        if ($action === 'panier' ) { // traitement ajouter panier
+        if ($action === 'panier' ) {
         $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');
         $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
         $verif = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -147,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        }else if ($action === 'payer') { // traitement payer immediatement
+        }else if ($action === 'payer') {
         $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');
         $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
         $verif = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -176,172 +217,114 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<script>
             window.location.href = 'panier.php';
         </script>";
-        exit(); // très important pour arrêter le scrip
+        exit();
         }
     }
-    }
+}
 ?>
 
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produit Détail - Compte CLient</title>
-    <meta name="description" content="Page ou tu vois un produit avec son détail !">
-    <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
+    <title>Détail produit - <?= htmlspecialchars($infos['nom_produit']) ?></title>
+    <meta name="description" content="Détails du produit">
+    <meta name="keywords" content="MarketPlace, Shopping, Ventes, Breton, Produit" lang="fr">
     <link rel="stylesheet" href="../assets/csss/style.css">
-    <!--<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">-->
-    <style>
-        .rating-container {
-            margin: 1rem 0;
-        }
-
-        .rating-container label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .stars-rating {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .star {
-            font-size: 2.5rem;
-            color: #ddd;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            user-select: none;
-        }
-
-        .star.active {
-            color: #ffd700;
-            animation: starPulse 0.3s ease;
-        }
-
-        .star.hover {
-            color: #ffed4e;
-        }
-
-        @keyframes starPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
-
-        .rating-text {
-            margin-left: 1rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #666;
-            min-width: 150px;
-        }
-    </style>
 </head>
 <body>
-    <header>
+    <header class = "disabled">
         <?php include 'header.php'?>
     </header>
-    <main class="main_produit" style="padding-top: 50px;">
-        <section class="fiche-produit">
+    <main class="main_detail">
+        <section class="produit">
+            <?php
+            $requete_img = $pdo->prepare('SELECT * FROM media_produit WHERE id_produit = :id_produit');
+            $requete_img->execute([':id_produit' => $id_produit]);
+            $images = $requete_img->fetchAll(PDO::FETCH_ASSOC);
+            ?>
+            
+            <div class="conteneur-images">
+                <div class="grande-image">
+                    <?php if (!empty($images)): ?>
+                        <img src="<?= htmlspecialchars($images[0]['chemin_image']) ?>" alt="<?= htmlspecialchars($infos['nom_produit']) ?>" id="grande-img">
+                    <?php endif; ?>
+                </div>
+                <div class="miniatures">
+                    <?php foreach ($images as $img): ?>
+                        <img src="<?= htmlspecialchars($img['chemin_image']) ?>" alt="Miniature">
+                    <?php endforeach; ?>
+                </div>
+            </div>
 
-            <div class="fiche-container">
-                <div class="images-produit">
-                    <?php
-                    $requete_img = $pdo->prepare('SELECT chemin_image FROM media_produit WHERE id_produit = :id_produit LIMIT 1');
-                    $requete_img->execute([':id_produit' => $id_produit]);
-                    $img = $requete_img->fetch();
-                    ?>
-                    <img src="<?= $img['chemin_image'] ? htmlentities($img['chemin_image']) : 'front_end/assets/images_produits/' ?>" alt="Kouign Amann" class="image-principale">
-
-                    <div class="miniatures">
+            <div class="informations">
+                <div class="info-haut">
+                    <h1><?= htmlspecialchars($infos['nom_produit']) ?></h1>
+                    
+                    <?php if ($a_une_remise): ?>
+                        <!-- Affichage avec remise -->
+                        <div class="remise-detail-container">
+                            <div class="remise-badge-detail">
+                                <?php if ($infos['type_remise'] === 'pourcentage'): ?>
+                                    -<?= number_format($infos['valeur_remise'], 0) ?>%
+                                <?php else: ?>
+                                    -<?= number_format($infos['valeur_remise'], 2, ',', ' ') ?>€
+                                <?php endif; ?>
+                            </div>
+                            <span class="remise-nom-detail"><?= htmlentities($infos['nom_remise']) ?></span>
+                        </div>
+                        
+                        <div class="prix-container-detail">
+                            <p class="prix prix-original-detail"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</p>
+                            <p class="prix prix-final-detail"><?= number_format($prix_final, 2, ',', ' ') ?>€</p>
+                        </div>
+                        
+                        <p class="prix-ht-detail">Prix HT avec remise : <?= number_format($prix_ht_final, 2, ',', ' ') ?>€</p>
+                        
+                        <div class="remise-periode">
+                            <small>
+                                <?php
+                                $debut = new DateTime($infos['date_debut']);
+                                $fin = new DateTime($infos['date_fin']);
+                                echo "Offre valable du " . $debut->format('d/m/Y') . " au " . $fin->format('d/m/Y');
+                                ?>
+                            </small>
+                        </div>
+                    <?php else: ?>
+                        <!-- Affichage sans remise -->
+                        <p class="prix"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</p>
+                        <p class="prix-ht">Prix HT : <?= number_format($infos['prix_unitaire_ht'], 2, ',', ' ') ?>€</p>
+                    <?php endif; ?>
+                    
+                    <div class="disponibilite">
+                        <p>Stock disponible : <strong><?= htmlspecialchars($stock_dispo) ?></strong></p>
+                    </div>
+                    
+                    <div class="actions">
+                        <form method="post" id="form-panier">
+                            <input type="hidden" name="action" value="panier">
+                            <button type="submit" class="ajouter-panier">🛒 Ajouter au panier</button>
+                        </form>
+                        <form method="post" id="form-achat">
+                            <input type="hidden" name="action" value="payer">
+                            <button type="submit" class="payer">⚡ Acheter maintenant</button>
+                        </form>
+                    </div>
+                    
+                    <div class="notation">
                         <?php
-                            $requete_img = $pdo->prepare('SELECT chemin_image FROM media_produit WHERE id_produit = :id_produit');
-                            $requete_img->execute([':id_produit' => $id_produit]);
-                            $img = $requete_img->fetchAll();
-                            $imgprincipale = true;
-
-                            foreach ($img as $minia) {
-                                if ($imgprincipale) {
-                                    $imgprincipale = false;
-                                }
-                                else{
-                                    $chemin = !empty($minia["chemin_image"])
-                                    ? htmlentities($minia["chemin_image"])
-                                    : "front_end/assets/images_produits/default.png"; // mets une image par défaut si tu veux
-
-                                    echo '<img src="' . $chemin . '" alt="Miniature">';
-                                }
+                            if (count($avis) > 0) {
+                                $etoiles_moyenne = str_repeat('★', $moyenne) . str_repeat('☆', 5 - $moyenne);
+                                echo '<span class="etoiles">' . $etoiles_moyenne . '</span>';
+                                echo '<span class="note">' . $moyenne . '/5</span>';
+                                echo '<a href="#avis-section">Voir les ' . count($avis) . ' avis</a>';
+                            } else {
+                                echo '<span class="etoiles">☆☆☆☆☆</span>';
+                                echo '<span class="note">Aucune note</span>';
                             }
                         ?>
-
                     </div>
-                </div>
-
-                <div class="infos-produit">
-                    <div class="titre-prix-boutons">
-                        <div class="titre-prix">
-                            <div class="titre-ligne">
-                                <h1><?= htmlspecialchars($infos['nom_produit']) ?></h1>
-                            </div>
-                            
-                            <div class="prix">
-                                <span class="prix-valeur"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</span>
-                            </div>
-                        </div>
-                        <div class="boutons">
-                                <?php echo '
-                                <form action="" method="post" style="display:inline;">
-                                    <input type="hidden" name="action" value="panier">
-                                    <button type="submit">Ajouter au panier</button>
-                                </form>
-                                
-                                <form action="" method="post" style="display:inline;">
-                                    <input type="hidden" name="action" value="payer">
-                                    <button type="submit">Payer maintenant</button>
-                                </form>' ?>
-                        </div>
-                    </div>
-                    <p class="description">
-                        <?= htmlspecialchars($infos['description_produit']) ?>
-                    </p>
-                    <div class="stock-avis">
-                        <span class="stock-dispo" style="color: <?= $stock_dispo > 0 ? 'green' : 'red' ?>">
-                            <?php
-                                if ($stock_dispo > 0) {
-                                    echo 'Stock disponible : ' . $stock_dispo .'';
-                                }
-                                else {
-                                    echo 'Rupture de stock';
-                                }
-                            ?>
-                        </span>
-
-                        <div class="avis">
-                            <?php
-                                if (count($avis) > 0) {
-                                    $etoiles_moyenne = str_repeat('★', $moyenne) . str_repeat('☆', 5 - $moyenne);
-                                    echo '<span class="etoiles">' . $etoiles_moyenne . '</span>';
-                                    echo '<span class="note">' . $moyenne . '/5</span>';
-                                    echo '<a href="#avis-section">Voir les ' . count($avis) . ' avis</a>';
-                                } else {
-                                    echo '<span class="etoiles">☆☆☆☆☆</span>';
-                                    echo '<span class="note">Aucune note</span>';
-                                }
-                            ?>
-                        </div>
-                    </div>
-
-
                 </div>
             </div>
         </section>
@@ -354,7 +337,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     foreach ($avis as $un_avis) {
                         $id_client = (int) $un_avis['id_client'];
                         $client = $pdo->query("SELECT * FROM compte_client WHERE id_client = $id_client")->fetch(PDO::FETCH_ASSOC);
-                        // Génération des étoiles selon la note
                         $note = (int)$un_avis['note'];
                         $etoiles = str_repeat('★', $note) . str_repeat('☆', 5 - $note);
 
@@ -377,7 +359,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             }
                             else{
                                 ?>
-                                <button class="btn-signaler-avis" id-client="<?= $un_avis['id_client'] ?>">Signaler cet avis</button>
+                                <button class="btn-signaler-avis" data-id-client="<?= $un_avis['id_client'] ?>">Signaler cet avis</button>
                                 <?php
                             }
                         }
@@ -459,26 +441,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </footer>
 
     <script>
-        // Sélection des éléments
         const miniatures = document.querySelectorAll('.miniatures img');
+        const grandeImage = document.getElementById('grande-img');
+
+        miniatures.forEach(img => {
+            img.addEventListener('click', () => {
+                grandeImage.src = img.src;
+            });
+        });
+
         const popup = document.getElementById('popup-image');
         const popupImg = document.getElementById('popup-img');
         const closeBtn = document.querySelector('.popup .close');
 
-        // Quand on clique sur une miniature
         miniatures.forEach(img => {
             img.addEventListener('click', () => {
                 popup.style.display = 'block';
-                popupImg.src = img.src; // affiche la bonne image
+                popupImg.src = img.src;
             });
         });
 
-        // Quand on clique sur la croix
         closeBtn.addEventListener('click', () => {
             popup.style.display = 'none';
         });
 
-        // Quand on clique en dehors de l’image
         popup.addEventListener('click', (event) => {
             if (event.target === popup) {
                 popup.style.display = 'none';
@@ -491,12 +477,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         const closeBtnSignalement = popupSignalement.querySelector('.close');
         const cancelBtnSignalement = popupSignalement.querySelector('.btn-cancel');
 
-
         boutonsSignalement.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const idClient = btn.getAttribute('data-id-client');
-
-                // injecte l'id du client dans le  formulaire
                 document.getElementById('input_id_client_cible').value = idClient;
                 popupSignalement.style.display = 'flex';
             });
@@ -510,7 +493,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if(cancelBtnSignalement) {
             cancelBtnSignalement.addEventListener('click', fermerSignalement);
         }
-
     </script>
     <script src="../assets/js/noteEtoile.js"></script>
 </body>
+</html>

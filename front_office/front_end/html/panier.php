@@ -1,6 +1,5 @@
 <?php
 include 'config.php';
-include 'session.php';
 include 'sessionindex.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

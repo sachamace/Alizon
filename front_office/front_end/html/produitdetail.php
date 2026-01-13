@@ -357,9 +357,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                 <h1><?= htmlspecialchars($infos['nom_produit']) ?></h1>
                             </div>
                             
-                            <div class="prix">
-                                <span class="prix-valeur"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</span>
-                            </div>
+                            <?php if ($a_une_remise): ?>
+                                <!-- Affichage avec remise -->
+                                <div class="remise-detail-container">
+                                    <div class="remise-badge-detail">
+                                        <?php if ($infos['type_remise'] === 'pourcentage'): ?>
+                                            -<?= number_format($infos['valeur_remise'], 0) ?>%
+                                        <?php else: ?>
+                                            -<?= number_format($infos['valeur_remise'], 2, ',', ' ') ?>€
+                                        <?php endif; ?>
+                                    </div>
+                                    <span class="remise-nom-detail"><?= htmlentities($infos['nom_remise']) ?></span>
+                                </div>
+                                
+                                <div class="prix-container-detail">
+                                    <p class="prix prix-original-detail"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</p>
+                                    <p class="prix prix-final-detail"><?= number_format($prix_final, 2, ',', ' ') ?>€</p>
+                                </div>
+                                
+                                <p class="prix-ht-detail">Prix HT avec remise : <?= number_format($prix_ht_final, 2, ',', ' ') ?>€</p>
+                                
+                                <div class="remise-periode">
+                                    <small>
+                                        <?php
+                                        $debut = new DateTime($infos['date_debut']);
+                                        $fin = new DateTime($infos['date_fin']);
+                                        echo "Offre valable du " . $debut->format('d/m/Y') . " au " . $fin->format('d/m/Y');
+                                        ?>
+                                    </small>
+                                </div>
+                            <?php else: ?>
+                                                        <!-- Affichage sans remise -->
+                            <p class="prix"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</p>
+                            <p class="prix-ht">Prix HT : <?= number_format($infos['prix_unitaire_ht'], 2, ',', ' ') ?>€</p>
+                        <?php endif; ?>
                         </div>
                         <div class="boutons">
                                 <?php echo '
@@ -401,10 +432,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                     echo '<span class="note">Aucune note</span>';
                                 }
                             ?>
-                        </div>
+                        </div>        
                     </div>
-
-
                 </div>
             </div>
         </section>

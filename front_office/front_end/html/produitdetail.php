@@ -267,12 +267,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 ?>
 <!doctype html>
 <html lang="fr">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détail produit - <?= htmlspecialchars($infos['nom_produit']) ?></title>
-    <meta name="description" content="Détails du produit">
-    <meta name="keywords" content="MarketPlace, Shopping, Ventes, Breton, Produit" lang="fr">
+    <meta name="description" content="Page ou tu vois un produit avec son détail !">
+    <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
     <link rel="stylesheet" href="../assets/csss/style.css">
     <!--<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -361,24 +362,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     <header class="disabled">
         <?php include 'header.php'?>
     </header>
-    <main class="main_detail">
-        <section class="produit">
-            <?php
-            $requete_img = $pdo->prepare('SELECT * FROM media_produit WHERE id_produit = :id_produit');
-            $requete_img->execute([':id_produit' => $id_produit]);
-            $images = $requete_img->fetchAll(PDO::FETCH_ASSOC);
-            ?>
-            
-            <div class="conteneur-images">
-                <div class="grande-image">
-                    <?php if (!empty($images)): ?>
-                        <img src="<?= htmlspecialchars($images[0]['chemin_image']) ?>" alt="<?= htmlspecialchars($infos['nom_produit']) ?>" id="grande-img">
-                    <?php endif; ?>
-                </div>
-                <div class="miniatures">
-                    <?php foreach ($images as $img): ?>
-                        <img src="<?= htmlspecialchars($img['chemin_image']) ?>" alt="Miniature">
-                    <?php endforeach; ?>
+    <main class="main_produit" style="padding-top: 50px;">
+        <section class="fiche-produit">
+
+            <div class="fiche-container">
+                <div class="images-produit">
+                    <?php
+                    $requete_img = $pdo->prepare('SELECT chemin_image FROM media_produit WHERE id_produit = :id_produit LIMIT 1');
+                    $requete_img->execute([':id_produit' => $id_produit]);
+                    $img = $requete_img->fetch();
+                    ?>
+                    <img src="<?= $img['chemin_image'] ? htmlentities($img['chemin_image']) : 'front_end/assets/images_produits/' ?>" alt="Kouign Amann" class="image-principale">
+
+                    <div class="miniatures">
+                        <?php
+                            $requete_img = $pdo->prepare('SELECT chemin_image FROM media_produit WHERE id_produit = :id_produit');
+                            $requete_img->execute([':id_produit' => $id_produit]);
+                            $img = $requete_img->fetchAll();
+                            $imgprincipale = true;
+
+                            foreach ($img as $minia) {
+                                if ($imgprincipale) {
+                                    $imgprincipale = false;
+                                }
+                                else{
+                                    $chemin = !empty($minia["chemin_image"])
+                                    ? htmlentities($minia["chemin_image"])
+                                    : "front_end/assets/images_produits/default.png"; // mets une image par défaut si tu veux
+
+                                    echo '<img src="' . $chemin . '" alt="Miniature">';
+                                }
+                            }
+                        ?>
+
+                    </div>
                 </div>
 
                 <div class="infos-produit">
@@ -435,14 +452,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                 ?>
                             </small>
                         </div>
-                    <?php else: ?>
-                        <!-- Affichage sans remise -->
-                        <p class="prix"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</p>
-                        <p class="prix-ht">Prix HT : <?= number_format($infos['prix_unitaire_ht'], 2, ',', ' ') ?>€</p>
-                    <?php endif; ?>
-                    
-                    <div class="disponibilite">
-                        <p>Stock disponible : <strong><?= htmlspecialchars($stock_dispo) ?></strong></p>
                     </div>
                     
                     <div class="actions">
@@ -685,30 +694,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     </footer>
 
     <script>
+        // Sélection des éléments
         const miniatures = document.querySelectorAll('.miniatures img');
-        const grandeImage = document.getElementById('grande-img');
-
-        miniatures.forEach(img => {
-            img.addEventListener('click', () => {
-                grandeImage.src = img.src;
-            });
-        });
-
         const popup = document.getElementById('popup-image');
         const popupImg = document.getElementById('popup-img');
         const closeBtn = document.querySelector('.popup .close');
 
+        // Quand on clique sur une miniature
         miniatures.forEach(img => {
             img.addEventListener('click', () => {
                 popup.style.display = 'block';
-                popupImg.src = img.src;
+                popupImg.src = img.src; // affiche la bonne image
             });
         });
 
+        // Quand on clique sur la croix
         closeBtn.addEventListener('click', () => {
             popup.style.display = 'none';
         });
 
+        // Quand on clique en dehors de l’image
         popup.addEventListener('click', (event) => {
             if (event.target === popup) {
                 popup.style.display = 'none';
@@ -720,6 +725,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         const popupSignalement = document.getElementById('popup-signalement');
         const closeBtnSignalement = popupSignalement.querySelector('.close');
         const cancelBtnSignalement = popupSignalement.querySelector('.btn-cancel');
+
 
         boutonsSignalement.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -739,7 +745,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         if(cancelBtnSignalement) {
             cancelBtnSignalement.addEventListener('click', fermerSignalement);
         }
+
     </script>
     <script src="../assets/js/noteEtoile.js"></script>
 </body>
-</html>

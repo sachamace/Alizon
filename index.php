@@ -19,6 +19,52 @@
         <?php include 'front_office/front_end/html/header.php' ?>
     </header>
     <div class="div__catalogue">
+        <aside id="filtre">
+            <form action="" method="get" id="tri-form">
+                <?php if (isset($_GET['categorie'])): ?>
+                    <input type="hidden" name="categorie" value="<?= htmlspecialchars($_GET['categorie']) ?>">
+                <?php endif; ?>
+                <label for="tri">Trier par :</label>
+                <select name="tri" id="tri" onchange="this.form.submit()">
+                    <option value="">-- Sélectionner --</option>
+                    <option value="prix_asc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'prix_asc') echo 'selected'; ?>>Prix croissant</option>
+                    <option value="prix_desc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'prix_desc') echo 'selected'; ?>>Prix décroissant</option>
+                    <option value="note_asc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'note_asc') echo 'selected'; ?>>Note 1-5</option>
+                    <option value="note_desc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'note_desc') echo 'selected'; ?>>Note 5-1</option>
+                </select>
+
+                <label>Prix</label>
+                <div class="inputs">
+                    <input type="number" placeholder="Min" id="prixMinInput" name="prixMin" min="0" max="1000" value="<?php echo $_GET['prixMin']?>">
+                    <input type="number" placeholder="Max" id="prixMaxInput" name="prixMax" min="0" max="1000" value="<?php echo $_GET['prixMax']?>">
+                </div>
+                <fieldset>
+                    <legend>Vendeurs :</legend>
+                    <?php
+                    $vendeurs_selectionnes = $_GET['vendeurs'] ?? []; // On récupère les IDs cochés
+                    $vendeurs = $pdo->query('SELECT * FROM compte_vendeur');
+                    
+                    while ($vendeur = $vendeurs->fetch()){
+                        // On vérifie si l'id actuel est dans le tableau des vendeurs sélectionnés
+                        $is_checked = in_array($vendeur['id_vendeur'], $vendeurs_selectionnes) ? 'checked' : '';
+                        ?>
+                        <input type="checkbox" 
+                            id="vend_<?php echo $vendeur['id_vendeur'];?>" 
+                            name="vendeurs[]" 
+                            value="<?php echo $vendeur['id_vendeur']; ?>"
+                            <?php echo $is_checked; ?> /> <label for="vend_<?php echo $vendeur['id_vendeur'];?>"><?php echo $vendeur['raison_sociale'];?></label><br>
+                    <?php } ?>
+                </fieldset>
+                <label>Note</label>
+                <div class="inputs">
+                    <input type="number" placeholder="Min" id="noteMinInput" name="noteMin" min="0" max="5" value="<?php echo $_GET['noteMin']?>">
+                    <input type="number" placeholder="Max" id="noteMaxInput" name="noteMax" min="0" max="5" value="<?php echo $_GET['noteMax']?>">
+                </div>
+                <button type="button" id="resetAllFilters" onclick="window.location.href=window.location.pathname">
+                    Réinitialiser les filtres
+                </button>
+            </form>
+        </aside>
         <?php
             $tri = $_GET['tri'] ?? '';
             switch ($tri) {
@@ -37,16 +83,74 @@
                 default:
                     $orderBy = 'id_produit ASC';
             }
-            // 1. DÉFINITION DE LA REQUÊTE COMMUNE (Socle de base)
-            // On combine : Produits + Calcul TTC + Note Moyenne + Infos Remises (les 4 cas)
-            $sqlBase = "
+            // --- 1. INITIALISATION DES VARIABLES ---
+            $params = [];
+            // On commence le WHERE avec la condition de base (Produit actif)
+            $where = "p.est_actif = true"; 
+            $having = "1 = 1"; // Condition "toujours vraie" pour pouvoir ajouter des "AND" derrière
+
+            // --- 2. GESTION DE LA RECHERCHE (Texte) ---
+            if (isset($_GET['search']) && !empty($_GET['search'])) {
+                // On ajoute la recherche textuelle au WHERE
+                $where .= " AND (LOWER(p.nom_produit) LIKE LOWER(:search) OR LOWER(p.description_produit) LIKE LOWER(:search))";
+                // On stocke le paramètre sécurisé
+                $params['search'] = '%' . urldecode($_GET['search']) . '%';
+            }
+
+            // --- 3. GESTION DES FILTRES (Prix, Vendeurs, Notes) ---
+            
+            // Filtre Prix Min (HAVING car c'est un calcul)
+            if (!empty($_GET['prixMin'])) {
+                $having .= " AND ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) >= :prixMin";
+                $params['prixMin'] = $_GET['prixMin'];
+            }
+
+            // Filtre Prix Max
+            if (!empty($_GET['prixMax'])) {
+                $having .= " AND ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) <= :prixMax";
+                $params['prixMax'] = $_GET['prixMax'];
+            }
+
+            // Filtre Vendeurs (Tableau de cases cochées)
+            if (!empty($_GET['vendeurs']) && is_array($_GET['vendeurs'])) {
+                $vendeurs = $_GET['vendeurs'];
+                $placeholders = [];
+                
+                // On crée des marqueurs dynamiques :vendeur_1, :vendeur_2, etc.
+                foreach ($vendeurs as $key => $id) {
+                    // Sécurité : on s'assure que la clé est unique
+                    $paramName = 'vendeur_' . $key; 
+                    $placeholders[] = ':' . $paramName;
+                    $params[$paramName] = $id;
+                }
+                
+                // On ajoute la condition au WHERE
+                if (!empty($placeholders)) {
+                    $where .= " AND p.id_vendeur IN (" . implode(',', $placeholders) . ")";
+                }
+            }
+
+            // Filtre Note Min (HAVING car c'est une moyenne AVG)
+            if (!empty($_GET['noteMin'])) {
+                $having .= " AND AVG(a.note) >= :noteMin";
+                $params['noteMin'] = $_GET['noteMin'];
+            }
+
+            // Filtre Note Max
+            if (!empty($_GET['noteMax'])) {
+                $having .= " AND AVG(a.note) <= :noteMax";
+                $params['noteMax'] = $_GET['noteMax'];
+            }
+
+            // --- 4. CONSTRUCTION DE LA REQUÊTE FINALE ---
+            $sql = "
                 SELECT p.*, 
                     ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc,
-                    AVG(a.note) AS note_moyenne,
                     r.id_remise, 
                     r.nom_remise, 
                     r.type_remise, 
-                    r.valeur_remise
+                    r.valeur_remise,
+                    AVG(a.note) AS note_moyenne
                 FROM produit p
                 LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
                 LEFT JOIN avis a ON p.id_produit = a.id_produit
@@ -55,52 +159,33 @@
                     AND r.est_actif = true
                     AND CURRENT_DATE BETWEEN r.date_debut AND r.date_fin
                     AND (
-                        -- Cas 1: Remise sur CE produit spécifique (via id_produit)
+                        -- Cas 1: Remise sur CE produit spécifique
                         r.id_produit = p.id_produit
-                        -- Cas 2: Remise sur CE produit spécifique (via table remise_produit)
+                        -- Cas 2: Remise sur CE produit spécifique (via table de liaison)
                         OR EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise AND rp.id_produit = p.id_produit)
-                        -- Cas 3: Remise sur TOUS les produits (pas de produit spécifique, pas de catégorie)
+                        -- Cas 3: Remise sur TOUS les produits
                         OR (r.id_produit IS NULL AND r.categorie IS NULL AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
                         -- Cas 4: Remise sur CATÉGORIE spécifique
                         OR (r.id_produit IS NULL AND r.categorie = p.categorie AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
                     )
                 )
-                WHERE p.est_actif = true
+                WHERE $where
+                GROUP BY 
+                    p.id_produit, 
+                    t.taux, 
+                    r.id_remise, 
+                    r.nom_remise, 
+                    r.type_remise, 
+                    r.valeur_remise
+                HAVING $having
+                ORDER BY $orderBy
             ";
 
-            // 2. GESTION DE LA RECHERCHE ET EXÉCUTION
-            if (isset($_GET['search']) && !empty($_GET['search'])) {
-                // --- CAS AVEC RECHERCHE ---
-                
-                // On ajoute le filtre de recherche au SQL de base
-                $sql = $sqlBase . " AND (LOWER(p.nom_produit) LIKE LOWER(:query) OR LOWER(p.description_produit) LIKE LOWER(:query))";
-                
-                // On ajoute le GROUP BY (obligatoire car on a AVG(note)) et le ORDER BY
-                // Note : On groupe aussi par les infos de remise pour être propre en SQL
-                $sql .= " GROUP BY p.id_produit, t.taux, r.id_remise, r.nom_remise, r.type_remise, r.valeur_remise";
-                $sql .= " ORDER BY " . $orderBy;
-
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute(['query' => '%' . urldecode($_GET['search']) . '%']);
-                $reponse = $stmt;
-
-            } else {
-                // --- CAS SANS RECHERCHE (Affichage par défaut) ---
-                
-                // Juste le Group By et Order By
-                $sql = $sqlBase . " GROUP BY p.id_produit, t.taux, r.id_remise, r.nom_remise, r.type_remise, r.valeur_remise";
-                $sql .= " ORDER BY " . $orderBy;
-
-                // Pas de paramètre ? On utilise query() directement
-                $reponse = $pdo->query($sql);
-            }
-            
-            // On affiche chaque entrée une à une
-            if ($reponse->rowCount() == 0){
-                ?>
-                <h2>Nous n'avons pas trouvé ce que vous cherchez.</h2>
-                <?php
-            }
+            // --- 5. EXÉCUTION ---
+            // On utilise toujours prepare() ici car $params peut contenir la recherche OU les filtres
+            $reponse = $pdo->prepare($sql);
+            $reponse->execute($params);
+            // Affichage des produits
             while ($donnees = $reponse->fetch()){ 
                 if (!isset($_GET['categorie']) || $donnees['categorie'] == $_GET['categorie']){
                 
@@ -182,74 +267,22 @@
                     </div>
                 </article>
             </a>
-                
             <?php
                 }
             }
             $reponse->closeCursor();
         ?>
-        <aside id="filtre">
-            <form action="" method="get" id="tri-form">
-                <?php if (isset($_GET['categorie'])): ?>
-                    <input type="hidden" name="categorie" value="<?= htmlspecialchars($_GET['categorie']) ?>">
-                <?php endif; ?>
-                <label for="tri">Trier par :</label>
-                <select name="tri" id="tri" onchange="this.form.submit()">
-                    <option value="">-- Sélectionner --</option>
-                    <option value="prix_asc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'prix_asc') echo 'selected'; ?>>Prix croissant</option>
-                    <option value="prix_desc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'prix_desc') echo 'selected'; ?>>Prix décroissant</option>
-                    <option value="note_asc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'note_asc') echo 'selected'; ?>>Note 1-5</option>
-                    <option value="note_desc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'note_desc') echo 'selected'; ?>>Note 5-1</option>
-                </select>
-                <br><label for="prixMin">Prix Min :</label>
-                    <input type="number" id="prixMinInput" name="prixMin" min="0" max="1000" value="<?php echo $_GET['prixMin']?>">
-                <label for="prixMax">Prix Max :</label>
-                    <input type="number" id="prixMaxInput" name="prixMax" min="0" max="1000" value="<?php echo $_GET['prixMax']?>">
-                <fieldset>
-                    <legend>Vendeurs :</legend>
-                    <?php
-                    $vendeurs = $pdo->query('SELECT * FROM compte_vendeur');
-                    while ($vendeur = $vendeurs->fetch()){?>
-                        <input type="checkbox" id="<?php echo $vendeur['id_vendeur'];?>" name="<?php echo $vendeur['raison_sociale'];?>"/>
-                        <label for="<?php echo $vendeur['raison_sociale'];?>"><?php echo $vendeur['raison_sociale'];?></label><br>
-                    <?php } ?>
-                </fieldset>
-                <fieldset>
-                    <legend>Notes :</legend>
-                    <div>
-                        <input type="checkbox" id="1" name="1"/>
-                            <label for="1">★</label><br>
-                        <input type="checkbox" id="2" name="2"/>
-                            <label for="2">★★</label><br>
-                        <input type="checkbox" id="3" name="3"/>
-                            <label for="3">★★★</label><br>
-                        <input type="checkbox" id="4" name="4"/>
-                            <label for="4">★★★★</label><br>
-                        <input type="checkbox" id="5" name="5"/>
-                            <label for="5">★★★★★</label>
-                </fieldset>
-                <button type="button" id="resetAllFilters">Réinitialiser les filtres</button>
-            </form>
-        </aside>
     </div>
     <footer class="footer mobile">
         <?php include 'front_office/front_end/html/footer.php'?>
     </footer>
     <script>
         $(function(){
-            $('#openFilter').on('click', function(e){
-            e.preventDefault();
-            $('#filtre').toggle();
-            const expanded = $(this).attr('aria-expanded') === 'true' ? 'false' : 'true';
-            $(this).attr('aria-expanded', expanded);
-            });
-        });
-        $(function(){
             $('#tri, input[type="checkbox"]').on('change', function() {
                 $('#tri-form').submit();
             });
             let timeout = null;
-            $('#prixMinInput, #prixMaxInput').on('keyup input', function() {
+            $('#prixMinInput, #prixMaxInput, #noteMinInput, #noteMaxInput').on('keyup input', function() {
                 clearTimeout(timeout);
                 timeout = setTimeout(function() {
                     $('#tri-form').submit();

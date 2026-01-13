@@ -89,22 +89,6 @@ try {
                         <?= htmlentities($remise['nom_remise'] ?: 'Remise sans nom') ?>
                     </h3>
                     
-<<<<<<< HEAD
-                    <!-- Afficher le type d'application -->
-                    <div class="remise-type-application">
-                        <?php if ($remise['type_application'] === 'Produit spécifique' && $remise['nom_produit']): ?>
-                            Sur: <strong><?= htmlentities($remise['nom_produit']) ?></strong>
-                        <?php elseif ($remise['type_application'] === 'Produits multiples'): ?>
-                            Sur: <strong><?= $remise['nb_produits_associes'] ?> produit(s) spécifique(s)</strong>
-                        <?php elseif (strpos($remise['type_application'], 'Catégorie:') === 0): ?>
-                            Sur: <strong><?= htmlentities($remise['type_application']) ?></strong>
-                        <?php else: ?>
-                            Sur: <strong><?= htmlentities($remise['type_application']) ?></strong>
-                        <?php endif; ?>
-                    </div>
-                    
-=======
->>>>>>> aef5c3a (remise cote back office)
                     <?php if ($remise['code_promo']): ?>
                         <div class="remise-code">
                             Code: <strong><?= htmlentities($remise['code_promo']) ?></strong>
@@ -165,6 +149,11 @@ try {
                 </article>
             </a>
         <?php endforeach; ?>
+    <?php else: ?>
+        <div class="aucune-remise">
+            <h3>Aucune remise créée</h3>
+            <p>Vous n'avez pas encore créé de remise. Cliquez sur "Créer une remise" pour commencer.</p>
+        </div>
     <?php endif; ?>
 </section>
 >>>>>>> aef5c3a (remise cote back office)

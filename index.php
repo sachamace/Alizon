@@ -73,7 +73,7 @@
             }
             
             // On affiche chaque entrée une à une
-            if (!($reponse->fetch())){
+            if ($reponse->rowCount() == 0){
                 ?>
                 <h2>Nous n'avons pas trouvé ce que vous cherchez.</h2>
                 <?php

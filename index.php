@@ -83,50 +83,74 @@
                 default:
                     $orderBy = 'id_produit ASC';
             }
+            // --- 1. INITIALISATION DES VARIABLES ---
             $params = [];
-            $having = "1 = 1"; 
-            $where = "1 = 1";
+            // On commence le WHERE avec la condition de base (Produit actif)
+            $where = "p.est_actif = true"; 
+            $having = "1 = 1"; // Condition "toujours vraie" pour pouvoir ajouter des "AND" derrière
 
+            // --- 2. GESTION DE LA RECHERCHE (Texte) ---
+            if (isset($_GET['search']) && !empty($_GET['search'])) {
+                // On ajoute la recherche textuelle au WHERE
+                $where .= " AND (LOWER(p.nom_produit) LIKE LOWER(:search) OR LOWER(p.description_produit) LIKE LOWER(:search))";
+                // On stocke le paramètre sécurisé
+                $params['search'] = '%' . urldecode($_GET['search']) . '%';
+            }
+
+            // --- 3. GESTION DES FILTRES (Prix, Vendeurs, Notes) ---
+            
+            // Filtre Prix Min (HAVING car c'est un calcul)
             if (!empty($_GET['prixMin'])) {
                 $having .= " AND ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) >= :prixMin";
                 $params['prixMin'] = $_GET['prixMin'];
             }
 
+            // Filtre Prix Max
             if (!empty($_GET['prixMax'])) {
                 $having .= " AND ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) <= :prixMax";
                 $params['prixMax'] = $_GET['prixMax'];
             }
 
+            // Filtre Vendeurs (Tableau de cases cochées)
             if (!empty($_GET['vendeurs']) && is_array($_GET['vendeurs'])) {
                 $vendeurs = $_GET['vendeurs'];
                 $placeholders = [];
                 
+                // On crée des marqueurs dynamiques :vendeur_1, :vendeur_2, etc.
                 foreach ($vendeurs as $key => $id) {
-                    $placeholders[] = ':' . $key;
-                    $params[$key] = $id;
+                    // Sécurité : on s'assure que la clé est unique
+                    $paramName = 'vendeur_' . $key; 
+                    $placeholders[] = ':' . $paramName;
+                    $params[$paramName] = $id;
                 }
-
-                $where .= " AND p.id_vendeur IN (" . implode(',', $placeholders) . ")";
+                
+                // On ajoute la condition au WHERE
+                if (!empty($placeholders)) {
+                    $where .= " AND p.id_vendeur IN (" . implode(',', $placeholders) . ")";
+                }
             }
 
+            // Filtre Note Min (HAVING car c'est une moyenne AVG)
             if (!empty($_GET['noteMin'])) {
                 $having .= " AND AVG(a.note) >= :noteMin";
                 $params['noteMin'] = $_GET['noteMin'];
             }
 
+            // Filtre Note Max
             if (!empty($_GET['noteMax'])) {
                 $having .= " AND AVG(a.note) <= :noteMax";
                 $params['noteMax'] = $_GET['noteMax'];
             }
 
+            // --- 4. CONSTRUCTION DE LA REQUÊTE FINALE ---
             $sql = "
                 SELECT p.*, 
-                       ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc,
-                       r.id_remise, 
-                       r.nom_remise, 
-                       r.type_remise, 
-                       r.valeur_remise,
-                       AVG(a.note) AS note_moyenne
+                    ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc,
+                    r.id_remise, 
+                    r.nom_remise, 
+                    r.type_remise, 
+                    r.valeur_remise,
+                    AVG(a.note) AS note_moyenne
                 FROM produit p
                 LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
                 LEFT JOIN avis a ON p.id_produit = a.id_produit
@@ -135,11 +159,11 @@
                     AND r.est_actif = true
                     AND CURRENT_DATE BETWEEN r.date_debut AND r.date_fin
                     AND (
-                        -- Cas 1: Remise sur CE produit spécifique (via id_produit)
+                        -- Cas 1: Remise sur CE produit spécifique
                         r.id_produit = p.id_produit
-                        -- Cas 2: Remise sur CE produit spécifique (via table remise_produit)
+                        -- Cas 2: Remise sur CE produit spécifique (via table de liaison)
                         OR EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise AND rp.id_produit = p.id_produit)
-                        -- Cas 3: Remise sur TOUS les produits (pas de produit spécifique, pas de catégorie)
+                        -- Cas 3: Remise sur TOUS les produits
                         OR (r.id_produit IS NULL AND r.categorie IS NULL AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
                         -- Cas 4: Remise sur CATÉGORIE spécifique (pas de produit spécifique, catégorie correspond)
                         OR (r.id_produit IS NULL AND r.categorie = p.categorie AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
@@ -157,10 +181,11 @@
                 ORDER BY $orderBy
             ";
 
+            // --- 5. EXÉCUTION ---
+            // On utilise toujours prepare() ici car $params peut contenir la recherche OU les filtres
             $reponse = $pdo->prepare($sql);
             $reponse->execute($params);
-            
-            // On affiche chaque entrée une à une
+            // Affichage des produits
             while ($donnees = $reponse->fetch()){ 
                 if (!isset($_GET['categorie']) || $donnees['categorie'] == $_GET['categorie']){
                 

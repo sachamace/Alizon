@@ -13,10 +13,6 @@
     <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
     <link rel="stylesheet" href="front_office/front_end/assets/csss/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!--<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">-->
 </head>
 <body>
     <header>
@@ -41,35 +37,62 @@
                 default:
                     $orderBy = 'id_produit ASC';
             }
-            if (isset($_GET['search'])){
-                $sql = "
-                    SELECT p.*, 
-                        ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc,
-                        AVG(a.note) AS note_moyenne
-                    FROM produit p
-                    LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
-                    LEFT JOIN avis a ON p.id_produit = a.id_produit
-                    WHERE p.est_actif = true 
-                    AND (LOWER(p.nom_produit) LIKE LOWER(:query) OR LOWER(p.description_produit) LIKE LOWER(:query))
-                    GROUP BY p.id_produit, t.taux
-                    ORDER BY " . $orderBy;
+            // 1. DÉFINITION DE LA REQUÊTE COMMUNE (Socle de base)
+            // On combine : Produits + Calcul TTC + Note Moyenne + Infos Remises (les 4 cas)
+            $sqlBase = "
+                SELECT p.*, 
+                    ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc,
+                    AVG(a.note) AS note_moyenne,
+                    r.id_remise, 
+                    r.nom_remise, 
+                    r.type_remise, 
+                    r.valeur_remise
+                FROM produit p
+                LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
+                LEFT JOIN avis a ON p.id_produit = a.id_produit
+                LEFT JOIN remise r ON (
+                    r.id_vendeur = p.id_vendeur
+                    AND r.est_actif = true
+                    AND CURRENT_DATE BETWEEN r.date_debut AND r.date_fin
+                    AND (
+                        -- Cas 1: Remise sur CE produit spécifique (via id_produit)
+                        r.id_produit = p.id_produit
+                        -- Cas 2: Remise sur CE produit spécifique (via table remise_produit)
+                        OR EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise AND rp.id_produit = p.id_produit)
+                        -- Cas 3: Remise sur TOUS les produits (pas de produit spécifique, pas de catégorie)
+                        OR (r.id_produit IS NULL AND r.categorie IS NULL AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+                        -- Cas 4: Remise sur CATÉGORIE spécifique
+                        OR (r.id_produit IS NULL AND r.categorie = p.categorie AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+                    )
+                )
+                WHERE p.est_actif = true
+            ";
+
+            // 2. GESTION DE LA RECHERCHE ET EXÉCUTION
+            if (isset($_GET['search']) && !empty($_GET['search'])) {
+                // --- CAS AVEC RECHERCHE ---
+                
+                // On ajoute le filtre de recherche au SQL de base
+                $sql = $sqlBase . " AND (LOWER(p.nom_produit) LIKE LOWER(:query) OR LOWER(p.description_produit) LIKE LOWER(:query))";
+                
+                // On ajoute le GROUP BY (obligatoire car on a AVG(note)) et le ORDER BY
+                // Note : On groupe aussi par les infos de remise pour être propre en SQL
+                $sql .= " GROUP BY p.id_produit, t.taux, r.id_remise, r.nom_remise, r.type_remise, r.valeur_remise";
+                $sql .= " ORDER BY " . $orderBy;
 
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute(['query' => '%' . urldecode($_GET['search']) . '%']);
-
                 $reponse = $stmt;
-            }
-            else{
-                $reponse = $pdo->query("
-                    SELECT p.*, 
-                    ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc,
-                    AVG(a.note) AS note_moyenne
-                    FROM produit p
-                    LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
-                    LEFT JOIN avis a ON p.id_produit = a.id_produit
-                    GROUP BY p.id_produit, t.taux
-                    ORDER BY $orderBy"
-                );
+
+            } else {
+                // --- CAS SANS RECHERCHE (Affichage par défaut) ---
+                
+                // Juste le Group By et Order By
+                $sql = $sqlBase . " GROUP BY p.id_produit, t.taux, r.id_remise, r.nom_remise, r.type_remise, r.valeur_remise";
+                $sql .= " ORDER BY " . $orderBy;
+
+                // Pas de paramètre ? On utilise query() directement
+                $reponse = $pdo->query($sql);
             }
             
             // On affiche chaque entrée une à une
@@ -81,7 +104,7 @@
             while ($donnees = $reponse->fetch()){ 
                 if (!isset($_GET['categorie']) || $donnees['categorie'] == $_GET['categorie']){
                 
-                // Récupération du stock pour afficher le statut
+                // Récupération du stock
                 $stock_dispo = (int) $donnees['stock_disponible'];
                 $stock_class = 'in-stock';
                 
@@ -91,9 +114,34 @@
                     $stock_class = 'low-stock';
                 }
                 
+                // Calcul du prix avec remise
+                $prix_final = $donnees['prix_ttc'];
+                $a_une_remise = false;
+                
+                if ($donnees['id_remise']) {
+                    $a_une_remise = true;
+                    if ($donnees['type_remise'] === 'pourcentage') {
+                        $prix_final = $donnees['prix_ttc'] * (1 - $donnees['valeur_remise'] / 100);
+                    } else {
+                        $prix_final = $donnees['prix_ttc'] - $donnees['valeur_remise'];
+                    }
+                    if ($prix_final < 0) $prix_final = 0;
+                }
                 ?>
             <a href="front_office/front_end/html/produitdetail.php?article=<?php echo $donnees['id_produit']?>" style="text-decoration:none; color:inherit;">
-                <article>
+                <article class="<?= $a_une_remise ? 'has-remise-front' : '' ?>">
+                    <?php
+                    // Badge remise si applicable
+                    if ($a_une_remise): ?>
+                        <div class="remise-badge-front">
+                            <?php if ($donnees['type_remise'] === 'pourcentage'): ?>
+                                -<?= number_format($donnees['valeur_remise'], 0) ?>%
+                            <?php else: ?>
+                                -<?= number_format($donnees['valeur_remise'], 2, ',', ' ') ?>€
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+                    
                     <?php
                     $requete_img = $pdo->prepare('SELECT chemin_image FROM media_produit WHERE id_produit = :id_produit LIMIT 1');
                     $requete_img->execute([':id_produit' => $donnees['id_produit']]);
@@ -109,7 +157,18 @@
                         <p class="description"><?php echo htmlentities($donnees['description_produit']) ?></p>
                         
                         <div class="price-section">
-                            <p class="prix"><?php echo number_format($donnees['prix_ttc'], 2, ',', ' ') . '€' ?></p>
+                            <?php if ($a_une_remise): ?>
+                                <div class="prix-container-front">
+                                    <p class="prix prix-original-front"><?php echo number_format($donnees['prix_ttc'], 2, ',', ' ') . '€' ?></p>
+                                    <p class="prix prix-remise-front"><?php echo number_format($prix_final, 2, ',', ' ') . '€' ?></p>
+                                </div>
+                                <?php if ($donnees['nom_remise']): ?>
+                                    <p class="remise-nom-front"><?= htmlentities($donnees['nom_remise']) ?></p>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <p class="prix"><?php echo number_format($donnees['prix_ttc'], 2, ',', ' ') . '€' ?></p>
+                            <?php endif; ?>
+                            
                             <span class="stock-info <?php echo $stock_class; ?>">
                                 <?php 
                                 if ($stock_dispo > 0) {
@@ -127,7 +186,7 @@
             <?php
                 }
             }
-            $reponse->closeCursor(); // Termine le traitement de la requête
+            $reponse->closeCursor();
         ?>
         <aside id="filtre">
             <form action="" method="get" id="tri-form">

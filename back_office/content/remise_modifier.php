@@ -1,3 +1,4 @@
+
 <?php
 $erreurs = [];
 
@@ -9,8 +10,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $condition_min_achat = floatval($_POST['condition_min_achat']);
     $date_debut = $_POST['date_debut'];
     $date_fin = $_POST['date_fin'];
-    $id_produit = !empty($_POST['id_produit']) ? intval($_POST['id_produit']) : null;
     $est_actif = isset($_POST['est_actif']) ? 1 : 0;
+    
+    // Récupérer le type d'application
+    $type_application = $_POST['type_application'] ?? 'tous';
+    $categorie = ($type_application === 'categorie') ? $_POST['categorie'] : null;
+    $produits_ids = ($type_application === 'produits') ? ($_POST['produits'] ?? []) : [];
+    
+    // Pour les produits spécifiques, NE PAS mettre id_produit dans la table remise
+    // On utilisera uniquement la table remise_produit
+    $id_produit_remise = ($type_application === 'produits' && count($produits_ids) === 1) 
+        ? intval($produits_ids[0]) 
+        : null;
     
     // Validations
     if (empty($nom_remise)) {
@@ -31,8 +42,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $erreurs['dates'] = "La date de fin doit être après la date de début";
     }
     
+    if ($type_application === 'categorie' && empty($categorie)) {
+        $erreurs['application'] = "Veuillez sélectionner une catégorie";
+    }
+    
+    if ($type_application === 'produits' && empty($produits_ids)) {
+        $erreurs['application'] = "Veuillez sélectionner au moins un produit";
+    }
+    
     if (empty($erreurs)) {
         try {
+            $pdo->beginTransaction();
+            
+            // 1. Mettre à jour la remise
             $sql = "UPDATE remise SET 
                     nom_remise = ?, 
                     description = ?, 
@@ -41,8 +63,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     condition_min_achat = ?, 
                     date_debut = ?, 
                     date_fin = ?, 
-                    id_produit = ?, 
-                    est_actif = ?
+                    categorie = ?, 
+                    est_actif = ?,
+                    id_produit = ?
                     WHERE id_remise = ? AND id_vendeur = ?";
             
             $stmt = $pdo->prepare($sql);
@@ -54,24 +77,62 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $condition_min_achat,
                 $date_debut,
                 $date_fin,
-                $id_produit,
+                $categorie,
                 $est_actif,
+                $id_produit_remise,
                 $id_remise,
                 $id_vendeur_connecte
             ]);
+            
+            // 2. Supprimer les anciennes associations produits
+            $stmt = $pdo->prepare("DELETE FROM remise_produit WHERE id_remise = ?");
+            $stmt->execute([$id_remise]);
+            
+            // 3. Si application sur des produits spécifiques, insérer dans remise_produit
+            if ($type_application === 'produits' && !empty($produits_ids)) {
+                $stmt = $pdo->prepare("INSERT INTO remise_produit (id_remise, id_produit) VALUES (?, ?)");
+                foreach ($produits_ids as $id_produit) {
+                    $stmt->execute([$id_remise, intval($id_produit)]);
+                }
+            }
+            
+            $pdo->commit();
             
             echo "<script>
                 window.location.href = 'index.php?page=remise&type=consulter&id=$id_remise';
             </script>";
             exit();
         } catch (PDOException $e) {
+            $pdo->rollBack();
             $erreurs['general'] = "Erreur lors de la modification : " . $e->getMessage();
         }
     }
 }
 
+// Déterminer le type d'application actuel
+$type_application_actuel = 'tous';
+if (!empty($remise['categorie'])) {
+    $type_application_actuel = 'categorie';
+} else {
+    // Vérifier s'il y a des produits spécifiques
+    $stmtCheck = $pdo->prepare("SELECT COUNT(*) as nb FROM remise_produit WHERE id_remise = ?");
+    $stmtCheck->execute([$id_remise]);
+    if ($stmtCheck->fetch()['nb'] > 0) {
+        $type_application_actuel = 'produits';
+    }
+}
+
+// Récupérer les produits sélectionnés si c'est une remise sur produits spécifiques
+$produits_selectionnes = [];
+if ($type_application_actuel === 'produits') {
+    $stmtProdSel = $pdo->prepare("SELECT id_produit FROM remise_produit WHERE id_remise = ?");
+    $stmtProdSel->execute([$id_remise]);
+    $produits_selectionnes = $stmtProdSel->fetchAll(PDO::FETCH_COLUMN);
+}
+
 // Utiliser les valeurs POST si disponibles, sinon les valeurs de la BDD
 $form_data = $_SERVER["REQUEST_METHOD"] === "POST" ? $_POST : $remise;
+$type_application = $_SERVER["REQUEST_METHOD"] === "POST" ? ($_POST['type_application'] ?? 'tous') : $type_application_actuel;
 ?>
 
 <section class="remise-form-container">
@@ -89,7 +150,7 @@ $form_data = $_SERVER["REQUEST_METHOD"] === "POST" ? $_POST : $remise;
         <div class="error-message"><?= htmlentities($erreurs['general']) ?></div>
     <?php endif; ?>
 
-    <form method="POST" class="remise-form">
+    <form method="POST" class="remise-form" id="remiseForm">
         <div class="form-section">
             <h3>Informations générales</h3>
             
@@ -180,18 +241,83 @@ $form_data = $_SERVER["REQUEST_METHOD"] === "POST" ? $_POST : $remise;
         <div class="form-section">
             <h3>Application de la remise</h3>
             
-            <div class="input-group">
-                <label for="id_produit">Produit concerné</label>
-                <select id="id_produit" name="id_produit">
-                    <option value="">Tous les produits</option>
-                    <?php foreach ($produits as $produit): ?>
-                        <option value="<?= $produit['id_produit'] ?>" 
-                                <?= ($form_data['id_produit'] == $produit['id_produit']) ? 'selected' : '' ?>>
-                            <?= htmlentities($produit['nom_produit']) ?>
+            <?php if (isset($erreurs['application'])): ?>
+                <div class="error-message"><?= $erreurs['application'] ?></div>
+            <?php endif; ?>
+            
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="type_application" value="tous" 
+                           <?= ($type_application === 'tous') ? 'checked' : '' ?>>
+                    <div class="radio-content">
+                        <strong>Tous les produits</strong>
+                        <small>La remise s'applique sur l'ensemble du catalogue</small>
+                    </div>
+                </label>
+
+                <label class="radio-option">
+                    <input type="radio" name="type_application" value="categorie" 
+                           <?= ($type_application === 'categorie') ? 'checked' : '' ?>>
+                    <div class="radio-content">
+                        <strong>Une catégorie entière</strong>
+                        <small>Tous les produits d'une catégorie spécifique</small>
+                    </div>
+                </label>
+
+                <label class="radio-option">
+                    <input type="radio" name="type_application" value="produits" 
+                           <?= ($type_application === 'produits') ? 'checked' : '' ?>>
+                    <div class="radio-content">
+                        <strong>Produits spécifiques</strong>
+                        <small>Sélectionnez un ou plusieurs produits</small>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Section catégorie -->
+            <div id="section-categorie" class="application-section" style="display: none;">
+                <label for="categorie">Sélectionner une catégorie *</label>
+                <select id="categorie" name="categorie">
+                    <option value="">-- Choisir une catégorie --</option>
+                    <?php
+                    $stmtCat = $pdo->prepare("SELECT DISTINCT categorie FROM produit WHERE id_vendeur = ? ORDER BY categorie");
+                    $stmtCat->execute([$id_vendeur_connecte]);
+                    while ($cat = $stmtCat->fetch()):
+                    ?>
+                        <option value="<?= htmlentities($cat['categorie']) ?>" 
+                                <?= (isset($form_data['categorie']) && $form_data['categorie'] === $cat['categorie']) ? 'selected' : '' ?>>
+                            <?= htmlentities($cat['categorie']) ?>
                         </option>
-                    <?php endforeach; ?>
+                    <?php endwhile; ?>
                 </select>
-                <small>Laissez vide pour appliquer la remise à tous vos produits</small>
+            </div>
+
+            <!-- Section produits spécifiques -->
+            <div id="section-produits" class="application-section" style="display: none;">
+                <div class="produits-selection">
+                    <div class="selection-header">
+                        <label>Sélectionner les produits *</label>
+                        <div class="selection-actions">
+                            <button type="button" id="selectAll">Tout sélectionner</button>
+                            <button type="button" id="deselectAll">Tout désélectionner</button>
+                        </div>
+                    </div>
+                    
+                    <div class="produits-list">
+                        <?php
+                        $selectedProduits = $_SERVER["REQUEST_METHOD"] === "POST" ? ($_POST['produits'] ?? []) : $produits_selectionnes;
+                        foreach ($produits as $produit):
+                        ?>
+                            <label class="produit-checkbox">
+                                <input type="checkbox" name="produits[]" value="<?= $produit['id_produit'] ?>"
+                                       <?= in_array($produit['id_produit'], $selectedProduits) ? 'checked' : '' ?>>
+                                <div class="produit-info">
+                                    <span class="produit-nom"><?= htmlentities($produit['nom_produit']) ?></span>
+                                </div>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -203,6 +329,45 @@ $form_data = $_SERVER["REQUEST_METHOD"] === "POST" ? $_POST : $remise;
 </section>
 
 <script>
+// Gestion de l'affichage des sections selon le type d'application
+const typeApplicationRadios = document.getElementsByName('type_application');
+const sectionCategorie = document.getElementById('section-categorie');
+const sectionProduits = document.getElementById('section-produits');
+const categorieSelect = document.getElementById('categorie');
+
+function updateApplicationSection() {
+    const selectedType = document.querySelector('input[name="type_application"]:checked').value;
+    
+    // Cacher toutes les sections
+    sectionCategorie.style.display = 'none';
+    sectionProduits.style.display = 'none';
+    categorieSelect.removeAttribute('required');
+    
+    // Afficher la section appropriée
+    if (selectedType === 'categorie') {
+        sectionCategorie.style.display = 'block';
+        categorieSelect.setAttribute('required', 'required');
+    } else if (selectedType === 'produits') {
+        sectionProduits.style.display = 'block';
+    }
+}
+
+typeApplicationRadios.forEach(radio => {
+    radio.addEventListener('change', updateApplicationSection);
+});
+
+// Initialiser l'affichage au chargement
+updateApplicationSection();
+
+// Boutons sélectionner tout / désélectionner tout
+document.getElementById('selectAll').addEventListener('click', function() {
+    document.querySelectorAll('input[name="produits[]"]').forEach(cb => cb.checked = true);
+});
+
+document.getElementById('deselectAll').addEventListener('click', function() {
+    document.querySelectorAll('input[name="produits[]"]').forEach(cb => cb.checked = false);
+});
+
 // Mise à jour du placeholder selon le type de remise
 document.getElementById('type_remise').addEventListener('change', function() {
     const valeurInput = document.getElementById('valeur_remise');

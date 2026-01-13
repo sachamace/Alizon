@@ -26,31 +26,71 @@ try {
 }
 
 try {
-    // Utiliser la VUE produit_avec_prix qui calcule automatiquement le prix_ttc
+    // ✅ REQUÊTE CORRIGÉE - Casting explicite pour PostgreSQL
     $stmt = $pdo->prepare("
         SELECT pp.quantite, 
                p.nom_produit, 
                p.prix_unitaire_ht,
                p.id_produit,
-               p.taux_tva,
-               p.prix_ttc
+               t.taux AS taux_tva,
+               -- Prix TTC sans remise (CAST en NUMERIC pour ROUND)
+               ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) AS NUMERIC), 2) AS prix_ttc_sans_remise,
+               -- Informations sur la remise active
+               r.id_remise,
+               r.nom_remise,
+               r.type_remise,
+               r.valeur_remise,
+               -- Prix TTC avec remise si applicable
+               CASE 
+                   WHEN r.id_remise IS NOT NULL AND r.type_remise = 'pourcentage' THEN
+                       ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) * (1 - r.valeur_remise / 100) AS NUMERIC), 2)
+                   WHEN r.id_remise IS NOT NULL AND r.type_remise = 'fixe' THEN
+                       GREATEST(0, ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) - r.valeur_remise AS NUMERIC), 2))
+                   ELSE
+                       ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) AS NUMERIC), 2)
+               END AS prix_ttc,
+               -- Prix HT avec remise pour la ligne de commande
+               CASE 
+                   WHEN r.id_remise IS NOT NULL AND r.type_remise = 'pourcentage' THEN
+                       ROUND(CAST(p.prix_unitaire_ht * (1 - r.valeur_remise / 100) AS NUMERIC), 2)
+                   WHEN r.id_remise IS NOT NULL AND r.type_remise = 'fixe' THEN
+                       ROUND(CAST(p.prix_unitaire_ht * (GREATEST(0, ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) - r.valeur_remise AS NUMERIC), 2)) / NULLIF(ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) AS NUMERIC), 2), 0)) AS NUMERIC), 2)
+                   ELSE
+                       p.prix_unitaire_ht
+               END AS prix_unitaire_ht_final
         FROM panier_produit pp
-        JOIN produit_avec_prix p ON pp.id_produit = p.id_produit
+        JOIN produit p ON pp.id_produit = p.id_produit
+        LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
+        LEFT JOIN remise r ON (
+            r.id_vendeur = p.id_vendeur
+            AND r.est_actif = true
+            AND CURRENT_DATE BETWEEN r.date_debut AND r.date_fin
+            AND (
+                -- Cas 1: Remise sur CE produit spécifique (via id_produit)
+                r.id_produit = p.id_produit
+                -- Cas 2: Remise sur CE produit spécifique (via table remise_produit)
+                OR EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise AND rp.id_produit = p.id_produit)
+                -- Cas 3: Remise sur TOUS les produits (pas de produit spécifique, pas de catégorie)
+                OR (r.id_produit IS NULL AND r.categorie IS NULL AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+                -- Cas 4: Remise sur CATÉGORIE spécifique (pas de produit spécifique, catégorie correspond)
+                OR (r.id_produit IS NULL AND r.categorie = p.categorie AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+            )
+        )
         WHERE pp.id_panier = :id_panier
     ");
     $stmt->execute([':id_panier' => $_SESSION['id_panier']]);
     $articles_panier = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Calculer le total HT, TTC et nombre d'articles
+    // ✅ Calculer le total en utilisant les prix avec remise
     $total_ht = 0;
     $total_ttc = 0;
     $nb_articles = 0;
     $taxe = 0;
 
     foreach ($articles_panier as $article) {
-        $total_ht += $article['prix_unitaire_ht'] * $article['quantite'];
+        $total_ht += $article['prix_unitaire_ht_final'] * $article['quantite'];
         $total_ttc += $article['prix_ttc'] * $article['quantite'];
-        $taxe += ($article['prix_ttc'] - $article['prix_unitaire_ht']) * $article['quantite'];
+        $taxe += ($article['prix_ttc'] - $article['prix_unitaire_ht_final']) * $article['quantite'];
         $nb_articles += $article['quantite'];
     }
 } catch (PDOException $e) {
@@ -160,8 +200,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':id_commande' => $id_commande,
                         ':id_produit' => $article['id_produit'],
                         ':quantite' => $article['quantite'],
-                        ':prix_ht' => $article['prix_unitaire_ht'],
-                        ':prix_ttc' => $article['prix_ttc']
+                        ':prix_ht' => $article['prix_unitaire_ht_final'], // ✅ Prix avec remise
+                        ':prix_ttc' => $article['prix_ttc']                // ✅ Prix avec remise
                     ]);
                 }
 
@@ -235,7 +275,7 @@ function verifLuhn($numero) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de paiement - Compte Client</title>
     <meta name="description" content="Page lors du paiement de ton panier côté client!">
-    <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
+    <meta name="keywords" content="MarketPlace, Shopping, Ventes, Breton, Produit" lang="fr">
     <link rel="stylesheet" href="../assets/csss/style.css?v=<?php echo time(); ?>" id="main-css">
 </head>
 <body class="body_paiement">
@@ -276,9 +316,24 @@ function verifLuhn($numero) {
                     <ul>
                         <?php foreach ($articles_panier as $article): ?>
                         <p>
-                            <li><?= htmlentities($article['nom_produit']) ?> – x<?= $article['quantite'] ?></li>
+                            <li>
+                                <?= htmlentities($article['nom_produit']) ?> – x<?= $article['quantite'] ?>
+                                <?php if ($article['id_remise']): ?>
+                                    <span class="badge-mini-remise">
+                                        <?php if ($article['type_remise'] === 'pourcentage'): ?>
+                                            -<?= number_format($article['valeur_remise'], 0) ?>%
+                                        <?php else: ?>
+                                            -<?= number_format($article['valeur_remise'], 2, ',', ' ') ?>€
+                                        <?php endif; ?>
+                                    </span>
+                                <?php endif; ?>
+                            </li>
                             <span>
-                            <?= number_format($article['prix_ttc'], 2, ',', ' ') ?>€ (Total: <?= number_format($article['prix_ttc'] * $article['quantite'], 2, ',', ' ') ?>€)
+                                <?php if ($article['id_remise']): ?>
+                                    <s style="color: #999; font-size: 0.9em;"><?= number_format($article['prix_ttc_sans_remise'], 2, ',', ' ') ?>€</s>
+                                <?php endif; ?>
+                                <?= number_format($article['prix_ttc'], 2, ',', ' ') ?>€ 
+                                (Total: <?= number_format($article['prix_ttc'] * $article['quantite'], 2, ',', ' ') ?>€)
                             </span>
                         </p>
                         <?php endforeach; ?>

@@ -1,3 +1,4 @@
+
 <?php
 if (isset($_GET['page']) && $_GET['page'] === 'produit') {
     if (isset($_GET['id']) && isset($_GET['type'])) {
@@ -34,21 +35,39 @@ if (isset($_GET['page']) && $_GET['page'] === 'produit') {
         $stmtCheck->execute([$id]);
         $imageCount = $stmtCheck->fetchColumn();
 
-        // Récupérer les remises actives pour ce produit
+        // Récupérer les remises actives pour ce produit - REQUÊTE CORRIGÉE
         $stmtRemises = $pdo->prepare("
             SELECT r.id_remise, r.nom_remise, r.type_remise, r.valeur_remise, 
-                   r.date_debut, r.date_fin
+                   r.date_debut, r.date_fin, r.categorie
             FROM remise r
             WHERE r.id_vendeur = :id_vendeur
               AND r.est_actif = true
               AND CURRENT_DATE BETWEEN r.date_debut AND r.date_fin
-              AND (r.id_produit = :id_produit OR r.id_produit IS NULL)
-            ORDER BY r.id_produit DESC NULLS LAST
+              AND (
+                  -- Cas 1: Remise sur CE produit spécifique (via id_produit)
+                  r.id_produit = :id_produit
+                  -- Cas 2: Remise sur CE produit spécifique (via table remise_produit)
+                  OR EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise AND rp.id_produit = :id_produit2)
+                  -- Cas 3: Remise sur TOUS les produits (pas de produit spécifique, pas de catégorie)
+                  OR (r.id_produit IS NULL AND r.categorie IS NULL AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+                  -- Cas 4: Remise sur CATÉGORIE spécifique (pas de produit spécifique, catégorie correspond)
+                  OR (r.id_produit IS NULL AND r.categorie = :categorie_produit AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+              )
+            ORDER BY 
+                -- Priorité: 1. Produit spécifique, 2. Catégorie, 3. Tous produits
+                CASE 
+                    WHEN r.id_produit IS NOT NULL THEN 1
+                    WHEN EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise) THEN 1
+                    WHEN r.categorie IS NOT NULL THEN 2
+                    ELSE 3
+                END
             LIMIT 1
         ");
         $stmtRemises->execute([
             'id_vendeur' => $id_vendeur_connecte,
-            'id_produit' => $id
+            'id_produit' => $id,
+            'id_produit2' => $id,
+            'categorie_produit' => $produit['categorie']
         ]);
         $remise_active = $stmtRemises->fetch();
 

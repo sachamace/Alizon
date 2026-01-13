@@ -1,3 +1,4 @@
+
 <?php
 if (isset($_GET['page']) && $_GET['page'] === 'remise') {
     $id_vendeur_connecte = $_SESSION['vendeur_id'];
@@ -7,7 +8,12 @@ if (isset($_GET['page']) && $_GET['page'] === 'remise') {
         
         if ($type === 'creer') {
             // Récupérer les produits du vendeur pour la création
-            $stmtProduits = $pdo->prepare("SELECT id_produit, nom_produit FROM produit WHERE id_vendeur = ? ORDER BY nom_produit");
+            $stmtProduits = $pdo->prepare("
+                SELECT p.id_produit, p.nom_produit, p.categorie 
+                FROM produit p 
+                WHERE p.id_vendeur = ? 
+                ORDER BY p.categorie, p.nom_produit
+            ");
             $stmtProduits->execute([$id_vendeur_connecte]);
             $produits = $stmtProduits->fetchAll();
             
@@ -16,9 +22,17 @@ if (isset($_GET['page']) && $_GET['page'] === 'remise') {
         } elseif ($type === 'consulter' && isset($_GET['id'])) {
             $id_remise = $_GET['id'];
             
-            // Récupérer la remise
+            // Récupérer la remise avec informations complètes
             $stmt = $pdo->prepare("
-                SELECT r.*, p.nom_produit 
+                SELECT r.*,
+                       p.nom_produit,
+                       -- Information sur le type d'application
+                       CASE 
+                           WHEN r.id_produit IS NOT NULL THEN 'Produit spécifique'
+                           WHEN EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise) THEN 'Produits multiples'
+                           WHEN r.categorie IS NOT NULL THEN 'Catégorie'
+                           ELSE 'Tous les produits'
+                       END as type_application
                 FROM remise r
                 LEFT JOIN produit p ON r.id_produit = p.id_produit
                 WHERE r.id_remise = ? AND r.id_vendeur = ?
@@ -51,30 +65,19 @@ if (isset($_GET['page']) && $_GET['page'] === 'remise') {
             }
             
             // Récupérer les produits du vendeur
-            $stmtProduits = $pdo->prepare("SELECT id_produit, nom_produit FROM produit WHERE id_vendeur = ? ORDER BY nom_produit");
+            $stmtProduits = $pdo->prepare("
+                SELECT p.id_produit, p.nom_produit, p.categorie 
+                FROM produit p 
+                WHERE p.id_vendeur = ? 
+                ORDER BY p.categorie, p.nom_produit
+            ");
             $stmtProduits->execute([$id_vendeur_connecte]);
             $produits = $stmtProduits->fetchAll();
             
             include __DIR__ . '/remise_modifier.php';
             
         } elseif ($type === 'liste') {
-            // Récupérer toutes les remises du vendeur
-            $stmt = $pdo->prepare("
-                SELECT r.*, p.nom_produit,
-                       CASE 
-                           WHEN r.date_fin < CURRENT_DATE THEN 'Expirée'
-                           WHEN r.date_debut > CURRENT_DATE THEN 'À venir'
-                           WHEN r.est_actif = false THEN 'Inactive'
-                           ELSE 'Active'
-                       END as statut_calcule
-                FROM remise r
-                LEFT JOIN produit p ON r.id_produit = p.id_produit
-                WHERE r.id_vendeur = ?
-                ORDER BY r.date_debut DESC, r.id_remise DESC
-            ");
-            $stmt->execute([$id_vendeur_connecte]);
-            $remises = $stmt->fetchAll();
-            
+            // Inclure le fichier remise_liste.php avec la nouvelle requête
             include __DIR__ . '/remise_liste.php';
         }
     } else {

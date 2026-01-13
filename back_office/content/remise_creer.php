@@ -1,3 +1,4 @@
+
 <?php
 $erreurs = [];
 $success = false;
@@ -16,6 +17,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $type_application = $_POST['type_application'] ?? 'tous';
     $categorie = ($type_application === 'categorie') ? $_POST['categorie'] : null;
     $produits_ids = ($type_application === 'produits') ? ($_POST['produits'] ?? []) : [];
+    
+    // Pour les produits spécifiques, NE PAS mettre id_produit dans la table remise
+    // On utilisera uniquement la table remise_produit
+    $id_produit_remise = ($type_application === 'produits' && count($produits_ids) === 1) 
+        ? intval($produits_ids[0]) 
+        : null;
     
     // Validation : vérifier que les champs numériques ne contiennent que des chiffres et virgules/points
     if (!empty($_POST['valeur_remise']) && !preg_match('/^[0-9.,]+$/', $_POST['valeur_remise'])) {
@@ -59,8 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // 1. Insérer la remise
             $sql = "INSERT INTO remise (nom_remise, description, type_remise, valeur_remise, 
                     condition_min_achat, date_debut, date_fin, categorie, 
-                    id_vendeur, est_actif) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    id_vendeur, est_actif, id_produit) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
@@ -73,12 +80,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $date_fin,
                 $categorie,
                 $id_vendeur_connecte,
-                $est_actif
+                $est_actif,
+                $id_produit_remise // NULL pour plusieurs produits ou catégorie
             ]);
             
             $id_remise = $pdo->lastInsertId();
             
-            // 2. Si application sur des produits spécifiques, insérer dans remise_produit
+            // 2. Si application sur des produits spécifiques (un seul ou plusieurs), 
+            // insérer dans remise_produit
             if ($type_application === 'produits' && !empty($produits_ids)) {
                 $stmt = $pdo->prepare("INSERT INTO remise_produit (id_remise, id_produit) VALUES (?, ?)");
                 foreach ($produits_ids as $id_produit) {

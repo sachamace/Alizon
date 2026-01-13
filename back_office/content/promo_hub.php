@@ -1,3 +1,4 @@
+
 <?php
 include 'config.php';
 
@@ -14,15 +15,24 @@ $stmt = $pdo->prepare("
 $stmt->execute([$id_vendeur_connecte]);
 $stats_remises = $stmt->fetch();
 
-// Compter les produits en promotion
+// Compter les produits en promotion - REQUÊTE CORRIGÉE
 $stmt = $pdo->prepare("
     SELECT COUNT(DISTINCT p.id_produit) as produits_en_promo
     FROM produit p
     INNER JOIN remise r ON (
-        (r.id_produit = p.id_produit OR r.id_produit IS NULL)
-        AND r.id_vendeur = p.id_vendeur
+        r.id_vendeur = p.id_vendeur
         AND r.est_actif = true
         AND CURRENT_DATE BETWEEN r.date_debut AND r.date_fin
+        AND (
+            -- Cas 1: Remise sur CE produit spécifique (via id_produit)
+            r.id_produit = p.id_produit
+            -- Cas 2: Remise sur CE produit spécifique (via table remise_produit)
+            OR EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise AND rp.id_produit = p.id_produit)
+            -- Cas 3: Remise sur TOUS les produits (pas de produit spécifique, pas de catégorie)
+            OR (r.id_produit IS NULL AND r.categorie IS NULL AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+            -- Cas 4: Remise sur CATÉGORIE spécifique (pas de produit spécifique, catégorie correspond)
+            OR (r.id_produit IS NULL AND r.categorie = p.categorie AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+        )
     )
     WHERE p.id_vendeur = ?
 ");

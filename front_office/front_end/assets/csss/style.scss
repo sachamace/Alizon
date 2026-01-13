@@ -403,8 +403,7 @@ footer.footer {
   align-content: flex-start;
   gap: 25px;
   padding-top: 40px;
-  margin: 150px auto 50px auto;
-  width: 100%;
+  margin: 150px auto 50px 310px;
   
   a {
     text-decoration: none;
@@ -419,7 +418,7 @@ footer.footer {
 
   article {
     background: linear-gradient(135deg, $white 0%, darken($white, 2%) 100%);
-    width: 350px;
+    width: 325px;
     height: 550px;
     padding: 20px;
     margin: 0;
@@ -549,19 +548,138 @@ footer.footer {
       }
     }
   }
-  aside { //filtre
-      display: none;
-      background-color: $gray-light;
-      box-shadow: 0 2px 8px rgba($black, 0.1);
-      position: fixed;
-      top: 150px;
-      left: 0;
-      z-index: 999999999;
-      padding: 10px;
-      height: calc(100% - 150px);
-      input{
-          margin: 20px;
+  aside{
+    position: fixed;
+    top: 150px;
+    left: 0;
+    width: 300px;
+    height: calc(100vh - 150px);
+    z-index: 100;
+    background-color: $white;
+    border-right: 1px solid rgba($black, 0.08);
+    box-shadow: 2px 0 10px rgba($black, 0.02);
+    padding: 25px 20px;
+    overflow-y: auto;
+    box-sizing: border-box;
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+
+      label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]) {
+        display: block;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: $black;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
       }
+
+      select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1.5px solid $gray-light;
+        background-color: lighten($gray-light, 12%);
+        font-family: $font-family;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          background-color: $white;
+        }
+      }
+      .inputs {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        align-items: center;
+
+        input[type="number"] {
+          width: 100%;
+          padding: 10px;
+          border-radius: 8px;
+          border: 1.5px solid $gray-light;
+          box-sizing: border-box;
+          margin-bottom: 0;
+          transition: border-color 0.2s;
+
+          &:focus {
+            outline: none;
+            border-color: $primary-color;
+          }
+        }
+      }
+
+      fieldset {
+        border: none;
+        padding: 0;
+        margin: 0;
+
+        legend {
+          font-weight: 700;
+          font-size: 0.85rem;
+          color: $black;
+          text-transform: uppercase;
+          margin-bottom: 12px;
+        }
+
+        input[type="checkbox"] {
+          margin-right: 10px;
+          accent-color: $primary-color;
+          cursor: pointer;
+        }
+
+        label {
+          font-size: 0.95rem;
+          color: $gray-darker;
+          cursor: pointer;
+          display: inline-block;
+          margin-bottom: 6px;
+          transition: color 0.2s;
+
+          &:hover {
+            color: $primary-color;
+          }
+        }
+      }
+
+      label[for="1"], label[for="2"], label[for="3"], label[for="4"], label[for="5"] {
+        color: #ffb800;
+        font-size: 1.1rem;
+      }
+
+      #resetAllFilters {
+        background: transparent;
+        color: $gray-dark;
+        border: 1.5px solid $gray-light;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 10px;
+
+        &:hover {
+          background: #fff0f0;
+          color: #d93025;
+          border-color: #d93025;
+        }
+      }
+    }
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: $gray-light;
+      border-radius: 10px;
+    }
   }
 
   // =========================================================================
@@ -575,7 +693,7 @@ footer.footer {
     max-width: 100%;
     box-sizing: border-box;
     padding: 30px 10px 100px; // Encore plus réduit pour coller aux bords
-    margin-top: 180px;
+    margin-top: 180px auto 50px 0;
     justify-items: stretch; // Les articles prennent toute la largeur de leur colonne
     
     // Amélioration du scroll sur mobile
@@ -698,6 +816,10 @@ footer.footer {
       text-overflow: ellipsis;
       overflow: hidden;
       word-break: break-word;
+    }
+
+    aside{
+      width: 30px;
     }
   }
 

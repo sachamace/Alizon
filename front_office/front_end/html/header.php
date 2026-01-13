@@ -1,6 +1,6 @@
 <?php
-    include 'front_office/front_end/html/config.php';
-    include 'front_office/front_end/html/sessionindex.php';
+    include '/front_office/front_end/html/config.php';
+    include '/front_office/front_end/html/sessionindex.php';
     $stmt = $pdo->query("SELECT version();");
     if (isset($_POST['texte-recherche']) && !empty($_POST['texte-recherche'])) {
         $pageActuelle = basename($_SERVER['SCRIPT_NAME']);

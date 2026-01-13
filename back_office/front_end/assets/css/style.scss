@@ -82,7 +82,6 @@ body {
     text-decoration: none;
   }
 
-  // Lien du profil
   .profil-link {
     @include transition(transform);
     
@@ -96,7 +95,6 @@ body {
     }
   }
 
-  // Bouton de déconnexion
   .btn-deconnexion {
     @include flex-center;
     gap: 10px;
@@ -165,14 +163,12 @@ Structure de Consulter, Créer, Modifier produit
     margin-bottom: 2rem;
   }
 
-  // Grille principale
   .produit-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
     flex: 1;
 
-    // Partie gauche - Informations générales + Média
     .produit-infos {
       background-color: $gray-light;
       border: 1px solid $gray-medium;
@@ -228,7 +224,6 @@ Structure de Consulter, Créer, Modifier produit
           align-items: center;
           margin-top: 10px;
 
-          // Image média dans la partie gauche
           img {
             display: block;
             width: 100%;
@@ -242,7 +237,6 @@ Structure de Consulter, Créer, Modifier produit
       }
     }
 
-    // Partie droite - Prix, Stock, Visibilité
     .produit-prix-stock {
       display: flex;
       flex-direction: column;
@@ -262,7 +256,6 @@ Structure de Consulter, Créer, Modifier produit
           border-bottom: 2px solid #e0e0e0;
         }
 
-        // Prix avec sous-sections
         h4 {
           font-size: 0.9rem;
           color: #6b7280;
@@ -294,7 +287,6 @@ Structure de Consulter, Créer, Modifier produit
           font-weight: 500 !important;
         }
 
-        // Options de visibilité
         .visibility-option {
           display: flex;
           align-items: center;
@@ -321,7 +313,6 @@ Structure de Consulter, Créer, Modifier produit
     }
   }
 
-  // Actions (boutons en bas)
   .produit-actions {
     display: flex;
     justify-content: center;
@@ -350,7 +341,6 @@ Structure de Consulter, Créer, Modifier produit
     }
   }
 
-  // Styles pour les inputs
   input[type="text"] {
     @include input-base;
 
@@ -391,7 +381,6 @@ Structure de Consulter, Créer, Modifier produit
     }
   }
 
-  //Partie modification / création
   input[type="file"] {
     padding: 0.5rem;
     border: 2px dashed $gray-medium;
@@ -424,7 +413,6 @@ Structure de Consulter, Créer, Modifier produit
     }
   }
 
-  // Galerie de médias
   .media-gallery {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -442,7 +430,6 @@ Structure de Consulter, Créer, Modifier produit
       justify-content: space-between;
       margin-right: 10px;
     }
-
 
     img {
       width: 100%;
@@ -502,7 +489,6 @@ Structure du tableau de bord
 
 ------------------------------------------*/
 
-//Case article 
 .content {
   display: grid;
   padding: 20px;
@@ -1001,10 +987,6 @@ Fin de la structure de Consulter/Modifier Profil
 
 ------------------------------------------*/
 
-// =============================================================================
-// PAGE DE CONNEXION
-// =============================================================================
-
 .body__connexion {
   margin: 0;
   padding: 0;
@@ -1189,10 +1171,6 @@ Fin de la structure de Consulter/Modifier Profil
   margin-top: 5px;
   display: block;
 }
-
-// =============================================================================
-// PAGE DE CRÉATION DE COMPTE
-// =============================================================================
 
 .body__creation-compte {
   margin: 0;
@@ -1445,8 +1423,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-
-// Animation pour les champs valides
 .input__creation-compte:valid {
   border-color: $success-color;
   
@@ -1454,11 +1430,6 @@ Fin de la structure de Consulter/Modifier Profil
     background: $success-color;
   }
 }
-
-
-// =============================================================================
-// RÉCUPÉRATION DE MOT DE PASSE
-// =============================================================================
 
 .recuperation-container {
   @extend .container__connexion;
@@ -1472,12 +1443,10 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Messages de statut
 .succes-message {
   margin-bottom: 20px;
 }
 
-// Styles spécifiques à la récupération
 .recuperation-links {
   text-align: center;
   margin-top: 20px;
@@ -1493,7 +1462,6 @@ Fin de la structure de Consulter/Modifier Profil
   }
 }
 
-// Adaptation du bouton pour les liens
 .btn__link {
   @extend .btn__connexion;
   text-decoration: none;
@@ -1532,3 +1500,2698 @@ Fin de la structure de Consulter/Modifier Profil
 /* Les petites icônes avant le texte */
 .validation-item:before { content: "✖ "; }
 .validation-item.valid:before { content: "✔ "; }
+
+.content {
+
+  .creer_remise {
+    background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+    color: $white;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    border: 3px dashed rgba($white, 0.3);
+    transition: all $transition-speed ease;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    border-radius: $border-radius;
+
+    &:hover {
+      border-color: $white;
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 15px 40px rgba($black, 0.2);
+
+      p:last-child {
+        transform: rotate(90deg) scale(1.2);
+      }
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg,
+          transparent,
+          rgba($white, 0.1),
+          transparent);
+      transform: rotate(45deg);
+      transition: all 0.6s ease;
+    }
+
+    &:hover::before {
+      left: 100%;
+    }
+
+    p:first-child {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 0 0 20px 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba($black, 0.2);
+      z-index: 1;
+    }
+
+    p:last-child {
+      font-size: 5em;
+      font-weight: bold;
+      margin: 0;
+      line-height: 1;
+      transition: transform 0.3s ease;
+      text-shadow: 3px 3px 6px rgba($black, 0.3);
+      z-index: 1;
+    }
+  }
+
+  .remise-card-wrapper {
+    display: block;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+
+  .remise-article {
+    background: $white;
+    border-radius: $border-radius;
+    padding: 20px;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba($black, 0.08);
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba($black, 0.15);
+    }
+
+    .statut-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.75em;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: $white;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba($black, 0.15);
+    }
+
+    &.remise-active {
+      border: 2px solid $status-active;
+
+      .statut-badge {
+        background: $status-active;
+      }
+    }
+
+    &.remise-inactive {
+      border: 2px solid $status-inactive;
+      opacity: 0.6;
+
+      .statut-badge {
+        background: $status-inactive;
+      }
+    }
+
+    &.remise-expiree {
+      border: 2px solid $status-out-of-stock;
+
+      .statut-badge {
+        background: $status-out-of-stock;
+      }
+    }
+
+    &.remise-a-venir {
+      border: 2px solid $status-low-stock;
+
+      .statut-badge {
+        background: $status-low-stock;
+        color: $black;
+      }
+    }
+
+    .remise-valeur {
+      font-size: 3em;
+      font-weight: bold;
+      color: $primary-color;
+      margin: 20px 0 10px;
+      text-align: center;
+    }
+
+    .remise-nom {
+      margin: 10px 0 5px;
+      font-size: 1.2em;
+      color: $gray-darker;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .remise-code {
+      text-align: center;
+      padding: 10px;
+      background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($secondary-color, 0.1) 100%);
+      border: 2px dashed $primary-color;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+
+      strong {
+        color: $primary-color;
+        font-size: 1.1em;
+        letter-spacing: 1px;
+      }
+    }
+
+    .remise-produit {
+      color: $gray-dark;
+      font-size: 0.9em;
+      margin: 5px 0;
+      text-align: center;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: break-word;
+    }
+
+    .remise-dates {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 15px;
+      border-top: 1px solid $gray-medium;
+      font-size: 0.85em;
+      color: $gray-dark;
+
+      svg {
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+        vertical-align: middle;
+      }
+
+      > div {
+        display: flex;
+        align-items: center;
+      }
+
+      span {
+        margin: 0 8px;
+        color: $gray-medium;
+        font-weight: bold;
+      }
+    }
+
+    .remise-condition {
+      font-size: 0.8em;
+      color: $gray-dark;
+      text-align: center;
+      margin-top: 8px;
+      font-style: italic;
+    }
+  }
+}
+
+.remise-form-container {
+  background-color: $white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+
+  h2 {
+    font-size: 1.8rem;
+    color: $primary-color;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .form-section {
+    background-color: $gray-light;
+    border: 1px solid $gray-medium;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    h3 {
+      font-size: 1.2rem;
+      color: $black;
+      margin: 0 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid $gray-medium;
+    }
+  }
+
+  .input-group {
+    margin-bottom: 1.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 0.95rem;
+      color: $gray-h3-produit;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      input[type="checkbox"] {
+        margin-right: 0.5rem;
+        width: 18px;
+        height: 18px;
+        accent-color: $primary-color;
+      }
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid $gray-medium;
+      border-radius: 10px;
+      font-size: 1em;
+      font-family: $font-family;
+      background-color: $white;
+      transition: all $transition-speed ease;
+      box-sizing: border-box;
+
+      &:hover {
+        border-color: #bdc3c7;
+        background-color: $white;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        background-color: $white;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+      }
+
+      &::placeholder {
+        color: #bdc3c7;
+      }
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: calc(100% - 16px) center;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    small {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: $gray-dark;
+    }
+
+    .error {
+      font-size: 0.85rem;
+      color: $danger-color;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid $gray-medium;
+
+    .btn-primary,
+    input[type="submit"] {
+      padding: 12px 30px;
+      background: $success-color;
+      color: $white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: darken($success-color, 8%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($success-color, 0.3);
+      }
+    }
+
+    .btn-secondary,
+    a {
+      padding: 12px 30px;
+      background: $cancel-color;
+      color: $white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-align: center;
+
+      &:hover {
+        background: darken($cancel-color, 8%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($cancel-color, 0.3);
+      }
+    }
+  }
+}
+
+.error-message {
+  color: $danger-color;
+  background: lighten($danger-color, 35%);
+  border: 2px solid $danger-color;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.remise-detail-container {
+  background-color: $white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+
+  h2 {
+    font-size: 1.8rem;
+    color: $primary-color;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .remise-detail-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    flex: 1;
+
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .detail-section {
+    background-color: $gray-light;
+    border: 1px solid $gray-medium;
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      color: $black;
+      margin: 0 0 1.5rem 0;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid $gray-medium;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1rem 0;
+      border-bottom: 1px solid $gray-medium;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .detail-label {
+        font-weight: 600;
+        color: $gray-h3-produit;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .detail-value {
+        text-align: right;
+        color: #1f2937;
+        font-weight: 500;
+
+        .badge {
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 0.75em;
+          font-weight: bold;
+          text-transform: uppercase;
+          color: $white;
+
+          &.badge-actif {
+            background: $status-active;
+          }
+
+          &.badge-inactif {
+            background: $status-inactive;
+          }
+
+          &.badge-expire {
+            background: $status-out-of-stock;
+          }
+
+          &.badge-a-venir {
+            background: $status-low-stock;
+            color: $black;
+          }
+        }
+      }
+    }
+
+    .remise-valeur-display {
+      text-align: center;
+      padding: 2rem 0;
+
+      .valeur-principale {
+        font-size: 3.5rem;
+        font-weight: bold;
+        color: $primary-color;
+        margin-bottom: 0.5rem;
+      }
+
+      .valeur-type {
+        font-size: 1rem;
+        color: $gray-dark;
+        font-weight: 500;
+      }
+    }
+
+    .code-promo-display {
+      padding: 12px 20px;
+      background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($secondary-color, 0.1) 100%);
+      border: 2px dashed $primary-color;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      color: $primary-color;
+      text-align: center;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+    }
+  }
+
+  .remise-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid $gray-medium;
+
+    .modifier {
+      padding: 12px 30px;
+      background: $success-color;
+      color: $white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: darken($success-color, 8%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($success-color, 0.3);
+      }
+    }
+
+    .supprimer {
+      padding: 12px 30px;
+      background: $danger-color;
+      color: $white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: darken($danger-color, 8%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($danger-color, 0.3);
+      }
+    }
+  }
+}
+
+.periode-timeline {
+  padding: 1.5rem 0;
+
+  .timeline-item {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background: $white;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+
+    .timeline-icon {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $gray-light;
+      border: 2px solid $primary-color;
+      border-radius: 50%;
+      color: $primary-color;
+    }
+
+    .timeline-content {
+      flex: 1;
+
+      .timeline-label {
+        font-size: 0.85rem;
+        color: $gray-h3-produit;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      .timeline-date {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $gray-darker;
+      }
+    }
+  }
+
+  .timeline-separator {
+    height: 2rem;
+    width: 2px;
+    background: $gray-medium;
+    margin: 0 auto 1rem;
+    margin-left: 23px;
+  }
+}
+
+.duree-info {
+  text-align: center;
+  padding-top: 1.5rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid $gray-medium;
+  color: $gray-dark;
+  font-size: 0.9rem;
+
+  strong {
+    color: $gray-darker;
+    font-weight: 600;
+  }
+}
+
+.remise-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid $gray-medium;
+
+  .supprimer {
+    @include button-base;
+    @include button-variant($danger-color);
+  }
+}
+
+.btn-retour {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 10px 20px;
+  color: $black;
+  text-decoration: none;
+  border: 2px solid $gray-medium;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+
+  &:hover {
+    background: $gray-light;
+    border-color: $gray-dark;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.remise-detail-header,
+.remise-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid $gray-medium;
+
+  h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: $primary-color;
+    text-align: left;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+.btn-modifier {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 10px 20px;
+  background: $success-color;
+  color: $white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: darken($success-color, 8%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($success-color, 0.3);
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.section-valeur {
+  background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($secondary-color, 0.05) 100%) !important;
+  border: 2px solid $primary-color !important;
+  padding: 2.5rem !important;
+  text-align: center;
+
+  .remise-valeur-principale {
+    margin-bottom: 1.5rem;
+
+    .valeur-numero {
+      font-size: 4.5rem;
+      font-weight: 900;
+      color: $primary-color;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba($black, 0.1);
+    }
+
+    .valeur-description {
+      font-size: 1.3rem;
+      color: $gray-darker;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  }
+
+  .statut-remise .badge {
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba($black, 0.15);
+  }
+}
+
+.info-ligne {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid $gray-medium;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .info-icone {
+    font-size: 2rem;
+    flex-shrink: 0;
+    width: 40px;
+    text-align: center;
+  }
+
+  .info-contenu {
+    flex: 1;
+
+    .info-label {
+      font-size: 0.85rem;
+      color: $gray-dark;
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .info-valeur {
+      font-size: 1.1rem;
+      color: $gray-darker;
+      font-weight: 500;
+
+      strong {
+        font-weight: 700;
+        color: $primary-color;
+      }
+    }
+
+    .code-promo-box {
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      background: linear-gradient(135deg, rgba($primary-color, 0.15) 0%, rgba($secondary-color, 0.1) 100%);
+      border: 2px dashed $primary-color;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: $primary-color;
+      letter-spacing: 2px;
+      margin-top: 0.3rem;
+    }
+  }
+}
+
+.description-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: $gray-darker;
+  margin: 0;
+  padding: 1rem;
+  background: $white;
+  border-radius: 8px;
+  border-left: 4px solid $primary-color;
+}
+
+.periode-visuelle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  .date-box {
+    flex: 1;
+    text-align: center;
+    padding: 1.5rem;
+    background: $white;
+    border-radius: 12px;
+    border: 2px solid $gray-medium;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba($black, 0.1);
+    }
+
+    &.date-debut {
+      border-color: $primary-color;
+    }
+
+    &.date-fin {
+      border-color: $danger-color;
+    }
+
+    .date-label {
+      font-size: 0.8rem;
+      color: $gray-dark;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .date-valeur {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: $gray-darker;
+      margin-bottom: 0.3rem;
+    }
+
+    .date-jour {
+      font-size: 0.9rem;
+      color: $gray-dark;
+      font-weight: 500;
+    }
+  }
+
+  .fleche-periode {
+    font-size: 2rem;
+    color: $gray-dark;
+    flex-shrink: 0;
+  }
+}
+
+.duree-totale {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba($primary-color, 0.08);
+  border-radius: 8px;
+  font-size: 1rem;
+  color: $gray-darker;
+
+  svg {
+    color: $primary-color;
+  }
+
+  strong {
+    font-weight: 700;
+    color: $primary-color;
+  }
+}
+
+.section-info {
+  .info-simple {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid $gray-medium;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .info-simple-label {
+      font-size: 0.9rem;
+      color: $gray-dark;
+      font-weight: 600;
+    }
+
+    .info-simple-valeur {
+      font-size: 1rem;
+      color: $gray-darker;
+      font-weight: 500;
+    }
+  }
+}
+
+.section-danger {
+  border: 2px solid $danger-color !important;
+  background: lighten($danger-color, 45%) !important;
+
+  h3 {
+    color: $danger-color !important;
+    border-bottom-color: $danger-color !important;
+  }
+
+  .danger-warning {
+    text-align: center;
+    padding: 0.75rem;
+    background: rgba($danger-color, 0.1);
+    border-radius: 6px;
+    color: $danger-color;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+}// ============================================
+
+.content {
+
+  .creer_remise {
+    background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+    color: $white;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    border: 3px dashed rgba($white, 0.3);
+    transition: all $transition-speed ease;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    border-radius: $border-radius;
+
+    &:hover {
+      border-color: $white;
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 15px 40px rgba($black, 0.2);
+
+      p:last-child {
+        transform: rotate(90deg) scale(1.2);
+      }
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg,
+          transparent,
+          rgba($white, 0.1),
+          transparent);
+      transform: rotate(45deg);
+      transition: all 0.6s ease;
+    }
+
+    &:hover::before {
+      left: 100%;
+    }
+
+    p:first-child {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 0 0 20px 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba($black, 0.2);
+      z-index: 1;
+    }
+
+    p:last-child {
+      font-size: 5em;
+      font-weight: bold;
+      margin: 0;
+      line-height: 1;
+      transition: transform 0.3s ease;
+      text-shadow: 3px 3px 6px rgba($black, 0.3);
+      z-index: 1;
+    }
+  }
+
+  .remise-card-wrapper {
+    display: block;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+
+  .remise-article {
+    background: $white;
+    border-radius: $border-radius;
+    padding: 20px;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba($black, 0.08);
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba($black, 0.15);
+    }
+
+    .statut-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.75em;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: $white;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba($black, 0.15);
+    }
+
+    &.remise-active {
+      border: 2px solid $status-active;
+
+      .statut-badge {
+        background: $status-active;
+      }
+    }
+
+    &.remise-inactive {
+      border: 2px solid $status-inactive;
+      opacity: 0.6;
+
+      .statut-badge {
+        background: $status-inactive;
+      }
+    }
+
+    &.remise-expiree {
+      border: 2px solid $status-out-of-stock;
+
+      .statut-badge {
+        background: $status-out-of-stock;
+      }
+    }
+
+    &.remise-a-venir {
+      border: 2px solid $status-low-stock;
+
+      .statut-badge {
+        background: $status-low-stock;
+        color: $black;
+      }
+    }
+
+    .remise-valeur {
+      font-size: 3em;
+      font-weight: bold;
+      color: $primary-color;
+      margin: 20px 0 10px;
+      text-align: center;
+    }
+
+    .remise-nom {
+      margin: 10px 0 5px;
+      font-size: 1.2em;
+      color: $gray-darker;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .remise-code {
+      text-align: center;
+      padding: 10px;
+      background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($secondary-color, 0.1) 100%);
+      border: 2px dashed $primary-color;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+
+      strong {
+        color: $primary-color;
+        font-size: 1.1em;
+        letter-spacing: 1px;
+      }
+    }
+
+    .remise-produit {
+      color: $gray-dark;
+      font-size: 0.9em;
+      margin: 5px 0;
+      text-align: center;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: break-word;
+    }
+
+    .remise-dates {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 15px;
+      border-top: 1px solid $gray-medium;
+      font-size: 0.85em;
+      color: $gray-dark;
+
+      svg {
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+        vertical-align: middle;
+      }
+
+      > div {
+        display: flex;
+        align-items: center;
+      }
+
+      span {
+        margin: 0 8px;
+        color: $gray-medium;
+        font-weight: bold;
+      }
+    }
+
+    .remise-condition {
+      font-size: 0.8em;
+      color: $gray-dark;
+      text-align: center;
+      margin-top: 8px;
+      font-style: italic;
+    }
+  }
+}
+
+.remise-form-container {
+  background-color: $white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+
+  h2 {
+    font-size: 1.8rem;
+    color: $primary-color;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .form-section {
+    background-color: $gray-light;
+    border: 1px solid $gray-medium;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    h3 {
+      font-size: 1.2rem;
+      color: $black;
+      margin: 0 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid $gray-medium;
+    }
+  }
+
+  .input-group {
+    margin-bottom: 1.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 0.95rem;
+      color: $gray-h3-produit;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      input[type="checkbox"] {
+        margin-right: 0.5rem;
+        width: 18px;
+        height: 18px;
+        accent-color: $primary-color;
+      }
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid $gray-medium;
+      border-radius: 10px;
+      font-size: 1em;
+      font-family: $font-family;
+      background-color: $white;
+      transition: all $transition-speed ease;
+      box-sizing: border-box;
+
+      &:hover {
+        border-color: #bdc3c7;
+        background-color: $white;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        background-color: $white;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+      }
+
+      &::placeholder {
+        color: #bdc3c7;
+      }
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: calc(100% - 16px) center;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    small {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: $gray-dark;
+    }
+
+    .error {
+      font-size: 0.85rem;
+      color: $danger-color;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid $gray-medium;
+
+    .btn-primary,
+    input[type="submit"] {
+      padding: 12px 30px;
+      background: $success-color;
+      color: $white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: darken($success-color, 8%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($success-color, 0.3);
+      }
+    }
+
+    .btn-secondary,
+    a {
+      padding: 12px 30px;
+      background: $cancel-color;
+      color: $white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-align: center;
+
+      &:hover {
+        background: darken($cancel-color, 8%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($cancel-color, 0.3);
+      }
+    }
+  }
+}
+
+.error-message {
+  color: $danger-color;
+  background: lighten($danger-color, 35%);
+  border: 2px solid $danger-color;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.remise-detail-container {
+  background-color: $white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+
+  h2 {
+    font-size: 1.8rem;
+    color: $primary-color;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .remise-detail-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    flex: 1;
+
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .detail-section {
+    background-color: $gray-light;
+    border: 1px solid $gray-medium;
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      color: $black;
+      margin: 0 0 1.5rem 0;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid $gray-medium;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1rem 0;
+      border-bottom: 1px solid $gray-medium;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .detail-label {
+        font-weight: 600;
+        color: $gray-h3-produit;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .detail-value {
+        text-align: right;
+        color: #1f2937;
+        font-weight: 500;
+
+        .badge {
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 0.75em;
+          font-weight: bold;
+          text-transform: uppercase;
+          color: $white;
+
+          &.badge-actif {
+            background: $status-active;
+          }
+
+          &.badge-inactif {
+            background: $status-inactive;
+          }
+
+          &.badge-expire {
+            background: $status-out-of-stock;
+          }
+
+          &.badge-a-venir {
+            background: $status-low-stock;
+            color: $black;
+          }
+        }
+      }
+    }
+
+    .remise-valeur-display {
+      text-align: center;
+      padding: 2rem 0;
+
+      .valeur-principale {
+        font-size: 3.5rem;
+        font-weight: bold;
+        color: $primary-color;
+        margin-bottom: 0.5rem;
+      }
+
+      .valeur-type {
+        font-size: 1rem;
+        color: $gray-dark;
+        font-weight: 500;
+      }
+    }
+
+    .code-promo-display {
+      padding: 12px 20px;
+      background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($secondary-color, 0.1) 100%);
+      border: 2px dashed $primary-color;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      color: $primary-color;
+      text-align: center;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+    }
+  }
+
+  .remise-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid $gray-medium;
+
+    .modifier {
+      padding: 12px 30px;
+      background: $success-color;
+      color: $white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: darken($success-color, 8%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($success-color, 0.3);
+      }
+    }
+
+    .supprimer {
+      padding: 12px 30px;
+      background: $danger-color;
+      color: $white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: darken($danger-color, 8%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($danger-color, 0.3);
+      }
+    }
+  }
+}
+
+.periode-timeline {
+  padding: 1.5rem 0;
+
+  .timeline-item {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background: $white;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+
+    .timeline-icon {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $gray-light;
+      border: 2px solid $primary-color;
+      border-radius: 50%;
+      color: $primary-color;
+    }
+
+    .timeline-content {
+      flex: 1;
+
+      .timeline-label {
+        font-size: 0.85rem;
+        color: $gray-h3-produit;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      .timeline-date {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $gray-darker;
+      }
+    }
+  }
+
+  .timeline-separator {
+    height: 2rem;
+    width: 2px;
+    background: $gray-medium;
+    margin: 0 auto 1rem;
+    margin-left: 23px;
+  }
+}
+
+.duree-info {
+  text-align: center;
+  padding-top: 1.5rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid $gray-medium;
+  color: $gray-dark;
+  font-size: 0.9rem;
+
+  strong {
+    color: $gray-darker;
+    font-weight: 600;
+  }
+}
+
+.remise-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid $gray-medium;
+
+  .supprimer {
+    @include button-base;
+    @include button-variant($danger-color);
+  }
+}
+
+.btn-retour {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 10px 20px;
+  color: $black;
+  text-decoration: none;
+  border: 2px solid $gray-medium;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+
+  &:hover {
+    background: $gray-light;
+    border-color: $gray-dark;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.remise-detail-header,
+.remise-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid $gray-medium;
+
+  h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: $primary-color;
+    text-align: left;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+.btn-modifier {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 10px 20px;
+  background: $success-color;
+  color: $white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: darken($success-color, 8%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($success-color, 0.3);
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.section-valeur {
+  background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($secondary-color, 0.05) 100%) !important;
+  border: 2px solid $primary-color !important;
+  padding: 2.5rem !important;
+  text-align: center;
+
+  .remise-valeur-principale {
+    margin-bottom: 1.5rem;
+
+    .valeur-numero {
+      font-size: 4.5rem;
+      font-weight: 900;
+      color: $primary-color;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba($black, 0.1);
+    }
+
+    .valeur-description {
+      font-size: 1.3rem;
+      color: $gray-darker;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  }
+
+  .statut-remise .badge {
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba($black, 0.15);
+  }
+}
+
+.info-ligne {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid $gray-medium;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .info-icone {
+    font-size: 2rem;
+    flex-shrink: 0;
+    width: 40px;
+    text-align: center;
+  }
+
+  .info-contenu {
+    flex: 1;
+
+    .info-label {
+      font-size: 0.85rem;
+      color: $gray-dark;
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .info-valeur {
+      font-size: 1.1rem;
+      color: $gray-darker;
+      font-weight: 500;
+
+      strong {
+        font-weight: 700;
+        color: $primary-color;
+      }
+    }
+
+    .code-promo-box {
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      background: linear-gradient(135deg, rgba($primary-color, 0.15) 0%, rgba($secondary-color, 0.1) 100%);
+      border: 2px dashed $primary-color;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: $primary-color;
+      letter-spacing: 2px;
+      margin-top: 0.3rem;
+    }
+  }
+}
+
+.description-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: $gray-darker;
+  margin: 0;
+  padding: 1rem;
+  background: $white;
+  border-radius: 8px;
+  border-left: 4px solid $primary-color;
+}
+
+.periode-visuelle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  .date-box {
+    flex: 1;
+    text-align: center;
+    padding: 1.5rem;
+    background: $white;
+    border-radius: 12px;
+    border: 2px solid $gray-medium;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba($black, 0.1);
+    }
+
+    &.date-debut {
+      border-color: $primary-color;
+    }
+
+    &.date-fin {
+      border-color: $danger-color;
+    }
+
+    .date-label {
+      font-size: 0.8rem;
+      color: $gray-dark;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .date-valeur {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: $gray-darker;
+      margin-bottom: 0.3rem;
+    }
+
+    .date-jour {
+      font-size: 0.9rem;
+      color: $gray-dark;
+      font-weight: 500;
+    }
+  }
+
+  .fleche-periode {
+    font-size: 2rem;
+    color: $gray-dark;
+    flex-shrink: 0;
+  }
+}
+
+.duree-totale {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba($primary-color, 0.08);
+  border-radius: 8px;
+  font-size: 1rem;
+  color: $gray-darker;
+
+  svg {
+    color: $primary-color;
+  }
+
+  strong {
+    font-weight: 700;
+    color: $primary-color;
+  }
+}
+
+.section-info {
+  .info-simple {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid $gray-medium;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .info-simple-label {
+      font-size: 0.9rem;
+      color: $gray-dark;
+      font-weight: 600;
+    }
+
+    .info-simple-valeur {
+      font-size: 1rem;
+      color: $gray-darker;
+      font-weight: 500;
+    }
+  }
+}
+
+.section-danger {
+  border: 2px solid $danger-color !important;
+  background: lighten($danger-color, 45%) !important;
+
+  h3 {
+    color: $danger-color !important;
+    border-bottom-color: $danger-color !important;
+  }
+
+  .danger-warning {
+    text-align: center;
+    padding: 0.75rem;
+    background: rgba($danger-color, 0.1);
+    border-radius: 6px;
+    color: $danger-color;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+}
+
+.content {
+  article {
+    .remise-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 8px 14px;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      color: white;
+      border-radius: 8px;
+      font-size: 0.9em;
+      font-weight: 700;
+      z-index: 15;
+      box-shadow: 0 3px 10px rgba(255, 107, 107, 0.4);
+      letter-spacing: 0.5px;
+    }
+
+    &.has-remise {
+      border: 2px solid #ff6b6b;
+
+      &:hover {
+        box-shadow: 0 4px 10px rgba($black, 0.15);
+      }
+    }
+
+    .prix-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+
+      .prix-original {
+        font-size: 1em;
+        font-weight: 500;
+        color: $gray-dark;
+        text-decoration: line-through;
+        margin: 0;
+      }
+
+      .prix-remise {
+        font-size: 1.5em;
+        font-weight: 800;
+        color: #ff6b6b;
+        margin: 0;
+      }
+    }
+
+    .remise-nom {
+      font-size: 0.85em;
+      color: #ff6b6b;
+      font-weight: 600;
+      margin: 5px 0 0;
+      font-style: italic;
+      text-align: center;
+    }
+  }
+}
+
+.produit-container {
+  .prix-avec-remise {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(238, 90, 111, 0.1) 100%);
+    border-radius: 8px;
+    border: 2px solid #ff6b6b;
+
+    .remise-badge-consultation {
+      padding: 8px 16px;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      color: white;
+      border-radius: 8px;
+      font-size: 1.1em;
+      font-weight: 700;
+      box-shadow: 0 3px 10px rgba(255, 107, 107, 0.4);
+      letter-spacing: 0.5px;
+    }
+
+    .remise-nom-consultation {
+      font-size: 1.1em;
+      color: #ff6b6b;
+      font-weight: 600;
+      font-style: italic;
+      margin: 0;
+    }
+  }
+
+  .prix-final-consultation {
+    font-size: 1.8em;
+    font-weight: 800;
+    color: #ff6b6b;
+    margin: 0.5rem 0;
+  }
+
+  .prix-original-consultation {
+    font-size: 1.2em;
+    color: $gray-dark;
+    text-decoration: line-through;
+    font-weight: 500;
+    margin: 0.5rem 0 1.5rem;
+  }
+
+  .remise-info-consultation {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(238, 90, 111, 0.05) 100%);
+    border: 2px solid #ff6b6b;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    h3 {
+      color: #ff6b6b;
+      margin-bottom: 1rem;
+      font-size: 1.2em;
+      border-bottom: 2px solid #ff6b6b;
+      padding-bottom: 0.5rem;
+    }
+
+    .remise-details {
+      p {
+        margin: 0.75rem 0;
+        font-size: 0.95em;
+        color: $gray-darker;
+
+        strong {
+          font-weight: 700;
+          color: $black;
+        }
+
+        .code-promo {
+          font-family: 'Courier New', monospace;
+          background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($secondary-color, 0.1) 100%);
+          padding: 4px 12px;
+          border-radius: 6px;
+          border: 2px dashed #ff6b6b;
+          font-weight: 700;
+          letter-spacing: 1px;
+          color: #ff6b6b;
+        }
+      }
+
+      .voir-remise-link {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.6rem 1.2rem;
+        background: #ff6b6b;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-size: 0.9em;
+
+        &:hover {
+          background: darken(#ff6b6b, 10%);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+      }
+    }
+  }
+}
+
+.produit-container {
+  .produit-infos {
+    .stock-display {
+      font-size: 1.5em;
+      font-weight: 700;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      display: inline-block;
+      
+      &.stock-normal {
+        color: $status-active;
+        background: rgba($status-active, 0.1);
+      }
+      
+      &.stock-faible {
+        color: $status-low-stock;
+        background: rgba($status-low-stock, 0.15);
+      }
+      
+      &.stock-rupture {
+        color: $status-out-of-stock;
+        background: rgba($status-out-of-stock, 0.1);
+      }
+      
+      .alerte-seuil {
+        font-size: 0.7em;
+        font-weight: 600;
+        margin-left: 0.5rem;
+      }
+    }
+    
+    .statut-stock {
+      margin-top: 0.5rem;
+      font-weight: 600;
+      font-size: 0.95em;
+      color: $danger-color;
+    }
+  }
+}
+
+.promo-hub-container {
+  padding: 1rem 2rem 2rem;
+  max-width: 100%;
+  margin: 0;
+
+  h2 {
+    font-size: 2rem;
+    color: $black;
+    margin-bottom: 0.3rem;
+    text-align: center;
+  }
+
+  .hub-description {
+    color: $gray-dark;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .promo-hub-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+    margin-bottom: 0;
+    padding: 0 4rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      padding: 0 1rem;
+    }
+  }
+
+  .hub-card {
+    background: $white;
+    border-radius: 12px;
+    padding: 2.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    border: 2px solid $gray-medium;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+
+    h3 {
+      font-size: 1.5rem;
+      color: $black;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: $gray-dark;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      flex-grow: 1;
+    }
+
+    .hub-card-stats {
+      margin: 1rem 0;
+
+      .stat-badge {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        background: $gray-light;
+        color: $gray-darker;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+
+        &.stat-active {
+          background: rgba($status-active, 0.15);
+          color: $status-active;
+        }
+
+        &.stat-promo {
+          background: rgba(#ff6b6b, 0.15);
+          color: #ff6b6b;
+        }
+      }
+    }
+
+    .hub-card-action {
+      font-weight: 600;
+      color: $primary-color;
+      margin-top: auto;
+    }
+
+    &.hub-card-active:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba($black, 0.12);
+      border-color: $primary-color;
+    }
+
+    &.hub-card-highlight {
+      border-color: #ff6b6b;
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.03) 0%, rgba(238, 90, 111, 0.03) 100%);
+    }
+
+    &.hub-card-disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      position: relative;
+
+      .hub-card-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: $gray-medium;
+        color: $white;
+        padding: 0.3rem 0.7rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .promo-summary {
+    background: $gray-light;
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid $gray-medium;
+
+    h3 {
+      font-size: 1.2rem;
+      color: $black;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 2rem;
+    }
+
+    .summary-item {
+      text-align: center;
+
+      .summary-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: $primary-color;
+        margin-bottom: 0.5rem;
+      }
+
+      .summary-label {
+        color: $gray-dark;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.produits-promo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 2rem 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  h2 {
+    font-size: 2rem;
+    color: $black;
+    margin: 0;
+  }
+
+  .promo-count {
+    color: $gray-dark;
+    font-size: 1rem;
+    margin: 0.5rem 0 0;
+  }
+
+  .btn-retour-hub {
+    @include button-base;
+    @include button-variant($gray-dark);
+    font-size: 0.95rem;
+  }
+}
+
+.aucun-produit-promo {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: $white;
+  border: 2px solid $gray-medium;
+  border-radius: 12px;
+  margin: 2rem;
+
+  h3 {
+    font-size: 1.8rem;
+    color: $black;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: $gray-dark;
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .empty-actions {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    a {
+      @include button-base;
+      padding: 0.9rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-creer-remise {
+      background: $primary-color;
+      color: $white;
+      border: 2px solid $primary-color;
+
+      &:hover {
+        background: darken($primary-color, 8%);
+        border-color: darken($primary-color, 8%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+      }
+    }
+
+    .btn-consulter-remises {
+      background: $white;
+      color: $primary-color;
+      border: 2px solid $primary-color;
+
+      &:hover {
+        background: $primary-color;
+        color: $white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($primary-color, 0.2);
+      }
+    }
+  }
+}
+
+.remise-liste-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 2rem 1rem;
+  margin-bottom: 0;
+
+  h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: $black;
+  }
+
+  .btn-retour {
+    @include button-base;
+    @include button-variant($gray-dark);
+    font-size: 0.95rem;
+  }
+}
+
+.remise-form {
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    .radio-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.2rem;
+      border: 2px solid $gray-medium;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: $primary-color;
+        background: rgba($primary-color, 0.05);
+      }
+
+      input[type="radio"] {
+        margin-top: 0.2rem;
+        cursor: pointer;
+        width: 18px;
+        height: 18px;
+      }
+
+      input[type="radio"]:checked ~ .radio-content {
+        color: $primary-color;
+      }
+
+      &:has(input:checked) {
+        border-color: $primary-color;
+        background: rgba($primary-color, 0.08);
+        box-shadow: 0 2px 8px rgba($primary-color, 0.15);
+      }
+
+      .radio-content {
+        flex: 1;
+        
+        strong {
+          display: block;
+          font-size: 1.1rem;
+          margin-bottom: 0.3rem;
+          color: $black;
+        }
+
+        small {
+          color: $gray-dark;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  .application-section {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: $gray-light;
+    border-radius: 8px;
+    border: 2px solid $gray-medium;
+
+    label:not(.produit-checkbox) {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      color: $black;
+    }
+
+    select {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid $gray-medium;
+      border-radius: 6px;
+      font-size: 1rem;
+      background: $white;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+      }
+    }
+  }
+
+  .produits-selection {
+    .selection-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      label {
+        margin: 0;
+      }
+
+      .selection-actions {
+        display: flex;
+        gap: 0.5rem;
+
+        button {
+          padding: 0.5rem 1rem;
+          font-size: 0.85rem;
+          border: 1px solid $gray-dark;
+          background: $white;
+          color: $gray-darker;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-weight: 500;
+
+          &:hover {
+            background: $gray-dark;
+            color: $white;
+          }
+        }
+      }
+    }
+
+    .produits-list {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 2px solid $gray-medium;
+      border-radius: 6px;
+      background: $white;
+      padding: 0.5rem;
+
+      &::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: $gray-light;
+        border-radius: 4px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $gray-dark;
+        border-radius: 4px;
+
+        &:hover {
+          background: $gray-darker;
+        }
+      }
+
+      .produit-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.8rem;
+        margin: 0.3rem 0;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &:hover {
+          background: rgba($primary-color, 0.05);
+        }
+
+        &:has(input:checked) {
+          background: rgba($primary-color, 0.1);
+          border: 1px solid rgba($primary-color, 0.3);
+        }
+
+        input[type="checkbox"] {
+          width: 18px;
+          height: 18px;
+          cursor: pointer;
+          flex-shrink: 0;
+        }
+
+        .produit-info {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 0.2rem;
+
+          .produit-nom {
+            font-weight: 600;
+            color: $black;
+            font-size: 0.95rem;
+          }
+
+          .produit-categorie {
+            font-size: 0.85rem;
+            color: $gray-dark;
+            font-style: italic;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .remise-form {
+    .produits-selection {
+      .selection-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .selection-actions {
+          width: 100%;
+
+          button {
+            flex: 1;
+          }
+        }
+      }
+    }
+  }
+}
+
+.error-inline {
+  color: $danger-color;
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+  display: block;
+  font-weight: 500;
+  animation: slideDown 0.3s ease;
+}
+
+.error-container {
+  color: $danger-color;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  padding: 0.8rem 1rem;
+  background-color: #f8d7da;
+  border: 1px solid $danger-color;
+  border-radius: 6px;
+  animation: slideDown 0.3s ease;
+  
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  &::before {
+    content: "⚠️";
+    font-size: 1.2rem;
+  }
+}
+
+input.error,
+select.error,
+textarea.error {
+  border-color: $danger-color !important;
+  background-color: rgba($danger-color, 0.05);
+  
+  &:focus {
+    border-color: $danger-color !important;
+    box-shadow: 0 0 0 0.2rem rgba($danger-color, 0.25);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.produits-count {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  color: $primary-color;
+  font-size: 0.95rem;
+}

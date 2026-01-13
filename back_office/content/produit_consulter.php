@@ -36,15 +36,65 @@
             <article>
                 <h3>Prix</h3>
 
-                <h4>Prix TTC</h4>
-                <p><?php echo htmlentities(number_format($produit['prix_ttc'], 2, ',', ' ')) ?> €</p>
+                <?php if ($remise_active): ?>
+                    <!-- Affichage avec remise active -->
+                    <div class="prix-avec-remise">
+                        <div class="remise-badge-consultation">
+                            <?php if ($remise_active['type_remise'] === 'pourcentage'): ?>
+                                -<?= number_format($remise_active['valeur_remise'], 0) ?>%
+                            <?php else: ?>
+                                -<?= number_format($remise_active['valeur_remise'], 2, ',', ' ') ?>€
+                            <?php endif; ?>
+                        </div>
+                        <p class="remise-nom-consultation"><?= htmlentities($remise_active['nom_remise']) ?></p>
+                    </div>
 
-                <h4>Prix HT</h4>
-                <p><?php echo htmlentities(number_format($produit['prix_unitaire_ht'], 2, ',', ' ')) ?> €</p>
+                    <h4>Prix TTC avec remise</h4>
+                    <p class="prix-final-consultation"><?php echo number_format($prix_final, 2, ',', ' ') ?> €</p>
+                    <p class="prix-original-consultation"><?php echo number_format($produit['prix_ttc'], 2, ',', ' ') ?> €</p>
+
+                    <h4>Prix HT avec remise</h4>
+                    <p class="prix-final-consultation"><?php echo number_format($prix_ht_final, 2, ',', ' ') ?> €</p>
+                    <p class="prix-original-consultation"><?php echo number_format($produit['prix_unitaire_ht'], 2, ',', ' ') ?> €</p>
+
+                <?php else: ?>
+                    <!-- Affichage sans remise -->
+                    <h4>Prix TTC</h4>
+                    <p><?php echo number_format($produit['prix_ttc'], 2, ',', ' ') ?> €</p>
+
+                    <h4>Prix HT</h4>
+                    <p><?php echo number_format($produit['prix_unitaire_ht'], 2, ',', ' ') ?> €</p>
+                <?php endif; ?>
 
                 <h4>TVA</h4>
                 <p><?php echo htmlentities($produit['taux_tva']) ?>%</p>
             </article>
+
+            <?php if ($remise_active): ?>
+                <article class="remise-info-consultation">
+                    <h3>Remise active</h3>
+                    <div class="remise-details">
+                        <p><strong>Nom :</strong> <?= htmlentities($remise_active['nom_remise']) ?></p>
+                        <p><strong>Valeur :</strong> 
+                            <?php if ($remise_active['type_remise'] === 'pourcentage'): ?>
+                                -<?= number_format($remise_active['valeur_remise'], 0) ?>%
+                            <?php else: ?>
+                                -<?= number_format($remise_active['valeur_remise'], 2, ',', ' ') ?>€
+                            <?php endif; ?>
+                        </p>
+                        <p><strong>Période :</strong> 
+                            <?php 
+                            $debut = new DateTime($remise_active['date_debut']);
+                            $fin = new DateTime($remise_active['date_fin']);
+                            echo $debut->format('d/m/Y') . ' - ' . $fin->format('d/m/Y');
+                            ?>
+                        </p>
+                        <a href="?page=remise&type=consulter&id=<?= $remise_active['id_remise'] ?>" class="voir-remise-link">
+                            Voir la remise →
+                        </a>
+                    </div>
+                </article>
+            <?php endif; ?>
 
             <article>
                 <h3>Stock</h3>

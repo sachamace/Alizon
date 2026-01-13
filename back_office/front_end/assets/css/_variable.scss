@@ -20,20 +20,12 @@ $status-low-stock: #ffc107;
 $status-out-of-stock: #dc3545;
 $status-warning-text: #856404;
 
-// Couleurs des statuts
-$status-active: #28a745;
-$status-inactive: #6c757d;
-$status-low-stock: #ffc107;
-$status-out-of-stock: #dc3545;
-$status-warning-text: #856404;
-
 $font-family: 'Space Grotesk', sans-serif;
 $sidebar-width: 300px;
 $border-radius: 1em;
 $transition-speed: 0.3s;
 
 // Couleurs supplémentaires
-$success-color: #28a745;
 $success-bg: #d4edda;
 $success-border: #c3e6cb;
 $warning-bg: #fff3cd;
@@ -42,3 +34,23 @@ $warning-border: #ffeaa7;
 // Tailles de police
 $font-size-small: 0.8em;
 $font-size-smaller: 0.9em;
+
+// ============================================
+// VARIABLES POUR LE SYSTÈME DE REMISES
+// ============================================
+
+// Couleur principale (utilisée pour les boutons, liens, etc.)
+$color-primary: $primary-color;
+
+// Couleurs de texte
+$color-text-primary: $gray-darker;      // Texte principal
+$color-text-secondary: $gray-dark;      // Texte secondaire
+$color-text-tertiary: #9ca3af;          // Texte tertiaire (notes, infos)
+
+// Couleurs de bordure
+$color-border: $gray-medium;            // Bordure standard
+$color-border-light: #f3f4f6;          // Bordure légère
+
+// Couleurs de fond
+$color-background-light: $gray-light;   // Fond léger
+$color-background: $background-color;   // Fond standard

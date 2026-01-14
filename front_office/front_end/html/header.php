@@ -1,22 +1,18 @@
 <?php
     include __DIR__ . '/config.php';
     include __DIR__ . '/sessionindex.php';
-    $stmt = $pdo->query("SELECT version();");
+    $parametres = $_GET;// On récupère d'abord TOUS les filtres qui sont déjà dans l'URL ($_GET)
+    
     if (isset($_POST['texte-recherche']) && !empty($_POST['texte-recherche'])) {
-        $pageActuelle = basename($_SERVER['SCRIPT_NAME']);
-        $categorie = isset($_GET['categorie']) ? $_GET['categorie'] : null;
 
-        $recherche = htmlspecialchars(string: $_POST['texte-recherche']);
-        if ($pageActuelle === 'index.php' && $categorie !== null) {
-            $cheminActuel = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-            $nomFichier = basename($cheminActuel);
-            header('Location: ' . $nomFichier . '?categorie=' . urlencode($categorie) . '&search=' . urlencode($recherche));
-            exit();
-        }
-        else{
-            header('Location: /index.php?search=' . urlencode($recherche));
-            exit();
-        }
+        // On ajoute (ou écrase) le nouveau mot-clé de recherche
+        $parametres['search'] = htmlspecialchars($_POST['texte-recherche']);
+
+        $queryString = http_build_query($parametres);
+
+        // Redirection
+        header("Location: index.php?" . $queryString);
+        exit();
     }
     
 
@@ -38,16 +34,14 @@
         <?php
         // On récupère tout le contenu de la table 
         $categorie = $pdo->query('SELECT * FROM categorie');
-
-        $paramRecherche = "";
-        if (isset($_GET['search']) && !empty($_GET['search'])) {
-            $paramRecherche = "&search=" . urlencode($_GET['search']);
-        }
+        
         // On affiche chaque entrée une à une
         while ($cat = $categorie->fetch()){ 
-            $libelle = urlencode($cat['libelle']); 
+            $libelle = $cat['libelle'];
+            $parametres['categorie'] = htmlspecialchars($libelle);
+            $queryString = http_build_query($parametres);
             ?>
-            <a href="/index.php?categorie=<?php echo $libelle . $paramRecherche; ?>">
+            <a href="/index.php?<?php echo $queryString; ?>">
                 <?php echo $cat['libelle']; ?>
             </a>
         <?php } ?>

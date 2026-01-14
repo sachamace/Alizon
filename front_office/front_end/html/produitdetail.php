@@ -63,8 +63,10 @@ try {
     echo "Erreur SQL : " . $e->getMessage();
 }
 
+
 // pose des variables 
 if(isset($_SESSION['id_panier'])){
+    $id_panier = $_SESSION['id_panier'];
     $id_panier = $_SESSION['id_panier'];
 }
 
@@ -438,40 +440,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                             <p class="prix-ht">Prix HT : <?= number_format($infos['prix_unitaire_ht'], 2, ',', ' ') ?>€</p>
                         <?php endif; ?>
                         </div>
-                        
-                        <p class="prix-ht-detail">Prix HT avec remise : <?= number_format($prix_ht_final, 2, ',', ' ') ?>€</p>
-                        
-                        <div class="remise-periode">
-                            <small>
-                                <?php
-                                $debut = new DateTime($infos['date_debut']);
-                                $fin = new DateTime($infos['date_fin']);
-                                echo "Offre valable du " . $debut->format('d/m/Y') . " au " . $fin->format('d/m/Y');
-                                ?>
-                            </small>
+                        <div class="boutons">
+                                <?php echo '
+                                <form action="" method="post" style="display:inline;">
+                                    <input type="hidden" name="action" value="panier">
+                                    <button type="submit">Ajouter au panier</button>
+                                </form>
+                                
+                                <form action="" method="post" style="display:inline;">
+                                    <input type="hidden" name="action" value="payer">
+                                    <button type="submit">Payer maintenant</button>
+                                </form>' ?>
                         </div>
-                    </div>
-                    
-                    <div class="actions">
-                        <form method="post" id="form-panier">
-                            <input type="hidden" name="action" value="panier">
-                            <button type="submit" class="ajouter-panier">🛒 Ajouter au panier</button>
-                        </form>
-                        <form method="post" id="form-achat">
-                            <input type="hidden" name="action" value="payer">
-                            <button type="submit" class="payer">⚡ Acheter maintenant</button>
-                        </form>
-                    </div>
-                    
-                    <div class="actions">
-                        <form method="post" id="form-panier">
-                            <input type="hidden" name="action" value="panier">
-                            <button type="submit" class="ajouter-panier">🛒 Ajouter au panier</button>
-                        </form>
-                        <form method="post" id="form-achat">
-                            <input type="hidden" name="action" value="payer">
-                            <button type="submit" class="payer">⚡ Acheter maintenant</button>
-                        </form>
                     </div>
                     <p class="description">
                         <?= htmlspecialchars($infos['description_produit']) ?>

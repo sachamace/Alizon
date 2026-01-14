@@ -1,6 +1,6 @@
 <?php
 include 'config.php';
-
+// fichier appeler par le JS autocompletion
 if (isset($_POST['search']) && !empty($_POST['search'])) {
     
     $search = htmlspecialchars($_POST['search']);

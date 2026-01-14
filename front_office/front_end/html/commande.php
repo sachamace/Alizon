@@ -63,7 +63,7 @@
             margin-bottom: 1.5rem;
             padding: 1.5rem;
             box-sizing: border-box;
-            width: calc(50% - 20px);
+            width: calc(100% - 20px);
             transition: transform 0.2s;
         }
 

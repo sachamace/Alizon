@@ -198,5 +198,6 @@
             });
         });
     </script>
+    <script src="/front_office/front_end/assets/js/autocompletion.js"></script>
 </body>
 </html>

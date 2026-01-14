@@ -85,21 +85,40 @@ $requete_avis = $pdo->prepare("
 $requete_avis->execute([':id_produit' => $id_produit]);
 $avis = $requete_avis->fetchAll(PDO::FETCH_ASSOC);
 
-// Calcul de la moyenne des notes des avis
+// Fonction pour générer les étoiles d'affichage
+function genererEtoiles($note) {
+    $note_arrondie = round($note * 2) / 2; // Arrondir au 0.5
+    $etoiles_pleines = floor($note_arrondie);
+    $demi_etoile = ($note_arrondie - $etoiles_pleines) >= 0.5;
+    $etoiles_vides = 5 - $etoiles_pleines - ($demi_etoile ? 1 : 0);
+    
+    $html = str_repeat('★', $etoiles_pleines);
+    if ($demi_etoile) {
+        $html .= '⯨'; // Demi-étoile
+    }
+    $html .= str_repeat('☆', $etoiles_vides);
+    
+    return $html;
+}
+
+// Calcul de la moyenne des notes (avec décimales)
 $moyenne = 0;
+$moyenne_arrondie = 0;
 if (count($avis) > 0) {
     $total_notes = 0;
     foreach ($avis as $un_avis) {
-        $total_notes += (int)$un_avis['note'];
+        $total_notes += floatval($un_avis['note']); // Utiliser floatval au lieu de int
     }
-    $moyenne = round($total_notes / count($avis));
+    $moyenne = $total_notes / count($avis);
+    $moyenne_arrondie = round($moyenne * 2) / 2; // Arrondir au 0.5 le plus proche
 }
+
 
 // Traitement du formulaire d'avis
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajouter_avis') {
-    $note = (int)$_POST['note'];
+    $note = floatval($_POST['note']); // Utiliser floatval
     $description = trim($_POST['description']);
-    if ($note >= 1 && $note <= 5 && !empty($description) && isset($_SESSION['id_panier'])) {
+    if ($note >= 0.5 && $note <= 5 && !empty($description) && isset($_SESSION['id_panier'])) {
         $id_client = $_SESSION['id_client'];
 
         try {
@@ -122,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $erreur_avis = "Vous avez déjà rentré un avis";
         }
     } else {
-        $erreur_avis = "Veuillez entrer une note entre 1 et 5 et une description.";
+        $erreur_avis = "Veuillez entrer une note entre 0.5 et 5 et une description.";
     }
 }
 // traitement formulaire signalement
@@ -274,31 +293,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
         .stars-rating {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.25rem;
             align-items: center;
         }
 
-        .star {
+        .star-wrapper {
+            display: inline-block;
+            position: relative;
             font-size: 2.5rem;
-            color: #ddd;
+            line-height: 1;
             cursor: pointer;
-            transition: all 0.2s ease;
             user-select: none;
+            width: 1em;
+            height: 1em;
         }
 
-        .star.active {
-            color: #ffd700;
-            animation: starPulse 0.3s ease;
+        /* Étoile de base grise */
+        .star-wrapper::before {
+            content: '★';
+            color: #ddd;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
         }
 
-        .star.hover {
-            color: #ffed4e;
+        .star-half {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            color: transparent;
+            transition: color 0.2s ease;
+            z-index: 1;
         }
 
-        @keyframes starPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
+        .star-left {
+            clip-path: inset(0 50% 0 0); /* Coupe la moitié droite */
+        }
+
+        .star-right {
+            clip-path: inset(0 0 0 50%); /* Coupe la moitié gauche */
+        }
+
+        .star-half.active,
+        .star-half.hover {
+            color: #ffc107;
         }
 
         .rating-text {
@@ -307,6 +348,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             font-weight: 600;
             color: #666;
             min-width: 150px;
+        }
+
+        /* Styles pour l'affichage des avis existants */
+        .avis-etoiles {
+            color: #ffc107;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
         }
     </style>
 </head>
@@ -423,12 +471,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         <div class="avis">
                             <?php
                                 if (count($avis) > 0) {
-                                    $etoiles_moyenne = str_repeat('★', $moyenne) . str_repeat('☆', 5 - $moyenne);
-                                    echo '<span class="etoiles">' . $etoiles_moyenne . '</span>';
-                                    echo '<span class="note">' . $moyenne . '/5</span>';
+                                    echo '<span class="avis-etoiles">' . genererEtoiles($moyenne) . '</span>';
+                                    echo '<span class="note">' . number_format($moyenne, 1, ',', '') . '/5</span>';
                                     echo '<a href="#avis-section">Voir les ' . count($avis) . ' avis</a>';
                                 } else {
-                                    echo '<span class="etoiles">☆☆☆☆☆</span>';
+                                    echo '<span class="avis-etoiles">☆☆☆☆☆</span>';
                                     echo '<span class="note">Aucune note</span>';
                                 }
                             ?>
@@ -453,8 +500,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         $deactiver = $est_signale ? 'disabled' : '';
                         $client = $pdo->query("SELECT * FROM compte_client WHERE id_client = $id_client")->fetch(PDO::FETCH_ASSOC);
                         // Génération des étoiles selon la note
-                        $note = (int)$un_avis['note'];
-                        $etoiles = str_repeat('★', $note) . str_repeat('☆', 5 - $note);
+                        $note = floatval($un_avis['note']);
+                        $etoiles = genererEtoiles($note);
 
                         echo '
                         <div class="avis-item"> 
@@ -518,7 +565,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 }
             ?>
             <div class="form-avis">
-                <h2>✏️ Écrire un avis</h2>
+                <h2>Écrire un avis</h2>
 
                 <?php if (isset($erreur_avis)) echo "<p class='erreur'>$erreur_avis</p>"; ?>
 

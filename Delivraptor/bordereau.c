@@ -39,7 +39,7 @@ void afficher_man(char *nom_programme) {
 
 // Fonction pour récupérer la liste des commandes et l'envoyer au PHP
 void traiter_get_list(int cnx, PGconn *conn) {
-    const char *query = "SELECT id_commande, etape, statut, priorite FROM systeme.commandes";
+    const char *query = "SELECT c.id_commande, c.etape, c.statut, c.priorite FROM commandes c";
     PGresult *res = PQexec(conn, query);
     
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
@@ -90,7 +90,7 @@ void traiter_update(char *buffer, PGconn *conn, int verbose) {
     char query[2048];
     // Construction de la requête SQL dynamique
     snprintf(query, sizeof(query), 
-        "UPDATE systeme.commandes SET etape=%s, statut='%s', priorite=%s, details_etape='%s', raison='%s', chemin_image_refuse='%s', date_maj=NOW() WHERE id_commande=%s;",
+        "UPDATE public.commandesSET etape=%s, statut='%s', priorite=%s, details_etape='%s', raison='%s', chemin_image_refuse='%s', date_maj=NOW() WHERE id_commande=%s;",
         etape ? etape : "0",
         statut ? statut : "ENCOURS",
         prio ? prio : "0",
@@ -117,7 +117,7 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
     generer_bordereau(bordereau);
 
     // 1. Vérifier la capacité
-    PGresult *res = PQexec(conn, "SELECT COUNT(*) FROM systeme.commandes WHERE etape <= 4;");
+    PGresult *res = PQexec(conn, "SELECT COUNT(*) FROM public.commandes WHERE etape <= 4;");
     int nb_commandes = 0;
     if (PQresultStatus(res) == PGRES_TUPLES_OK) {
         nb_commandes = atoi(PQgetvalue(res, 0, 0));
@@ -141,19 +141,19 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
 
         // Insertion
         snprintf(query, sizeof(query), 
-            "INSERT INTO systeme.commandes (id_commande, etape, bordereau, details_etape, statut, priorite) VALUES (%s, 1, '%s', 'Création d’un bordereau de livraison', 'EN ATTENTE', %d);",
+            "INSERT INTO public.commandes (id_commande, etape, bordereau, details_etape, statut, priorite) VALUES (%s, 1, '%s', 'Création d’un bordereau de livraison', 'EN ATTENTE', %d);",
             id_str, bordereau, new_prio
         );
         
         // Réponse formatée : STATUS|BORDEREAU
-        snprintf(message_retour, sizeof(message_retour), "WAIT|%s", bordereau);
+        snprintf(message_retour, sizeof(message_retour), "EN ATTENTE|%s", bordereau);
 
     } else {
         // --- CAS NORMAL : ENCOURS ---
         if (verbose) printf("AJOUT OK (%d/%d) -> %s encours.\n", nb_commandes, capacite_max, id_str);
         
         snprintf(query, sizeof(query), 
-            "INSERT INTO systeme.commandes (id_commande, etape, bordereau, details_etape, statut, priorite) VALUES (%s, 1, '%s', 'Création d’un bordereau de livraison', 'ENCOURS', 0);",
+            "INSERT INTO public.commandes (id_commande, etape, bordereau, details_etape, statut, priorite) VALUES (%s, 1, '%s', 'Création d’un bordereau de livraison', 'ENCOURS', 0);",
             id_str, bordereau
         );
         
@@ -174,7 +174,7 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
 int main(int argc, char *argv[]){
 
     // Variables initialisé pour la base de données 
-    const char *conninfo = "host=127.0.0.1 port=5432 dbname=postgres user=postgres password=bigouden08";
+    const char *conninfo = "host=10.253.5.108 port=5432 dbname=postgres user=postgres password=bigouden08";
     int sock;
     int size;
     int ret;

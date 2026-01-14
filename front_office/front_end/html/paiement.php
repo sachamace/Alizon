@@ -26,7 +26,6 @@ try {
 }
 
 try {
-    // ✅ REQUÊTE CORRIGÉE - Casting explicite pour PostgreSQL
     $stmt = $pdo->prepare("
         SELECT pp.quantite, 
                p.nom_produit, 
@@ -403,16 +402,6 @@ function verifLuhn($numero) {
                         <p class="required"><?= htmlentities($erreurs['cvv'] ?? '') ?></p>
                         <input type="text" name="nom_titulaire" placeholder="Nom du titulaire"
                             value="<?= htmlentities($nom) ?>">
-                    </div>
-
-                    <!-- OPTION PAYPAL -->
-                    <label class="option">
-                        <input type="radio" name="paiement" id="radio-paypal" value="paypal" disabled>
-                        <span style="opacity: 0.5; font-size: 1rem;">PayPal</span>
-                    </label>
-
-                    <div class="formulaire hidden" id="form-paypal">
-                        <p>PayPal est désactivé.</p>
                     </div>
                 </div>
             </div>

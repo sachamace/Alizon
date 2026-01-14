@@ -4,12 +4,6 @@ require 'config.php';
 include 'session.php';
 include 'sessionindex.php';
 
-// Vérifier que l'utilisateur est connecté
-if (!isset($_SESSION['id'])) {
-    header("Location: index.php");
-    exit();
-}
-
 // Vérifier qu'une commande vient d'être passée
 if (!isset($_SESSION['derniere_commande'])) {
     header("Location: index.php");
@@ -18,58 +12,118 @@ if (!isset($_SESSION['derniere_commande'])) {
 
 $id_client_connecte = $_SESSION['id'];
 $id_commande = $_SESSION['derniere_commande'];
+$message_transporteur = "";
 
 try {
-    // Récupération des informations client
-    $stmt_client = $pdo->prepare("
-        SELECT prenom, nom, adresse_mail 
-        FROM compte_client 
-        WHERE id_client = :id_client
-    ");
+    // --- PARTIE A : RÉCUPÉRATION DES DONNÉES DE LA COMMANDE
+    // Informations client
+    $stmt_client = $pdo->prepare("SELECT prenom, nom, adresse_mail FROM compte_client WHERE id_client = :id_client");
     $stmt_client->execute([':id_client' => $id_client_connecte]);
     $client = $stmt_client->fetch(PDO::FETCH_ASSOC);
 
-    if (!$client) {
-        die("Client introuvable");
-    }
+    if (!$client) die("Client introuvable");
 
-    // Récupération des informations de la commande
-    $stmt_commande = $pdo->prepare("
-        SELECT id_commande, date_commande, montant_total_ht, montant_total_ttc, statut
-        FROM commande
-        WHERE id_commande = :id_commande AND id_client = :id_client
-    ");
-    $stmt_commande->execute([
-        ':id_commande' => $id_commande,
-        ':id_client' => $id_client_connecte
-    ]);
+    // Informations commande
+    $stmt_commande = $pdo->prepare("SELECT id_commande, date_commande, montant_total_ht, montant_total_ttc, statut FROM commande WHERE id_commande = :id_commande AND id_client = :id_client");
+    $stmt_commande->execute([':id_commande' => $id_commande, ':id_client' => $id_client_connecte]);
     $commande = $stmt_commande->fetch(PDO::FETCH_ASSOC);
 
-    if (!$commande) {
-        die("Commande introuvable");
-    }
+    if (!$commande) die("Commande introuvable");
 
-    // Récupération des lignes de commande avec la vue produit_avec_prix
-    $stmt_lignes = $pdo->prepare("
-        SELECT lc.quantite, 
-               p.nom_produit, 
-               lc.prix_unitaire_ht,
-               lc.prix_unitaire_ttc
-        FROM ligne_commande lc
-        JOIN produit p ON lc.id_produit = p.id_produit
-        WHERE lc.id_commande = :id_commande
-    ");
+    // Articles pour calcul de la taxe
+    $stmt_lignes = $pdo->prepare("SELECT lc.quantite, p.nom_produit, lc.prix_unitaire_ht, lc.prix_unitaire_ttc FROM ligne_commande lc JOIN produit p ON lc.id_produit = p.id_produit WHERE lc.id_commande = :id_commande");
     $stmt_lignes->execute([':id_commande' => $id_commande]);
     $articles_commande = $stmt_lignes->fetchAll(PDO::FETCH_ASSOC);
 
     $nb_articles = 0;
     $taxe = 0;
-
     foreach ($articles_commande as $article) {
         $taxe += ($article['prix_unitaire_ttc'] - $article['prix_unitaire_ht']) * $article['quantite'];
         $nb_articles += $article['quantite'];
     }
 
+    // --- PARTIE B : CRÉATION DU BORDEREAU (Communication Serveur C & PostgreSQL) ---
+    
+    $host = "10.253.5.108";
+    $port = 5432;
+    
+    // 1. Ouvrir la connexion vers le serveur C 
+    $socket = @fsockopen($host, $port, $errno, $errstr, 5);
+    if (!$socket) {
+        throw new Exception("Le serveur C (bordereau) ne répond pas sur le port $port.");
+    }
+
+    // 2. Générer un ID de commande unique (Algorithme conservé malgré le type SERIAL)
+    do {
+        $num_commande = rand(1000, 9999);
+        // Table modifiée : systeme.commandes -> commande
+        $stmt_check = $pdo->prepare("SELECT id_commande FROM commande WHERE id_commande = ?");
+        $stmt_check->execute([$num_commande]);
+        $exists = $stmt_check->fetch();
+    } while ($exists);
+
+    // 3. Envoyer l'ID au serveur C
+    fwrite($socket, $num_commande);
+
+    // 4. Lire le bordereau TRK-XXXX généré par le C
+    $reponse_c = trim(fgets($socket, 1024));
+    
+    // Table modifiée : systeme.commandes -> commande
+    $query_max = "SELECT MAX(priorite) AS valeur_max FROM commande";
+    $stmt_max = $pdo->prepare($query_max);
+    $stmt_max->execute();
+    
+    $resultat = $stmt_max->fetch(PDO::FETCH_ASSOC);
+    $max = $resultat['valeur_max'] ?? 0; // Gestion du cas si la table est vide
+
+    $parts = explode('|', $reponse_c);
+    $bordereau_recu = $parts[0] ?? ''; 
+    $erreur_recue    = $parts[1] ?? '';
+
+    // Logique de mise en attente (Algorithme conservé)
+    if ($max != 0) {
+        $query = "INSERT INTO commande (id_commande, id_client, montant_total_ht, montant_total_ttc, etape, bordereau, details_etape, statut, priorite) 
+                  VALUES (:id, :id_client, :ht, :ttc, :etape, :bordereau, :details_etape, :statut, :priorite)";
+        
+        $stmtenvoie = $pdo->prepare($query);
+        $stmtenvoie->execute([
+            'id'            => $num_commande,
+            'id_client'     => $id_client,
+            'ht'            => $montant_ht,
+            'ttc'           => $montant_ttc,
+            'etape'         => 1,
+            'bordereau'     => $bordereau_recu,
+            'details_etape' => "Création d’un bordereau de livraison",
+            'statut'        => "EN ATTENTE",
+            'priorite'      => $max + 1
+        ]);
+        
+        fclose($socket);
+        throw new Exception("Désolé, le transporteur est complet. Votre commande est en attente.");
+    }
+
+    if (empty($reponse_c)) {
+        fclose($socket);
+        throw new Exception("Le serveur C a renvoyé une réponse vide.");
+    }
+    
+    fclose($socket);
+
+    // 5. CAS : INSERTION NORMALE (ENCOURS)
+    $query = "INSERT INTO commande (id_commande, id_client, montant_total_ht, montant_total_ttc, etape, bordereau, details_etape, statut) 
+              VALUES (:id, :id_client, :ht, :ttc, :etape, :bordereau, :details_etape, :statut)";
+    
+    $stmtenvoie = $pdo->prepare($query);
+    $stmtenvoie->execute([
+        'id'            => $num_commande,
+        'id_client'     => $id_client,
+        'ht'            => $montant_ht,
+        'ttc'           => $montant_ttc,
+        'etape'         => 1,
+        'bordereau'     => $bordereau_recu,
+        'details_etape' => "Création d’un bordereau de livraison",
+        'statut'        => "ENCOURS"
+    ]);
 } catch (PDOException $e) {
     die("Erreur lors de la récupération des données : " . $e->getMessage());
 }

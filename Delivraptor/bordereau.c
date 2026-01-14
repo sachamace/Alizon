@@ -1,0 +1,289 @@
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <time.h>
+#include <stdbool.h> 
+#include <getopt.h>
+#include <postgresql/libpq-fe.h>
+#define TAILLE_BUFF 1024
+
+#define PORT 8080
+
+const char* max_erreur = "ERREUR_PLEIN"; 
+
+
+void generer_bordereau(char *buffer) {
+    int nombreAleatoire = rand() % 10000;
+    sprintf(buffer, "TRK-%04d", nombreAleatoire); 
+}
+
+void afficher_man(char *nom_programme) {
+    printf("\nUsage: %s [OPTIONS]\n", nom_programme);
+    printf("\nDESCRIPTION:\n");
+    printf("  Serveur de simulation de livraison 'Délivraptor'.\n");
+    printf("  Gère les étapes de transit et créer un bordereau pour la livraison.\n");
+    printf("\nOPTIONS:\n");
+    printf("  -t, --time SEC      Définit le temps d'un quantum en secondes (défaut: 1).\n");
+    printf("  -s, --silent        Désactive l'affichage des logs dans la console.\n");
+    printf("  -h, --help          Affiche cette aide et quitte le programme.\n");
+    printf("  -c, --cap           Définit la capacité maximale des commandes à étape 1 - 4.\n");
+
+}
+
+// Fonction pour récupérer la liste des commandes et l'envoyer au PHP
+void traiter_get_list(int cnx, PGconn *conn) {
+    const char *query = "SELECT id_commande, etape, statut, priorite FROM systeme.commandes";
+    PGresult *res = PQexec(conn, query);
+    
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        perror("Erreur SELECT");
+        PQclear(res);
+        return;
+    }
+
+    int rows = PQntuples(res);
+    char buffer_envoi[TAILLE_BUFF] = "";
+    char ligne[256];
+
+    // Format: id;etape;statut;priorite|id;etape...
+    for (int i = 0; i < rows; i++) {
+        snprintf(ligne, sizeof(ligne), "%s;%s;%s;%s|",
+            PQgetvalue(res, i, 0),
+            PQgetvalue(res, i, 1),
+            PQgetvalue(res, i, 2),
+            PQgetvalue(res, i, 3)
+        );
+        // Vérification débordement tampon (simplifié)
+        if (strlen(buffer_envoi) + strlen(ligne) < TAILLE_BUFF - 1) {
+            strcat(buffer_envoi, ligne);
+        }
+    }
+    PQclear(res);
+    send(cnx, buffer_envoi, strlen(buffer_envoi), 0);
+}
+
+// Fonction pour parser et exécuter l'UPDATE reçu du PHP
+void traiter_update(char *buffer, PGconn *conn, int verbose) {
+    // Protocole attendu: UPDATE;id;etape;statut;priorite;details;raison;image
+    char *saveptr;
+    
+    // On saute le mot clé "UPDATE"
+    strtok_r(buffer, ";", &saveptr); 
+
+    char *id = strtok_r(NULL, ";", &saveptr);
+    char *etape = strtok_r(NULL, ";", &saveptr);
+    char *statut = strtok_r(NULL, ";", &saveptr);
+    char *prio = strtok_r(NULL, ";", &saveptr);
+    char *details = strtok_r(NULL, ";", &saveptr);
+    char *raison = strtok_r(NULL, ";", &saveptr);
+    char *image = strtok_r(NULL, ";", &saveptr);
+
+    if (!id) return;
+
+    char query[2048];
+    // Construction de la requête SQL dynamique
+    snprintf(query, sizeof(query), 
+        "UPDATE systeme.commandes SET etape=%s, statut='%s', priorite=%s, details_etape='%s', raison='%s', chemin_image_refuse='%s', date_maj=NOW() WHERE id_commande=%s;",
+        etape ? etape : "0",
+        statut ? statut : "ENCOURS",
+        prio ? prio : "0",
+        details ? details : "",
+        (raison && strcmp(raison, "NULL") != 0) ? raison : "", // Gestion simplifiée du NULL string
+        (image && strcmp(image, "NULL") != 0) ? image : "",
+        id
+    );
+
+    if (verbose) printf("Exécution SQL: %s\n", query);
+
+    PGresult *res = PQexec(conn, query);
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        fprintf(stderr, "Erreur UPDATE : %s\n", PQerrorMessage(conn));
+    }
+    PQclear(res);
+}
+
+void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int verbose){
+    char bordereau[50];
+    char query[1024];
+    char message_retour[256];
+    int max_prio;
+    generer_bordereau(bordereau);
+
+    // 1. Vérifier la capacité
+    PGresult *res = PQexec(conn, "SELECT COUNT(*) FROM systeme.commandes WHERE etape <= 4;");
+    int nb_commandes = 0;
+    if (PQresultStatus(res) == PGRES_TUPLES_OK) {
+        nb_commandes = atoi(PQgetvalue(res, 0, 0));
+    }
+    PQclear(res);
+
+    // 2.Vérifier les cas de la création 
+    if(nb_commandes >= capacite_max){
+        // --- CAS PLEIN : EN ATTENTE ---
+        if (verbose) printf("SYSTÈME PLEIN (%d/%d) -> %s en attente.\n", nb_commandes, capacite_max, id_str);
+
+        // Calculer nouvelle priorité (Max + 1)
+        res = PQexec(conn, "SELECT MAX(priorite) FROM systeme.commandes;");
+        max_prio = 0;
+        if (PQresultStatus(res) == PGRES_TUPLES_OK){
+            max_prio = atoi(PQgetvalue(res, 0, 0));
+        }
+        PQclear(res);
+
+        int new_prio = max_prio + 1;
+
+        // Insertion
+        snprintf(query, sizeof(query), 
+            "INSERT INTO systeme.commandes (id_commande, etape, bordereau, details_etape, statut, priorite) VALUES (%s, 1, '%s', 'Création d’un bordereau de livraison', 'EN ATTENTE', %d);",
+            id_str, bordereau, new_prio
+        );
+        
+        // Réponse formatée : STATUS|BORDEREAU
+        snprintf(message_retour, sizeof(message_retour), "WAIT|%s", bordereau);
+
+    } else {
+        // --- CAS NORMAL : ENCOURS ---
+        if (verbose) printf("AJOUT OK (%d/%d) -> %s encours.\n", nb_commandes, capacite_max, id_str);
+        
+        snprintf(query, sizeof(query), 
+            "INSERT INTO systeme.commandes (id_commande, etape, bordereau, details_etape, statut, priorite) VALUES (%s, 1, '%s', 'Création d’un bordereau de livraison', 'ENCOURS', 0);",
+            id_str, bordereau
+        );
+        
+        snprintf(message_retour, sizeof(message_retour), "OK|%s", bordereau);
+    }
+
+    // Exécution de l'INSERT
+    res = PQexec(conn, query);
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        fprintf(stderr, "Erreur INSERT : %s\n", PQerrorMessage(conn));
+        snprintf(message_retour, sizeof(message_retour), "ERROR|Erreur SQL");
+    }
+    PQclear(res);
+
+    send(cnx, message_retour, strlen(message_retour), 0);
+}
+
+int main(int argc, char *argv[]){
+
+    // Variables initialisé pour la base de données 
+    const char *conninfo = "host=127.0.0.1 port=5432 dbname=postgres user=postgres password=bigouden08";
+    int sock;
+    int size;
+    int ret;
+    int cnx;
+    int capacite_max = 3; // Capacité par défault.
+    char buf[TAILLE_BUFF];
+    char bordereau_genere[50] = {0};
+    struct sockaddr_in conn_addr;
+    struct sockaddr_in addr;
+    int opt;
+    int verbose = false;
+    bool cap_argument = false;
+    srand(time(NULL));
+
+    static struct option long_options[] = {
+        {"time", required_argument,0, 't'},
+        {"cap",required_argument,0,'c'},
+        {"logs", no_argument,0, 's'},
+        {"help", no_argument,0, 'h'},
+        {0, 0, 0}
+    };
+
+
+    // 2. Établir la connexion
+    PGconn *conn = PQconnectdb(conninfo);
+
+    // Vérifier si la connexion a réussi
+    if (PQstatus(conn) != CONNECTION_OK) {
+        fprintf(stderr, "Erreur de connexion : %s\n", PQerrorMessage(conn));
+        PQfinish(conn);
+        exit(1);
+    }
+
+    printf("Connexion réussie !\n");
+
+
+    // Choix des options qu'on peut choisir pour lancer le système.
+    while ((opt = getopt_long(argc, argv, "c:sh",long_options, NULL)) != -1) {
+        switch (opt) {
+            case 's':
+                verbose = true; // Affiche les logs .
+                break;
+            case 'h':
+                afficher_man(argv[0]); // Affiche le man du service. 
+                exit(EXIT_SUCCESS);
+            case 'c':
+                capacite_max = atoi(optarg);
+                cap_argument = true;
+                break;
+            default:    
+                fprintf(stderr, "Tapez '%s --help' pour plus d'informations.\n", argv[0]); // Scénario d'érreur
+                exit(EXIT_FAILURE);
+        }
+    }
+    if(!cap_argument){
+        fprintf(stderr, "Erreur : Les options --cap (-c) sont obligatoires.\n");
+        fprintf(stderr, "Utilisez --help pour voir l'usage.\n");
+        exit(EXIT_FAILURE);
+    }
+    // --- Vérification des paramètres (Log de démarrage) ---
+    if (verbose) {
+        printf("=== DÉMARRAGE DU SERVEUR ===\n");
+        printf("Capacité Maximale : %d\n", capacite_max);
+        printf("============================\n\n");
+    }
+
+    // Fonction Socket() - Client et Serveur 
+    sock = socket(AF_INET, SOCK_STREAM, 0);
+    printf("Création du socket");
+    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
+        perror("setsockopt");
+        exit(EXIT_FAILURE);
+    }
+    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(PORT);
+    ret = bind(sock, (struct sockaddr *)&addr, sizeof(addr));
+    ret = listen(sock, 5);
+
+
+       while(1){
+        if (verbose) printf("\nAttente connexion...\n");
+        size = sizeof(conn_addr);
+        cnx = accept(sock, (struct sockaddr *)&conn_addr, (socklen_t *)&size);
+        
+        if (cnx == -1) { perror("accept"); continue; }
+        
+        int len = read(cnx, buf, TAILLE_BUFF - 1);
+        if(len > 0){
+            buf[len] = '\0';
+            buf[strcspn(buf,"\r\n")] = 0;
+        }
+
+        if (verbose) printf("Reçu : %s\n", buf);
+
+        
+        if (strcmp(buf, "GET_LIST") == 0) {
+            // Cas 1 : Le PHP demande la liste des commandes
+            traiter_get_list(cnx, conn);
+        } 
+        else if (strncmp(buf, "UPDATE", 6) == 0) {
+            // Cas 2 : Le PHP demande une mise à jour
+            traiter_update(buf, conn, verbose);
+        }
+        else {
+            // C'est un ID, on lance la création
+            traiter_creation(buf, capacite_max, cnx, conn, verbose);
+        }
+    }
+    
+    return EXIT_SUCCESS;
+}

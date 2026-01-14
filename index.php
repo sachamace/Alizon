@@ -24,6 +24,9 @@
                 <?php if (isset($_GET['categorie'])): ?>
                     <input type="hidden" name="categorie" value="<?= htmlspecialchars($_GET['categorie']) ?>">
                 <?php endif; ?>
+                <?php if (isset($_GET['search'])): ?>
+                    <input type="hidden" name="search" value="<?= htmlspecialchars($_GET['search']) ?>">
+                <?php endif; ?>
                 <label for="tri">Trier par :</label>
                 <select name="tri" id="tri" onchange="this.form.submit()">
                     <option value="">-- Sélectionner --</option>
@@ -85,9 +88,8 @@
             }
             // --- 1. INITIALISATION DES VARIABLES ---
             $params = [];
-            // On commence le WHERE avec la condition de base (Produit actif)
             $where = "p.est_actif = true"; 
-            $having = "1 = 1"; // Condition "toujours vraie" pour pouvoir ajouter des "AND" derrière
+            $having = "1 = 1";
 
             // --- 2. GESTION DE LA RECHERCHE (Texte) ---
             if (isset($_GET['search']) && !empty($_GET['search'])) {

@@ -357,8 +357,7 @@ footer.footer.mobile, footer.footer.tablette {
   align-content: flex-start;
   gap: 25px;
   padding-top: 40px;
-  margin: 150px auto 50px auto;
-  width: 100%;
+  margin: 150px auto 50px 310px;
 }
 .div__catalogue a {
   text-decoration: none;
@@ -375,7 +374,7 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .div__catalogue article {
   background: linear-gradient(135deg, #fff 0%, rgb(249.9, 249.9, 249.9) 100%);
-  width: 350px;
+  width: 325px;
   height: 550px;
   padding: 20px;
   margin: 0;
@@ -543,18 +542,123 @@ footer.footer.mobile, footer.footer.tablette {
   color: #dc3545;
 }
 .div__catalogue aside {
-  display: none;
-  background-color: #ddd;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 150px;
   left: 0;
-  z-index: 999999999;
-  padding: 10px;
-  height: calc(100% - 150px);
+  width: 300px;
+  height: calc(100vh - 150px);
+  z-index: 100;
+  background-color: #fff;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
+  padding: 25px 20px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  border-top: 1px solid #e1e1e1;
 }
-.div__catalogue aside input {
-  margin: 20px;
+.div__catalogue aside form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+.div__catalogue aside form label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]) {
+  display: block;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.div__catalogue aside form select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1.5px solid #ddd;
+  background-color: rgb(251.6, 251.6, 251.6);
+  font-family: "Space Grotesk", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.div__catalogue aside form select:focus {
+  outline: none;
+  border-color: #ff6ce2;
+  background-color: #fff;
+}
+.div__catalogue aside form .inputs {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+.div__catalogue aside form .inputs input[type=number] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1.5px solid #ddd;
+  box-sizing: border-box;
+  margin-bottom: 0;
+  transition: border-color 0.2s;
+}
+.div__catalogue aside form .inputs input[type=number]:focus {
+  outline: none;
+  border-color: #ff6ce2;
+}
+.div__catalogue aside form fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.div__catalogue aside form fieldset legend {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #000;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.div__catalogue aside form fieldset input[type=checkbox] {
+  margin-right: 10px;
+  accent-color: #ff6ce2;
+  cursor: pointer;
+}
+.div__catalogue aside form fieldset label {
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom: 6px;
+  transition: color 0.2s;
+}
+.div__catalogue aside form fieldset label:hover {
+  color: #ff6ce2;
+}
+.div__catalogue aside form label[for="1"], .div__catalogue aside form label[for="2"], .div__catalogue aside form label[for="3"], .div__catalogue aside form label[for="4"], .div__catalogue aside form label[for="5"] {
+  color: #ffb800;
+  font-size: 1.1rem;
+}
+.div__catalogue aside form #resetAllFilters {
+  background: transparent;
+  color: #666;
+  border: 1.5px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+.div__catalogue aside form #resetAllFilters:hover {
+  background: #fff0f0;
+  color: #d93025;
+  border-color: #d93025;
+}
+.div__catalogue aside::-webkit-scrollbar {
+  width: 4px;
+}
+.div__catalogue aside::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 10px;
 }
 @media (max-width: 428px) {
   .div__catalogue {
@@ -566,7 +670,7 @@ footer.footer.mobile, footer.footer.tablette {
     max-width: 100%;
     box-sizing: border-box;
     padding: 30px 10px 100px;
-    margin-top: 180px;
+    margin-top: 180px auto 50px 0;
     justify-items: stretch;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -670,6 +774,9 @@ footer.footer.mobile, footer.footer.tablette {
     text-overflow: ellipsis;
     overflow: hidden;
     word-break: break-word;
+  }
+  .div__catalogue aside {
+    width: 30px;
   }
 }
 @media (min-width: 429px) and (max-width: 430px) {

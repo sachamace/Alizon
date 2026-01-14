@@ -23,7 +23,6 @@ $(document).ready(function(){
                         console.log("Je suis dans if");
                         $.each(data, function(index, produit){
                             // On construit le lien vers la page produit
-                            // Notez que j'utilise l'ID produit pour le lien
                             
                             html += '<a href="front_office/front_end/html/produitdetail.php?article=' + produit.id_produit + '" class="suggestion-item">' + produit.nom_produit + '</a>';
                         });

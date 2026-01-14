@@ -39,7 +39,7 @@ $(document).ready(function(){
         }
     });
 
-    // Bonus : Cacher la liste si on clique ailleurs sur la page
+    // Bonus : Cacher la liste si on clique ailleurs sur la page 
     $(document).on('click', function(e) {
         if (!$(e.target).closest('#site-search, #resultats-recherche').length) {
             $('#resultats-recherche').hide();

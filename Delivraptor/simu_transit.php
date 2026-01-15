@@ -2,7 +2,7 @@
 // Fonction utilitaire pour parler au serveur C
 function envoyer_au_c($message) {
     $host = "10.253.5.108";
-    $port = 5432;
+    $port = 8080;
     $response = "";
 
     $socket = @fsockopen($host, $port, $errno, $errstr, 2);

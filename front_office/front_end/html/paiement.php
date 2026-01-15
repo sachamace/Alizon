@@ -231,8 +231,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 //VALIDER LA TRANSACTION
                 $pdo->commit();
                 // --- APPEL AU SERVEUR C ---
-                $host_c = "127.0.0.1"; // Ou l'IP de votre conteneur C si Docker
-                $port_c = 8080;        // Port défini dans systeme.c
+                $host_c = "10.253.5.108"; // Ou l'IP de votre conteneur C si Docker
+                $port_c = 5432;        // Port défini dans systeme.c
                 
                 $socket = @fsockopen($host_c, $port_c, $errno, $errstr, 2);
                 if ($socket) {

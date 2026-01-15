@@ -257,7 +257,7 @@ int main(int argc, char *argv[]){
 
     // Fonction Socket() - Client et Serveur 
     sock = socket(AF_INET, SOCK_STREAM, 0);
-    printf("Création du socket");
+    if(verbose) printf("Création du socket\n");
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
         perror("setsockopt");
         exit(EXIT_FAILURE);

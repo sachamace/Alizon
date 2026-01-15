@@ -12,8 +12,8 @@
 #include <stdbool.h> 
 #include <getopt.h>
 #include <postgresql/libpq-fe.h>
-#define TAILLE_BUFF 1024
 
+#define TAILLE_BUFF 1024
 #define PORT 8080
 
 const char* max_erreur = "ERREUR_PLEIN"; 
@@ -118,7 +118,6 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
     char bordereau[50];
     char query[1024];
     char message_retour[256];
-    int max_prio;
     char nom_client[100] = "Client";
 
     // 1. Trouver l'id du client de la commande 
@@ -194,6 +193,7 @@ int main(int argc, char *argv[]){
     int size;
     int ret;
     int cnx;
+    int opt_val = 1;
     int capacite_max = 3; // Capacité par défault.
     char buf[TAILLE_BUFF];
     struct sockaddr_in conn_addr;
@@ -258,8 +258,6 @@ int main(int argc, char *argv[]){
     // Fonction Socket() - Client et Serveur 
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if(verbose) printf("Création du socket\n");
-// Option pour redémarrer le serveur rapidement sans erreur "Address already in use"
-    int opt_val = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt_val, sizeof(opt_val))) {
         perror("setsockopt");
         exit(EXIT_FAILURE);
@@ -300,6 +298,7 @@ int main(int argc, char *argv[]){
             // C'est un ID, on lance la création
             traiter_creation(buf, capacite_max, cnx, conn, verbose);
         }
+        close(cnx);
     }
     
     return EXIT_SUCCESS;

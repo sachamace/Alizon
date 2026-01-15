@@ -32,7 +32,7 @@ try{
     if (empty($raw_data)) {
         die("Aucune donnée reçue du serveur ou base vide.\n");
     }
-    echo $raw_data;
+    echo "Test voir si ca va jusqu'à là.";
     // On transforme la string en tableau 
     $rows = explode('|', $raw_data);
     $commandes = [];

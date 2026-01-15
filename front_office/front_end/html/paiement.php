@@ -176,18 +176,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 //DÉBUT DE LA TRANSACTION
                 $pdo->beginTransaction();
 
-                //CRÉER LA COMMANDE
-                $stmt_commande = $pdo->prepare("
-                    INSERT INTO commande (id_client, date_commande, montant_total_ht, montant_total_ttc, statut)
-                    VALUES (:id_client, NOW(), :montant_ht, :montant_ttc, 'validée')
-                    RETURNING id_commande
-                ");
-                $stmt_commande->execute([
-                    ':id_client' => $id_client_connecte,
-                    ':montant_ht' => $total_ht,
-                    ':montant_ttc' => $total_ttc
-                ]);
-                $id_commande = $stmt_commande->fetchColumn();
+                // 2. Générer un ID de commande unique
+                do {
+                    $num_commande = rand(1000, 9999);
+                    // Table modifiée : systeme.commandes -> commande
+                    $stmt_check = $pdo->prepare("SELECT id_commande FROM commande WHERE id_commande = ?");
+                    $stmt_check->execute([$num_commande]);
+                    $exists = $stmt_check->fetch();
+                } while ($exists);
 
                 // 2️⃣ INSÉRER LES LIGNES DE COMMANDE - ✅ Avec prix incluant les remises
                 $stmt_ligne = $pdo->prepare("
@@ -404,16 +400,7 @@ function verifLuhn($numero) {
                         <input type="text" name="nom_titulaire" placeholder="Nom du titulaire"
                             value="<?= htmlentities($nom) ?>">
                     </div>
-
-                    <!-- OPTION PAYPAL -->
-                    <label class="option">
-                        <input type="radio" name="paiement" id="radio-paypal" value="paypal" disabled>
-                        <span style="opacity: 0.5; font-size: 1rem;">PayPal</span>
-                    </label>
-
-                    <div class="formulaire hidden" id="form-paypal">
-                        <p>PayPal est désactivé.</p>
-                    </div>
+                                    
                 </div>
             </div>
 

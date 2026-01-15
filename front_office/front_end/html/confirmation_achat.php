@@ -53,15 +53,7 @@ try {
         throw new Exception("Le serveur C (bordereau) ne répond pas sur le port $port.");
     }
 
-    // 2. Générer un ID de commande unique (Algorithme conservé malgré le type SERIAL)
-    do {
-        $num_commande = rand(1000, 9999);
-        // Table modifiée : systeme.commandes -> commande
-        $stmt_check = $pdo->prepare("SELECT id_commande FROM commande WHERE id_commande = ?");
-        $stmt_check->execute([$num_commande]);
-        $exists = $stmt_check->fetch();
-    } while ($exists);
-
+    
     // 3. Envoyer l'ID au serveur C
     fwrite($socket, $num_commande);
 

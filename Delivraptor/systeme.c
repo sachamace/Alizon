@@ -19,9 +19,10 @@
 const char* max_erreur = "ERREUR_PLEIN"; 
 
 
-void generer_bordereau(char *buffer) {
+void generer_bordereau(char *buffer,int cnx, PGconn *conn,char *nom_client) {
     int nombreAleatoire = rand() % 10000;
-    sprintf(buffer, "TRK-%04d", nombreAleatoire); 
+    
+    sprintf(buffer, "%s-%04d", &nom_client,nombreAleatoire); 
 }
 
 void afficher_man(char *nom_programme) {
@@ -114,9 +115,25 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
     char query[1024];
     char message_retour[256];
     int max_prio;
-    generer_bordereau(bordereau);
+    char *nom_client;
 
-    // 1. Vérifier la capacité
+    // 1. Trouver l'id du client de la commande 
+    // Construction de la requête
+    snprintf(query, sizeof(query), "SELECT nom FROM public.compte_client WHERE id_commande = '%s';", id_str);
+    PGresult *res = PQexec(conn, query);
+    if (PQntuples(res) > 0) {
+        // On récupère la valeur sous forme de chaîne de caractères
+        char *nom_client = PQgetvalue(res, 0, 0);
+        printf("Le nom du client est : %s\n", nom_client);
+    } 
+    else {
+        printf("Aucun client trouvé pour cet ID.\n");
+    }
+    PQclear(res);
+
+    // 2. Générer un bordereau
+    generer_bordereau(bordereau,cnx,&conn,&nom_client);
+    // 3. Vérifier la capacité
     PGresult *res = PQexec(conn, "SELECT COUNT(*) FROM public.commandes WHERE etape <= 4;");
     int nb_commandes = 0;
     if (PQresultStatus(res) == PGRES_TUPLES_OK) {
@@ -124,7 +141,7 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
     }
     PQclear(res);
 
-    // 2.Vérifier les cas de la création 
+    // 4.Vérifier les cas de la création 
     if(nb_commandes >= capacite_max){
         // --- CAS PLEIN : EN ATTENTE ---
         if (verbose) printf("SYSTÈME PLEIN (%d/%d) -> %s en attente.\n", nb_commandes, capacite_max, id_str);
@@ -160,7 +177,7 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
         snprintf(message_retour, sizeof(message_retour), "OK|%s", bordereau);
     }
 
-    // Exécution de l'INSERT
+    // 5.Exécution de l'INSERT
     res = PQexec(conn, query);
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         fprintf(stderr, "Erreur INSERT : %s\n", PQerrorMessage(conn));
@@ -181,7 +198,6 @@ int main(int argc, char *argv[]){
     int cnx;
     int capacite_max = 3; // Capacité par défault.
     char buf[TAILLE_BUFF];
-    char bordereau_genere[50] = {0};
     struct sockaddr_in conn_addr;
     struct sockaddr_in addr;
     int opt;

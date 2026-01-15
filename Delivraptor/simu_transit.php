@@ -1,7 +1,7 @@
 <?php
 // Fonction utilitaire pour parler au serveur C
 function envoyer_au_c($message) {
-    $host = "10.253.5.108";
+    $host = "127.0.0.1";
     $port = 8080;
     $response = "";
 

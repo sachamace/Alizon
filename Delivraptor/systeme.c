@@ -19,10 +19,11 @@
 const char* max_erreur = "ERREUR_PLEIN"; 
 
 
-void generer_bordereau(char *buffer,int cnx, PGconn *conn,char *nom_client) {
+
+void generer_bordereau(char *buffer, int cnx, PGconn *conn, const char *nom_client) {
     int nombreAleatoire = rand() % 10000;
-    
-    sprintf(buffer, "%s-%04d", &nom_client,nombreAleatoire); 
+    // Maintenant %s peut recevoir une chaîne de caractères
+    sprintf(buffer, "%s-%04d", nom_client, nombreAleatoire); 
 }
 
 void afficher_man(char *nom_programme) {
@@ -115,7 +116,7 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
     char query[1024];
     char message_retour[256];
     int max_prio;
-    char *nom_client;
+    char nom_client[100] = "Inconnu";
 
     // 1. Trouver l'id du client de la commande 
     // Construction de la requête
@@ -123,18 +124,17 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
     PGresult *res = PQexec(conn, query);
     if (PQntuples(res) > 0) {
         // On récupère la valeur sous forme de chaîne de caractères
-        char *nom_client = PQgetvalue(res, 0, 0);
-        printf("Le nom du client est : %s\n", nom_client);
+        strncpy(nom_client, PQgetvalue(res, 0, 0), sizeof(nom_client) - 1);
+        if (verbose) printf("Le nom du client est : %s\n", nom_client); 
     } 
-    else {
-        printf("Aucun client trouvé pour cet ID.\n");
-    }
     PQclear(res);
 
     // 2. Générer un bordereau
-    generer_bordereau(bordereau,cnx,&conn,&nom_client);
+    generer_bordereau(bordereau,cnx,conn,nom_client);
     // 3. Vérifier la capacité
-    PGresult *res = PQexec(conn, "SELECT COUNT(*) FROM public.commandes WHERE etape <= 4;");
+
+    // 3. Vérifier la capacité 
+    res = PQexec(conn, "SELECT COUNT(*) FROM public.commandes WHERE etape <= 4;");
     int nb_commandes = 0;
     if (PQresultStatus(res) == PGRES_TUPLES_OK) {
         nb_commandes = atoi(PQgetvalue(res, 0, 0));

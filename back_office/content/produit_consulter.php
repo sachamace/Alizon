@@ -18,6 +18,9 @@
                 <p><?php echo htmlentities($categorie) ?></p>
             </article>
             <article>
+                <a href="?page=avis&id=<?= $produit['id_produit'] ?>">Voir les avis</a>
+            </article>
+            <article>
                 <h3>Média</h3>
                 <?php if (!empty($images)){ ?>
                     <div class="produit-images">

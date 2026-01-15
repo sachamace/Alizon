@@ -197,6 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 foreach ($articles_panier as $article) {
                     $stmt_ligne->execute([
+                        'id_ligne' => $id_commande,
                         ':id_commande' => $id_commande,
                         ':id_produit' => $article['id_produit'],
                         ':quantite' => $article['quantite'],

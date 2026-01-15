@@ -78,7 +78,7 @@ try {
         
         $stmtenvoie = $pdo->prepare($query);
         $stmtenvoie->execute([
-            'id'            => $num_commande,
+            'id'            => $id_commande,
             'id_client'     => $id_client,
             'ht'            => $montant_ht,
             'ttc'           => $montant_ttc,
@@ -106,7 +106,7 @@ try {
     
     $stmtenvoie = $pdo->prepare($query);
     $stmtenvoie->execute([
-        'id'            => $num_commande,
+        'id'            => $id_commande,
         'id_client'     => $id_client,
         'ht'            => $montant_ht,
         'ttc'           => $montant_ttc,

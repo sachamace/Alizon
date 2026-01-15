@@ -192,12 +192,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // 2️⃣ INSÉRER LES LIGNES DE COMMANDE - ✅ Avec prix incluant les remises
                 $stmt_ligne = $pdo->prepare("
                     INSERT INTO ligne_commande (id_ligne,id_commande, id_produit, quantite, prix_unitaire_ht, prix_unitaire_ttc)
-                    VALUES (:id_ligne ,:id_commande, :id_produit, :quantite, :prix_ht, :prix_ttc)
+                    VALUES (:id_commande, :id_produit, :quantite, :prix_ht, :prix_ttc)
                 ");
                 
                 foreach ($articles_panier as $article) {
                     $stmt_ligne->execute([
-                        'id_ligne' => $id_commande,
                         ':id_commande' => $id_commande,
                         ':id_produit' => $article['id_produit'],
                         ':quantite' => $article['quantite'],

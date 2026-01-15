@@ -56,7 +56,8 @@ try{
         $raison = "NULL";
         $statut = "NULL";
         $chemin_image_refuse = "NULL";
-
+        $priorite = $commande['priorite'];
+        $need_update = false;
         $id = $commande['id_commande'];
         $nouvelle_etape = $commande['etape'] + 1;
 

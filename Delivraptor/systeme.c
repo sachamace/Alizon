@@ -258,11 +258,14 @@ int main(int argc, char *argv[]){
     // Fonction Socket() - Client et Serveur 
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if(verbose) printf("Création du socket\n");
-    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
+// Option pour redémarrer le serveur rapidement sans erreur "Address already in use"
+    int opt_val = 1;
+    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt_val, sizeof(opt_val))) {
         perror("setsockopt");
         exit(EXIT_FAILURE);
     }
-    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    addr.sin_addr.s_addr = inet_addr(INADDR_ANY);
     addr.sin_family = AF_INET;
     addr.sin_port = htons(PORT);
     ret = bind(sock, (struct sockaddr *)&addr, sizeof(addr));

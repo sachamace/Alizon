@@ -231,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 //VALIDER LA TRANSACTION
                 $pdo->commit();
                 // --- APPEL AU SERVEUR C ---
-                $host_c = "127.0.0.1";
+                $host = "10.255.5.108";
                 $port_c = 8080;        // Port défini dans systeme.c
                 
                 $socket = @fsockopen($host_c, $port_c, $errno, $errstr, 2);
@@ -239,7 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // On envoie juste l'ID, le C fera l'UPDATE du statut et du bordereau
                     fwrite($socket, $id_commande);
                     
-                    // On attend la réponse (ex: "OK|TRK-CLIENT-1234")
+                    // On attend la réponse 
                     $reponse = fgets($socket, 1024);
                     fclose($socket);
                 } 

@@ -14,7 +14,7 @@
 #include <postgresql/libpq-fe.h>
 #define TAILLE_BUFF 1024
 
-#define PORT 5432
+#define PORT 8080
 
 const char* max_erreur = "ERREUR_PLEIN"; 
 

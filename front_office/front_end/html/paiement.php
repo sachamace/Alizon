@@ -176,24 +176,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 //DÉBUT DE LA TRANSACTION
                 $pdo->beginTransaction();
 
-                // 2. Générer un ID de commande unique
-                do {
-                    $id_commande = rand(1000, 9999);
-                    // Table modifiée : systeme.commandes -> commande
-                    $stmt_check = $pdo->prepare("SELECT id_commande FROM commande WHERE id_commande = ?");
-                    $stmt_check->execute([$id_commande]);
-                    $exists = $stmt_check->fetch();
-                } while ($exists);
+                //CRÉER LA COMMANDE
+                $stmt_commande = $pdo->prepare("
+                    INSERT INTO commande (id_client, date_commande, montant_total_ht, montant_total_ttc, statut)
+                    VALUES (:id_client, NOW(), :montant_ht, :montant_ttc, 'validée')
+                    RETURNING id_commande
+                ");
+                $stmt_commande->execute([
+                    ':id_client' => $id_client_connecte,
+                    ':montant_ht' => $total_ht,
+                    ':montant_ttc' => $total_ttc
+                ]);
+                $id_commande = $stmt_commande->fetchColumn();
 
                 // 2️⃣ INSÉRER LES LIGNES DE COMMANDE - ✅ Avec prix incluant les remises
                 $stmt_ligne = $pdo->prepare("
                     INSERT INTO ligne_commande (id_ligne,id_commande, id_produit, quantite, prix_unitaire_ht, prix_unitaire_ttc)
-                    VALUES (:id_ligne ,:id_commande, :id_produit, :quantite, :prix_ht, :prix_ttc)
+                    VALUES (:id_commande, :id_produit, :quantite, :prix_ht, :prix_ttc)
                 ");
                 
                 foreach ($articles_panier as $article) {
                     $stmt_ligne->execute([
-                        'id_ligne' => $id_commande,
                         ':id_commande' => $id_commande,
                         ':id_produit' => $article['id_produit'],
                         ':quantite' => $article['quantite'],

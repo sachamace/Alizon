@@ -490,6 +490,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             <?php
                 echo '<h1>' . count($avis) . ' avis</h1>';
                 if (count($avis) > 0) {
+                    $req_client = $pdo->prepare("SELECT * FROM compte_client WHERE id_client = ?");
                     foreach ($avis as $un_avis) {
                         $id_client = (int) $un_avis['id_client'];
                         $est_signale = isset($_SESSION['avis_signales']) && in_array($id_client, $_SESSION['avis_signales']);
@@ -498,7 +499,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         $couleur_fill   = $est_signale ? 'red' : 'white';
                         $couleur_stroke = $est_signale ? 'red' : 'black';
                         $deactiver = $est_signale ? 'disabled' : '';
-                        $client = $pdo->query("SELECT * FROM compte_client WHERE id_client = $id_client")->fetch(PDO::FETCH_ASSOC);
+                        $req_client->execute([$id_client]);
+                        $client = $req_client->fetch(PDO::FETCH_ASSOC);
                         // Génération des étoiles selon la note
                         $note = floatval($un_avis['note']);
                         $etoiles = genererEtoiles($note);
@@ -681,5 +683,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
 
     </script>
-    <script src="../assets/js/noteEtoile.js"></script>
+    <script src="/front_office/front_end/assets/js/noteEtoile.js"></script>
 </body>

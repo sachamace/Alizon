@@ -168,7 +168,7 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
         if (verbose) printf("AJOUT OK (%d/%d) -> %s encours.\n", nb_commandes, capacite_max, id_str);
         
         snprintf(query, sizeof(query), 
-            "UPDATE commande SET etape=1, bordereau='%s', details_etape='Création bordereau', statut='ENCOURS', priorite=1, date_maj=NOW() WHERE id_commande=%s;",
+            "UPDATE commande SET etape=1, bordereau='%s', details_etape='Création bordereau', statut='ENCOURS', priorite=0, date_maj=NOW() WHERE id_commande=%s;",
             bordereau, id_str
         );
         

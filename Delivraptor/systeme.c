@@ -262,7 +262,7 @@ int main(int argc, char *argv[]){
         perror("setsockopt");
         exit(EXIT_FAILURE);
     }
-    addr.sin_addr.s_addr = inet_addr(INADDR_ANY);
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
     addr.sin_family = AF_INET;
     addr.sin_port = htons(PORT);
     ret = bind(sock, (struct sockaddr *)&addr, sizeof(addr));

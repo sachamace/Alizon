@@ -21,9 +21,12 @@ const char* max_erreur = "ERREUR_PLEIN";
 
 
 void generer_bordereau(char *buffer, int cnx, PGconn *conn, const char *nom_client) {
-    int nombreAleatoire = rand() % 10000;
-    // Maintenant %s peut recevoir une chaîne de caractères
-    sprintf(buffer, "%s-%04d", nom_client, nombreAleatoire); 
+int nombreAleatoire = rand() % 10000;
+    // Nettoyage du nom pour le bordereau (simple)
+    char nom_clean[50];
+    strncpy(nom_clean, nom_client, 49);
+    nom_clean[49] = '\0';
+    sprintf(buffer, "%s-%04d", nom_clean, nombreAleatoire);
 }
 
 void afficher_man(char *nom_programme) {
@@ -116,7 +119,7 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
     char query[1024];
     char message_retour[256];
     int max_prio;
-    char nom_client[100] = "Inconnu";
+    char nom_client[100] = "Client";
 
     // 1. Trouver l'id du client de la commande 
     // Construction de la requête
@@ -148,21 +151,16 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
 
         // Calculer nouvelle priorité (Max + 1)
         res = PQexec(conn, "SELECT MAX(priorite) FROM systeme.commandes;");
-        max_prio = 0;
+        int max_prio = 0;
         if (PQresultStatus(res) == PGRES_TUPLES_OK){
             max_prio = atoi(PQgetvalue(res, 0, 0));
         }
         PQclear(res);
 
-        int new_prio = max_prio + 1;
-
-        // Insertion
         snprintf(query, sizeof(query), 
-            "INSERT INTO public.commandes (id_commande, etape, bordereau, details_etape, statut, priorite) VALUES (%s, 1, '%s', 'Création d’un bordereau de livraison', 'EN ATTENTE', %d);",
-            id_str, bordereau, new_prio
+            "UPDATE commande SET etape=1, bordereau='%s', details_etape='Création bordereau (File d''attente)', statut='EN ATTENTE', priorite=%d, date_maj=NOW() WHERE id_commande=%s;",
+            bordereau, max_prio + 1, id_str
         );
-        
-        // Réponse formatée : STATUS|BORDEREAU
         snprintf(message_retour, sizeof(message_retour), "EN ATTENTE|%s", bordereau);
 
     } else {
@@ -170,8 +168,8 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
         if (verbose) printf("AJOUT OK (%d/%d) -> %s encours.\n", nb_commandes, capacite_max, id_str);
         
         snprintf(query, sizeof(query), 
-            "INSERT INTO public.commandes (id_commande, etape, bordereau, details_etape, statut, priorite) VALUES (%s, 1, '%s', 'Création d’un bordereau de livraison', 'ENCOURS', 0);",
-            id_str, bordereau
+            "UPDATE commande SET etape=1, bordereau='%s', details_etape='Création bordereau', statut='ENCOURS', priorite=1, date_maj=NOW() WHERE id_commande=%s;",
+            bordereau, id_str
         );
         
         snprintf(message_retour, sizeof(message_retour), "OK|%s", bordereau);
@@ -269,7 +267,7 @@ int main(int argc, char *argv[]){
     addr.sin_port = htons(PORT);
     ret = bind(sock, (struct sockaddr *)&addr, sizeof(addr));
     ret = listen(sock, 5);
-
+    if(verbose) printf("Serveur C en écoute sur le port %d...\n", PORT);
 
        while(1){
         if (verbose) printf("\nAttente connexion...\n");

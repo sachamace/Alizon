@@ -200,8 +200,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':id_commande' => $id_commande,
                         ':id_produit' => $article['id_produit'],
                         ':quantite' => $article['quantite'],
-                        ':prix_ht' => $article['prix_unitaire_ht_final'], // ✅ Prix avec remise
-                        ':prix_ttc' => $article['prix_ttc']                // ✅ Prix avec remise
+                        ':prix_ht' => $article['prix_unitaire_ht_final'], 
+                        ':prix_ttc' => $article['prix_ttc']                
                     ]);
                 }
 
@@ -230,7 +230,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 //VALIDER LA TRANSACTION
                 $pdo->commit();
-
+                // --- APPEL AU SERVEUR C ---
+                $host_c = "127.0.0.1"; // Ou l'IP de votre conteneur C si Docker
+                $port_c = 8080;        // Port défini dans systeme.c
+                
+                $socket = @fsockopen($host_c, $port_c, $errno, $errstr, 2);
+                if ($socket) {
+                    // On envoie juste l'ID, le C fera l'UPDATE du statut et du bordereau
+                    fwrite($socket, (string)$id_commande);
+                    
+                    // On attend la réponse (ex: "OK|TRK-CLIENT-1234")
+                    $reponse = fgets($socket, 1024);
+                    fclose($socket);
+                } 
                 //SAUVEGARDER L'ID DE COMMANDE EN SESSION
                 $_SESSION['derniere_commande'] = $id_commande;
 

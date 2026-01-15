@@ -12,6 +12,7 @@
 #include <stdbool.h> 
 #include <getopt.h>
 #include <postgresql/libpq-fe.h>
+
 #define TAILLE_BUFF 1024
 
 #define TAILLE_BUFF 1024
@@ -270,8 +271,6 @@ int main(int argc, char *argv[]){
     // Fonction Socket() - Client et Serveur 
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if(verbose) printf("Création du socket\n");
-// Option pour redémarrer le serveur rapidement sans erreur "Address already in use"
-    int opt_val = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt_val, sizeof(opt_val))) {
         perror("setsockopt");
         exit(EXIT_FAILURE);

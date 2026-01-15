@@ -12,9 +12,9 @@
 #include <stdbool.h> 
 #include <getopt.h>
 #include <postgresql/libpq-fe.h>
-
 #define TAILLE_BUFF 1024
-#define PORT 8080
+
+#define PORT 5432
 
 const char* max_erreur = "ERREUR_PLEIN"; 
 
@@ -44,9 +44,9 @@ void afficher_man(char *nom_programme) {
 
 // Fonction pour récupérer la liste des commandes et l'envoyer au PHP
 void traiter_get_list(int cnx, PGconn *conn) {
-    const char *query = "SELECT c.id_commande, c.etape, c.statut, c.priorite FROM commande c";
+    const char *query = "SELECT c.id_commande, c.etape, c.statut, c.priorite FROM commandes c";
     PGresult *res = PQexec(conn, query);
-    
+
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
         perror("Erreur SELECT");
         PQclear(res);
@@ -78,7 +78,7 @@ void traiter_get_list(int cnx, PGconn *conn) {
 void traiter_update(char *buffer, PGconn *conn, int verbose) {
     // Protocole attendu: UPDATE;id;etape;statut;priorite;details;raison;image
     char *saveptr;
-    
+
     // On saute le mot clé "UPDATE"
     strtok_r(buffer, ";", &saveptr); 
 
@@ -95,7 +95,7 @@ void traiter_update(char *buffer, PGconn *conn, int verbose) {
     char query[2048];
     // Construction de la requête SQL dynamique
     snprintf(query, sizeof(query), 
-        "UPDATE public.commande SET etape=%s, statut='%s', priorite=%s, details_etape='%s', raison='%s', chemin_image_refuse='%s', date_maj=NOW() WHERE id_commande=%s;",
+        "UPDATE public.commandesSET etape=%s, statut='%s', priorite=%s, details_etape='%s', raison='%s', chemin_image_refuse='%s', date_maj=NOW() WHERE id_commande=%s;",
         etape ? etape : "0",
         statut ? statut : "ENCOURS",
         prio ? prio : "0",
@@ -118,11 +118,12 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
     char bordereau[50];
     char query[1024];
     char message_retour[256];
+    int max_prio;
     char nom_client[100] = "Client";
 
     // 1. Trouver l'id du client de la commande 
     // Construction de la requête
-    snprintf(query, sizeof(query), "SELECT nom FROM public.compte_client JOIN public.commande ON compte_client.id_client = commande.id_client WHERE id_commande = '%s';", id_str);
+    snprintf(query, sizeof(query), "SELECT nom FROM public.compte_client WHERE id_commande = '%s';", id_str);
     PGresult *res = PQexec(conn, query);
     if (PQntuples(res) > 0) {
         // On récupère la valeur sous forme de chaîne de caractères
@@ -136,7 +137,7 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
     // 3. Vérifier la capacité
 
     // 3. Vérifier la capacité 
-    res = PQexec(conn, "SELECT COUNT(*) FROM public.commande WHERE etape <= 4;");
+    res = PQexec(conn, "SELECT COUNT(*) FROM public.commandes WHERE etape <= 4;");
     int nb_commandes = 0;
     if (PQresultStatus(res) == PGRES_TUPLES_OK) {
         nb_commandes = atoi(PQgetvalue(res, 0, 0));
@@ -149,7 +150,7 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
         if (verbose) printf("SYSTÈME PLEIN (%d/%d) -> %s en attente.\n", nb_commandes, capacite_max, id_str);
 
         // Calculer nouvelle priorité (Max + 1)
-        res = PQexec(conn, "SELECT MAX(priorite) FROM public.commande;");
+        res = PQexec(conn, "SELECT MAX(priorite) FROM systeme.commandes;");
         int max_prio = 0;
         if (PQresultStatus(res) == PGRES_TUPLES_OK){
             max_prio = atoi(PQgetvalue(res, 0, 0));
@@ -165,12 +166,12 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
     } else {
         // --- CAS NORMAL : ENCOURS ---
         if (verbose) printf("AJOUT OK (%d/%d) -> %s encours.\n", nb_commandes, capacite_max, id_str);
-        
+
         snprintf(query, sizeof(query), 
-            "UPDATE commande SET etape=1, bordereau='%s', details_etape='Création bordereau', statut='ENCOURS', priorite=0, date_maj=NOW() WHERE id_commande=%s;",
+            "UPDATE commande SET etape=1, bordereau='%s', details_etape='Création bordereau', statut='ENCOURS', priorite=1, date_maj=NOW() WHERE id_commande=%s;",
             bordereau, id_str
         );
-        
+
         snprintf(message_retour, sizeof(message_retour), "OK|%s", bordereau);
     }
 
@@ -261,7 +262,6 @@ int main(int argc, char *argv[]){
         perror("setsockopt");
         exit(EXIT_FAILURE);
     }
-
     addr.sin_addr.s_addr = inet_addr(INADDR_ANY);
     addr.sin_family = AF_INET;
     addr.sin_port = htons(PORT);
@@ -273,9 +273,9 @@ int main(int argc, char *argv[]){
         if (verbose) printf("\nAttente connexion...\n");
         size = sizeof(conn_addr);
         cnx = accept(sock, (struct sockaddr *)&conn_addr, (socklen_t *)&size);
-        
+
         if (cnx == -1) { perror("accept"); continue; }
-        
+
         int len = read(cnx, buf, TAILLE_BUFF - 1);
         if(len > 0){
             buf[len] = '\0';
@@ -284,7 +284,7 @@ int main(int argc, char *argv[]){
 
         if (verbose) printf("Reçu : %s\n", buf);
 
-        
+
         if (strcmp(buf, "GET_LIST") == 0) {
             // Cas 1 : Le PHP demande la liste des commandes
             traiter_get_list(cnx, conn);
@@ -299,6 +299,6 @@ int main(int argc, char *argv[]){
         }
         close(cnx);
     }
-    
+
     return EXIT_SUCCESS;
 }

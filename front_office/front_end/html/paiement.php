@@ -408,7 +408,7 @@ function verifLuhn($numero) {
 
                     <div class="formulaire hidden" id="form-paypal">
                         <p>PayPal est désactivé.</p>
-                
+                    </div>               
                 </div>
             </div>
 

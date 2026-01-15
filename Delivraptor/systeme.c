@@ -174,7 +174,7 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
 int main(int argc, char *argv[]){
 
     // Variables initialisé pour la base de données 
-    const char *conninfo = "host=10.253.5.108 port=5432 dbname=postgres user=postgres password=bigouden08";
+    const char *conninfo = "host=10.253.5.108 port=5432 dbname=postgres user=sae password=bigouden08";
     int sock;
     int size;
     int ret;

@@ -53,9 +53,8 @@ try {
         throw new Exception("Le serveur C (bordereau) ne répond pas sur le port $port.");
     }
 
-    
     // 3. Envoyer l'ID au serveur C
-    fwrite($socket, $num_commande);
+    fwrite($socket, $id_commande);
 
     // 4. Lire le bordereau TRK-XXXX généré par le C
     $reponse_c = trim(fgets($socket, 1024));

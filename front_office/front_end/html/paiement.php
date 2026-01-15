@@ -237,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $socket = @fsockopen($host_c, $port_c, $errno, $errstr, 2);
                 if ($socket) {
                     // On envoie juste l'ID, le C fera l'UPDATE du statut et du bordereau
-                    fwrite($socket, (string)$id_commande);
+                    fwrite($socket, $id_commande);
                     
                     // On attend la réponse (ex: "OK|TRK-CLIENT-1234")
                     $reponse = fgets($socket, 1024);

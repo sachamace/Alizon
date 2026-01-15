@@ -66,18 +66,18 @@ try{
             if($commande['priorite'] == 1){
                 $statut = "ENCOURS";
                 echo "Commande $id : Mise à jour du statut ENCOURS\n";
+                $need_update = true;
             }
             else{
                 $statut = "EN ATTENTE";
                 echo "Commande $id : En Attente \n";
             }
             $priorite = $commande['priorite'] - 1;
-            $need_update = true;
             
             $nouvelle_etape = $commande['etape']; 
         }
         elseif ($commande['statut'] === "ENCOURS"){
-
+            $need_update = true;
             if($nouvelle_etape == 9){
                 
                 $choix = rand(1,3);

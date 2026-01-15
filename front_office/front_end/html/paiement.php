@@ -178,8 +178,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 //CRÉER LA COMMANDE
                 $stmt_commande = $pdo->prepare("
-                    INSERT INTO commande (id_client, date_commande, montant_total_ht, montant_total_ttc, statut)
-                    VALUES (:id_client, NOW(), :montant_ht, :montant_ttc, 'validée')
+                    INSERT INTO commande (id_client, date_commande, montant_total_ht, montant_total_ttc,date_maj)
+                    VALUES (:id_client, NOW(), :montant_ht, :montant_ttc, NOW() )
                     RETURNING id_commande
                 ");
                 $stmt_commande->execute([

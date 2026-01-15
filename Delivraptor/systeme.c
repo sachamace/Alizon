@@ -14,7 +14,7 @@
 #include <postgresql/libpq-fe.h>
 #define TAILLE_BUFF 1024
 
-#define PORT 8080
+#define PORT 5432
 
 const char* max_erreur = "ERREUR_PLEIN"; 
 
@@ -264,7 +264,7 @@ int main(int argc, char *argv[]){
         perror("setsockopt");
         exit(EXIT_FAILURE);
     }
-    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    addr.sin_addr.s_addr = inet_addr("10.253.5.108");
     addr.sin_family = AF_INET;
     addr.sin_port = htons(PORT);
     ret = bind(sock, (struct sockaddr *)&addr, sizeof(addr));

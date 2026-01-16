@@ -139,7 +139,7 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
 
     // 1. Trouver l'id du client de la commande 
     // Construction de la requête
-    
+    snprintf(query, sizeof(query), "SELECT nom FROM public.compte_client JOIN public.commande ON compte_client.id_client = commande.id_client WHERE id_commande = '%s';", id_str);
     PGresult *res = PQexec(conn, query);
     if (PQntuples(res) > 0) {
         // On récupère la valeur sous forme de chaîne de caractères

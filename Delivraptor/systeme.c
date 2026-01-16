@@ -75,9 +75,17 @@ void traiter_get_list(int cnx, PGconn *conn) {
 }
 
 // Fonction pour parser et exécuter l'UPDATE reçu du PHP
-void traiter_update(char *buffer, PGconn *conn, int verbose) {
+void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
     // Protocole attendu: UPDATE;id;etape;statut;priorite;details;raison;image
     char *saveptr;
+    char query[1024] ;
+    snprintf(query, sizeof(query), "SELECT COUNT(*) FROM public.commande WHERE etape <= 4;");
+    PGresult *res = PQexec(conn, query);
+    int nb_commandes = 0;
+    if (PQresultStatus(res) == PGRES_TUPLES_OK) {
+        nb_commandes = atoi(PQgetvalue(res, 0, 0));
+    }
+    PQclear(res);
 
     // On saute le mot clé "UPDATE"
     strtok_r(buffer, ";", &saveptr); 
@@ -94,16 +102,19 @@ void traiter_update(char *buffer, PGconn *conn, int verbose) {
 
     char query[2048];
     // Construction de la requête SQL dynamique
-    snprintf(query, sizeof(query), 
-        "UPDATE public.commande SET etape=%s, statut='%s', priorite=%s, details_etape='%s', raison='%s', chemin_image_refuse='%s', date_maj=NOW() WHERE id_commande=%s;",
-        etape ? etape : "0",
-        statut ? statut : "ENCOURS",
-        prio ? prio : "0",
-        details ? details : "",
-        (raison && strcmp(raison, "NULL") != 0) ? raison : "", // Gestion simplifiée du NULL string
-        (image && strcmp(image, "NULL") != 0) ? image : "",
-        id
-    );
+    if(!nb_commandes >= capacite_max){
+        snprintf(query, sizeof(query), 
+            "UPDATE public.commande SET etape=%s, statut='%s', priorite=%s, details_etape='%s', raison='%s', chemin_image_refuse='%s', date_maj=NOW() WHERE id_commande=%s;",
+            etape ? etape : "0",
+            statut ? statut : "ENCOURS",
+            prio ? prio : "0",
+            details ? details : "",
+            (raison && strcmp(raison, "NULL") != 0) ? raison : "", // Gestion simplifiée du NULL string
+            (image && strcmp(image, "NULL") != 0) ? image : "",
+            id
+        );
+
+    }
 
     if (verbose) printf("Exécution SQL: %s\n", query);
 
@@ -122,7 +133,7 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
 
     // 1. Trouver l'id du client de la commande 
     // Construction de la requête
-    snprintf(query, sizeof(query), "SELECT nom FROM public.compte_client JOIN public.commande ON compte_client.id_client = commande.id_client WHERE id_commande = '%s';", id_str);
+    
     PGresult *res = PQexec(conn, query);
     if (PQntuples(res) > 0) {
         // On récupère la valeur sous forme de chaîne de caractères
@@ -193,7 +204,7 @@ int main(int argc, char *argv[]){
     int size;
     int ret;
     int cnx;
-    int capacite_max = 3; // Capacité par défault.
+    int capacite_max ; // Capacité par défault.
     char buf[TAILLE_BUFF];
     struct sockaddr_in conn_addr;
     struct sockaddr_in addr;
@@ -291,7 +302,7 @@ int main(int argc, char *argv[]){
         } 
         else if (strncmp(buf, "UPDATE", 6) == 0) {
             // Cas 2 : Le PHP demande une mise à jour
-            traiter_update(buf, conn, verbose);
+            traiter_update(buf,capacite_max, conn, verbose);
         }
         else {
             // C'est un ID, on lance la création

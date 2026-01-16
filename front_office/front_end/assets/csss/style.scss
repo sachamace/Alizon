@@ -82,6 +82,7 @@ header {
 
         form {
           margin-left: 42.625px;
+          position: relative;
 
           input {
             width: 1000px;
@@ -94,6 +95,47 @@ header {
             background-position: left;
             opacity: 0.5;
           }
+          #resultats-recherche {
+            position: absolute; 
+            top: 100%; 
+            left: 0;
+            width: 100%; 
+            
+            background-color: #ffffff;
+            border: 1px solid #e1e1e1; 
+            border-top: none; 
+            
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+            
+            border-radius: 0 0 8px 8px;
+            
+            z-index: 1000;  
+        }
+
+        /* 3. Chaque ligne de suggestion */
+        .suggestion-item {
+            display: block;
+            padding: 12px 15px; 
+            
+            color: #333333; 
+            text-decoration: none; 
+            font-size: 0.95rem; 
+            
+            border-bottom: 1px solid #f0f0f0; 
+            transition: all 0.2s ease; 
+
+            
+            &:last-child {
+                border-bottom: none;
+            }
+
+            
+            &:hover {
+                background-color: #f8f9fa; 
+                color: #000000; 
+                padding-left: 20px;
+            }
+        }
 
           button {
             display: none;
@@ -403,8 +445,7 @@ footer.footer {
   align-content: flex-start;
   gap: 25px;
   padding-top: 40px;
-  margin: 150px auto 50px auto;
-  width: 100%;
+  margin: 150px auto 50px 310px;
   
   a {
     text-decoration: none;
@@ -419,7 +460,7 @@ footer.footer {
 
   article {
     background: linear-gradient(135deg, $white 0%, darken($white, 2%) 100%);
-    width: 350px;
+    width: 325px;
     height: 550px;
     padding: 20px;
     margin: 0;
@@ -549,19 +590,139 @@ footer.footer {
       }
     }
   }
-  aside { //filtre
-      display: none;
-      background-color: $gray-light;
-      box-shadow: 0 2px 8px rgba($black, 0.1);
-      position: fixed;
-      top: 150px;
-      left: 0;
-      z-index: 999999999;
-      padding: 10px;
-      height: calc(100% - 150px);
-      input{
-          margin: 20px;
+  aside{
+    position: fixed;
+    top: 150px;
+    left: 0;
+    width: 300px;
+    height: calc(100vh - 150px);
+    z-index: 100;
+    background-color: $white;
+    border-right: 1px solid rgba($black, 0.08);
+    box-shadow: 2px 0 10px rgba($black, 0.02);
+    padding: 25px 20px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    border-top: 1px solid #e1e1e1;;
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+
+      label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]) {
+        display: block;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: $black;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
       }
+
+      select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1.5px solid $gray-light;
+        background-color: lighten($gray-light, 12%);
+        font-family: $font-family;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          background-color: $white;
+        }
+      }
+      .inputs {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        align-items: center;
+
+        input[type="number"] {
+          width: 100%;
+          padding: 10px;
+          border-radius: 8px;
+          border: 1.5px solid $gray-light;
+          box-sizing: border-box;
+          margin-bottom: 0;
+          transition: border-color 0.2s;
+
+          &:focus {
+            outline: none;
+            border-color: $primary-color;
+          }
+        }
+      }
+
+      fieldset {
+        border: none;
+        padding: 0;
+        margin: 0;
+
+        legend {
+          font-weight: 700;
+          font-size: 0.85rem;
+          color: $black;
+          text-transform: uppercase;
+          margin-bottom: 12px;
+        }
+
+        input[type="checkbox"] {
+          margin-right: 10px;
+          accent-color: $primary-color;
+          cursor: pointer;
+        }
+
+        label {
+          font-size: 0.95rem;
+          color: $gray-darker;
+          cursor: pointer;
+          display: inline-block;
+          margin-bottom: 6px;
+          transition: color 0.2s;
+
+          &:hover {
+            color: $primary-color;
+          }
+        }
+      }
+
+      label[for="1"], label[for="2"], label[for="3"], label[for="4"], label[for="5"] {
+        color: #ffb800;
+        font-size: 1.1rem;
+      }
+
+      #resetAllFilters {
+        background: transparent;
+        color: $gray-dark;
+        border: 1.5px solid $gray-light;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 10px;
+
+        &:hover {
+          background: #fff0f0;
+          color: #d93025;
+          border-color: #d93025;
+        }
+      }
+    }
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: $gray-light;
+      border-radius: 10px;
+    }
   }
 
   // =========================================================================
@@ -575,7 +736,7 @@ footer.footer {
     max-width: 100%;
     box-sizing: border-box;
     padding: 30px 10px 100px; // Encore plus réduit pour coller aux bords
-    margin-top: 180px;
+    margin-top: 180px auto 50px 0;
     justify-items: stretch; // Les articles prennent toute la largeur de leur colonne
     
     // Amélioration du scroll sur mobile
@@ -698,6 +859,10 @@ footer.footer {
       text-overflow: ellipsis;
       overflow: hidden;
       word-break: break-word;
+    }
+
+    aside{
+      width: 30px;
     }
   }
 
@@ -1305,7 +1470,18 @@ footer.footer {
         }
       }
       
-      .btn-supprimer-avis, .btn-signaler-avis {
+      .btn-signaler-avis {
+        border: none;
+        background-color: #fafafa;
+        cursor: pointer;
+
+        &:disabled {
+          pointer-events: none;
+          cursor: not-allowed;
+        }
+      }
+
+      .btn-supprimer-avis {
         margin-top: 1rem;
         background: #ff5555;
         color: $white;
@@ -1315,7 +1491,7 @@ footer.footer {
         cursor: pointer;
         font-size: 0.9rem;
         font-weight: 600;
-        
+
         // Téléphone (428px)
         @media (max-width: 428px) {
           padding: 0.6rem 1.2rem;
@@ -1701,6 +1877,9 @@ footer.footer {
 // PAGE PAIEMENT & PROFIL CLIENT
 // =============================================================================
 
+// Assurez-vous que vos variables sont définies au début de votre fichier
+// $font-family, $black, $primary-color, $white, $gray-light, $gray-medium, $border-radius
+
 .body_paiement,
 .body_profilClient {
   font-family: $font-family;
@@ -1710,6 +1889,7 @@ footer.footer {
   display: flex;
   justify-content: center;
   padding: 0;
+  min-height: 100vh;
 
   .main_paiement,
   .main_profilClient {
@@ -1719,7 +1899,7 @@ footer.footer {
     margin: 0 auto;
     margin-top: 150px;
 
-
+    // --- EN-TÊTE COMMUN ---
     .commande-header {
       display: flex;
       align-items: center;
@@ -1738,6 +1918,11 @@ footer.footer {
         cursor: pointer;
       }
     }
+
+    // ==========================================
+    // SECTION 1 : STYLE SPÉCIFIQUE AU PROFIL
+    // (Issu du CSS #1)
+    // ==========================================
     .profil-container {
       max-width: 650px;
       margin: 2rem auto;
@@ -1772,6 +1957,7 @@ footer.footer {
         font-weight: 500 !important;
       }
 
+      // Liste des informations (Article)
       article {
         padding: 1rem 0;
         border-bottom: 1px solid #e5e5e5;
@@ -1804,7 +1990,7 @@ footer.footer {
           text-align: right;
         }
 
-        // Styles pour les inputs dans les articles
+        // Inputs spécifiques au profil
         input[type="text"],
         input[type="email"],
         input[type="date"],
@@ -1822,22 +2008,17 @@ footer.footer {
 
           &:hover {
             border-color: #bdc3c7;
-            background-color: #fff;
           }
 
           &:focus {
             outline: none;
             border-color: #6CD3FF;
-            background-color: #fff;
             box-shadow: 0 0 0 3px rgba(108, 211, 255, 0.1);
-          }
-
-          &::placeholder {
-            color: #bdc3c7;
           }
         }
       }
 
+      // Boutons Modifier/Confirmer/Annuler
       .btn-modif {
         display: flex;
         justify-content: flex-end;
@@ -1862,33 +2043,23 @@ footer.footer {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
           }
-
-          &:active {
-            transform: translateY(0);
-          }
         }
 
         .modifier,
         .confirmer {
           background-color: $primary-color;
           color: #fff;
-
-          &:hover {
-            background-color: #218838;
-          }
+          &:hover { background-color: #218838; }
         }
 
         .annuler {
           background-color: #95a5a6;
           color: #fff;
-
-          &:hover {
-            background-color: #7f8c8d;
-          }
+          &:hover { background-color: #7f8c8d; }
         }
       }
 
-      // Styles pour le champ de mot de passe déroulant
+      // Mot de passe déroulant
       .password-edit {
         display: none;
         flex-direction: column;
@@ -1900,30 +2071,11 @@ footer.footer {
         border: 1px solid #e5e5e5;
         animation: fadeIn 0.3s ease;
 
-        label {
-          font-size: 0.85rem;
-          font-weight: 700;
-          color: #5a5a5a;
-          text-transform: uppercase;
-          margin-bottom: 0.3rem;
-        }
-
         input[type="password"] {
           width: 100%;
           padding: 0.6rem 1rem;
           border: 2px solid #e0e0e0;
           border-radius: 8px;
-          font-size: 1rem;
-          color: #2c3e50;
-          background-color: #fff;
-          box-sizing: border-box;
-          transition: all 0.3s ease;
-
-          &:focus {
-            outline: none;
-            border-color: #6CD3FF;
-            box-shadow: 0 0 0 3px rgba(108, 211, 255, 0.1);
-          }
         }
 
         &.visible {
@@ -1934,61 +2086,191 @@ footer.footer {
       .password-field {
         cursor: pointer;
         transition: background-color 0.2s ease;
-
-        &:hover {
-          background-color: #f9fafb;
-        }
+        &:hover { background-color: #f9fafb; }
 
         div {
           display: flex;
-          flex-direction: row;
           align-items: center;
           gap: 0.5em;
-
           svg {
             transition: transform 0.3s ease;
-            flex-shrink: 0;
+            &.rotate { transform: rotate(180deg); }
+          }
+        }
+      }
+    } // Fin .profil-container
 
-            &.rotate {
-              transform: rotate(180deg);
+    // ==========================================
+    // SECTION 2 : STYLE SPÉCIFIQUE AU PAIEMENT
+    // (Adapté pour fonctionner sans .profil-container)
+    // ==========================================
+    
+    // Style générique des blocs (Adresse, Récap)
+    .bloc {
+      background: #fff;
+      border: 1px solid #e5e5e5; // Utilisation d'une couleur fixe si border-radius n'est pas défini
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+
+      h2 {
+        margin-top: 0;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #222;
+      }
+
+// Style pour le récapitulatif
+      // Style pour le récapitulatif
+      &.recap {
+        // Style général des lignes (Total HT, Taxe, etc.)
+        p {
+          display: flex;
+          justify-content: space-between;
+          border-bottom: 1px solid #eee;
+          padding: 0.8rem 0;
+          margin: 0;
+
+          span:first-child { font-weight: 600; color: #5a5a5a; }
+          span:last-child { color: #222; }
+
+          &:last-of-type {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+          }
+        }
+        
+        // Zone spécifique à la liste des produits
+        .liste-produit {
+            padding: 0.2rem 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            
+            ul { 
+                padding: 0; 
+                list-style: none; 
             }
+
+            // --- C'est ici que se fait la correction ---
+            p {
+                border-bottom: none;   // Enlève le trait gris entre les produits
+                padding: 0.2rem 0;     // Réduit l'espace entre les produits (beaucoup plus serré)
+                
+                // Si tu veux que le texte s'aligne bien en haut
+                align-items: flex-start; 
+            }
+        }
+      }
+      
+      // Les options de paiement (Radio buttons)
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .option {
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+          background: #e8e8e8;
+          padding: 1rem 1.2rem;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: 0.2s;
+
+          input[type="radio"] {
+            accent-color: $black;
+            transform: scale(1.3);
+          }
+
+          span { font-weight: 500; }
+          &:hover { background: #dcdcdc; }
+        }
+      }
+
+      // Le formulaire de carte bancaire
+      .formulaire {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        background: #fff;
+        padding: 1rem 0;
+        margin-top: 1rem;
+        border-top: 1px solid #eee;
+
+        &.hidden { display: none; }
+
+        input[type="text"],
+        input[type="month"] {
+          width: 100%;
+          padding: 0.8rem 1rem;
+          border: 2px solid #e0e0e0;
+          border-radius: 8px;
+          font-size: 1rem;
+          box-sizing: border-box;
+
+          &:focus {
+            outline: none;
+            border-color: #e87edc; // Ou votre couleur primaire
+            box-shadow: 0 0 5px rgba(232, 126, 220, 0.5);
           }
         }
-      }
-
-      // Animation
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(-4px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
+        
+        .required {
+          color: #e63946;
+          font-size: 0.85rem;
+          margin-top: -0.5rem;
         }
       }
+    }
 
-      // Responsive
-      @media (max-width: 768px) {
-        margin: 1rem;
+    // Bouton payer (En dehors du .bloc ou dedans, selon votre HTML)
+    .payer-btn {
+      width: 100%;
+      background: $primary-color;
+      border: none;
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #fff;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: 0.2s ease;
+      margin-top: 1rem;
+
+      &:hover {
+        background: #218838; // ou une variante darker de primary
+        transform: translateY(-2px);
+      }
+    }
+
+    // Animation générique
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    // Responsive Global
+    @media (max-width: 768px) {
+      width: 100%;
+      padding: 1rem;
+      margin-top: 20px;
+
+      .profil-container, .bloc {
         padding: 1.5rem;
-
-        article {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.5em;
-
-          h3 {
-            min-width: auto;
-          }
-
-          p,
-          input,
-          select {
-            width: 100%;
-            max-width: 100%;
-            text-align: left;
-          }
+      }
+      
+      article {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5em;
+        
+        h3, p, input, select {
+             width: 100%; text-align: left;
         }
       }
     }

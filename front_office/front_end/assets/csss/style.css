@@ -62,6 +62,8 @@ header nav nav:first-child a[data-panier]:visited, header nav nav:first-child a[
 }
 header nav nav:first-child form {
   margin-left: 42.625px;
+  position: relative;
+  /* 3. Chaque ligne de suggestion */
 }
 header nav nav:first-child form input {
   width: 1000px;
@@ -73,6 +75,35 @@ header nav nav:first-child form input {
   background-repeat: no-repeat;
   background-position: left;
   opacity: 0.5;
+}
+header nav nav:first-child form #resultats-recherche {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e1e1e1;
+  border-top: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 8px 8px;
+  z-index: 1000;
+}
+header nav nav:first-child form .suggestion-item {
+  display: block;
+  padding: 12px 15px;
+  color: #333333;
+  text-decoration: none;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
+}
+header nav nav:first-child form .suggestion-item:last-child {
+  border-bottom: none;
+}
+header nav nav:first-child form .suggestion-item:hover {
+  background-color: #f8f9fa;
+  color: #000000;
+  padding-left: 20px;
 }
 header nav nav:first-child form button {
   display: none;
@@ -326,8 +357,7 @@ footer.footer.mobile, footer.footer.tablette {
   align-content: flex-start;
   gap: 25px;
   padding-top: 40px;
-  margin: 150px auto 50px auto;
-  width: 100%;
+  margin: 150px auto 50px 310px;
 }
 .div__catalogue a {
   text-decoration: none;
@@ -344,7 +374,7 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .div__catalogue article {
   background: linear-gradient(135deg, #fff 0%, rgb(249.9, 249.9, 249.9) 100%);
-  width: 350px;
+  width: 325px;
   height: 550px;
   padding: 20px;
   margin: 0;
@@ -512,18 +542,123 @@ footer.footer.mobile, footer.footer.tablette {
   color: #dc3545;
 }
 .div__catalogue aside {
-  display: none;
-  background-color: #ddd;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 150px;
   left: 0;
-  z-index: 999999999;
-  padding: 10px;
-  height: calc(100% - 150px);
+  width: 300px;
+  height: calc(100vh - 150px);
+  z-index: 100;
+  background-color: #fff;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
+  padding: 25px 20px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  border-top: 1px solid #e1e1e1;
 }
-.div__catalogue aside input {
-  margin: 20px;
+.div__catalogue aside form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+.div__catalogue aside form label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]) {
+  display: block;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.div__catalogue aside form select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1.5px solid #ddd;
+  background-color: rgb(251.6, 251.6, 251.6);
+  font-family: "Space Grotesk", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.div__catalogue aside form select:focus {
+  outline: none;
+  border-color: #ff6ce2;
+  background-color: #fff;
+}
+.div__catalogue aside form .inputs {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+.div__catalogue aside form .inputs input[type=number] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1.5px solid #ddd;
+  box-sizing: border-box;
+  margin-bottom: 0;
+  transition: border-color 0.2s;
+}
+.div__catalogue aside form .inputs input[type=number]:focus {
+  outline: none;
+  border-color: #ff6ce2;
+}
+.div__catalogue aside form fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.div__catalogue aside form fieldset legend {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #000;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.div__catalogue aside form fieldset input[type=checkbox] {
+  margin-right: 10px;
+  accent-color: #ff6ce2;
+  cursor: pointer;
+}
+.div__catalogue aside form fieldset label {
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom: 6px;
+  transition: color 0.2s;
+}
+.div__catalogue aside form fieldset label:hover {
+  color: #ff6ce2;
+}
+.div__catalogue aside form label[for="1"], .div__catalogue aside form label[for="2"], .div__catalogue aside form label[for="3"], .div__catalogue aside form label[for="4"], .div__catalogue aside form label[for="5"] {
+  color: #ffb800;
+  font-size: 1.1rem;
+}
+.div__catalogue aside form #resetAllFilters {
+  background: transparent;
+  color: #666;
+  border: 1.5px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+.div__catalogue aside form #resetAllFilters:hover {
+  background: #fff0f0;
+  color: #d93025;
+  border-color: #d93025;
+}
+.div__catalogue aside::-webkit-scrollbar {
+  width: 4px;
+}
+.div__catalogue aside::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 10px;
 }
 @media (max-width: 428px) {
   .div__catalogue {
@@ -535,7 +670,7 @@ footer.footer.mobile, footer.footer.tablette {
     max-width: 100%;
     box-sizing: border-box;
     padding: 30px 10px 100px;
-    margin-top: 180px;
+    margin-top: 180px auto 50px 0;
     justify-items: stretch;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -639,6 +774,9 @@ footer.footer.mobile, footer.footer.tablette {
     text-overflow: ellipsis;
     overflow: hidden;
     word-break: break-word;
+  }
+  .div__catalogue aside {
+    width: 30px;
   }
 }
 @media (min-width: 429px) and (max-width: 430px) {
@@ -1180,7 +1318,16 @@ footer.footer.mobile, footer.footer.tablette {
     line-height: 1.6;
   }
 }
-.main_produit .avis .avis-item .btn-supprimer-avis, .main_produit .avis .avis-item .btn-signaler-avis {
+.main_produit .avis .avis-item .btn-signaler-avis {
+  border: none;
+  background-color: #fafafa;
+  cursor: pointer;
+}
+.main_produit .avis .avis-item .btn-signaler-avis:disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+.main_produit .avis .avis-item .btn-supprimer-avis {
   margin-top: 1rem;
   background: #ff5555;
   color: #fff;
@@ -1192,7 +1339,7 @@ footer.footer.mobile, footer.footer.tablette {
   font-weight: 600;
 }
 @media (max-width: 428px) {
-  .main_produit .avis .avis-item .btn-supprimer-avis, .main_produit .avis .avis-item .btn-signaler-avis {
+  .main_produit .avis .avis-item .btn-supprimer-avis {
     padding: 0.6rem 1.2rem;
     font-size: 0.85rem;
     width: 100%;
@@ -1538,6 +1685,7 @@ footer.footer.mobile, footer.footer.tablette {
   display: flex;
   justify-content: center;
   padding: 0;
+  min-height: 100vh;
 }
 .body_paiement .main_paiement,
 .body_paiement .main_profilClient,
@@ -1702,7 +1850,6 @@ footer.footer.mobile, footer.footer.tablette {
 .body_profilClient .main_profilClient .profil-container article input[type=date]:hover,
 .body_profilClient .main_profilClient .profil-container article select:hover {
   border-color: #bdc3c7;
-  background-color: #fff;
 }
 .body_paiement .main_paiement .profil-container article input[type=text]:focus,
 .body_paiement .main_paiement .profil-container article input[type=email]:focus,
@@ -1722,29 +1869,7 @@ footer.footer.mobile, footer.footer.tablette {
 .body_profilClient .main_profilClient .profil-container article select:focus {
   outline: none;
   border-color: #6CD3FF;
-  background-color: #fff;
   box-shadow: 0 0 0 3px rgba(108, 211, 255, 0.1);
-}
-.body_paiement .main_paiement .profil-container article input[type=text]::-moz-placeholder, .body_paiement .main_paiement .profil-container article input[type=email]::-moz-placeholder, .body_paiement .main_paiement .profil-container article input[type=date]::-moz-placeholder, .body_paiement .main_paiement .profil-container article select::-moz-placeholder, .body_paiement .main_profilClient .profil-container article input[type=text]::-moz-placeholder, .body_paiement .main_profilClient .profil-container article input[type=email]::-moz-placeholder, .body_paiement .main_profilClient .profil-container article input[type=date]::-moz-placeholder, .body_paiement .main_profilClient .profil-container article select::-moz-placeholder, .body_profilClient .main_paiement .profil-container article input[type=text]::-moz-placeholder, .body_profilClient .main_paiement .profil-container article input[type=email]::-moz-placeholder, .body_profilClient .main_paiement .profil-container article input[type=date]::-moz-placeholder, .body_profilClient .main_paiement .profil-container article select::-moz-placeholder, .body_profilClient .main_profilClient .profil-container article input[type=text]::-moz-placeholder, .body_profilClient .main_profilClient .profil-container article input[type=email]::-moz-placeholder, .body_profilClient .main_profilClient .profil-container article input[type=date]::-moz-placeholder, .body_profilClient .main_profilClient .profil-container article select::-moz-placeholder {
-  color: #bdc3c7;
-}
-.body_paiement .main_paiement .profil-container article input[type=text]::placeholder,
-.body_paiement .main_paiement .profil-container article input[type=email]::placeholder,
-.body_paiement .main_paiement .profil-container article input[type=date]::placeholder,
-.body_paiement .main_paiement .profil-container article select::placeholder,
-.body_paiement .main_profilClient .profil-container article input[type=text]::placeholder,
-.body_paiement .main_profilClient .profil-container article input[type=email]::placeholder,
-.body_paiement .main_profilClient .profil-container article input[type=date]::placeholder,
-.body_paiement .main_profilClient .profil-container article select::placeholder,
-.body_profilClient .main_paiement .profil-container article input[type=text]::placeholder,
-.body_profilClient .main_paiement .profil-container article input[type=email]::placeholder,
-.body_profilClient .main_paiement .profil-container article input[type=date]::placeholder,
-.body_profilClient .main_paiement .profil-container article select::placeholder,
-.body_profilClient .main_profilClient .profil-container article input[type=text]::placeholder,
-.body_profilClient .main_profilClient .profil-container article input[type=email]::placeholder,
-.body_profilClient .main_profilClient .profil-container article input[type=date]::placeholder,
-.body_profilClient .main_profilClient .profil-container article select::placeholder {
-  color: #bdc3c7;
 }
 .body_paiement .main_paiement .profil-container .btn-modif,
 .body_paiement .main_profilClient .profil-container .btn-modif,
@@ -1785,16 +1910,6 @@ footer.footer.mobile, footer.footer.tablette {
 .body_profilClient .main_profilClient .profil-container .btn-modif input[type=submit]:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-.body_paiement .main_paiement .profil-container .btn-modif a:active,
-.body_paiement .main_paiement .profil-container .btn-modif input[type=submit]:active,
-.body_paiement .main_profilClient .profil-container .btn-modif a:active,
-.body_paiement .main_profilClient .profil-container .btn-modif input[type=submit]:active,
-.body_profilClient .main_paiement .profil-container .btn-modif a:active,
-.body_profilClient .main_paiement .profil-container .btn-modif input[type=submit]:active,
-.body_profilClient .main_profilClient .profil-container .btn-modif a:active,
-.body_profilClient .main_profilClient .profil-container .btn-modif input[type=submit]:active {
-  transform: translateY(0);
 }
 .body_paiement .main_paiement .profil-container .btn-modif .modifier,
 .body_paiement .main_paiement .profil-container .btn-modif .confirmer,
@@ -1844,16 +1959,6 @@ footer.footer.mobile, footer.footer.tablette {
   border: 1px solid #e5e5e5;
   animation: fadeIn 0.3s ease;
 }
-.body_paiement .main_paiement .profil-container .password-edit label,
-.body_paiement .main_profilClient .profil-container .password-edit label,
-.body_profilClient .main_paiement .profil-container .password-edit label,
-.body_profilClient .main_profilClient .profil-container .password-edit label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #5a5a5a;
-  text-transform: uppercase;
-  margin-bottom: 0.3rem;
-}
 .body_paiement .main_paiement .profil-container .password-edit input[type=password],
 .body_paiement .main_profilClient .profil-container .password-edit input[type=password],
 .body_profilClient .main_paiement .profil-container .password-edit input[type=password],
@@ -1862,19 +1967,6 @@ footer.footer.mobile, footer.footer.tablette {
   padding: 0.6rem 1rem;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
-  font-size: 1rem;
-  color: #2c3e50;
-  background-color: #fff;
-  box-sizing: border-box;
-  transition: all 0.3s ease;
-}
-.body_paiement .main_paiement .profil-container .password-edit input[type=password]:focus,
-.body_paiement .main_profilClient .profil-container .password-edit input[type=password]:focus,
-.body_profilClient .main_paiement .profil-container .password-edit input[type=password]:focus,
-.body_profilClient .main_profilClient .profil-container .password-edit input[type=password]:focus {
-  outline: none;
-  border-color: #6CD3FF;
-  box-shadow: 0 0 0 3px rgba(108, 211, 255, 0.1);
 }
 .body_paiement .main_paiement .profil-container .password-edit.visible,
 .body_paiement .main_profilClient .profil-container .password-edit.visible,
@@ -1900,7 +1992,6 @@ footer.footer.mobile, footer.footer.tablette {
 .body_profilClient .main_paiement .profil-container .password-field div,
 .body_profilClient .main_profilClient .profil-container .password-field div {
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 0.5em;
 }
@@ -1909,13 +2000,204 @@ footer.footer.mobile, footer.footer.tablette {
 .body_profilClient .main_paiement .profil-container .password-field div svg,
 .body_profilClient .main_profilClient .profil-container .password-field div svg {
   transition: transform 0.3s ease;
-  flex-shrink: 0;
 }
 .body_paiement .main_paiement .profil-container .password-field div svg.rotate,
 .body_paiement .main_profilClient .profil-container .password-field div svg.rotate,
 .body_profilClient .main_paiement .profil-container .password-field div svg.rotate,
 .body_profilClient .main_profilClient .profil-container .password-field div svg.rotate {
   transform: rotate(180deg);
+}
+.body_paiement .main_paiement .bloc,
+.body_paiement .main_profilClient .bloc,
+.body_profilClient .main_paiement .bloc,
+.body_profilClient .main_profilClient .bloc {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+.body_paiement .main_paiement .bloc h2,
+.body_paiement .main_profilClient .bloc h2,
+.body_profilClient .main_paiement .bloc h2,
+.body_profilClient .main_profilClient .bloc h2 {
+  margin-top: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #222;
+}
+.body_paiement .main_paiement .bloc.recap p,
+.body_paiement .main_profilClient .bloc.recap p,
+.body_profilClient .main_paiement .bloc.recap p,
+.body_profilClient .main_profilClient .bloc.recap p {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  padding: 0.8rem 0;
+  margin: 0;
+}
+.body_paiement .main_paiement .bloc.recap p span:first-child,
+.body_paiement .main_profilClient .bloc.recap p span:first-child,
+.body_profilClient .main_paiement .bloc.recap p span:first-child,
+.body_profilClient .main_profilClient .bloc.recap p span:first-child {
+  font-weight: 600;
+  color: #5a5a5a;
+}
+.body_paiement .main_paiement .bloc.recap p span:last-child,
+.body_paiement .main_profilClient .bloc.recap p span:last-child,
+.body_profilClient .main_paiement .bloc.recap p span:last-child,
+.body_profilClient .main_profilClient .bloc.recap p span:last-child {
+  color: #222;
+}
+.body_paiement .main_paiement .bloc.recap p:last-of-type,
+.body_paiement .main_profilClient .bloc.recap p:last-of-type,
+.body_profilClient .main_paiement .bloc.recap p:last-of-type,
+.body_profilClient .main_profilClient .bloc.recap p:last-of-type {
+  border-bottom: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.body_paiement .main_paiement .bloc.recap .liste-produit,
+.body_paiement .main_profilClient .bloc.recap .liste-produit,
+.body_profilClient .main_paiement .bloc.recap .liste-produit,
+.body_profilClient .main_profilClient .bloc.recap .liste-produit {
+  padding: 0.2rem 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+.body_paiement .main_paiement .bloc.recap .liste-produit ul,
+.body_paiement .main_profilClient .bloc.recap .liste-produit ul,
+.body_profilClient .main_paiement .bloc.recap .liste-produit ul,
+.body_profilClient .main_profilClient .bloc.recap .liste-produit ul {
+  padding: 0;
+  list-style: none;
+}
+.body_paiement .main_paiement .bloc.recap .liste-produit p,
+.body_paiement .main_profilClient .bloc.recap .liste-produit p,
+.body_profilClient .main_paiement .bloc.recap .liste-produit p,
+.body_profilClient .main_profilClient .bloc.recap .liste-produit p {
+  border-bottom: none;
+  padding: 0.2rem 0;
+  align-items: flex-start;
+}
+.body_paiement .main_paiement .bloc .options,
+.body_paiement .main_profilClient .bloc .options,
+.body_profilClient .main_paiement .bloc .options,
+.body_profilClient .main_profilClient .bloc .options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.body_paiement .main_paiement .bloc .options .option,
+.body_paiement .main_profilClient .bloc .options .option,
+.body_profilClient .main_paiement .bloc .options .option,
+.body_profilClient .main_profilClient .bloc .options .option {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: #e8e8e8;
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.body_paiement .main_paiement .bloc .options .option input[type=radio],
+.body_paiement .main_profilClient .bloc .options .option input[type=radio],
+.body_profilClient .main_paiement .bloc .options .option input[type=radio],
+.body_profilClient .main_profilClient .bloc .options .option input[type=radio] {
+  accent-color: #000;
+  transform: scale(1.3);
+}
+.body_paiement .main_paiement .bloc .options .option span,
+.body_paiement .main_profilClient .bloc .options .option span,
+.body_profilClient .main_paiement .bloc .options .option span,
+.body_profilClient .main_profilClient .bloc .options .option span {
+  font-weight: 500;
+}
+.body_paiement .main_paiement .bloc .options .option:hover,
+.body_paiement .main_profilClient .bloc .options .option:hover,
+.body_profilClient .main_paiement .bloc .options .option:hover,
+.body_profilClient .main_profilClient .bloc .options .option:hover {
+  background: #dcdcdc;
+}
+.body_paiement .main_paiement .bloc .formulaire,
+.body_paiement .main_profilClient .bloc .formulaire,
+.body_profilClient .main_paiement .bloc .formulaire,
+.body_profilClient .main_profilClient .bloc .formulaire {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #fff;
+  padding: 1rem 0;
+  margin-top: 1rem;
+  border-top: 1px solid #eee;
+}
+.body_paiement .main_paiement .bloc .formulaire.hidden,
+.body_paiement .main_profilClient .bloc .formulaire.hidden,
+.body_profilClient .main_paiement .bloc .formulaire.hidden,
+.body_profilClient .main_profilClient .bloc .formulaire.hidden {
+  display: none;
+}
+.body_paiement .main_paiement .bloc .formulaire input[type=text],
+.body_paiement .main_paiement .bloc .formulaire input[type=month],
+.body_paiement .main_profilClient .bloc .formulaire input[type=text],
+.body_paiement .main_profilClient .bloc .formulaire input[type=month],
+.body_profilClient .main_paiement .bloc .formulaire input[type=text],
+.body_profilClient .main_paiement .bloc .formulaire input[type=month],
+.body_profilClient .main_profilClient .bloc .formulaire input[type=text],
+.body_profilClient .main_profilClient .bloc .formulaire input[type=month] {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+.body_paiement .main_paiement .bloc .formulaire input[type=text]:focus,
+.body_paiement .main_paiement .bloc .formulaire input[type=month]:focus,
+.body_paiement .main_profilClient .bloc .formulaire input[type=text]:focus,
+.body_paiement .main_profilClient .bloc .formulaire input[type=month]:focus,
+.body_profilClient .main_paiement .bloc .formulaire input[type=text]:focus,
+.body_profilClient .main_paiement .bloc .formulaire input[type=month]:focus,
+.body_profilClient .main_profilClient .bloc .formulaire input[type=text]:focus,
+.body_profilClient .main_profilClient .bloc .formulaire input[type=month]:focus {
+  outline: none;
+  border-color: #e87edc;
+  box-shadow: 0 0 5px rgba(232, 126, 220, 0.5);
+}
+.body_paiement .main_paiement .bloc .formulaire .required,
+.body_paiement .main_profilClient .bloc .formulaire .required,
+.body_profilClient .main_paiement .bloc .formulaire .required,
+.body_profilClient .main_profilClient .bloc .formulaire .required {
+  color: #e63946;
+  font-size: 0.85rem;
+  margin-top: -0.5rem;
+}
+.body_paiement .main_paiement .payer-btn,
+.body_paiement .main_profilClient .payer-btn,
+.body_profilClient .main_paiement .payer-btn,
+.body_profilClient .main_profilClient .payer-btn {
+  width: 100%;
+  background: #ff6ce2;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: 0.2s ease;
+  margin-top: 1rem;
+}
+.body_paiement .main_paiement .payer-btn:hover,
+.body_paiement .main_profilClient .payer-btn:hover,
+.body_profilClient .main_paiement .payer-btn:hover,
+.body_profilClient .main_profilClient .payer-btn:hover {
+  background: #218838;
+  transform: translateY(-2px);
 }
 @keyframes fadeIn {
   from {
@@ -1928,41 +2210,45 @@ footer.footer.mobile, footer.footer.tablette {
   }
 }
 @media (max-width: 768px) {
-  .body_paiement .main_paiement .profil-container,
+  .body_paiement .main_paiement,
+  .body_paiement .main_profilClient,
+  .body_profilClient .main_paiement,
+  .body_profilClient .main_profilClient {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 20px;
+  }
+  .body_paiement .main_paiement .profil-container, .body_paiement .main_paiement .bloc,
   .body_paiement .main_profilClient .profil-container,
+  .body_paiement .main_profilClient .bloc,
   .body_profilClient .main_paiement .profil-container,
-  .body_profilClient .main_profilClient .profil-container {
-    margin: 1rem;
+  .body_profilClient .main_paiement .bloc,
+  .body_profilClient .main_profilClient .profil-container,
+  .body_profilClient .main_profilClient .bloc {
     padding: 1.5rem;
   }
-  .body_paiement .main_paiement .profil-container article,
-  .body_paiement .main_profilClient .profil-container article,
-  .body_profilClient .main_paiement .profil-container article,
-  .body_profilClient .main_profilClient .profil-container article {
+  .body_paiement .main_paiement article,
+  .body_paiement .main_profilClient article,
+  .body_profilClient .main_paiement article,
+  .body_profilClient .main_profilClient article {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5em;
   }
-  .body_paiement .main_paiement .profil-container article h3,
-  .body_paiement .main_profilClient .profil-container article h3,
-  .body_profilClient .main_paiement .profil-container article h3,
-  .body_profilClient .main_profilClient .profil-container article h3 {
-    min-width: auto;
-  }
-  .body_paiement .main_paiement .profil-container article p,
-  .body_paiement .main_paiement .profil-container article input,
-  .body_paiement .main_paiement .profil-container article select,
-  .body_paiement .main_profilClient .profil-container article p,
-  .body_paiement .main_profilClient .profil-container article input,
-  .body_paiement .main_profilClient .profil-container article select,
-  .body_profilClient .main_paiement .profil-container article p,
-  .body_profilClient .main_paiement .profil-container article input,
-  .body_profilClient .main_paiement .profil-container article select,
-  .body_profilClient .main_profilClient .profil-container article p,
-  .body_profilClient .main_profilClient .profil-container article input,
-  .body_profilClient .main_profilClient .profil-container article select {
+  .body_paiement .main_paiement article h3, .body_paiement .main_paiement article p, .body_paiement .main_paiement article input, .body_paiement .main_paiement article select,
+  .body_paiement .main_profilClient article h3,
+  .body_paiement .main_profilClient article p,
+  .body_paiement .main_profilClient article input,
+  .body_paiement .main_profilClient article select,
+  .body_profilClient .main_paiement article h3,
+  .body_profilClient .main_paiement article p,
+  .body_profilClient .main_paiement article input,
+  .body_profilClient .main_paiement article select,
+  .body_profilClient .main_profilClient article h3,
+  .body_profilClient .main_profilClient article p,
+  .body_profilClient .main_profilClient article input,
+  .body_profilClient .main_profilClient article select {
     width: 100%;
-    max-width: 100%;
     text-align: left;
   }
 }

@@ -231,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 //VALIDER LA TRANSACTION
                 $pdo->commit();
                 // --- APPEL AU SERVEUR C ---
-                $host = "10.253.5.108";
+                $host_c = "10.253.5.108";
                 $port_c = 8080;        // Port défini dans systeme.c
                 
                 $socket = @fsockopen($host_c, $port_c, $errno, $errstr, 2);

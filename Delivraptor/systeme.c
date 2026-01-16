@@ -81,13 +81,12 @@ void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
     char *saveptr;
     char query[2048];
     // Vérifier la capacité maximale.
-    snprintf(query, sizeof(query), "SELECT COUNT(*) FROM public.commande WHERE etape <= 4;");
-    PGresult *res = PQexec(conn, query);
+    PGresult *res_count = PQexec(conn, "SELECT COUNT(*) FROM public.commande WHERE etape <= 4;");
     int nb_commandes = 0;
-    if (PQresultStatus(res) == PGRES_TUPLES_OK) {
-        nb_commandes = atoi(PQgetvalue(res, 0, 0));
+    if (PQresultStatus(res_count) == PGRES_TUPLES_OK) {
+        nb_commandes = atoi(PQgetvalue(res_count, 0, 0));
     }
-    PQclear(res);
+    PQclear(res_count);
 
     // On saute le mot clé "UPDATE"
     strtok_r(buffer, ";", &saveptr); 
@@ -120,10 +119,13 @@ void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
 
     if (verbose) printf("Exécution SQL: %s\n", query);
 
-    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
-        fprintf(stderr, "Erreur UPDATE : %s\n", PQerrorMessage(conn));
+    PGresult *res_upd = PQexec(conn, query);
+
+    if (PQresultStatus(res_upd) != PGRES_COMMAND_OK) {
+        // On affiche l'erreur textuelle précise fournie par PostgreSQL
+        fprintf(stderr, "Erreur lors de la mise à jour : %s\n", PQerrorMessage(conn));
     }
-    PQclear(res);
+    PQclear(res_upd);
 }
 
 void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int verbose){
@@ -145,7 +147,6 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
 
     // 2. Générer un bordereau
     generer_bordereau(bordereau,cnx,conn,nom_client);
-    // 3. Vérifier la capacité
 
     // 3. Vérifier la capacité 
     res = PQexec(conn, "SELECT COUNT(*) FROM public.commande WHERE etape <= 4;");
@@ -281,7 +282,7 @@ int main(int argc, char *argv[]){
     if (ret < 0) { perror("bind"); exit(EXIT_FAILURE); } // Utilisation de ret
 
     ret = listen(sock, 5);
-    
+
     if (ret < 0) { perror("listen"); exit(EXIT_FAILURE); } // Utilisation de ret
     if(verbose) printf("Serveur C en écoute sur le port %d...\n", PORT);
 

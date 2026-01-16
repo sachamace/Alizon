@@ -135,7 +135,6 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
     char bordereau[50];
     char query[1024];
     char message_retour[256];
-    int max_prio;
     char nom_client[100] = "Client";
 
     // 1. Trouver l'id du client de la commande 

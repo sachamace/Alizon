@@ -76,9 +76,11 @@ void traiter_get_list(int cnx, PGconn *conn) {
 
 // Fonction pour parser et exécuter l'UPDATE reçu du PHP
 void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
+
     // Protocole attendu: UPDATE;id;etape;statut;priorite;details;raison;image
     char *saveptr;
-    char query[1024] ;
+    char query[2048];
+    // Vérifier la capacité maximale.
     snprintf(query, sizeof(query), "SELECT COUNT(*) FROM public.commande WHERE etape <= 4;");
     PGresult *res = PQexec(conn, query);
     int nb_commandes = 0;
@@ -100,7 +102,7 @@ void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
 
     if (!id) return;
 
-    char query[2048];
+    query[1024] = "\0";
     // Construction de la requête SQL dynamique
     if(!nb_commandes >= capacite_max){
         snprintf(query, sizeof(query), 
@@ -118,7 +120,6 @@ void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
 
     if (verbose) printf("Exécution SQL: %s\n", query);
 
-    PGresult *res = PQexec(conn, query);
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         fprintf(stderr, "Erreur UPDATE : %s\n", PQerrorMessage(conn));
     }

@@ -36,7 +36,6 @@ void afficher_man(char *nom_programme) {
     printf("  Serveur de simulation de livraison 'Délivraptor'.\n");
     printf("  Gère les étapes de transit et créer un bordereau pour la livraison.\n");
     printf("\nOPTIONS:\n");
-    printf("  -t, --time SEC      Définit le temps d'un quantum en secondes (défaut: 1).\n");
     printf("  -s, --silent        Désactive l'affichage des logs dans la console.\n");
     printf("  -h, --help          Affiche cette aide et quitte le programme.\n");
     printf("  -c, --cap           Définit la capacité maximale des commandes à étape 1 - 4.\n");
@@ -263,7 +262,7 @@ int main(int argc, char *argv[]){
         exit(EXIT_FAILURE);
     }
     // Permet de faire un appel à tout les ips donc 127.0.0.1 et 10.253.5.108
-    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    addr.sin_addr.s_addr = INADDR_ANY;
     addr.sin_family = AF_INET;
     addr.sin_port = htons(PORT);
     ret = bind(sock, (struct sockaddr *)&addr, sizeof(addr));

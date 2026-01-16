@@ -47,7 +47,7 @@ try {
         <h2>Produits en remise</h2>
         <p class="promo-count"><?= count($produits_promo) ?> produit<?= count($produits_promo) > 1 ? 's' : '' ?> en promotion actuellement</p>
     </div>
-    <a href="?page=remise" class="btn-retour-hub">← Retour au menu</a>
+    <a href="?page=remise" class="btn-retour">← Retour au menu</a>
 </div>
 
 <?php if (empty($produits_promo)): ?>

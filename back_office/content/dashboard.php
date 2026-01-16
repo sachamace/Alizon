@@ -1,4 +1,3 @@
-
 <?php
 include 'config.php';
 
@@ -14,7 +13,7 @@ try {
     die("Erreur lors de la récupération des infos vendeur : " . $e->getMessage());
 }
 
-// Récupérer les produits du vendeur connecté avec les remises actives
+// Récupérer tous les produits du vendeur connecté avec les remises actives
 try {
     $stmt = $pdo->prepare("
         SELECT p.id_produit, p.nom_produit, p.description_produit, 
@@ -52,7 +51,10 @@ try {
 }
 ?>
 
+<!-- Section de tous les produits -->
 <section class="content">
+   
+    
     <a href="?page=produit&type=creer">
         <article class="creer_produit">
             <p>Créer un produit</p>

@@ -1402,14 +1402,54 @@ footer.footer {
       background: #fafafa;
       border-radius: 12px;
       border-left: 4px solid $primary-color;
-      
-      .avis-button {
+      .avis-button{
         display: flex;
         gap: 1em;
+
+        .toggle-view-reponse {
+          max-height: 50%;
+          background: $primary-color;
+          border: 1px solid $primary-color;
+          color: $black;
+          padding: 0.4rem 0.8rem; // Petit padding
+          font-size: 0.85rem;     // Texte fin
+          font-weight: 600;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
       }
 
       &:last-child {
         margin-bottom: 0;
+      }
+
+      .view-reponse {
+        display: none;
+        margin-top: 0.8rem;
+        margin-top: 1rem;
+        margin-left: 1rem;
+        padding: 1rem;
+        background-color: #fafafa;
+        border-radius: 0 6px 6px 0;
+        // Typographie
+        color: #555;
+        font-size: 1rem;
+        line-height: 1.5;
+
+        &::before {
+          content: "Réponse du vendeur:";
+          display: block;
+          font-size: 0.9rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          color: $black;
+          margin-bottom: 0.5rem;
+          letter-spacing: 0.5px;
+        }
+        &.is-visible {
+          display: block;
+        }
       }
 
 
@@ -1482,7 +1522,6 @@ footer.footer {
       }
 
       .btn-supprimer-avis {
-        margin-top: 1rem;
         background: #ff5555;
         color: $white;
         border: none;

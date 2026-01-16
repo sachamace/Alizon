@@ -41,6 +41,7 @@ try {
     $infos = $stmt2->fetch(PDO::FETCH_ASSOC);
     
     // Calculer le prix avec remise si applicable
+    $id_vendeur = $infos['id_vendeur'];
     $prix_final = $infos['prix_ttc'];
     $prix_ht_final = $infos['prix_unitaire_ht'];
     $a_une_remise = false;
@@ -494,6 +495,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     foreach ($avis as $un_avis) {
                         $id_client = (int) $un_avis['id_client'];
                         $est_signale = isset($_SESSION['avis_signales']) && in_array($id_client, $_SESSION['avis_signales']);
+                        $req_reponse = $pdo->prepare("SELECT description FROM reponse WHERE id_client = :id_client AND id_produit = :id_produit AND id_vendeur = :id_vendeur");
+                        $req_reponse->execute([
+                            ':id_client' => $id_client,
+                            ':id_produit' => $id_produit,
+                            ':id_vendeur' => $id_vendeur
+                        ]);
                         // Si signalé : Remplissage ROUGE, Bordure ROUGE
                         // Si pas signalé : Remplissage BLANC, Bordure NOIRE (pour qu'on voie la forme)
                         $couleur_fill   = $est_signale ? 'red' : 'white';
@@ -514,6 +521,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                             <p class="avis-commentaire">' . htmlspecialchars($un_avis['description']) . '</p>';
                         
                         echo '<div class="avis-button">';
+                        if ($reponse = $req_reponse->fetch()){
+                            ?>
+                            <button class="toggle-view-reponse">voir la réponse</button>
+                            <?php
+                        }
                         if (isset($_SESSION["id_client"])){
                             if ($_SESSION["id_client"] == $un_avis["id_client"]) {
                                 echo '
@@ -557,10 +569,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                             </button>
                             <?php
                         }
-                        
-                        echo '
+                        ?>
                             </div>
-                        </div>';
+                            <p class="view-reponse">
+                                <?php echo $reponse['description']; ?>
+                            </p>
+                        </div>
+                        <?php
                     }
                 } else {
                     echo '<p>Aucun avis pour ce produit pour le moment.</p>';
@@ -684,4 +699,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
     </script>
     <script src="/front_office/front_end/assets/js/noteEtoile.js"></script>
+    <script src="/front_office/front_end/assets/js/reponseVendeur.js"></script>
 </body>

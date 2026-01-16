@@ -12,6 +12,9 @@
 #include <stdbool.h> 
 #include <getopt.h>
 #include <postgresql/libpq-fe.h>
+
+#define TAILLE_BUFF 1024
+
 #define TAILLE_BUFF 1024
 
 #define TAILLE_BUFF 1024

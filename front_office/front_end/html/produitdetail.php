@@ -63,7 +63,10 @@ try {
     echo "Erreur SQL : " . $e->getMessage();
 }
 
+
+// pose des variables 
 if(isset($_SESSION['id_panier'])){
+    $id_panier = $_SESSION['id_panier'];
     $id_panier = $_SESSION['id_panier'];
 }
 
@@ -82,21 +85,40 @@ $requete_avis = $pdo->prepare("
 $requete_avis->execute([':id_produit' => $id_produit]);
 $avis = $requete_avis->fetchAll(PDO::FETCH_ASSOC);
 
-// Calcul de la moyenne des notes des avis
+// Fonction pour générer les étoiles d'affichage
+function genererEtoiles($note) {
+    $note_arrondie = round($note * 2) / 2; // Arrondir au 0.5
+    $etoiles_pleines = floor($note_arrondie);
+    $demi_etoile = ($note_arrondie - $etoiles_pleines) >= 0.5;
+    $etoiles_vides = 5 - $etoiles_pleines - ($demi_etoile ? 1 : 0);
+    
+    $html = str_repeat('★', $etoiles_pleines);
+    if ($demi_etoile) {
+        $html .= '⯨'; // Demi-étoile
+    }
+    $html .= str_repeat('☆', $etoiles_vides);
+    
+    return $html;
+}
+
+// Calcul de la moyenne des notes (avec décimales)
 $moyenne = 0;
+$moyenne_arrondie = 0;
 if (count($avis) > 0) {
     $total_notes = 0;
     foreach ($avis as $un_avis) {
-        $total_notes += (int)$un_avis['note'];
+        $total_notes += floatval($un_avis['note']); // Utiliser floatval au lieu de int
     }
-    $moyenne = round($total_notes / count($avis));
+    $moyenne = $total_notes / count($avis);
+    $moyenne_arrondie = round($moyenne * 2) / 2; // Arrondir au 0.5 le plus proche
 }
+
 
 // Traitement du formulaire d'avis
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajouter_avis') {
-    $note = (int)$_POST['note'];
+    $note = floatval($_POST['note']); // Utiliser floatval
     $description = trim($_POST['description']);
-    if ($note >= 1 && $note <= 5 && !empty($description) && isset($_SESSION['id_panier'])) {
+    if ($note >= 0.5 && $note <= 5 && !empty($description) && isset($_SESSION['id_panier'])) {
         $id_client = $_SESSION['id_client'];
 
         try {
@@ -119,12 +141,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $erreur_avis = "Vous avez déjà rentré un avis";
         }
     } else {
-        $erreur_avis = "Veuillez entrer une note entre 1 et 5 et une description.";
+        $erreur_avis = "Veuillez entrer une note entre 0.5 et 5 et une description.";
     }
+}
+// traitement formulaire signalement
+else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'signaler_avis') {
+    $id_client_avis = $_POST['id_client_cible'];
+    if (!isset($_SESSION['avis_signales'])){
+        $_SESSION['avis_signales'] = [$id_client_avis];
+    }
+    else {
+        $_SESSION['avis_signales'][] = $id_client_avis;
+    }
+    $requete_signalement = $pdo->prepare("
+        UPDATE avis 
+        SET nbr_signalement = nbr_signalement + 1
+        WHERE id_client = :id_client
+        AND id_produit = :id_produit
+    ");
+    $requete_signalement->execute([
+            ':id_client'  => $id_client_avis,
+            ':id_produit' => $id_produit
+        ]);
+
 }
 
 // traitement des autres actions
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     
     $action = $_POST['action'];
     if (isset($_GET['article'])) {
@@ -222,108 +265,221 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détail produit - <?= htmlspecialchars($infos['nom_produit']) ?></title>
-    <meta name="description" content="Détails du produit">
-    <meta name="keywords" content="MarketPlace, Shopping, Ventes, Breton, Produit" lang="fr">
+    <meta name="description" content="Page ou tu vois un produit avec son détail !">
+    <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
     <link rel="stylesheet" href="../assets/csss/style.css">
+    <!--<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">-->
+    <style>
+        .rating-container {
+            margin: 1rem 0;
+        }
+
+        .rating-container label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .stars-rating {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+        }
+
+        .star-wrapper {
+            display: inline-block;
+            position: relative;
+            font-size: 2.5rem;
+            line-height: 1;
+            cursor: pointer;
+            user-select: none;
+            width: 1em;
+            height: 1em;
+        }
+
+        /* Étoile de base grise */
+        .star-wrapper::before {
+            content: '★';
+            color: #ddd;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .star-half {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            color: transparent;
+            transition: color 0.2s ease;
+            z-index: 1;
+        }
+
+        .star-left {
+            clip-path: inset(0 50% 0 0); /* Coupe la moitié droite */
+        }
+
+        .star-right {
+            clip-path: inset(0 0 0 50%); /* Coupe la moitié gauche */
+        }
+
+        .star-half.active,
+        .star-half.hover {
+            color: #ffc107;
+        }
+
+        .rating-text {
+            margin-left: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #666;
+            min-width: 150px;
+        }
+
+        /* Styles pour l'affichage des avis existants */
+        .avis-etoiles {
+            color: #ffc107;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+    </style>
 </head>
 <body>
-    <header class = "disabled">
+    <header class="disabled">
         <?php include 'header.php'?>
     </header>
-    <main class="main_detail">
-        <section class="produit">
-            <?php
-            $requete_img = $pdo->prepare('SELECT * FROM media_produit WHERE id_produit = :id_produit');
-            $requete_img->execute([':id_produit' => $id_produit]);
-            $images = $requete_img->fetchAll(PDO::FETCH_ASSOC);
-            ?>
-            
-            <div class="conteneur-images">
-                <div class="grande-image">
-                    <?php if (!empty($images)): ?>
-                        <img src="<?= htmlspecialchars($images[0]['chemin_image']) ?>" alt="<?= htmlspecialchars($infos['nom_produit']) ?>" id="grande-img">
-                    <?php endif; ?>
-                </div>
-                <div class="miniatures">
-                    <?php foreach ($images as $img): ?>
-                        <img src="<?= htmlspecialchars($img['chemin_image']) ?>" alt="Miniature">
-                    <?php endforeach; ?>
-                </div>
-            </div>
+    <main class="main_produit" style="padding-top: 50px;">
+        <section class="fiche-produit">
 
-            <div class="informations">
-                <div class="info-haut">
-                    <h1><?= htmlspecialchars($infos['nom_produit']) ?></h1>
-                    
-                    <?php if ($a_une_remise): ?>
-                        <!-- Affichage avec remise -->
-                        <div class="remise-detail-container">
-                            <div class="remise-badge-detail">
-                                <?php if ($infos['type_remise'] === 'pourcentage'): ?>
-                                    -<?= number_format($infos['valeur_remise'], 0) ?>%
-                                <?php else: ?>
-                                    -<?= number_format($infos['valeur_remise'], 2, ',', ' ') ?>€
-                                <?php endif; ?>
-                            </div>
-                            <span class="remise-nom-detail"><?= htmlentities($infos['nom_remise']) ?></span>
-                        </div>
-                        
-                        <div class="prix-container-detail">
-                            <p class="prix prix-original-detail"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</p>
-                            <p class="prix prix-final-detail"><?= number_format($prix_final, 2, ',', ' ') ?>€</p>
-                        </div>
-                        
-                        <p class="prix-ht-detail">Prix HT avec remise : <?= number_format($prix_ht_final, 2, ',', ' ') ?>€</p>
-                        
-                        <div class="remise-periode">
-                            <small>
-                                <?php
-                                $debut = new DateTime($infos['date_debut']);
-                                $fin = new DateTime($infos['date_fin']);
-                                echo "Offre valable du " . $debut->format('d/m/Y') . " au " . $fin->format('d/m/Y');
-                                ?>
-                            </small>
-                        </div>
-                    <?php else: ?>
-                        <!-- Affichage sans remise -->
-                        <p class="prix"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</p>
-                        <p class="prix-ht">Prix HT : <?= number_format($infos['prix_unitaire_ht'], 2, ',', ' ') ?>€</p>
-                    <?php endif; ?>
-                    
-                    <div class="disponibilite">
-                        <p>Stock disponible : <strong><?= htmlspecialchars($stock_dispo) ?></strong></p>
-                    </div>
-                    
-                    <div class="actions">
-                        <form method="post" id="form-panier">
-                            <input type="hidden" name="action" value="panier">
-                            <button type="submit" class="ajouter-panier">🛒 Ajouter au panier</button>
-                        </form>
-                        <form method="post" id="form-achat">
-                            <input type="hidden" name="action" value="payer">
-                            <button type="submit" class="payer">⚡ Acheter maintenant</button>
-                        </form>
-                    </div>
-                    
-                    <div class="notation">
+            <div class="fiche-container">
+                <div class="images-produit">
+                    <?php
+                    $requete_img = $pdo->prepare('SELECT chemin_image FROM media_produit WHERE id_produit = :id_produit LIMIT 1');
+                    $requete_img->execute([':id_produit' => $id_produit]);
+                    $img = $requete_img->fetch();
+                    ?>
+                    <img src="<?= $img['chemin_image'] ? htmlentities($img['chemin_image']) : 'front_end/assets/images_produits/' ?>" alt="Kouign Amann" class="image-principale">
+
+                    <div class="miniatures">
                         <?php
-                            if (count($avis) > 0) {
-                                $etoiles_moyenne = str_repeat('★', $moyenne) . str_repeat('☆', 5 - $moyenne);
-                                echo '<span class="etoiles">' . $etoiles_moyenne . '</span>';
-                                echo '<span class="note">' . $moyenne . '/5</span>';
-                                echo '<a href="#avis-section">Voir les ' . count($avis) . ' avis</a>';
-                            } else {
-                                echo '<span class="etoiles">☆☆☆☆☆</span>';
-                                echo '<span class="note">Aucune note</span>';
+                            $requete_img = $pdo->prepare('SELECT chemin_image FROM media_produit WHERE id_produit = :id_produit');
+                            $requete_img->execute([':id_produit' => $id_produit]);
+                            $img = $requete_img->fetchAll();
+                            $imgprincipale = true;
+
+                            foreach ($img as $minia) {
+                                if ($imgprincipale) {
+                                    $imgprincipale = false;
+                                }
+                                else{
+                                    $chemin = !empty($minia["chemin_image"])
+                                    ? htmlentities($minia["chemin_image"])
+                                    : "front_end/assets/images_produits/default.png"; // mets une image par défaut si tu veux
+
+                                    echo '<img src="' . $chemin . '" alt="Miniature">';
+                                }
                             }
                         ?>
+
+                    </div>
+                </div>
+
+                <div class="infos-produit">
+                    <div class="titre-prix-boutons">
+                        <div class="titre-prix">
+                            <div class="titre-ligne">
+                                <h1><?= htmlspecialchars($infos['nom_produit']) ?></h1>
+                            </div>
+                            
+                            <?php if ($a_une_remise): ?>
+                                <!-- Affichage avec remise -->
+                                <div class="remise-detail-container">
+                                    <div class="remise-badge-detail">
+                                        <?php if ($infos['type_remise'] === 'pourcentage'): ?>
+                                            -<?= number_format($infos['valeur_remise'], 0) ?>%
+                                        <?php else: ?>
+                                            -<?= number_format($infos['valeur_remise'], 2, ',', ' ') ?>€
+                                        <?php endif; ?>
+                                    </div>
+                                    <span class="remise-nom-detail"><?= htmlentities($infos['nom_remise']) ?></span>
+                                </div>
+                                
+                                <div class="prix-container-detail">
+                                    <p class="prix prix-original-detail"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</p>
+                                    <p class="prix prix-final-detail"><?= number_format($prix_final, 2, ',', ' ') ?>€</p>
+                                </div>
+                                
+                                <p class="prix-ht-detail">Prix HT avec remise : <?= number_format($prix_ht_final, 2, ',', ' ') ?>€</p>
+                                
+                                <div class="remise-periode">
+                                    <small>
+                                        <?php
+                                        $debut = new DateTime($infos['date_debut']);
+                                        $fin = new DateTime($infos['date_fin']);
+                                        echo "Offre valable du " . $debut->format('d/m/Y') . " au " . $fin->format('d/m/Y');
+                                        ?>
+                                    </small>
+                                </div>
+                            <?php else: ?>
+                                                        <!-- Affichage sans remise -->
+                            <p class="prix"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</p>
+                            <p class="prix-ht">Prix HT : <?= number_format($infos['prix_unitaire_ht'], 2, ',', ' ') ?>€</p>
+                        <?php endif; ?>
+                        </div>
+                        <div class="boutons">
+                                <?php echo '
+                                <form action="" method="post" style="display:inline;">
+                                    <input type="hidden" name="action" value="panier">
+                                    <button type="submit">Ajouter au panier</button>
+                                </form>
+                                
+                                <form action="" method="post" style="display:inline;">
+                                    <input type="hidden" name="action" value="payer">
+                                    <button type="submit">Payer maintenant</button>
+                                </form>' ?>
+                        </div>
+                    </div>
+                    <p class="description">
+                        <?= htmlspecialchars($infos['description_produit']) ?>
+                    </p>
+                    <div class="stock-avis">
+                        <span class="stock-dispo" style="color: <?= $stock_dispo > 0 ? 'green' : 'red' ?>">
+                            <?php
+                                if ($stock_dispo > 0) {
+                                    echo 'Stock disponible : ' . $stock_dispo .'';
+                                }
+                                else {
+                                    echo 'Rupture de stock';
+                                }
+                            ?>
+                        </span>
+
+                        <div class="avis">
+                            <?php
+                                if (count($avis) > 0) {
+                                    echo '<span class="avis-etoiles">' . genererEtoiles($moyenne) . '</span>';
+                                    echo '<span class="note">' . number_format($moyenne, 1, ',', '') . '/5</span>';
+                                    echo '<a href="#avis-section">Voir les ' . count($avis) . ' avis</a>';
+                                } else {
+                                    echo '<span class="avis-etoiles">☆☆☆☆☆</span>';
+                                    echo '<span class="note">Aucune note</span>';
+                                }
+                            ?>
+                        </div>        
                     </div>
                 </div>
             </div>
@@ -334,11 +490,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php
                 echo '<h1>' . count($avis) . ' avis</h1>';
                 if (count($avis) > 0) {
+                    $req_client = $pdo->prepare("SELECT * FROM compte_client WHERE id_client = ?");
                     foreach ($avis as $un_avis) {
                         $id_client = (int) $un_avis['id_client'];
-                        $client = $pdo->query("SELECT * FROM compte_client WHERE id_client = $id_client")->fetch(PDO::FETCH_ASSOC);
-                        $note = (int)$un_avis['note'];
-                        $etoiles = str_repeat('★', $note) . str_repeat('☆', 5 - $note);
+                        $est_signale = isset($_SESSION['avis_signales']) && in_array($id_client, $_SESSION['avis_signales']);
+                        // Si signalé : Remplissage ROUGE, Bordure ROUGE
+                        // Si pas signalé : Remplissage BLANC, Bordure NOIRE (pour qu'on voie la forme)
+                        $couleur_fill   = $est_signale ? 'red' : 'white';
+                        $couleur_stroke = $est_signale ? 'red' : 'black';
+                        $deactiver = $est_signale ? 'disabled' : '';
+                        $req_client->execute([$id_client]);
+                        $client = $req_client->fetch(PDO::FETCH_ASSOC);
+                        // Génération des étoiles selon la note
+                        $note = floatval($un_avis['note']);
+                        $etoiles = genererEtoiles($note);
 
                         echo '
                         <div class="avis-item"> 
@@ -359,13 +524,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             }
                             else{
                                 ?>
-                                <button class="btn-signaler-avis" data-id-client="<?= $un_avis['id_client'] ?>">Signaler cet avis</button>
+                                <button class="btn-signaler-avis" 
+                                data-id-client="<?= $un_avis['id_client'] ?>"
+                                <?= $deactiver ?>>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" 
+                                        fill="<?= $couleur_fill ?>" 
+                                        stroke="<?= $couleur_stroke ?>" 
+                                        stroke-width="2" 
+                                        stroke-linecap="round" 
+                                        stroke-linejoin="round">
+                                        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                        <line x1="4" y1="22" x2="4" y2="15"></line>
+                                    </svg>
+                                </button>
                                 <?php
                             }
                         }
                         else{
                             ?>
-                            <button class="btn-signaler-avis">Signaler cet avis</button>
+                            <button class="btn-signaler-avis" 
+                            data-id-client="<?= $un_avis['id_client'] ?>"
+                            <?= $deactiver ?>>
+                                <svg width="24" height="24" viewBox="0 0 24 24" 
+                                    fill="<?= $couleur_fill ?>" 
+                                    stroke="<?= $couleur_stroke ?>" 
+                                    stroke-width="2" 
+                                    stroke-linecap="round" 
+                                    stroke-linejoin="round">
+                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                    <line x1="4" y1="22" x2="4" y2="15"></line>
+                                </svg>
+                            </button>
                             <?php
                         }
                         
@@ -378,7 +567,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             ?>
             <div class="form-avis">
-                <h2>✏️ Écrire un avis</h2>
+                <h2>Écrire un avis</h2>
 
                 <?php if (isset($erreur_avis)) echo "<p class='erreur'>$erreur_avis</p>"; ?>
 
@@ -441,30 +630,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </footer>
 
     <script>
+        // Sélection des éléments
         const miniatures = document.querySelectorAll('.miniatures img');
-        const grandeImage = document.getElementById('grande-img');
-
-        miniatures.forEach(img => {
-            img.addEventListener('click', () => {
-                grandeImage.src = img.src;
-            });
-        });
-
         const popup = document.getElementById('popup-image');
         const popupImg = document.getElementById('popup-img');
         const closeBtn = document.querySelector('.popup .close');
 
+        // Quand on clique sur une miniature
         miniatures.forEach(img => {
             img.addEventListener('click', () => {
                 popup.style.display = 'block';
-                popupImg.src = img.src;
+                popupImg.src = img.src; // affiche la bonne image
             });
         });
 
+        // Quand on clique sur la croix
         closeBtn.addEventListener('click', () => {
             popup.style.display = 'none';
         });
 
+        // Quand on clique en dehors de l’image
         popup.addEventListener('click', (event) => {
             if (event.target === popup) {
                 popup.style.display = 'none';
@@ -477,9 +662,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         const closeBtnSignalement = popupSignalement.querySelector('.close');
         const cancelBtnSignalement = popupSignalement.querySelector('.btn-cancel');
 
+
         boutonsSignalement.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const idClient = btn.getAttribute('data-id-client');
+                const idClient = e.currentTarget.getAttribute('data-id-client');
+
+                // injecte l'id du client dans le  formulaire
                 document.getElementById('input_id_client_cible').value = idClient;
                 popupSignalement.style.display = 'flex';
             });
@@ -493,7 +681,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if(cancelBtnSignalement) {
             cancelBtnSignalement.addEventListener('click', fermerSignalement);
         }
+
     </script>
-    <script src="../assets/js/noteEtoile.js"></script>
+    <script src="/front_office/front_end/assets/js/noteEtoile.js"></script>
 </body>
-</html>

@@ -53,7 +53,6 @@ try{
         $statut = $commande['statut'];
         $details_etape = "NULL";
         $raison = "NULL";
-        $statut = "NULL";
         $chemin_image_refuse = "NULL";
         $priorite = $commande['priorite'];
         $need_update = false;

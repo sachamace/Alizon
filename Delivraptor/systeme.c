@@ -110,7 +110,7 @@ void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
             statut ? statut : "ENCOURS",
             prio ? prio : "0",
             details ? details : "",
-            (raison && strcmp(raison, "NULL") != 0) ? raison : "", // Gestion simplifiée du NULL string
+            (raison && strcmp(raison, "NULL") != 0) ? raison : "", 
             (image && strcmp(image, "NULL") != 0) ? image : "",
             id
         );
@@ -197,7 +197,9 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
 
     send(cnx, message_retour, strlen(message_retour), 0);
 }
-
+void traiter_affiche(char *id_str , char*login , int cnx , PGconn*conn ,int verbose){
+    char query[1024];
+}
 int main(int argc, char *argv[]){
 
     // Variables initialisé pour la base de données 
@@ -301,7 +303,8 @@ int main(int argc, char *argv[]){
 
         if (verbose) printf("Reçu : %s\n", buf);
 
-
+        char *fin;
+        strtol(buf, &fin, 10);
         if (strcmp(buf, "GET_LIST") == 0) {
             // Cas 1 : Le PHP demande la liste des commandes
             traiter_get_list(cnx, conn);
@@ -310,9 +313,23 @@ int main(int argc, char *argv[]){
             // Cas 2 : Le PHP demande une mise à jour
             traiter_update(buf,capacite_max, conn, verbose);
         }
-        else {
+        else if(buf != fin && strcmp(*fin,"\0") == 0){
             // C'est un ID, on lance la création
             traiter_creation(buf, capacite_max, cnx, conn, verbose);
+        }
+        else {
+            // SI c'est un autre truc que get_list , update ou un int alors envoyer les données pour afficher la commande 
+            char *parties[2];
+            int i = 0;
+            char *token = strtok(buf,"|");
+            while (token != NULL && i < 2) {
+                parties[i] = token; // On stocke l'adresse de la partie trouvée
+                printf("Partie %d : %s\n", i, parties[i]);
+                
+                i++;
+                token = strtok(NULL, "|");
+            }  
+            traiter_affiche(parties[0],parties[1],cnx,conn,verbose);
         }
         close(cnx);
     }

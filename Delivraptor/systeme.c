@@ -102,9 +102,9 @@ void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
 
     if (!id) return;
 
-    query[1024] = "\0";
+    query[0] = '\0';
     // Construction de la requête SQL dynamique
-    if(!nb_commandes >= capacite_max){
+    if(!(nb_commandes >= capacite_max)){
         snprintf(query, sizeof(query), 
             "UPDATE public.commande SET etape=%s, statut='%s', priorite=%s, details_etape='%s', raison='%s', chemin_image_refuse='%s', date_maj=NOW() WHERE id_commande=%s;",
             etape ? etape : "0",
@@ -134,7 +134,7 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
 
     // 1. Trouver l'id du client de la commande 
     // Construction de la requête
-    
+    snprintf(query, sizeof(query), "SELECT nom FROM public.compte_client JOIN public.commande ON compte_client.id_client = commande.id_client WHERE id_commande = '%s';", id_str);
     PGresult *res = PQexec(conn, query);
     if (PQntuples(res) > 0) {
         // On récupère la valeur sous forme de chaîne de caractères
@@ -278,7 +278,11 @@ int main(int argc, char *argv[]){
     addr.sin_family = AF_INET;
     addr.sin_port = htons(PORT);
     ret = bind(sock, (struct sockaddr *)&addr, sizeof(addr));
+    if (ret < 0) { perror("bind"); exit(EXIT_FAILURE); } // Utilisation de ret
+
     ret = listen(sock, 5);
+    
+    if (ret < 0) { perror("listen"); exit(EXIT_FAILURE); } // Utilisation de ret
     if(verbose) printf("Serveur C en écoute sur le port %d...\n", PORT);
 
        while(1){

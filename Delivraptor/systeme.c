@@ -196,22 +196,28 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
 
     send(cnx, message_retour, strlen(message_retour), 0);
 }
-void traiter_affiche(char id_str , char login , int cnx , PGconn*conn ,int verbose){
-    char message_retour[256];
+void traiter_affiche(char *id_str, char *login, int cnx, PGconn *conn, int verbose){
+    char message_retour[TAILLE_BUFF] = ""; 
     FILE* fichier= NULL;
-    char chaine[20] = "";
+    char chaine[50] = ""; 
     char ligne[256];
+    char query[512]; 
     fichier = fopen("login.txt","r");
     if(fichier != NULL){
-        fgets(chaine,20,fichier);
+        if (fgets(chaine, sizeof(chaine), fichier) != NULL) {
+            chaine[strcspn(chaine, "\r\n")] = 0;
+        }
         fclose(fichier);
     }
     else{
-        if(verbose)  snprintf(message_retour,sizeof(message_retour),"Impossible d'ouvrir le fichier");
+        if(verbose) snprintf(message_retour, sizeof(message_retour), "Impossible d'ouvrir le fichier");
     }
 
     if(strcmp(chaine,login) == 0){
-        const char *query = "SELECT c.bordereau, c.statut, c.etape, c.date_maj, c.details_etape, c.priorite FROM commande c WHERE id_commande = '%s';", id_str;
+        snprintf(query, sizeof(query), 
+            "SELECT c.bordereau, c.statut, c.etape, c.date_maj, c.details_etape, c.priorite FROM commande c WHERE id_commande = '%s';", 
+            id_str
+        );
         PGresult *res = PQexec(conn, query);
         if (PQresultStatus(res) != PGRES_TUPLES_OK) {
             if(verbose) perror("Erreur SELECT");
@@ -326,11 +332,11 @@ int main(int argc, char *argv[]){
     addr.sin_family = AF_INET;
     addr.sin_port = htons(PORT);
     ret = bind(sock, (struct sockaddr *)&addr, sizeof(addr));
-    if (ret < 0) { perror("bind"); exit(EXIT_FAILURE); } // Utilisation de ret
+    if (ret < 0) { perror("bind"); exit(EXIT_FAILURE); } 
 
     ret = listen(sock, 5);
 
-    if (ret < 0) { perror("listen"); exit(EXIT_FAILURE); } // Utilisation de ret
+    if (ret < 0) { perror("listen"); exit(EXIT_FAILURE); } 
     if(verbose) printf("Serveur C en écoute sur le port %d...\n", PORT);
 
        while(1){
@@ -374,7 +380,11 @@ int main(int argc, char *argv[]){
                 i++;
                 token = strtok(NULL, "|");
             }  
-            traiter_affiche(parties[0],parties[1],cnx,conn,verbose);
+            if (i >= 2) { // Ensure we actually got 2 parts
+                traiter_affiche(parties[0], parties[1], cnx, conn, verbose);
+            } else {
+                 if(verbose) printf("Format incorrect pour l'affichage id_commande|login \n");
+            }
         }
         close(cnx);
     }

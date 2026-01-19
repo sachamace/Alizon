@@ -1262,8 +1262,45 @@ footer.footer.mobile, footer.footer.tablette {
   display: flex;
   gap: 1em;
 }
+.main_produit .avis .avis-item .avis-button .toggle-view-reponse {
+  max-height: 50%;
+  background: #ff6ce2;
+  border: 1px solid #ff6ce2;
+  color: #000;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 .main_produit .avis .avis-item:last-child {
   margin-bottom: 0;
+}
+.main_produit .avis .avis-item .view-reponse {
+  display: none;
+  margin-top: 0.8rem;
+  margin-top: 1rem;
+  margin-left: 1rem;
+  padding: 1rem;
+  background-color: #fafafa;
+  border-radius: 0 6px 6px 0;
+  color: #555;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.main_produit .avis .avis-item .view-reponse::before {
+  content: "Réponse du vendeur:";
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #000;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+.main_produit .avis .avis-item .view-reponse.is-visible {
+  display: block;
 }
 @media (max-width: 428px) {
   .main_produit .avis .avis-item {
@@ -1328,7 +1365,6 @@ footer.footer.mobile, footer.footer.tablette {
   cursor: not-allowed;
 }
 .main_produit .avis .avis-item .btn-supprimer-avis {
-  margin-top: 1rem;
   background: #ff5555;
   color: #fff;
   border: none;

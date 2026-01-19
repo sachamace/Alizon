@@ -18,8 +18,10 @@ $(function() {
     });
 
     $(document).on('click', function(e) {
-        // Si le clic n'est pas sur le menu (#filtre) et pas sur le bouton (#openFilter)
-        if (!$filtre.is(e.target) && $filtre.has(e.target).length === 0 && !$openBtn.is(e.target)) {
+        // On vérifie si on est en format mobile (moins de 768px)
+        const isMobile = window.innerWidth <= 768; 
+
+        if (isMobile && !$filtre.is(e.target) && $filtre.has(e.target).length === 0 && !$openBtn.is(e.target)) {
             if ($filtre.is(':visible')) {
                 $filtre.hide();
                 localStorage.setItem('filterVisible', 'false');

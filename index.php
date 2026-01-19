@@ -278,7 +278,7 @@
     <footer class="footer mobile">
         <?php include 'front_office/front_end/html/footer.php'?>
     </footer>
-    <script src="front_office/front_end/assets/js/filtre.js"></script>
+    <script src="/front_office/front_end/assets/js/filtre.js"></script>
     <script src="/front_office/front_end/assets/js/autocompletion.js"></script>
 </body>
 </html>

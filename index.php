@@ -278,20 +278,7 @@
     <footer class="footer mobile">
         <?php include 'front_office/front_end/html/footer.php'?>
     </footer>
-    <script>
-        $(function(){
-            $('#tri, input[type="checkbox"]').on('change', function() {
-                $('#tri-form').submit();
-            });
-            let timeout = null;
-            $('#prixMinInput, #prixMaxInput, #noteMinInput, #noteMaxInput').on('keyup input', function() {
-                clearTimeout(timeout);
-                timeout = setTimeout(function() {
-                    $('#tri-form').submit();
-                }, 800);
-            });
-        });
-    </script>
+    <script src="front_office/front_end/assets/js/filtre.js"></script>
     <script src="/front_office/front_end/assets/js/autocompletion.js"></script>
 </body>
 </html>

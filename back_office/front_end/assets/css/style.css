@@ -501,7 +501,8 @@ Structure du tableau de bord
   grid-auto-rows: auto;
   align-items: start;
 }
-.content a {
+.content > a {
+  grid-column: span 1;
   display: block;
   height: 100%;
   color: inherit;
@@ -672,6 +673,112 @@ Structure du tableau de bord
   transition: transform 0.3s ease;
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
   z-index: 1;
+}
+.content #filtre {
+  position: sticky;
+  grid-column: 1/-1;
+  grid-row: 1;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 10;
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 10px;
+  border-radius: 1em;
+}
+.content #filtre form {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 20px;
+}
+.content #filtre form label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]) {
+  display: block;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.content #filtre form select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1.5px solid #fafafa;
+  background-color: white;
+  font-family: "Space Grotesk", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  border-color: #6CD3FF;
+  background-color: #fff;
+}
+.content #filtre form .inputs {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+.content #filtre form .inputs input[type=number] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1.5px solid #fafafa;
+  box-sizing: border-box;
+  margin-bottom: 0;
+  transition: border-color 0.2s;
+  outline: none;
+  border-color: #6CD3FF;
+}
+.content #filtre form fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.content #filtre form fieldset legend {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #000;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.content #filtre form fieldset input[type=checkbox] {
+  margin-right: 10px;
+  accent-color: #6CD3FF;
+  cursor: pointer;
+}
+.content #filtre form fieldset label {
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom: 6px;
+  transition: color 0.2s;
+}
+.content #filtre form fieldset label:hover {
+  color: #6CD3FF;
+}
+.content #filtre form label[for="1"], .content #filtre form label[for="2"], .content #filtre form label[for="3"], .content #filtre form label[for="4"], .content #filtre form label[for="5"] {
+  color: #ffb800;
+  font-size: 1.1rem;
+}
+.content #filtre form #resetAllFilters {
+  background: transparent;
+  color: #666;
+  border: 1.5px solid #fafafa;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+.content #filtre form #resetAllFilters:hover {
+  background: #fff0f0;
+  color: #d93025;
+  border-color: #d93025;
 }
 
 /* -----------------------------------------

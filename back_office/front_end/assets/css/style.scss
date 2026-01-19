@@ -503,7 +503,8 @@ Structure du tableau de bord
   grid-auto-rows: auto;
   align-items: start;
 
-  a {
+  > a {
+    grid-column: span 1;
     display: block;
     height: 100%;
     color: inherit;
@@ -658,6 +659,123 @@ Structure du tableau de bord
       transition: transform 0.3s ease;
       text-shadow: 3px 3px 6px rgba($black, 0.3);
       z-index: 1;
+    }
+  }
+  #filtre {
+    position: sticky;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 10;
+    background: $white;
+    padding: 20px;
+    margin-bottom: 10px;
+    border-radius: $border-radius;
+    form {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 20px;
+      
+      label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]) {
+        display: block;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: $black;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+      }
+
+      select {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1.5px solid $gray-light;
+        background-color: lighten($gray-light, 12%);
+        font-family: $font-family;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        outline: none;
+        border-color: $primary-color;
+        background-color: $white;
+      }
+      .inputs {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        align-items: center;
+
+        input[type="number"] {
+          width: 100%;
+          padding: 10px;
+          border-radius: 8px;
+          border: 1.5px solid $gray-light;
+          box-sizing: border-box;
+          margin-bottom: 0;
+          transition: border-color 0.2s;
+          outline: none;
+          border-color: $primary-color;
+        }
+      }
+
+      fieldset {
+        border: none;
+        padding: 0;
+        margin: 0;
+
+        legend {
+          font-weight: 700;
+          font-size: 0.85rem;
+          color: $black;
+          text-transform: uppercase;
+          margin-bottom: 12px;
+        }
+
+        input[type="checkbox"] {
+          margin-right: 10px;
+          accent-color: $primary-color;
+          cursor: pointer;
+        }
+
+        label {
+          font-size: 0.95rem;
+          color: $gray-darker;
+          cursor: pointer;
+          display: inline-block;
+          margin-bottom: 6px;
+          transition: color 0.2s;
+
+          &:hover {
+            color: $primary-color;
+          }
+        }
+      }
+
+      label[for="1"], label[for="2"], label[for="3"], label[for="4"], label[for="5"] {
+        color: #ffb800;
+        font-size: 1.1rem;
+      }
+
+      #resetAllFilters {
+        background: transparent;
+        color: $gray-dark;
+        border: 1.5px solid $gray-light;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 10px;
+
+        &:hover {
+          background: #fff0f0;
+          color: #d93025;
+          border-color: #d93025;
+        }
+      }
     }
   }
 }

@@ -126,6 +126,16 @@ header nav nav:last-child div a {
   width: 190px;
   border-radius: 10px;
 }
+header nav nav:last-child div button {
+  display: none;
+  border: none;
+  background-color: #fff;
+}
+@media (max-width: 428px) {
+  header nav nav:last-child div button {
+    display: block;
+  }
+}
 header nav nav:last-child a {
   margin-left: auto;
   text-decoration: none;
@@ -554,7 +564,7 @@ footer.footer.mobile, footer.footer.tablette {
   padding: 25px 20px;
   overflow-y: auto;
   box-sizing: border-box;
-  border-top: 1px solid #e1e1e1;
+  border-top: solid 1px rgba(0, 0, 0, 0.08);
 }
 .div__catalogue aside form {
   display: flex;
@@ -672,6 +682,8 @@ footer.footer.mobile, footer.footer.tablette {
     padding: 30px 10px 100px;
     margin-top: 180px auto 50px 0;
     justify-items: stretch;
+    margin-left: auto;
+    margin-top: 180px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
@@ -776,7 +788,8 @@ footer.footer.mobile, footer.footer.tablette {
     word-break: break-word;
   }
   .div__catalogue aside {
-    width: 30px;
+    display: none;
+    top: 180px;
   }
 }
 @media (min-width: 429px) and (max-width: 430px) {

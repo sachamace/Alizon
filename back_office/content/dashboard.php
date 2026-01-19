@@ -94,9 +94,7 @@ try {
             r.valeur_remise
         HAVING $having
         ORDER BY $orderBy
-    ";
-
-try {
+    ");
     $params['id_vendeur'] = $id_vendeur_connecte;
     $tmt = $pdo->prepare($sql);
     $tmt->execute($params);

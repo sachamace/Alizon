@@ -788,7 +788,8 @@ footer.footer.mobile, footer.footer.tablette {
     word-break: break-word;
   }
   .div__catalogue aside {
-    width: 30px;
+    display: none;
+    top: 180px;
   }
 }
 @media (min-width: 429px) and (max-width: 430px) {

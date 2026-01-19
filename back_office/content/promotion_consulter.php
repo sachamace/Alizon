@@ -67,11 +67,6 @@ if ($promotion['est_actif']) {
                     </span>
                 </div>
                 
-                <div class="detail-row">
-                    <span class="detail-label">Ordre d'affichage</span>
-                    <span class="detail-value"><?= $promotion['ordre_affichage'] ?></span>
-                </div>
-                
                 <?php if (!empty($promotion['description'])): ?>
                 <div class="detail-row">
                     <span class="detail-label">Description</span>

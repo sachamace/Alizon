@@ -10,7 +10,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $date_debut = $_POST['date_debut'];
     $date_fin = $_POST['date_fin'];
     $est_actif = isset($_POST['est_actif']) ? true : false;
-    $ordre_affichage = intval($_POST['ordre_affichage'] ?? 0);
     $produits_selectionnes = $_POST['produits'] ?? [];
     
     // Validation
@@ -42,8 +41,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // Insérer la promotion
             $stmt = $pdo->prepare("
                 INSERT INTO public.promotion 
-                (nom_promotion, description, date_debut, date_fin, est_actif, ordre_affichage, id_vendeur)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                (nom_promotion, description, date_debut, date_fin, est_actif, id_vendeur)
+                VALUES (?, ?, ?, ?, ?, ?)
             ");
             $stmt->execute([
                 $nom_promotion,
@@ -51,7 +50,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $date_debut,
                 $date_fin,
                 $est_actif,
-                $ordre_affichage,
                 $id_vendeur_connecte
             ]);
             
@@ -153,27 +151,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="form-section">
             <h3>Paramètres d'affichage</h3>
             
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="ordre_affichage">Ordre d'affichage</label>
-                    <input type="number" 
-                           id="ordre_affichage" 
-                           name="ordre_affichage" 
-                           value="<?= htmlentities($_POST['ordre_affichage'] ?? '0') ?>"
-                           min="0"
-                           placeholder="0 = en premier">
-                    <small>Plus le chiffre est petit, plus la promotion sera affichée en premier</small>
-                </div>
-                
-                <div class="form-group checkbox-group">
-                    <label>
-                        <input type="checkbox" 
-                               name="est_actif" 
-                               <?= isset($_POST['est_actif']) || !isset($_POST['nom_promotion']) ? 'checked' : '' ?>>
-                        <span>Promotion active</span>
-                    </label>
-                    <small>Si décoché, la promotion ne sera pas visible sur le site</small>
-                </div>
+            <div class="form-group checkbox-group">
+                <label>
+                    <input type="checkbox" 
+                           name="est_actif" 
+                           <?= isset($_POST['est_actif']) || !isset($_POST['nom_promotion']) ? 'checked' : '' ?>>
+                    <span>Promotion active</span>
+                </label>
+                <small>Si décoché, la promotion ne sera pas visible sur le site</small>
             </div>
         </div>
 

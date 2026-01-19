@@ -1,4 +1,3 @@
-
 <?php
 // Récupérer toutes les remises du vendeur avec informations sur le type d'application
 try {
@@ -47,13 +46,6 @@ try {
 </div>
 
 <section class="content">
-    <a href="?page=remise&type=creer">
-        <article class="creer_remise">
-            <p>Créer une remise</p>
-            <p>+</p>
-        </article>
-    </a>
-
     <?php if (!empty($remises)): ?>
         <?php foreach ($remises as $remise): 
             // Déterminer la classe CSS en fonction du statut
@@ -139,21 +131,9 @@ try {
             </a>
         <?php endforeach; ?>
     <?php else: ?>
-        <div class="aucune-remise">
+        <article class="aucune-promotion">
             <h3>Aucune remise créée</h3>
-            <p>Vous n'avez pas encore créé de remise. Cliquez sur "Créer une remise" pour commencer.</p>
-        </div>
+            <p>Vous n'avez pas encore créé de remise.</p>
+        </article>
     <?php endif; ?>
 </section>
-=======
-                </article>
-            </a>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <div class="aucune-remise">
-            <h3>Aucune remise créée</h3>
-            <p>Vous n'avez pas encore créé de remise. Cliquez sur "Créer une remise" pour commencer.</p>
-        </div>
-    <?php endif; ?>
-</section>
->>>>>>> aef5c3a (remise cote back office)

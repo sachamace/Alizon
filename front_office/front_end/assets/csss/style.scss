@@ -612,7 +612,7 @@ footer.footer {
     padding: 25px 20px;
     overflow-y: auto;
     box-sizing: border-box;
-    border-top: solid 1px rgba($black, 0.08);
+    border-top: 1px solid #e1e1e1;;
 
     form {
       display: flex;
@@ -873,10 +873,8 @@ footer.footer {
     }
 
     aside{
-      display: none;
-      top: 180px;
+      width: 30px;
     }
-
   }
 
   // Version tablette (429px à 1439px) - AMÉLIORATION DU SCROLL
@@ -1535,6 +1533,7 @@ footer.footer {
       }
 
       .btn-supprimer-avis {
+        margin-top: 1rem;
         background: #ff5555;
         color: $white;
         border: none;

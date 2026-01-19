@@ -1,4 +1,3 @@
-
 <?php
 include 'config.php';
 
@@ -55,8 +54,9 @@ if (!empty($_GET['noteMax'])) {
     $params['noteMax'] = $_GET['noteMax'];
 }
 
-// Récupérer les produits du vendeur connecté avec les remises actives
-$sql = "
+// Récupérer tous les produits du vendeur connecté avec les remises actives
+try {
+    $stmt = $pdo->prepare("
         SELECT p.id_produit, p.nom_produit, p.description_produit, 
                p.prix_unitaire_ht,
                ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc,
@@ -106,37 +106,11 @@ try {
     die("Erreur lors de la récupération des produits : " . $e->getMessage());
 }
 ?>
-<section class="content">
-    <aside id="filtre">
-        <form action="index.php" method="get" id="tri-form">
-            <input type="hidden" name="page" value="dashboard">
-            <?php if (isset($_GET['categorie'])): ?>
-                <input type="hidden" name="categorie" value="<?= htmlspecialchars($_GET['categorie']) ?>">
-            <?php endif; ?>
-            <label for="tri">Trier par :</label>
-            <select name="tri" id="tri" onchange="this.form.submit()">
-                <option value="">-- Sélectionner --</option>
-                <option value="prix_asc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'prix_asc') echo 'selected'; ?>>Prix croissant</option>
-                <option value="prix_desc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'prix_desc') echo 'selected'; ?>>Prix décroissant</option>
-                <option value="note_asc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'note_asc') echo 'selected'; ?>>Note 1-5</option>
-                <option value="note_desc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'note_desc') echo 'selected'; ?>>Note 5-1</option>
-            </select>
 
-            <label>Prix</label>
-            <div class="inputs">
-                <input type="number" placeholder="Min" id="prixMinInput" name="prixMin" min="0" max="1000" value="<?php echo $_GET['prixMin']?>">
-                <input type="number" placeholder="Max" id="prixMaxInput" name="prixMax" min="0" max="1000" value="<?php echo $_GET['prixMax']?>">
-            </div>
-            <label>Note</label>
-            <div class="inputs">
-                <input type="number" placeholder="Min" id="noteMinInput" name="noteMin" min="0" max="5" value="<?php echo $_GET['noteMin']?>">
-                <input type="number" placeholder="Max" id="noteMaxInput" name="noteMax" min="0" max="5" value="<?php echo $_GET['noteMax']?>">
-            </div>
-            <button type="button" id="resetAllFilters" onclick="window.location.href=window.location.pathname.concat('?page=dashboard');">
-                Réinitialiser les filtres
-            </button>
-        </form>
-    </aside>
+<!-- Section de tous les produits -->
+<section class="content">
+   
+    
     <a href="?page=produit&type=creer">
         <article class="creer_produit">
             <p>Créer un produit</p>
@@ -220,66 +194,3 @@ try {
             </a>
         <?php endforeach; ?>
 </section>
-<script>
-$(function() {
-    const $filtre = $('#filtre');
-    const $openBtn = $('#openFilter');
-
-    if (localStorage.getItem('filterVisible') === 'true') {
-        $filtre.show();
-        $openBtn.attr('aria-expanded', 'true');
-    }
-
-    $openBtn.on('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation(); // Empêche le clic de se propager au document
-        $filtre.toggle();
-        
-        const isVisible = $filtre.is(':visible');
-        localStorage.setItem('filterVisible', isVisible);
-        $openBtn.attr('aria-expanded', isVisible);
-    });
-
-    $(document).on('click', function(e) {
-        // On vérifie si on est en format mobile (moins de 768px)
-        const isMobile = window.innerWidth <= 768; 
-
-        if (isMobile && !$filtre.is(e.target) && $filtre.has(e.target).length === 0 && !$openBtn.is(e.target)) {
-            if ($filtre.is(':visible')) {
-                $filtre.hide();
-                localStorage.setItem('filterVisible', 'false');
-                $openBtn.attr('aria-expanded', 'false');
-            }
-        }
-    });
-
-    // Empêcher la fermeture si on clique à l'intérieur du formulaire de filtre
-    $filtre.on('click', function(e) {
-        e.stopPropagation();
-    });
-
-    $('#tri, input[type="checkbox"]').on('change', function() {
-        $('#tri-form').submit();
-    });
-
-    let timeout = null;
-    $('#prixMinInput, #prixMaxInput, #noteMinInput, #noteMaxInput').on('keyup input', function() {
-        clearTimeout(timeout);
-        timeout = setTimeout(function() {
-            $('#tri-form').submit();
-        }, 800);
-    });
-});
-$(function(){
-    $('#tri, input[type="checkbox"]').on('change', function() {
-        $('#tri-form').submit();
-    });
-    let timeout = null;
-    $('#prixMinInput, #prixMaxInput, #noteMinInput, #noteMaxInput').on('keyup input', function() {
-        clearTimeout(timeout);
-        timeout = setTimeout(function() {
-            $('#tri-form').submit();
-        }, 800);
-    });
-});
-</script>

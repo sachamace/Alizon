@@ -14,10 +14,6 @@
 #include <postgresql/libpq-fe.h>
 
 #define TAILLE_BUFF 1024
-
-#define TAILLE_BUFF 1024
-
-#define TAILLE_BUFF 1024
 #define PORT 8080
 
 const char* max_erreur = "ERREUR_PLEIN"; 
@@ -200,8 +196,54 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
 
     send(cnx, message_retour, strlen(message_retour), 0);
 }
-void traiter_affiche(char *id_str , char*login , int cnx , PGconn*conn ,int verbose){
-    char query[1024];
+void traiter_affiche(char id_str , char login , int cnx , PGconn*conn ,int verbose){
+    char message_retour[256];
+    FILE* fichier= NULL;
+    char chaine[20] = "";
+    char ligne[256];
+    fichier = fopen("login.txt","r");
+    if(fichier != NULL){
+        fgets(chaine,20,fichier);
+        fclose(fichier);
+    }
+    else{
+        if(verbose)  nprintf(message_retour,sizeof(message_retour),"Impossible d'ouvrir le fichier");
+    }
+
+    if(strcmp(chaine,login) == 0){
+        const char *query = "SELECT c.bordereau, c.statut, c.etape, c.date_maj, c.details_etape, c.priorite FROM commande c WHERE id_commande = '%s';", id_str;
+        PGresult *res = PQexec(conn, query);
+        if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+            if(verbose) perror("Erreur SELECT");
+            PQclear(res);
+            return;
+        }
+        int rows = PQntuples(res);
+        
+
+        // Format: id;etape;statut;priorite|id;etape...
+        for (int i = 0; i < rows; i++) {
+            snprintf(ligne, sizeof(ligne), "%s;%s;%s;%s|",
+                PQgetvalue(res, i, 0),
+                PQgetvalue(res, i, 1),
+                PQgetvalue(res, i, 2),
+                PQgetvalue(res, i, 3),
+                PQgetvalue(res, i, 4),
+                PQgetvalue(res, i, 5)
+            );
+            // Vérification débordement tampon (simplifié)
+            if (strlen(message_retour) + strlen(ligne) < TAILLE_BUFF - 1) {
+                strcat(message_retour, ligne);
+            }
+        }
+        PQclear(res);
+
+    }
+    else{
+        if(verbose) snprintf(message_retour,sizeof(message_retour),"Echec dans la transaction , le login coté serveur alizon n'est pas le meme que celui de délivraptor");
+    }
+    send(cnx,message_retour,strlen(message_retour),0);
+
 }
 int main(int argc, char *argv[]){
 
@@ -324,7 +366,7 @@ int main(int argc, char *argv[]){
             // SI c'est un autre truc que get_list , update ou un int alors envoyer les données pour afficher la commande 
             char *parties[2];
             int i = 0;
-            char *token = strtok(buf,"|");
+            char *token = strtok(buf,"|"); // id_commande|login
             while (token != NULL && i < 2) {
                 parties[i] = token; // On stocke l'adresse de la partie trouvée
                 printf("Partie %d : %s\n", i, parties[i]);

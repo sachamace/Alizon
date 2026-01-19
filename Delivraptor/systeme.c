@@ -207,7 +207,7 @@ void traiter_affiche(char id_str , char login , int cnx , PGconn*conn ,int verbo
         fclose(fichier);
     }
     else{
-        if(verbose)  nprintf(message_retour,sizeof(message_retour),"Impossible d'ouvrir le fichier");
+        if(verbose)  snprintf(message_retour,sizeof(message_retour),"Impossible d'ouvrir le fichier");
     }
 
     if(strcmp(chaine,login) == 0){

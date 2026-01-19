@@ -16,7 +16,7 @@ try {
         LEFT JOIN promotion_produit pp ON p.id_promotion = pp.id_promotion
         WHERE p.id_vendeur = ?
         GROUP BY p.id_promotion
-        ORDER BY p.ordre_affichage, p.date_debut DESC
+        ORDER BY p.date_debut DESC
     ");
     $stmt->execute([$id_vendeur_connecte]);
     $promotions = $stmt->fetchAll();
@@ -94,10 +94,6 @@ try {
                         <div>
                             <?= date('d/m/Y', strtotime($promotion['date_fin'])) ?>
                         </div>
-                    </div>
-                    
-                    <div class="promotion-ordre">
-                        Ordre d'affichage: <strong><?= $promotion['ordre_affichage'] ?></strong>
                     </div>
                 </article>
             </a>

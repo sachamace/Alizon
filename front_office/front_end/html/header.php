@@ -11,7 +11,9 @@
         $queryString = http_build_query($parametres);
 
         // Redirection
-        header("Location: index.php?" . $queryString);
+        echo "<script>
+            window.location.href = 'index.php?' . $queryString;
+        </script>";
         exit();
     }
     

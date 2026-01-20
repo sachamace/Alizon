@@ -22,7 +22,7 @@ const char* max_erreur = "ERREUR_PLEIN";
 
 void generer_bordereau(char *buffer, int cnx, PGconn *conn, const char *nom_client) {
 int nombreAleatoire = rand() % 10000;
-    // Nettoyage du nom pour le bordereau (simple)
+    // Nettoyage du nom pour le bordereau
     char nom_clean[50];
     strncpy(nom_clean, nom_client, 49);
     nom_clean[49] = '\0';
@@ -229,7 +229,7 @@ void traiter_affiche(char *id_str, char *login, int cnx, PGconn *conn, int verbo
 
         // Format: id;etape;statut;priorite|id;etape...
         for (int i = 0; i < rows; i++) {
-            snprintf(ligne, sizeof(ligne), "%s;%s;%s;%s;%s|",
+            snprintf(ligne, sizeof(ligne), "%s;%s;%s;%s;%s;%s|",
                 PQgetvalue(res, i, 0),
                 PQgetvalue(res, i, 1),
                 PQgetvalue(res, i, 2),
@@ -259,7 +259,7 @@ int main(int argc, char *argv[]){
     int size;
     int ret;
     int cnx;
-    int capacite_max ; // Capacité par défault.
+    int capacite_max =0; // Capacité par défault.
     char buf[TAILLE_BUFF];
     struct sockaddr_in conn_addr;
     struct sockaddr_in addr;
@@ -364,7 +364,7 @@ int main(int argc, char *argv[]){
             // Cas 2 : Le PHP demande une mise à jour
             traiter_update(buf,capacite_max, conn, verbose);
         }
-        else if(buf != fin && strcmp(*fin,"\0") == 0){
+        else if(buf != fin && *fin == '\0'){
             // C'est un ID, on lance la création
             traiter_creation(buf, capacite_max, cnx, conn, verbose);
         }

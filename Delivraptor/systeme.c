@@ -18,10 +18,46 @@
 
 const char* max_erreur = "ERREUR_PLEIN"; 
 
+// --- FONCTOIN D'AUTHENTIFICATION ---
 
+// Vérifie si le couple login/hash reçu correspond exactement au fichier login.txt
+int verifier_auth(char *login_recu, char *hash_recu, char *fichier_auth, int verbose) {
+    FILE *fp = fopen(fichier_auth, "r");
+    if (!fp) {
+        if (verbose) perror("Erreur ouverture fichier auth");
+        return 0;
+    }
 
+    char ligne[256];
+    char file_login[100];
+    char file_hash[100];
+    int auth_ok = 0;
+
+    // Lecture du fichier ligne par ligne
+    while (fgets(ligne, sizeof(ligne), fp)) {
+        ligne[strcspn(ligne, "\r\n")] = 0; // Nettoyer les retours à la ligne
+        
+        // Le fichier contient : login;hash
+        char *ptr = strtok(ligne, ";");
+        if (ptr) strcpy(file_login, ptr);
+        
+        ptr = strtok(NULL, ";");
+        if (ptr) strcpy(file_hash, ptr);
+
+        // COMPARISON DIRECTE (CHAÎNE À CHAÎNE)
+        // On compare le login ET le hash reçu avec ceux du fichier
+        if (strcmp(login_recu, file_login) == 0 && strcmp(hash_recu, file_hash) == 0) {
+            auth_ok = 1;
+            break;
+        }
+    }
+    fclose(fp);
+    return auth_ok;
+}
+
+// --- FONCTIONS MÉTIER---
 void generer_bordereau(char *buffer, int cnx, PGconn *conn, const char *nom_client) {
-int nombreAleatoire = rand() % 10000;
+    int nombreAleatoire = rand() % 10000;
     // Nettoyage du nom pour le bordereau
     char nom_clean[50];
     strncpy(nom_clean, nom_client, 49);
@@ -41,53 +77,35 @@ void afficher_man(char *nom_programme) {
     printf("  -h, --help          Affiche cette aide.\n");
 }
 
-// Fonction pour récupérer la liste des commandes et l'envoyer au PHP
-void traiter_get_list(int cnx, PGconn *conn,int capacite_max) {
-    const char *query = "SELECT c.id_commande, c.etape, c.statut, c.priorite FROM commande c";
-    PGresult *res = PQexec(conn, query);
+void traiter_get_list(int cnx, PGconn *conn, int capacite_max) {
+    PGresult *res = PQexec(conn, "SELECT c.id_commande, c.etape, c.statut, c.priorite FROM commande c");
     PGresult *res_count = PQexec(conn, "SELECT COUNT(*) FROM public.commande WHERE etape < 4;");
-    bool statut = false;
+    
+    bool plein = false;
     char buffer_envoi[TAILLE_BUFF]; 
     int nb_commandes = 0;
-    char ligne[256];
 
-    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
-        perror("Erreur SELECT");
-        PQclear(res);
-        return;
-    }
-    
-    
     if (PQresultStatus(res_count) == PGRES_TUPLES_OK) {
         nb_commandes = atoi(PQgetvalue(res_count, 0, 0));
     }
     PQclear(res_count);
 
-    if(nb_commandes > capacite_max){
-        statut = true;
-    }
+    if(nb_commandes > capacite_max) plein = true;
 
-    // On écrit le booléen au tout début du buffer avec un séparateur '|'
-    // Résultat dans le buffer : "false|"
-    snprintf(buffer_envoi, sizeof(buffer_envoi), "%s|", statut ? "true" : "false");
+    snprintf(buffer_envoi, sizeof(buffer_envoi), "%s|", plein ? "true" : "false");
 
-    // --- PARTIE 2 : AJOUT DES DONNÉES À LA SUITE ---
     int rows = PQntuples(res);
+    char ligne[256];
 
     for (int i = 0; i < rows; i++) {
         snprintf(ligne, sizeof(ligne), "%s;%s;%s;%s|",
-            PQgetvalue(res, i, 0),
-            PQgetvalue(res, i, 1),
-            PQgetvalue(res, i, 2),
-            PQgetvalue(res, i, 3)
+            PQgetvalue(res, i, 0), PQgetvalue(res, i, 1),
+            PQgetvalue(res, i, 2), PQgetvalue(res, i, 3)
         );
-
-        // strcat va automatiquement ajouter 'ligne' APRÈS "false|"
         if (strlen(buffer_envoi) + strlen(ligne) < TAILLE_BUFF - 1) {
             strcat(buffer_envoi, ligne);
         }
     }
-    
     PQclear(res);
     send(cnx, buffer_envoi, strlen(buffer_envoi), 0);
 }
@@ -227,200 +245,126 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
     send(cnx, message_retour, strlen(message_retour), 0);
 }
 // Modification de la signature : ajout de char *fichier_auth
-void traiter_affiche(char *id_str, char *login, int cnx, PGconn *conn, int verbose, char *fichier_auth){
-    char message_retour[TAILLE_BUFF] = ""; 
-    FILE* fichier = NULL;
-    char chaine[50] = ""; 
+void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
+    char message_retour[TAILLE_BUFF] = "";
     char ligne[256];
-    char query[512]; 
-
-    // Utilisation de la variable passée en option
-    fichier = fopen(fichier_auth, "r");
+    char query[512];
     
-    if(fichier != NULL){
-        if (fgets(chaine, sizeof(chaine), fichier) != NULL) {
-            chaine[strcspn(chaine, "\r\n")] = 0;
-        }
-        fclose(fichier);
-    } else {
-        if(verbose) printf("ERREUR: Impossible d'ouvrir le fichier d'auth : %s\n", fichier_auth);
-        // On continue quand même pour renvoyer une erreur propre au client
-    }
-
-    // Le reste de la logique reste identique...
-    if(strcmp(chaine, login) == 0){
-        // ... (Ton code existant pour la requête SELECT) ...
-        snprintf(query, sizeof(query), 
-            "SELECT c.bordereau, c.statut, c.etape, c.date_maj, c.details_etape, c.priorite FROM commande c WHERE id_commande = '%s';", 
-            id_str
+    snprintf(query, sizeof(query), "SELECT bordereau, statut, etape, date_maj, details_etape, priorite FROM commande WHERE id_commande = '%s';", id_cmd);
+    PGresult *res = PQexec(conn, query);
+    
+    if (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0) {
+        snprintf(ligne, sizeof(ligne), "%s;%s;%s;%s;%s;%s|",
+            PQgetvalue(res, 0, 0), PQgetvalue(res, 0, 1),
+            PQgetvalue(res, 0, 2), PQgetvalue(res, 0, 3),
+            PQgetvalue(res, 0, 4), PQgetvalue(res, 0, 5)
         );
-        PGresult *res = PQexec(conn, query);
-        if (PQresultStatus(res) != PGRES_TUPLES_OK) {
-            if(verbose) perror("Erreur SELECT");
-            PQclear(res);
-            return;
-        }
-        int rows = PQntuples(res);
-
-        for (int i = 0; i < rows; i++) {
-            snprintf(ligne, sizeof(ligne), "%s;%s;%s;%s;%s;%s|",
-                PQgetvalue(res, i, 0),
-                PQgetvalue(res, i, 1),
-                PQgetvalue(res, i, 2),
-                PQgetvalue(res, i, 3),
-                PQgetvalue(res, i, 4),
-                PQgetvalue(res, i, 5)
-            );
-            if (strlen(message_retour) + strlen(ligne) < TAILLE_BUFF - 1) {
-                strcat(message_retour, ligne);
-            }
-        }
-        PQclear(res);
-
+        strcpy(message_retour, ligne);
     } else {
-        if(verbose) printf("Echec Auth: Reçu '%s' vs Attendu '%s'\n", login, chaine);
-        snprintf(message_retour, sizeof(message_retour), "Echec dans la transaction");
+        strcpy(message_retour, "NOT_FOUND");
     }
+    PQclear(res);
     send(cnx, message_retour, strlen(message_retour), 0);
 }
-int main(int argc, char *argv[]){
-
-    // Variables initialisées
+int main(int argc, char *argv[]) {
     const char *conninfo = "host=10.253.5.108 port=5432 dbname=postgres user=sae password=bigouden08";
-    int sock, size, ret, cnx;
-    int capacite_max = 0; 
+    int sock, cnx, opt, port_ecoute = PORT, capacite_max = 0;
+    int verbose = 0, cap_arg = 0;
+    char *fichier_auth = "login.txt";
+    struct sockaddr_in addr, conn_addr;
+    socklen_t size;
     char buf[TAILLE_BUFF];
-    struct sockaddr_in conn_addr, addr;
-    int opt;
-    int verbose = false; // silencieux de base 
-    bool cap_argument = false;
-    
-    
-    int port_ecoute = 8080; // Valeur par défaut
-    char *fichier_auth = "login.txt"; // Valeur par défaut
 
     srand(time(NULL));
 
-    // Ajout des options p (port) et f (file/auth)
     static struct option long_options[] = {
         {"cap", required_argument, 0, 'c'},
-        {"port", required_argument, 0, 'p'}, 
+        {"port", required_argument, 0, 'p'},
         {"auth", required_argument, 0, 'f'},
         {"logs", no_argument, 0, 's'},
         {"help", no_argument, 0, 'h'},
         {0, 0, 0}
     };
 
-    // Connexion BDD (Code existant)...
+    while ((opt = getopt_long(argc, argv, "c:p:f:sh", long_options, NULL)) != -1) {
+        switch (opt) {
+            case 's': verbose = 1; break;
+            case 'h': afficher_man(argv[0]); exit(0);
+            case 'c': capacite_max = atoi(optarg); cap_arg = 1; break;
+            case 'p': port_ecoute = atoi(optarg); break;
+            case 'f': fichier_auth = optarg; break;
+            default: exit(1);
+        }
+    }
+
+    if (!cap_arg) { fprintf(stderr, "Erreur: --cap obligatoire\n"); exit(1); }
+
     PGconn *conn = PQconnectdb(conninfo);
     if (PQstatus(conn) != CONNECTION_OK) {
-        fprintf(stderr, "Erreur de connexion : %s\n", PQerrorMessage(conn));
-        PQfinish(conn);
+        fprintf(stderr, "DB Error: %s\n", PQerrorMessage(conn));
         exit(1);
     }
 
-    // Gestion des arguments : ajout de p: et f: dans la chaîne courte
-    while ((opt = getopt_long(argc, argv, "c:p:f:sh", long_options, NULL)) != -1) {
-        switch (opt) {
-            case 's': // Afficher les logs en direct.
-                verbose = true; 
-                break;
-            case 'h': // Affiche le man
-                afficher_man(argv[0]); 
-                exit(EXIT_SUCCESS);
-            case 'c': // Gestion de la capacité 
-                capacite_max = atoi(optarg);
-                cap_argument = true;
-                break;
-            case 'p': // Gestion du PORT
-                port_ecoute = atoi(optarg);
-                break;
-            case 'f': // Gestion du FICHIER AUTH
-                fichier_auth = optarg;
-                break;
-            default:    
-                afficher_man(argv[0]);
-                exit(EXIT_FAILURE);
-        }
-    }
-
-    if(!cap_argument){
-        fprintf(stderr, "Erreur : L'option --cap (-c) est obligatoire.\n");
-        afficher_man(argv[0]);
-        exit(EXIT_FAILURE);
-    }
-
-    if (verbose) {
-        printf("=== DÉMARRAGE DU SERVEUR ===\n");
-        printf("Capacité : %d | Port : %d | Auth : %s\n", capacite_max, port_ecoute, fichier_auth);
-        printf("============================\n");
-    }
-
-    // Création du socket
     sock = socket(AF_INET, SOCK_STREAM, 0);
-    // ... (setsockopt reste pareil) ...
-    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
-        perror("setsockopt");
-        exit(EXIT_FAILURE);
-    }
-
-    addr.sin_addr.s_addr = INADDR_ANY;
+    int reuse = 1;
+    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
+    
     addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = INADDR_ANY;
+    addr.sin_port = htons(port_ecoute);
     
-    // UTILISATION DU PORT VARIABLE
-    addr.sin_port = htons(port_ecoute); 
-    
-    ret = bind(sock, (struct sockaddr *)&addr, sizeof(addr));
-    if (ret < 0) { perror("bind"); exit(EXIT_FAILURE); } 
+    if (bind(sock, (struct sockaddr *)&addr, sizeof(addr)) < 0) { perror("bind"); exit(1); }
+    listen(sock, 5);
 
-    ret = listen(sock, 5);
-    if (ret < 0) { perror("listen"); exit(EXIT_FAILURE); } 
-    
-    if(verbose) printf("Serveur en écoute sur le port %d...\n", port_ecoute);
+    if (verbose) printf("Serveur démarré sur le port %d (Cap: %d) - Auth via %s\n", port_ecoute, capacite_max, fichier_auth);
 
-    while(1){
-        // ... (Accept et Read restent pareils) ...
+    while (1) {
         size = sizeof(conn_addr);
-        cnx = accept(sock, (struct sockaddr *)&conn_addr, (socklen_t *)&size);
-        if (cnx == -1) { perror("accept"); continue; }
+        cnx = accept(sock, (struct sockaddr *)&conn_addr, &size);
+        if (cnx < 0) continue;
 
         int len = read(cnx, buf, TAILLE_BUFF - 1);
-        if(len > 0){
+        if (len > 0) {
             buf[len] = '\0';
-            buf[strcspn(buf,"\r\n")] = 0;
-        }
+            buf[strcspn(buf, "\r\n")] = 0;
 
-        // ... (Switch de traitement) ...
-        char *fin;
-        strtol(buf, &fin, 10); // Vérif si c'est un entier (ID)
-        
-        if (strcmp(buf, "GET_LIST") == 0) {
-            traiter_get_list(cnx, conn, capacite_max);
-        } 
-        else if (strncmp(buf, "UPDATE", 6) == 0) {
-            traiter_update(buf, capacite_max, conn, verbose);
-        }
-        else if(buf != fin && *fin == '\0'){
-            traiter_creation(buf, capacite_max, cnx, conn, verbose);
-        }
-        else {
-            // APPEL À TRAITER AFFICHE AVEC LE FICHIER
-            char *parties[2];
-            int i = 0;
-            char *token = strtok(buf,"|"); 
-            while (token != NULL && i < 2) {
-                parties[i] = token; 
-                i++;
-                token = strtok(NULL, "|");
-            }  
-            if (i >= 2) { 
-                // Passage de fichier_auth ici
-                traiter_affiche(parties[0], parties[1], cnx, conn, verbose, fichier_auth);
+            if (verbose) printf("Reçu : %s\n", buf);
+
+            // --- PROTOCOLE STRICT : LOGIN;HASH;COMMANDE;ARGS ---
+            char *saveptr;
+            char *login = strtok_r(buf, ";", &saveptr);
+            char *hash = strtok_r(NULL, ";", &saveptr);
+            char *cmd = strtok_r(NULL, ";", &saveptr);
+            char *reste = strtok_r(NULL, "", &saveptr); // Prend tout le reste
+
+            // 1. VÉRIFICATION OBLIGATOIRE DE L'AUTH
+            if (login && hash && cmd) {
+                if (verifier_auth(login, hash, fichier_auth, verbose)) {
+                    // 2. DISPATCH DES COMMANDES
+                    if (strcmp(cmd, "GET_LIST") == 0) {
+                        traiter_get_list(cnx, conn, capacite_max);
+                    } 
+                    else if (strcmp(cmd, "UPDATE") == 0) {
+                        if (reste) traiter_update(reste, capacite_max, conn, verbose);
+                    }
+                    else if (strcmp(cmd, "NEW") == 0) {
+                        if (reste) traiter_creation(reste, capacite_max, cnx, conn, verbose);
+                    }
+                    else if (strcmp(cmd, "CHECK") == 0) {
+                        if (reste) traiter_affiche(reste, cnx, conn, verbose);
+                    }
+                    else {
+                        send(cnx, "ERROR|Commande Inconnue", 23, 0);
+                    }
+                } else {
+                    if (verbose) printf(" > Echec Auth : %s\n", login);
+                    send(cnx, "ERROR|Authentification Echouee", 28, 0);
+                }
             } else {
-                if(verbose) printf("Format incorrect.\n");
+                send(cnx, "ERROR|Format Protocole Invalide", 31, 0);
             }
         }
         close(cnx);
     }
-    return EXIT_SUCCESS;
+    return 0;
 }

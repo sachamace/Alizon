@@ -2,8 +2,11 @@
 // Fonction utilitaire pour parler au serveur C
 function envoyer_au_c($message) {
     $host = "10.253.5.108";
-    $port = 8080;
+    $port = 8080; 
     $response = "";
+    $login = "alizon";
+    $hash_md5 = "e54d588ca06c9f379b36d0b616421376"; 
+    $message_complet = "$login;$hash_md5;$message";
 
     $socket = @fsockopen($host, $port, $errno, $errstr, 2);
     if (!$socket) {
@@ -11,13 +14,16 @@ function envoyer_au_c($message) {
         return null;
     }
 
-    fwrite($socket, $message);
     
-    // Si on demande la liste, on attend une grosse réponse
-    if ($message === "GET_LIST") {
+    fwrite($socket, $message_complet);
+    
+    if (strpos($message, "GET_LIST") === 0) {
         while (!feof($socket)) {
             $response .= fread($socket, 4096);
         }
+    } else {
+        
+        $response = fgets($socket, 4096);
     }
     
     fclose($socket);

@@ -237,7 +237,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $socket = @fsockopen($host_c, $port_c, $errno, $errstr, 2);
                 if ($socket) {
                     // On envoie juste l'ID, le C fera l'UPDATE du statut et du bordereau
-                    fwrite($socket, $id_commande);
+                    $auth = "alizon;e54d588ca06c9f379b36d0b616421376";
+                    fwrite($socket, "$auth;NEW;$id_commande");
                     
                     // On attend la réponse 
                     $reponse = fgets($socket, 1024);

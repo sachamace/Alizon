@@ -121,6 +121,9 @@
                     <a href="facture.php?id=<?= $commande['id_commande'] ?>" class="btn btn-secondary" target="_blank">
                         Facture
                     </a>
+                    <a href="recommander.php?id=<?= $commande['id_commande'] ?>" class="btn btn-primary">
+                        Recommander
+                    </a>
                     <a href="detail_commande.php?id=<?= $commande['id_commande'] ?>" class="btn btn-primary">
                         Voir le détail
                     </a>

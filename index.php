@@ -38,8 +38,8 @@
 
                 <label>Prix</label>
                 <div class="inputs">
-                    <input type="number" placeholder="Min" id="prixMinInput" name="prixMin" min="0" max="1000" value="<?php echo $_GET['prixMin']?>">
-                    <input type="number" placeholder="Max" id="prixMaxInput" name="prixMax" min="0" max="1000" value="<?php echo $_GET['prixMax']?>">
+                    <input type="number" placeholder="Min" id="prixMinInput" name="prixMin" min="0" max="1000" value="<?= htmlspecialchars($_GET['prixMin'] ?? '') ?>">
+                    <input type="number" placeholder="Max" id="prixMaxInput" name="prixMax" min="0" max="1000" value="<?= htmlspecialchars($_GET['prixMax'] ?? '') ?>">
                 </div>
                 <fieldset>
                     <legend>Vendeurs :</legend>
@@ -60,8 +60,8 @@
                 </fieldset>
                 <label>Note</label>
                 <div class="inputs">
-                    <input type="number" placeholder="Min" id="noteMinInput" name="noteMin" min="0" max="5" value="<?php echo $_GET['noteMin']?>">
-                    <input type="number" placeholder="Max" id="noteMaxInput" name="noteMax" min="0" max="5" value="<?php echo $_GET['noteMax']?>">
+                    <input type="number" placeholder="Min" id="noteMinInput" name="noteMin" min="0" max="5" value="<?= htmlspecialchars($_GET['noteMin'] ?? '') ?>">
+                    <input type="number" placeholder="Max" id="noteMaxInput" name="noteMax" min="0" max="5" value="<?= htmlspecialchars($_GET['noteMax'] ?? '') ?>">
                 </div>
                 <button type="button" id="resetAllFilters" onclick="window.location.href=window.location.pathname">
                     Réinitialiser les filtres
@@ -146,42 +146,45 @@
 
             // --- 4. CONSTRUCTION DE LA REQUÊTE FINALE ---
             $sql = "
-                SELECT p.*, 
-                    ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc,
-                    r.id_remise, 
-                    r.nom_remise, 
-                    r.type_remise, 
-                    r.valeur_remise,
-                    AVG(a.note) AS note_moyenne
-                FROM produit p
-                LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
-                LEFT JOIN avis a ON p.id_produit = a.id_produit
-                LEFT JOIN remise r ON (
-                    r.id_vendeur = p.id_vendeur
-                    AND r.est_actif = true
-                    AND CURRENT_DATE BETWEEN r.date_debut AND r.date_fin
-                    AND (
-                        -- Cas 1: Remise sur CE produit spécifique
-                        r.id_produit = p.id_produit
-                        -- Cas 2: Remise sur CE produit spécifique (via table de liaison)
-                        OR EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise AND rp.id_produit = p.id_produit)
-                        -- Cas 3: Remise sur TOUS les produits
-                        OR (r.id_produit IS NULL AND r.categorie IS NULL AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
-                        -- Cas 4: Remise sur CATÉGORIE spécifique (pas de produit spécifique, catégorie correspond)
-                        OR (r.id_produit IS NULL AND r.categorie = p.categorie AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+                    SELECT p.*, 
+                        ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) AS prix_ttc,
+                        r.id_remise, 
+                        r.nom_remise, 
+                        r.type_remise, 
+                        r.valeur_remise,
+                        AVG(a.note) AS note_moyenne,
+                        MAX(CASE WHEN pp_check.id_promotion IS NOT NULL THEN 1 ELSE 0 END) as est_en_promotion
+                    FROM produit p
+                    LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
+                    LEFT JOIN avis a ON p.id_produit = a.id_produit
+                    LEFT JOIN promotion_produit pp_check ON p.id_produit = pp_check.id_produit
+                    LEFT JOIN promotion prom ON (pp_check.id_promotion = prom.id_promotion AND prom.est_actif = true AND CURRENT_DATE BETWEEN prom.date_debut AND prom.date_fin)
+                    LEFT JOIN remise r ON (
+                        r.id_vendeur = p.id_vendeur
+                        AND r.est_actif = true
+                        AND CURRENT_DATE BETWEEN r.date_debut AND r.date_fin
+                        AND (
+                            -- Cas 1: Remise sur CE produit spécifique
+                            r.id_produit = p.id_produit
+                            -- Cas 2: Remise sur CE produit spécifique (via table de liaison)
+                            OR EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise AND rp.id_produit = p.id_produit)
+                            -- Cas 3: Remise sur TOUS les produits
+                            OR (r.id_produit IS NULL AND r.categorie IS NULL AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+                            -- Cas 4: Remise sur CATÉGORIE spécifique (pas de produit spécifique, catégorie correspond)
+                            OR (r.id_produit IS NULL AND r.categorie = p.categorie AND NOT EXISTS (SELECT 1 FROM remise_produit rp WHERE rp.id_remise = r.id_remise))
+                        )
                     )
-                )
-                WHERE $where
-                GROUP BY 
-                    p.id_produit, 
-                    t.taux, 
-                    r.id_remise, 
-                    r.nom_remise, 
-                    r.type_remise, 
-                    r.valeur_remise
-                HAVING $having
-                ORDER BY $orderBy
-            ";
+                    WHERE $where
+                    GROUP BY 
+                        p.id_produit, 
+                        t.taux, 
+                        r.id_remise, 
+                        r.nom_remise, 
+                        r.type_remise, 
+                        r.valeur_remise
+                    HAVING $having
+                    ORDER BY est_en_promotion DESC, $orderBy
+                ";
 
             // --- 5. EXÉCUTION ---
             // On utilise toujours prepare() ici car $params peut contenir la recherche OU les filtres
@@ -216,24 +219,32 @@
                 }
                 ?>
             <a href="front_office/front_end/html/produitdetail.php?article=<?php echo $donnees['id_produit']?>" style="text-decoration:none; color:inherit;">
-                <article class="<?= $a_une_remise ? 'has-remise-front' : '' ?>">
-                    <?php
-                    // Badge remise si applicable
-                    if ($a_une_remise): ?>
-                        <div class="remise-badge-front">
-                            <?php if ($donnees['type_remise'] === 'pourcentage'): ?>
-                                -<?= number_format($donnees['valeur_remise'], 0) ?>%
-                            <?php else: ?>
-                                -<?= number_format($donnees['valeur_remise'], 2, ',', ' ') ?>€
-                            <?php endif; ?>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?php
-                    $requete_img = $pdo->prepare('SELECT chemin_image FROM media_produit WHERE id_produit = :id_produit LIMIT 1');
-                    $requete_img->execute([':id_produit' => $donnees['id_produit']]);
-                    $img = $requete_img->fetch();
-                    ?>
+                <article class="<?= ($a_une_remise || $donnees['est_en_promotion'] == 1) ? 'has-badge-front' : '' ?>">
+                    <div class="badge-container">     
+                        <?php
+                        // Badge promo si en promotion
+                        if ($donnees['est_en_promotion'] == 1): ?>
+                            <div class="promo-badge-front">
+                                <p style="color: black;">PROMO</p>
+                            </div>
+                        <?php endif;
+                        // Badge remise si applicable
+                        if ($a_une_remise): ?>
+                            <div class="remise-badge-front">
+                                <?php if ($donnees['type_remise'] === 'pourcentage'): ?>
+                                    -<?= number_format($donnees['valeur_remise'], 0) ?>%
+                                <?php else: ?>
+                                    -<?= number_format($donnees['valeur_remise'], 2, ',', ' ') ?>€
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <?php
+                        $requete_img = $pdo->prepare('SELECT chemin_image FROM media_produit WHERE id_produit = :id_produit LIMIT 1');
+                        $requete_img->execute([':id_produit' => $donnees['id_produit']]);
+                        $img = $requete_img->fetch();
+                        ?>
+                    </div>
                     
                     <div class="image-container">
                         <img src="<?= $img['chemin_image'] ? htmlentities($img['chemin_image']) : 'front_end/assets/images_produits/' ?>" alt="Image du produit" width="350" height="350">

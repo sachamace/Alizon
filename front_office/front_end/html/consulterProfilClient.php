@@ -115,6 +115,7 @@ try {
 
             <div class="btn-modif">
                 <a href="modifierProfilClient.php" class="modifier">Modifier</a>
+                <a href="anonymeCompte.php" class="ano">Anonymiser mon compte</a>
             </div>
         </section>
     </main>

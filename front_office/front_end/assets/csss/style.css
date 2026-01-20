@@ -1995,6 +1995,19 @@ footer.footer.mobile, footer.footer.tablette {
 .body_profilClient .main_profilClient .profil-container .btn-modif .annuler:hover {
   background-color: #7f8c8d;
 }
+.body_paiement .main_paiement .profil-container .btn-modif .ano,
+.body_paiement .main_profilClient .profil-container .btn-modif .ano,
+.body_profilClient .main_paiement .profil-container .btn-modif .ano,
+.body_profilClient .main_profilClient .profil-container .btn-modif .ano {
+  background-color: #e63946;
+  color: #fff;
+}
+.body_paiement .main_paiement .profil-container .btn-modif .ano:hover,
+.body_paiement .main_profilClient .profil-container .btn-modif .ano:hover,
+.body_profilClient .main_paiement .profil-container .btn-modif .ano:hover,
+.body_profilClient .main_profilClient .profil-container .btn-modif .ano:hover {
+  background-color: #c53030;
+}
 .body_paiement .main_paiement .profil-container .password-edit,
 .body_paiement .main_profilClient .profil-container .password-edit,
 .body_profilClient .main_paiement .profil-container .password-edit,
@@ -2627,22 +2640,34 @@ footer.footer.mobile, footer.footer.tablette {
   content: "✔ ";
 }
 
-.has-remise-front {
+.has-badge-front {
   position: relative;
 }
-.has-remise-front .remise-badge-front {
+.has-badge-front .badge-container {
   position: absolute;
   top: 15px;
   right: 15px;
-  background: linear-gradient(135deg, #ff4444, #ff6b6b);
-  color: white;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+.has-badge-front .promo-badge-front, .has-badge-front .remise-badge-front {
   padding: 8px 15px;
   border-radius: 8px;
   font-weight: bold;
   font-size: 1.1rem;
-  z-index: 10;
-  box-shadow: 0 3px 10px rgba(255, 68, 68, 0.4);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   animation: pulse-remise 2s infinite;
+}
+.has-badge-front .promo-badge-front {
+  background: linear-gradient(135deg, yellow, #fffd6b);
+  color: black;
+}
+.has-badge-front .remise-badge-front {
+  background: linear-gradient(135deg, #ff4444, #ff6b6b);
+  color: white;
 }
 
 @keyframes pulse-remise {

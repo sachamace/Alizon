@@ -2211,6 +2211,12 @@ footer.footer {
           color: #fff;
           &:hover { background-color: #7f8c8d; }
         }
+
+        .ano{
+          background-color: #e63946;
+          color: #fff;
+          &:hover { background-color: #c53030;}
+        }
       }
 
       // Mot de passe déroulant
@@ -2953,22 +2959,36 @@ footer.footer {
 // ========================================
 
 // Badge remise sur les cartes produits (page d'accueil)
-.has-remise-front {
+.has-badge-front {
     position: relative;
     
-    .remise-badge-front {
+    .badge-container {
         position: absolute;
         top: 15px;
         right: 15px;
-        background: linear-gradient(135deg, #ff4444, #ff6b6b);
-        color: white;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+    }
+    .promo-badge-front, .remise-badge-front {
         padding: 8px 15px;
         border-radius: 8px;
         font-weight: bold;
         font-size: 1.1rem;
-        z-index: 10;
-        box-shadow: 0 3px 10px rgba(255, 68, 68, 0.4);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         animation: pulse-remise 2s infinite;
+    }
+
+    .promo-badge-front {
+        background: linear-gradient(135deg, yellow, #fffd6b);
+        color: black;
+    }
+
+    .remise-badge-front {
+        background: linear-gradient(135deg, #ff4444, #ff6b6b);
+        color: white;
     }
 }
 

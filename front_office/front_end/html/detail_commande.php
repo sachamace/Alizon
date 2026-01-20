@@ -47,6 +47,7 @@
     try {
         $raw_commande = envoyer_au_c('CHECK'. ";" . $id_commande);
         $all_commande = explode(';', $raw_commande);
+        var_dump(($all_commande));
         $commande = [
             'id_commande'       => $id_commande,
             'statut'            => $all_commande[4],

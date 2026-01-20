@@ -234,10 +234,6 @@ Structure de Consulter, Créer, Modifier produit
             margin-top: 0.5rem;
           }
         }
-        a {
-          color: #1f2937;
-          text-decoration: none;
-        }
       }
     }
 
@@ -503,8 +499,7 @@ Structure du tableau de bord
   grid-auto-rows: auto;
   align-items: start;
 
-  > a {
-    grid-column: span 1;
+  a {
     display: block;
     height: 100%;
     color: inherit;
@@ -659,123 +654,6 @@ Structure du tableau de bord
       transition: transform 0.3s ease;
       text-shadow: 3px 3px 6px rgba($black, 0.3);
       z-index: 1;
-    }
-  }
-  #filtre {
-    position: sticky;
-    grid-column: 1 / -1;
-    grid-row: 1;
-    width: 100%;
-    box-sizing: border-box;
-    z-index: 10;
-    background: $white;
-    padding: 20px;
-    margin-bottom: 10px;
-    border-radius: $border-radius;
-    form {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      align-items: center;
-      gap: 20px;
-      
-      label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]) {
-        display: block;
-        font-weight: 700;
-        font-size: 0.85rem;
-        color: $black;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 8px;
-      }
-
-      select {
-        padding: 10px;
-        border-radius: 8px;
-        border: 1.5px solid $gray-light;
-        background-color: lighten($gray-light, 12%);
-        font-family: $font-family;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        outline: none;
-        border-color: $primary-color;
-        background-color: $white;
-      }
-      .inputs {
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-        align-items: center;
-
-        input[type="number"] {
-          width: 100%;
-          padding: 10px;
-          border-radius: 8px;
-          border: 1.5px solid $gray-light;
-          box-sizing: border-box;
-          margin-bottom: 0;
-          transition: border-color 0.2s;
-          outline: none;
-          border-color: $primary-color;
-        }
-      }
-
-      fieldset {
-        border: none;
-        padding: 0;
-        margin: 0;
-
-        legend {
-          font-weight: 700;
-          font-size: 0.85rem;
-          color: $black;
-          text-transform: uppercase;
-          margin-bottom: 12px;
-        }
-
-        input[type="checkbox"] {
-          margin-right: 10px;
-          accent-color: $primary-color;
-          cursor: pointer;
-        }
-
-        label {
-          font-size: 0.95rem;
-          color: $gray-darker;
-          cursor: pointer;
-          display: inline-block;
-          margin-bottom: 6px;
-          transition: color 0.2s;
-
-          &:hover {
-            color: $primary-color;
-          }
-        }
-      }
-
-      label[for="1"], label[for="2"], label[for="3"], label[for="4"], label[for="5"] {
-        color: #ffb800;
-        font-size: 1.1rem;
-      }
-
-      #resetAllFilters {
-        background: transparent;
-        color: $gray-dark;
-        border: 1.5px solid $gray-light;
-        padding: 10px;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 0.85rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        margin-top: 10px;
-
-        &:hover {
-          background: #fff0f0;
-          color: #d93025;
-          border-color: #d93025;
-        }
-      }
     }
   }
 }
@@ -6221,263 +6099,152 @@ textarea.error {
   max-width: 100% !important;
   box-sizing: border-box !important;
 }
+/* -----------------------------------------
+   RÉCAPITULATIF COMMANDES VENDEUR
+------------------------------------------*/
 
-// Section des avis
-  .avis {
-    padding: 2.5rem;
-    background: $white;
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba($black, 0.06);
+.recapitulatif-container {
+  padding: 20px;
+  overflow-y: auto;
 
+  h2 {
+    font-size: 1.8rem;
+    color: $primary-color;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+}
 
-    // Téléphone (428px)
-    @media (max-width: 428px) {
-      padding: 1.5rem;
-    }
+.commandes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-    h1,
-    h2 {
-      margin-bottom: 2rem;
-      font-size: 1.8rem;
+.commande-card {
+  background: $gray-light;
+  border: 1px solid $gray-medium;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.commande-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: $white;
+  border-bottom: 1px solid $gray-medium;
+
+  .commande-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .commande-id {
+    font-weight: bold;
+    color: $black;
+  }
+
+  .commande-date {
+    font-size: 0.85rem;
+    color: $gray-dark;
+  }
+
+  .commande-statut {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    background: $gray-medium;
+    color: $black;
+
+    &.statut-livree { background: $success-color; color: $white; }
+    &.statut-expediee { background: $primary-color; color: $white; }
+    &.statut-en_attente { background: $warning-bg; color: $black; }
+    &.statut-annulee { background: $danger-color; color: $white; }
+  }
+}
+
+.commande-client {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  color: $gray-dark;
+  border-bottom: 1px solid $gray-medium;
+}
+
+.commande-produits {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.produit-ligne {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  background: $white;
+  border-radius: 6px;
+
+  img, .produit-img-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+
+  .produit-img-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $gray-medium;
+    font-size: 1.5rem;
+  }
+
+  .produit-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+
+    .produit-nom {
+      font-weight: 500;
       color: $black;
-      font-weight: 600;
-      
-      // Téléphone (428px)
-      @media (max-width: 428px) {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-      }
     }
 
-    .avis-item {
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      background: #fafafa;
-      border-radius: 12px;
-      border-left: 4px solid $primary-color;
-      
-      .avis-button {
-        display: flex;
-        gap: 1em;
-        margin-top: 1em;
-        button {
-          background: $primary-color;
-          border: 1px solid $primary-color;
-          color: $black;
-          padding: 0.4rem 0.8rem; // Petit padding
-          font-size: 0.85rem;     // Texte fin
-          font-weight: 600;
-          border-radius: 6px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-      }
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-
-      // Téléphone (428px)
-      @media (max-width: 428px) {
-        padding: 1.2rem;
-        margin-bottom: 1.2rem;
-        border-radius: 10px;
-      }
-
-      .view-reponse {
-        display: none;
-        margin-top: 0.8rem;
-        margin-top: 1rem;
-        margin-left: 1rem;
-        padding: 1rem;
-        background-color: #fafafa;
-        border-radius: 0 6px 6px 0;
-        // Typographie
-        color: #555;
-        font-size: 1rem;
-        line-height: 1.5;
-
-        &::before {
-          content: "Votre réponse :";
-          display: block;
-          font-size: 0.9rem;
-          font-weight: 800;
-          text-transform: uppercase;
-          color: $black;
-          margin-bottom: 0.5rem;
-          letter-spacing: 0.5px;
-        }
-        &.is-visible {
-          display: block;
-        }
-      }
-
-      .reponse-vendeur {
-        display: none;
-        margin-top: 0.8rem;
-        &.is-visible {
-          display: block;
-        }
-        textarea {
-          width: 98%; // Prend toute la largeur du conteneur parent
-          height: 80px; // Hauteur réduite par défaut
-          padding: 0.6rem;
-          border: 1px solid #ccc;
-          border-radius: 6px;
-          font-family: inherit;
-          font-size: 0.9rem;
-          resize: vertical; // L'utilisateur peut agrandir vers le bas si besoin
-          background: $white;
-          display: block; // Force le retour à la ligne
-          margin-bottom: 0.5rem;
-
-          &:focus {
-            outline: none;
-            border-color: $primary-color;
-          }
-        }
-        button[type="submit"] {
-            background: $primary-color;
-            color: $black;
-            border: none;
-            padding: 0.4rem 1.2rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border-radius: 6px;
-            cursor: pointer;
-            
-            &:hover {
-                opacity: 0.9;
-            }
-        }
-      }
-
-      .avis-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-        padding-bottom: 0.8rem;
-        border-bottom: 1px solid #e8e8e8;
-
-        // Téléphone (428px)
-        @media (max-width: 428px) {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.6rem;
-        }
-
-        strong {
-          font-size: 1.3rem;
-          color: $black;
-          font-weight: 600;
-          
-          // Téléphone (428px)
-          @media (max-width: 428px) {
-            font-size: 1.05rem;
-          }
-        }
-
-        .avis-etoiles {
-          color: #ffb800;
-          font-size: 1.2rem;
-          
-          // Téléphone (428px)
-          @media (max-width: 428px) {
-            font-size: 1.1rem;
-          }
-        }
-      }
-
-      .avis-commentaire {
-        margin-top: 0.8rem;
-        font-size: 1.2rem;
-        line-height: 1.7;
-        color: #555;
-        
-        // Téléphone (428px)
-        @media (max-width: 428px) {
-          font-size: 0.95rem;
-          line-height: 1.6;
-        }
-      }
+    .produit-qte {
+      font-size: 0.85rem;
+      color: $gray-dark;
     }
   }
 
-.rating-container {
-            margin: 1rem 0;
-        }
-
-.rating-container label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #333;
+  .produit-prix {
+    font-weight: bold;
+    color: $success-color;
+  }
 }
 
-.stars-rating {
-    display: flex;
-    gap: 0.25rem;
-    align-items: center;
-}
+.commande-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: $white;
+  border-top: 1px solid $gray-medium;
 
-.star-wrapper {
-    display: inline-block;
-    position: relative;
-    font-size: 2.5rem;
-    line-height: 1;
-    cursor: pointer;
-    user-select: none;
-    width: 1em;
-    height: 1em;
-}
+  .total-label {
+    color: $gray-dark;
+  }
 
-/* Étoile de base grise */
-.star-wrapper::before {
-    content: '★';
-    color: #ddd;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-}
-
-.star-half {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    color: transparent;
-    transition: color 0.2s ease;
-    z-index: 1;
-}
-
-.star-left {
-    clip-path: inset(0 50% 0 0); /* Coupe la moitié droite */
-}
-
-.star-right {
-    clip-path: inset(0 0 0 50%); /* Coupe la moitié gauche */
-}
-
-.star-half.active,
-.star-half.hover {
-    color: #ffc107;
-}
-
-.rating-text {
-    margin-left: 1rem;
+  .total-value {
     font-size: 1.1rem;
-    font-weight: 600;
-    color: #666;
-    min-width: 150px;
-}
-
-/* Styles pour l'affichage des avis existants */
-.avis-etoiles {
-    color: #ffc107;
-    font-size: 1.2rem;
-    letter-spacing: 2px;
+    font-weight: bold;
+    color: $primary-color;
+  }
 }

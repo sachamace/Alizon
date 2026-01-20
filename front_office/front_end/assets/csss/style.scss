@@ -2526,11 +2526,11 @@ footer.footer {
     display: inline-flex;
     align-items: center;
     gap: 0.7rem;
-    transition: all 0.3s ease;
+    transition: all $transition-speed ease;
 
     &-primary {
         background: $primary-color;
-        color: #000;
+        color: $black;
         box-shadow: 0 4px 15px rgba(108, 211, 255, 0.3);
 
         &:hover {

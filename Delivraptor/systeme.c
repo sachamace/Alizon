@@ -111,11 +111,13 @@ void traiter_get_list(int cnx, PGconn *conn, int capacite_max) {
 }
 
 // Fonction pour parser et exécuter l'UPDATE reçu du PHP
-void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
+void traiter_update(char *buffer, int capacite_max, PGconn *conn, int verbose) {
+    // Protocole attendu: id;etape;statut;priorite;details;raison;image
+    // NOTE : Le "UPDATE" a déjà été retiré dans le main() !
 
-    // Protocole attendu: UPDATE;id;etape;statut;priorite;details;raison;image
     char *saveptr;
     char query[2048];
+    
     // Vérifier la capacité maximale.
     PGresult *res_count = PQexec(conn, "SELECT COUNT(*) FROM public.commande WHERE etape <= 4;");
     int nb_commandes = 0;
@@ -124,10 +126,11 @@ void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
     }
     PQclear(res_count);
 
-    // On saute le mot clé "UPDATE"
-    strtok_r(buffer, ";", &saveptr); 
+    // --- CORRECTION ICI : ON NE SAUTE PLUS RIEN ---
+    // On attaque directement la récupération de l'ID
+    char *id = strtok_r(buffer, ";", &saveptr); 
+    // ----------------------------------------------
 
-    char *id = strtok_r(NULL, ";", &saveptr);
     char *etape = strtok_r(NULL, ";", &saveptr);
     char *statut = strtok_r(NULL, ";", &saveptr);
     char *prio = strtok_r(NULL, ";", &saveptr);
@@ -137,6 +140,7 @@ void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
 
     if (!id) return;
 
+    // ... Le reste de ta fonction reste identique ...
     query[0] = '\0';
     // Construction de la requête SQL dynamique
     if(!(nb_commandes > capacite_max)){
@@ -150,8 +154,7 @@ void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
             (image && strcmp(image, "NULL") != 0) ? image : "",
             id
         );
-
-    }else{
+    } else {
         snprintf(query, sizeof(query), 
             "UPDATE public.commande SET etape=%s, statut='%s', priorite=%s, details_etape='%s', raison='%s', chemin_image_refuse='%s', date_maj=NOW() WHERE id_commande=%s;",
             etape ? etape : "0",
@@ -164,17 +167,15 @@ void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
         );
     }
 
-    if (verbose) printf("Exécution SQL: %s\n", query);
+    if (verbose) log_message(query, NULL, verbose); // Petit bonus : log la requête SQL aussi
 
     PGresult *res_upd = PQexec(conn, query);
 
     if (PQresultStatus(res_upd) != PGRES_COMMAND_OK) {
-        // On affiche l'erreur textuelle précise fournie par PostgreSQL
         fprintf(stderr, "Erreur lors de la mise à jour : %s\n", PQerrorMessage(conn));
     }
     PQclear(res_upd);
 }
-
 void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int verbose){
     char bordereau[50];
     char query[1024];
@@ -250,14 +251,16 @@ void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
     char ligne[256];
     char query[512];
     
-    snprintf(query, sizeof(query), "SELECT bordereau, statut, etape, date_maj, details_etape, priorite FROM commande WHERE id_commande = '%s';", id_cmd);
+    snprintf(query, sizeof(query), "SELECT date_commande , montant_total_ht , montant_total_ttc, bordereau, statut, etape, date_maj, details_etape, priorite FROM commande WHERE id_commande = '%s';", id_cmd);
     PGresult *res = PQexec(conn, query);
     
     if (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0) {
-        snprintf(ligne, sizeof(ligne), "%s;%s;%s;%s;%s;%s|",
+        snprintf(ligne, sizeof(ligne), "%s;%s;%s;%s;%s;%s;%s;%s;%s|",
             PQgetvalue(res, 0, 0), PQgetvalue(res, 0, 1),
             PQgetvalue(res, 0, 2), PQgetvalue(res, 0, 3),
-            PQgetvalue(res, 0, 4), PQgetvalue(res, 0, 5)
+            PQgetvalue(res, 0, 4), PQgetvalue(res, 0, 5),
+            PQgetvalue(res, 0, 6),PQgetvalue(res, 0, 7),
+            PQgetvalue(res, 0, 8)
         );
         strcpy(message_retour, ligne);
     } else {
@@ -373,8 +376,8 @@ int main(int argc, char *argv[]) {
             char *saveptr;
             char *login = strtok_r(buf, ";", &saveptr);
             char *hash = strtok_r(NULL, ";", &saveptr);
-            char *cmd = strtok_r(NULL, ";", &saveptr);
-            char *reste = strtok_r(NULL, "", &saveptr); // Prend tout le reste
+            char *cmd = strtok_r(NULL, ";", &saveptr); // Tu récupères "UPDATE"
+            char *reste = strtok_r(NULL, "", &saveptr); // Tu récupères TOUT le reste : "7;2;ENCOURS;..."
 
             // 1. VÉRIFICATION OBLIGATOIRE DE L'AUTH
             if (login && hash && cmd) {

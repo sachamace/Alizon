@@ -45,7 +45,7 @@ void afficher_man(char *nom_programme) {
 void traiter_get_list(int cnx, PGconn *conn,int capacite_max) {
     const char *query = "SELECT c.id_commande, c.etape, c.statut, c.priorite FROM commande c";
     PGresult *res = PQexec(conn, query);
-    PGresult *res_count = PQexec(conn, "SELECT COUNT(*) FROM public.commande WHERE etape <= 4;");
+    PGresult *res_count = PQexec(conn, "SELECT COUNT(*) FROM public.commande WHERE etape < 4;");
     bool statut = false;
     char buffer_envoi[TAILLE_BUFF]; 
     int nb_commandes = 0;
@@ -245,7 +245,7 @@ void traiter_affiche(char *id_str, char *login, int cnx, PGconn *conn, int verbo
 
     if(strcmp(chaine,login) == 0){
         snprintf(query, sizeof(query), 
-            "SELECT c.bordereau, c.statut, c.etape, c.date_maj, c.details_etape, c.priorite FROM commande c WHERE id_commande = '%s';", 
+            "SELECT c.bordereau, c.statut, c.etape, c.date_maj, c.details_etape, c.priorite FROM commande c WHERE id_commande = '%s';", // Gabriel ce que tu auras 
             id_str
         );
         PGresult *res = PQexec(conn, query);

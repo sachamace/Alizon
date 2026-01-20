@@ -49,14 +49,6 @@
                     <p>Déconnecter vous de votre compte</p>
                 </div>
             </a>
-
-            <a href="#" class="card disabled">
-                <img src="../assets/images/poubelle.png" alt="">
-                <div class="text">
-                    <h3>Supprimer vos données</h3>
-                    <p>Supprimer toutes les données vous concernant enregistrées sur le site</p>
-                </div>
-            </a>
         </div>
     </main>
 
@@ -80,12 +72,6 @@
             <a href="deconnecter.php" class="compte__button">
                 <img src="../assets/images/logout.png" class="compte__image">
                 <h3>Se déconnecter</h3>
-                <h3>›</h3>
-            </a>
-
-            <a class="compte__button disabled">
-                <img src="../assets/images/poubelle.png" class="compte__image">
-                <h3>Supprimer vos données</h3>
                 <h3>›</h3>
             </a>
         </div>

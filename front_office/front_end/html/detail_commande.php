@@ -30,6 +30,8 @@
             while (!feof($socket)) {
                 $response .= fread($socket, 4096);
             }
+        }else{
+            $response = fgets($socket, 4096);
         }
     
         fclose($socket);
@@ -46,7 +48,6 @@
 
     try {
         $reponse = envoyer_au_c("CHECK;$id_commande");
-
         if ($reponse && $reponse !== "NOT_FOUND") {
             $reponse = rtrim($reponse, "|");
             $cols = explode(';', $reponse);
@@ -63,26 +64,6 @@
         } else {
             echo "Commande introuvable.";
         }
-        //  Récupération des infos principales de la commande
-        /*$stmt = $pdo->prepare("
-            SELECT 
-                id_commande, 
-                date_commande, 
-                montant_total_ht, 
-                montant_total_ttc, 
-                statut,
-                etape,
-                date_maj,
-                details_etape  
-            FROM commande
-            WHERE id_commande = :id_cmd AND id_client = :id_client
-        ");
-        $stmt->execute([':id_cmd' => $id_commande, ':id_client' => $id_client_connecte]);
-        $commande = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$commande) {
-            die("Commande introuvable ou vous n'avez pas les droits.");
-        }*/
 
         // Récupération des articles (lignes de commande)
         $stmt_lignes = $pdo->prepare("

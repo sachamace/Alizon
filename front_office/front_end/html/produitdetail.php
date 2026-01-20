@@ -495,6 +495,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     foreach ($avis as $un_avis) {
                         $id_client = (int) $un_avis['id_client'];
                         $est_signale = isset($_SESSION['avis_signales']) && in_array($id_client, $_SESSION['avis_signales']);
+                        $req_reponse = $pdo->prepare("SELECT description FROM reponse WHERE id_client = :id_client AND id_produit = :id_produit AND id_vendeur = :id_vendeur");
+                        $req_reponse->execute([
+                            ':id_client' => $id_client,
+                            ':id_produit' => $id_produit,
+                            ':id_vendeur' => $id_vendeur
+                        ]);
                         // Si signalé : Remplissage ROUGE, Bordure ROUGE
                         // Si pas signalé : Remplissage BLANC, Bordure NOIRE (pour qu'on voie la forme)
                         $couleur_fill   = $est_signale ? 'red' : 'white';

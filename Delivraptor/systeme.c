@@ -267,8 +267,6 @@ void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
     // Vérification du succès de la requête
     if (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0) {
         
-        // On écrit directement dans le grand buffer pour éviter les coupures
-        // Attention à l'ordre des %s qui doit correspondre à l'ordre du SELECT
         snprintf(message_retour, sizeof(message_retour), "%s;%s;%s;%s;%s;%s;%s;%s;%s|",
             PQgetvalue(res, 0, 0), // date_commande
             PQgetvalue(res, 0, 1), // montant_total_ht
@@ -277,7 +275,7 @@ void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
             PQgetvalue(res, 0, 4), // statut
             PQgetvalue(res, 0, 5), // etape
             PQgetvalue(res, 0, 6), // date_maj
-            PQgetvalue(res, 0, 7), // details_etape (TEXTE LONG)
+            PQgetvalue(res, 0, 7), // details_etape 
             PQgetvalue(res, 0, 8)  // priorite
         );
 

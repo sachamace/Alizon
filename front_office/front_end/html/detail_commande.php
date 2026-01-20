@@ -49,13 +49,13 @@
         $all_commande = explode(';', $raw_commande);
         $commande = [
             'id_commande'       => $id_commande,
-            'statut'            => $all_commande[1],
-            'etape'             => $all_commande[2],
-            'date_maj'          => $all_commande[3],
-            'details_etape'     => $all_commande[4],
-            'date_commande'     => $all_commande[6],
-            'montant_total_ht'  => $all_commande[7],
-            'montant_total_ttc' => $all_commande[8]
+            'statut'            => $all_commande[4],
+            'etape'             => $all_commande[5],
+            'date_maj'          => $all_commande[6],
+            'details_etape'     => $all_commande[7],
+            'date_commande'     => $all_commande[0],
+            'montant_total_ht'  => $all_commande[1],
+            'montant_total_ttc' => $all_commande[2]
         ];
         //  Récupération des infos principales de la commande
         /*$stmt = $pdo->prepare("

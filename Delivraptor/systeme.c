@@ -229,7 +229,7 @@ void traiter_affiche(char *id_str, char *login, int cnx, PGconn *conn, int verbo
 
         // Format: id;etape;statut;priorite|id;etape...
         for (int i = 0; i < rows; i++) {
-            snprintf(ligne, sizeof(ligne), "%s;%s;%s;%s|",
+            snprintf(ligne, sizeof(ligne), "%s;%s;%s;%s;%s|",
                 PQgetvalue(res, i, 0),
                 PQgetvalue(res, i, 1),
                 PQgetvalue(res, i, 2),

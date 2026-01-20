@@ -248,28 +248,53 @@ void traiter_creation(char *id_str, int capacite_max, int cnx, PGconn *conn, int
 // Modification de la signature : ajout de char *fichier_auth
 void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
     char message_retour[TAILLE_BUFF] = "";
-    char ligne[256];
+    // On supprime 'ligne[256]' qui était trop petit et dangereux
     char query[512];
     
-    snprintf(query, sizeof(query), "SELECT date_commande , montant_total_ht , montant_total_ttc, bordereau, statut, etape, date_maj, details_etape, priorite FROM commande WHERE id_commande = '%s';", id_cmd);
+    // DEBUG : On vérifie quel ID arrive vraiment (attention aux espaces/sauts de ligne)
+    if (verbose) printf("--- DEBUG CONSULTATION --- ID reçu : '%s'\n", id_cmd);
+
+    // Construction de la requête
+    snprintf(query, sizeof(query), 
+        "SELECT date_commande, montant_total_ht, montant_total_ttc, bordereau, statut, etape, date_maj, details_etape, priorite FROM commande WHERE id_commande = '%s';", 
+        id_cmd
+    );
+
+    if (verbose) printf("SQL : %s\n", query);
+
     PGresult *res = PQexec(conn, query);
     
+    // Vérification du succès de la requête
     if (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0) {
-        snprintf(ligne, sizeof(ligne), "%s;%s;%s;%s;%s;%s;%s;%s;%s|",
-            PQgetvalue(res, 0, 0), PQgetvalue(res, 0, 1),
-            PQgetvalue(res, 0, 2), PQgetvalue(res, 0, 3),
-            PQgetvalue(res, 0, 4), PQgetvalue(res, 0, 5),
-            PQgetvalue(res, 0, 6),PQgetvalue(res, 0, 7),
-            PQgetvalue(res, 0, 8)
+        
+        // On écrit directement dans le grand buffer pour éviter les coupures
+        // Attention à l'ordre des %s qui doit correspondre à l'ordre du SELECT
+        snprintf(message_retour, sizeof(message_retour), "%s;%s;%s;%s;%s;%s;%s;%s;%s|",
+            PQgetvalue(res, 0, 0), // date_commande
+            PQgetvalue(res, 0, 1), // montant_total_ht
+            PQgetvalue(res, 0, 2), // montant_total_ttc
+            PQgetvalue(res, 0, 3), // bordereau
+            PQgetvalue(res, 0, 4), // statut
+            PQgetvalue(res, 0, 5), // etape
+            PQgetvalue(res, 0, 6), // date_maj
+            PQgetvalue(res, 0, 7), // details_etape (TEXTE LONG)
+            PQgetvalue(res, 0, 8)  // priorite
         );
-        strcpy(message_retour, ligne);
+
+        if (verbose) printf("Réponse générée : %s\n", message_retour);
+
     } else {
+        // Cas où l'ID n'existe pas ou erreur SQL
+        if (verbose) printf("Erreur ou ID introuvable. Status SQL : %s\n", PQresultErrorMessage(res));
         strcpy(message_retour, "NOT_FOUND");
     }
-    PQclear(res);
-    send(cnx, message_retour, strlen(message_retour), 0);
-}
 
+    PQclear(res);
+    
+    // Envoi au client
+    int sent = send(cnx, message_retour, strlen(message_retour), 0);
+    if (verbose) printf("Octets envoyés au PHP : %d\n--------------------------\n", sent);
+}
 
 // --- FONCTION DE LOG ---
 void log_message(const char *msg, struct sockaddr_in *client_addr, int verbose) { // Généré par Gémini le 20 janvir 15:17 

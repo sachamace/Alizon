@@ -95,7 +95,6 @@ try {
         HAVING $having
         ORDER BY $orderBy
     ");
-    // ✅ FICHIER CORRIGÉ PAR CLAUDE - VERSION 2026-01-19 - Si tu vois cette ligne, c'est le bon fichier !
     $params['id_vendeur'] = $id_vendeur_connecte;
     $stmt->execute($params);
 

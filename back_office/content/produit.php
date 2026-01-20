@@ -1,4 +1,3 @@
-
 <?php
 if (isset($_GET['page']) && $_GET['page'] === 'produit') {
     if (isset($_GET['id']) && isset($_GET['type'])) {
@@ -10,7 +9,13 @@ if (isset($_GET['page']) && $_GET['page'] === 'produit') {
             SELECT p.*, 
                    ROUND(p.prix_unitaire_ht * (1 + t.taux / 100), 2) AS prix_ttc,
                    t.taux AS taux_tva,
-                   t.nom_tva
+                   t.nom_tva,
+                   -- Calcul du prix au kilo/litre
+                   CASE 
+                       WHEN p.poids_unite IS NOT NULL AND p.poids_unite > 0 THEN
+                           ROUND((p.prix_unitaire_ht * (1 + t.taux / 100)) / p.poids_unite, 2)
+                       ELSE NULL
+                   END AS prix_ttc_par_unite
             FROM produit p
             LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
             WHERE p.id_produit = :id
@@ -74,20 +79,30 @@ if (isset($_GET['page']) && $_GET['page'] === 'produit') {
         // Calculer le prix avec remise si applicable
         $prix_final = $produit['prix_ttc'];
         $prix_ht_final = $produit['prix_unitaire_ht'];
+        $prix_par_unite_final = $produit['prix_ttc_par_unite']; // Prix au kilo/litre
         
         if ($remise_active) {
             if ($remise_active['type_remise'] === 'pourcentage') {
                 $prix_final = $produit['prix_ttc'] * (1 - $remise_active['valeur_remise'] / 100);
                 $prix_ht_final = $produit['prix_unitaire_ht'] * (1 - $remise_active['valeur_remise'] / 100);
+                // Prix au kilo avec remise
+                if ($prix_par_unite_final) {
+                    $prix_par_unite_final = $prix_par_unite_final * (1 - $remise_active['valeur_remise'] / 100);
+                }
             } else {
                 $prix_final = $produit['prix_ttc'] - $remise_active['valeur_remise'];
                 // Calculer le HT proportionnellement
                 $ratio = $prix_final / $produit['prix_ttc'];
                 $prix_ht_final = $produit['prix_unitaire_ht'] * $ratio;
+                // Prix au kilo avec remise
+                if ($prix_par_unite_final) {
+                    $prix_par_unite_final = $prix_par_unite_final * $ratio;
+                }
             }
             // S'assurer que les prix ne soient pas négatifs
             if ($prix_final < 0) $prix_final = 0;
             if ($prix_ht_final < 0) $prix_ht_final = 0;
+            if ($prix_par_unite_final < 0) $prix_par_unite_final = 0;
         }
 
         if ($_GET['page'] == "produit" && $_GET['type'] == "consulter") {

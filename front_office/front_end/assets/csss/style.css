@@ -2950,4 +2950,171 @@ footer.footer.mobile, footer.footer.tablette {
     padding: 8px 12px;
     font-size: 1rem;
   }
+}
+.commandes-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 150px 1rem 0 1rem;
+  gap: 20px;
+  font-family: "Space Grotesk", sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+}
+.commandes-container .commande-vide {
+  text-align: center;
+  padding: 3rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 1em;
+  margin: 2rem auto;
+  width: 100%;
+}
+.commandes-container .commande-vide h3 {
+  color: #666;
+  margin-bottom: 1rem;
+}
+.commandes-container .commande-card {
+  background: #fff;
+  border-radius: 1em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: transform 0.3s;
+  border: 1px solid transparent;
+}
+.commandes-container .commande-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #FFE0FE;
+}
+.commandes-container .commande-card .commande-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 1rem;
+}
+.commandes-container .commande-card .commande-header .commande-numero {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+}
+.commandes-container .commande-card .commande-header .commande-date {
+  margin: 0.3rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+.commandes-container .commande-card .commande-header .commande-statut {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.commandes-container .commande-card .commande-header .commande-statut.statut-validée, .commandes-container .commande-card .commande-header .commande-statut.statut-livree, .commandes-container .commande-card .commande-header .commande-statut.statut-livrée {
+  background: rgba(40, 167, 69, 0.15);
+  color: rgb(30.1449275362, 125.8550724638, 52);
+}
+.commandes-container .commande-card .commande-header .commande-statut.statut-en-preparation, .commandes-container .commande-card .commande-header .commande-statut.statut-en-préparation {
+  background: rgba(255, 193, 7, 0.15);
+  color: #856404;
+}
+.commandes-container .commande-card .commande-header .commande-statut.statut-expediee, .commandes-container .commande-card .commande-header .commande-statut.statut-expédiée {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+.commandes-container .commande-card .commande-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+.commandes-container .commande-card .commande-info p {
+  margin: 0.3rem 0;
+  color: #666;
+}
+.commandes-container .commande-card .commande-info strong {
+  color: #333;
+}
+.commandes-container .commande-card .commande-produits {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem 0;
+  margin: 1rem 0;
+  scrollbar-width: thin;
+}
+.commandes-container .commande-card .commande-produits .produit-miniature {
+  flex: 0 0 100px;
+  text-align: center;
+  position: relative;
+}
+.commandes-container .commande-card .commande-produits .produit-miniature img {
+  width: 80px;
+  height: 80px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: calc(1em / 2);
+  border: 1px solid #ddd;
+}
+.commandes-container .commande-card .commande-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+}
+
+.btn {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: calc(1em / 2);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: "Space Grotesk", sans-serif;
+}
+.btn-primary {
+  background: #ff6ce2;
+  color: #000;
+}
+.btn-primary:hover {
+  background: rgb(255, 82.5, 220.9693877551);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.btn-secondary {
+  background: #6c757d;
+  color: #fff;
+}
+.btn-secondary:hover {
+  background: rgb(84.3605150215, 91.3905579399, 97.6394849785);
+}
+
+@media (max-width: 768px) {
+  .commandes-container .commande-card {
+    width: 100%;
+  }
+  .commandes-container .commande-card .commande-info {
+    grid-template-columns: 1fr;
+  }
+  .commandes-container .commande-card .commande-actions {
+    flex-direction: column-reverse;
+    gap: 0.8rem;
+  }
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }/*# sourceMappingURL=style.css.map */

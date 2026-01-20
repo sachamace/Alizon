@@ -114,6 +114,8 @@ void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
             id
         );
 
+    }else{
+        
     }
 
     if (verbose) printf("Exécution SQL: %s\n", query);

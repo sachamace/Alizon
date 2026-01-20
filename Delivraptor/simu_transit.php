@@ -65,6 +65,7 @@ try{
                 $statut = "ENCOURS";
                 echo "Commande $id : Mise à jour du statut ENCOURS\n";
                 $need_update = true;
+                $details_etape = "Création d’un bordereau de livraison";
             }
             else{
                 $statut = "EN ATTENTE";

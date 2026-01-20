@@ -30,6 +30,8 @@
             while (!feof($socket)) {
                 $response .= fread($socket, 4096);
             }
+        }else{
+            $response = fgets($socket, 4096);
         }
     
         fclose($socket);

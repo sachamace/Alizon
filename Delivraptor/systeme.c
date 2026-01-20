@@ -266,6 +266,43 @@ void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
     PQclear(res);
     send(cnx, message_retour, strlen(message_retour), 0);
 }
+
+
+// --- FONCTION DE LOG ---
+void log_message(const char *msg, struct sockaddr_in *client_addr, int verbose) { // Généré par Gémini le 20 janvir 15:17 
+    FILE *fichier_log;
+    time_t now = time(NULL);
+    struct tm *t = localtime(&now);
+    char date_str[64];
+    char ip_str[INET_ADDRSTRLEN] = "SERVER"; // Par défaut si pas de client
+    char ligne_log[TAILLE_BUFF + 128]; // Buffer pour la ligne complète
+
+    // 1. Formatage de la date : [YYYY-MM-DD HH:MM:SS]
+    strftime(date_str, sizeof(date_str), "%Y-%m-%d %H:%M:%S", t);
+
+    // 2. Récupération de l'IP (si un client est connecté)
+    if (client_addr != NULL) {
+        inet_ntop(AF_INET, &(client_addr->sin_addr), ip_str, INET_ADDRSTRLEN);
+    }
+
+    // 3. Construction de la ligne formatée
+    snprintf(ligne_log, sizeof(ligne_log), "[%s] [%s] %s", date_str, ip_str, msg);
+
+    // 4. Écriture dans le fichier (Mode "a" pour append/ajout)
+    fichier_log = fopen("simulation.log", "a");
+    if (fichier_log != NULL) {
+        fprintf(fichier_log, "%s\n", ligne_log);
+        fclose(fichier_log);
+    } else {
+        perror("Impossible d'écrire dans le log");
+    }
+
+    // 5. Affichage console (seulement si l'option -s est activée)
+    if (verbose) {
+        printf("%s\n", ligne_log);
+    }
+}
+
 int main(int argc, char *argv[]) {
     const char *conninfo = "host=10.253.5.108 port=5432 dbname=postgres user=sae password=bigouden08";
     int sock, cnx, opt, port_ecoute = PORT, capacite_max = 0;
@@ -316,7 +353,9 @@ int main(int argc, char *argv[]) {
     if (bind(sock, (struct sockaddr *)&addr, sizeof(addr)) < 0) { perror("bind"); exit(1); }
     listen(sock, 5);
 
-    if (verbose) printf("Serveur démarré sur le port %d (Cap: %d) - Auth via %s\n", port_ecoute, capacite_max, fichier_auth);
+    char start_msg[100];
+    snprintf(start_msg, sizeof(start_msg), "Démarrage du service sur le port %d (Capacité: %d)", port_ecoute, capacite_max);
+    log_message(start_msg, NULL, verbose);
 
     while (1) {
         size = sizeof(conn_addr);

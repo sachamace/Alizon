@@ -3062,3 +3062,219 @@ footer.footer {
         }
     }
 }
+
+// -----------------------------------------------------------------------------
+// Styles de la page Mes Commandes (Clean Version)
+// -----------------------------------------------------------------------------
+
+.commandes-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 150px 1rem 0 1rem;
+    gap: 20px;
+    font-family: $font-family;
+    width: 100%;
+    box-sizing: border-box;
+
+    // Bloc "Pas de commande"
+    .commande-vide {
+        text-align: center;
+        padding: 3rem;
+        background: $white;
+        border: 1px solid $gray-light;
+        border-radius: $border-radius;
+        margin: 2rem auto;
+        width: 100%;
+
+        h3 {
+            color: $gray-dark;
+            margin-bottom: 1rem;
+        }
+    }
+
+    // Carte de commande
+    .commande-card {
+        background: $white;
+        border-radius: $border-radius;
+        box-shadow: 0 2px 8px rgba($black, 0.1);
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+        width: 100%;
+        box-sizing: border-box;
+        transition: transform $transition-speed;
+        border: 1px solid transparent;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba($black, 0.15);
+            border-color: $secondary-color;
+        }
+
+        // Header de la carte
+        .commande-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid $gray-light;
+            margin-bottom: 1rem;
+
+            .commande-numero {
+                font-size: 1.1rem;
+                font-weight: bold;
+                color: $gray-darker;
+            }
+
+            .commande-date {
+                 margin: 0.3rem 0; 
+                 color: $gray-dark; 
+                 font-size: 0.9rem;
+            }
+
+            .commande-statut {
+                padding: 0.4rem 1rem;
+                border-radius: 20px;
+                font-size: 0.85rem;
+                font-weight: 600;
+
+                // Couleurs basées sur vos variables
+                &.statut-validée,
+                &.statut-livree,
+                &.statut-livrée {
+                    background: rgba($status-active, 0.15);
+                    color: darken($status-active, 10%);
+                }
+
+                &.statut-en-preparation,
+                &.statut-en-préparation {
+                    background: rgba($status-low-stock, 0.15);
+                    color: $status-warning-text;
+                }
+
+                &.statut-expediee,
+                &.statut-expédiée {
+                    background: #d1ecf1; 
+                    color: #0c5460;
+                }
+            }
+        }
+
+        // Infos (Prix, nombre articles)
+        .commande-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+
+            p {
+                margin: 0.3rem 0;
+                color: $gray-dark;
+            }
+
+            strong {
+                color: $gray-darker;
+            }
+        }
+
+        // Aperçu Miniatures
+        .commande-produits {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin: 1rem 0;
+            // Barre de défilement fine si beaucoup de produits
+            scrollbar-width: thin; 
+
+            .produit-miniature {
+                flex: 0 0 100px; // Taille fixe pour l'alignement
+                text-align: center;
+                position: relative;
+
+                img {
+                    width: 80px;
+                    height: 80px;
+                    object-fit: cover;
+                    border-radius: calc(#{$border-radius} / 2);
+                    border: 1px solid $gray-light;
+                }
+            }
+        }
+
+        // Actions (Boutons)
+        .commande-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid $gray-light;
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Composants Boutons
+// -----------------------------------------------------------------------------
+.btn {
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: calc(#{$border-radius} / 2);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all $transition-speed;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: $font-family;
+
+    // Bouton Principal (Voir détail)
+    &-primary {
+        background: $primary-color;
+        color: $black; 
+
+        &:hover {
+            background: darken($primary-color, 5%); 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba($black, 0.1);
+        }
+    }
+
+    // Bouton Secondaire (Facture)
+    &-secondary {
+        background: $status-inactive; 
+        color: $white;
+
+        &:hover {
+            background: darken($status-inactive, 10%);
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+// Responsive
+// -----------------------------------------------------------------------------
+@media (max-width: 768px) {
+    .commandes-container .commande-card {
+        width: 100%;
+
+        .commande-info {
+            grid-template-columns: 1fr;
+        }
+
+        .commande-actions {
+            flex-direction: column-reverse; // Met le bouton principal en haut sur mobile
+            gap: 0.8rem;
+        }
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

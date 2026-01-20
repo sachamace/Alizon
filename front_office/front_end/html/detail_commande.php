@@ -48,25 +48,16 @@
         $reponse = envoyer_au_c("CHECK;$id_commande");
 
         if ($reponse && $reponse !== "NOT_FOUND") {
-            // On enlève le pipe à la fin
             $reponse = rtrim($reponse, "|");
             $cols = explode(';', $reponse);
-
-            // NOUVEAU MAPPING (selon ton SELECT C) :
-            // 0: date_commande
-            // 1: montant_ht
-            // 2: montant_ttc
-            // 3: bordereau
-            // 4: statut
-            // 5: etape
-            // 6: date_maj
-            // 7: details_etape
-            // 8: priorite
-
+            $date_commande = $cols[0];
+            $montant_ht = $cols[1];
+            $montant_ttc = $cols[2];
             $bordereau = $cols[3];
             $statut = $cols[4];
             $etape = $cols[5];
             $details = $cols[7]; 
+            $date_maj = $cols[6];
             
             // ... affichage ...
         } else {
@@ -112,7 +103,7 @@
 
         $articles_par_vendeur = [];
         $nb_articles_total = 0;
-        $numero_commande = "CMD-" . date('Ymd', strtotime($commande['date_commande'])) . "-" . str_pad($commande['id_commande'], 5, '0', STR_PAD_LEFT);
+        $numero_commande = "CMD-" . date('Ymd', strtotime($date_commande)) . "-" . str_pad($id_commande, 5, '0', STR_PAD_LEFT);
         // Calcul du nombre total d'articles
         $nb_articles_total = 0;
         foreach ($all_lignes as $ligne) {
@@ -128,10 +119,10 @@
         // --- Logique pour la Timeline (Barre de progression) ---
         // On définit les étapes logiques
         $etapes_visuelles = ['Validée', 'En préparation', 'Expédiée', 'Livrée'];
-        $etape_actuelle = (int)$commande['etape'];
+        $etape_actuelle = (int)$etape;
         // On trouve l'index de l'étape actuelle (basé sur le statut en BDD)
         // Note : Cela suppose que $commande['statut'] correspond exactement à l'un des mots clés
-        $current_status = $commande['statut']; 
+        $current_status = $statut; 
         $current_step_index = 0;
         
         if ($etape_actuelle >= 9) {
@@ -154,7 +145,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Détail Commande #<?= $commande['id_commande'] ?></title>
+    <title>Détail Commande #<?= $id_commande ?></title>
     <link rel="stylesheet" href="../assets/csss/style.css">
     <link rel="stylesheet" href="../assets/csss/detail_commande.css">
 </head>
@@ -174,15 +165,15 @@
             <div class="header-left">
                 <h1>Commande <span>#<?= str_pad($numero_commande, 5, '0', STR_PAD_LEFT) ?></span></h1>
                 <div class="statut-simple">
-                    Statut actuel : <strong><?= htmlspecialchars($commande['statut']) ?></strong>
+                    Statut actuel : <strong><?= htmlspecialchars($statut) ?></strong>
                 </div>
-                <p class="date-commande">Passée le <?= date('d/m/Y à H:i', strtotime($commande['date_commande'])) ?></p>
+                <p class="date-commande">Passée le <?= date('d/m/Y à H:i', strtotime($date_commande)) ?></p>
             </div>
             <div class="header-right">
                 <div class="last-update">
                     <span class="label">Dernière mise à jour :</span>
                     <span class="valeur">
-                        <?= !empty($commande['date_maj']) ? date('d/m/Y', strtotime($commande['date_maj'])) : '-' ?>
+                        <?= !empty($date_maj) ? date('d/m/Y', strtotime($date_maj)) : '-' ?>
                     </span>
                 </div>
             </div>
@@ -199,9 +190,9 @@
                     </div>
                     <div class="step-label"><?= $nom_etape ?></div>
                     
-                    <?php if($isCurrent && !empty($commande['details_etape'])): ?>
+                    <?php if($isCurrent && !empty($details)): ?>
                         <div class="step-detail-bulle">
-                            <?= htmlspecialchars($commande['details_etape']) ?>
+                            <?= htmlspecialchars($details) ?>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -266,14 +257,14 @@
                 <h3>Récapitulatif</h3>
                 <div class="ligne-recap">
                     <span>Total HT</span>
-                    <span><?= number_format($commande['montant_total_ht'], 2, ',', ' ') ?> €</span>
+                    <span><?= number_format($montant_ht, 2, ',', ' ') ?> €</span>
                 </div>
                 <div class="ligne-recap">
-                    <span>TVA</span> <span><?= number_format($commande['montant_total_ttc'] - $commande['montant_total_ht'], 2, ',', ' ') ?> €</span>
+                    <span>TVA</span> <span><?= number_format($montant_ttc - $montant_ht, 2, ',', ' ') ?> €</span>
                 </div>
                 <div class="ligne-recap total-final">
                     <span>Total TTC</span>
-                    <span><?= number_format($commande['montant_total_ttc'], 2, ',', ' ') ?> €</span>
+                    <span><?= number_format($montant_ttc, 2, ',', ' ') ?> €</span>
                 </div>
             </div>
         </section>

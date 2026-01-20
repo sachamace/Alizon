@@ -1,5 +1,9 @@
 <?php
-// Traitement du formulaire de modification
+// Les produits sont déjà récupérés dans promotion.php avec prix_ttc_base
+// $promotion contient les données de la promotion à modifier
+// $produits_selectionnes contient les IDs des produits déjà sélectionnés
+
+// Traitement du formulaire de modification de promotion
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $errors = [];
     
@@ -31,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $errors['produits'] = "Veuillez sélectionner au moins un produit";
     }
     
-    // Si pas d'erreurs, mettre à jour la promotion
+    // Si pas d'erreurs, modifier la promotion
     if (empty($errors)) {
         try {
             $pdo->beginTransaction();
@@ -89,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 
-<section class="promotion-modifier-container">
+<section class="promotion-creer-container">
     <div class="promotion-header">
         <h2>Modifier la promotion</h2>
         <a href="?page=promotion&type=consulter&id=<?= $id_promotion ?>" class="btn-retour">
@@ -127,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <textarea id="description" 
                           name="description" 
                           rows="4"
-                          placeholder="Décrivez cette promotion..."><?= htmlentities($_POST['description'] ?? $promotion['description']) ?></textarea>
+                          placeholder="Décrivez cette promotion..."><?= htmlentities($_POST['description'] ?? $promotion['description'] ?? '') ?></textarea>
             </div>
         </div>
 
@@ -162,7 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <label>
                     <input type="checkbox" 
                            name="est_actif" 
-                           <?= (isset($_POST['est_actif']) && $_POST['est_actif']) || (!isset($_POST['est_actif']) && $promotion['est_actif']) ? 'checked' : '' ?>>
+                           <?= (isset($_POST['est_actif']) ? $_POST['est_actif'] : $promotion['est_actif']) ? 'checked' : '' ?>>
                     <span>Promotion active</span>
                 </label>
                 <small>Si décoché, la promotion ne sera pas visible sur le site</small>
@@ -175,8 +179,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             
             <div class="produits-selection-simple">
                 <div class="produits-liste">
-                    <?php foreach ($produits as $produit): 
-                        $is_selected = in_array($produit['id_produit'], $_POST['produits'] ?? $produits_selectionnes);
+                    <?php 
+                    // Récupérer les produits déjà sélectionnés
+                    $produits_post = $_POST['produits'] ?? [];
+                    $produits_selectionnes = !empty($produits_post) ? $produits_post : $produits_selectionnes;
+                    
+                    foreach ($produits as $produit): 
+                        $is_selected = in_array($produit['id_produit'], $produits_selectionnes);
                     ?>
                         <label class="produit-item">
                             <input type="checkbox" 
@@ -202,7 +211,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </div>
                 
                 <div class="selection-count">
-                    <span id="count-selected"><?= count($_POST['produits'] ?? $produits_selectionnes) ?></span> produit(s) sélectionné(s)
+                    <span id="count-selected"><?= count($produits_selectionnes) ?></span> produit(s) sélectionné(s)
                 </div>
             </div>
         </div>

@@ -115,7 +115,16 @@ void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
         );
 
     }else{
-        
+        snprintf(query, sizeof(query), 
+            "UPDATE public.commande SET etape=%s, statut='%s', priorite=%s, details_etape='%s', raison='%s', chemin_image_refuse='%s', date_maj=NOW() WHERE id_commande=%s;",
+            etape ? etape : "0",
+            statut ? statut : "EN ATTENTE",
+            prio ? prio : "0",
+            details ? details : "",
+            (raison && strcmp(raison, "NULL") != 0) ? raison : "", 
+            (image && strcmp(image, "NULL") != 0) ? image : "",
+            id
+        );
     }
 
     if (verbose) printf("Exécution SQL: %s\n", query);

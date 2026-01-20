@@ -50,6 +50,7 @@
         if ($reponse && $reponse !== "NOT_FOUND") {
             $reponse = rtrim($reponse, "|");
             $cols = explode(';', $reponse);
+            var_dump($cols);
             $date_commande = $cols[0];
             $montant_ht = $cols[1];
             $montant_ttc = $cols[2];

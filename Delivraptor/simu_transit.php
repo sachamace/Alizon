@@ -32,8 +32,16 @@ try{
     if (empty($raw_data)) {
         die("Aucune donnée reçue du serveur ou base vide.\n");
     }
+    $parties = explode('|', $raw_data, 2);
+
+    // 2. On récupère et "supprime" le booléen
+    $monBool = $parties[0]; // Contient "false" ou "true"
+    $resteDesDonnees = isset($parties[1]) ? $parties[1] : ""; // Contient la liste des commandes
+
+    // Conversion propre en vrai booléen PHP si besoin
+    $estRenvoie = ($monBool === "true");
     // On transforme la string en tableau 
-    $rows = explode('|', $raw_data);
+    $rows = explode('|', $resteDesDonnees);
     $commandes = [];
     
     foreach($rows as $row) {
@@ -61,7 +69,7 @@ try{
 
 
         if($commande['statut'] === "EN ATTENTE"){
-            if($commande['priorite'] == 1){
+            if(!$estRenvoie){
                 $statut = "ENCOURS";
                 echo "Commande $id : Mise à jour du statut ENCOURS\n";
                 $need_update = true;

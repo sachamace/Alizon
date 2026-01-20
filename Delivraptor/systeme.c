@@ -42,21 +42,38 @@ void afficher_man(char *nom_programme) {
 }
 
 // Fonction pour récupérer la liste des commandes et l'envoyer au PHP
-void traiter_get_list(int cnx, PGconn *conn) {
+void traiter_get_list(int cnx, PGconn *conn,int capacite_max) {
     const char *query = "SELECT c.id_commande, c.etape, c.statut, c.priorite FROM commande c";
     PGresult *res = PQexec(conn, query);
+    PGresult *res_count = PQexec(conn, "SELECT COUNT(*) FROM public.commande WHERE etape <= 4;");
+    bool statut = false;
+    char buffer_envoi[TAILLE_BUFF]; 
+    int nb_commandes = 0;
+    char ligne[256];
 
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
         perror("Erreur SELECT");
         PQclear(res);
         return;
     }
+    
+    
+    if (PQresultStatus(res_count) == PGRES_TUPLES_OK) {
+        nb_commandes = atoi(PQgetvalue(res_count, 0, 0));
+    }
+    PQclear(res_count);
 
+    if(nb_commandes > capacite_max){
+        statut = true;
+    }
+
+    // On écrit le booléen au tout début du buffer avec un séparateur '|'
+    // Résultat dans le buffer : "false|"
+    snprintf(buffer_envoi, sizeof(buffer_envoi), "%s|", statut ? "true" : "false");
+
+    // --- PARTIE 2 : AJOUT DES DONNÉES À LA SUITE ---
     int rows = PQntuples(res);
-    char buffer_envoi[TAILLE_BUFF] = "";
-    char ligne[256];
 
-    // Format: id;etape;statut;priorite|id;etape...
     for (int i = 0; i < rows; i++) {
         snprintf(ligne, sizeof(ligne), "%s;%s;%s;%s|",
             PQgetvalue(res, i, 0),
@@ -64,11 +81,13 @@ void traiter_get_list(int cnx, PGconn *conn) {
             PQgetvalue(res, i, 2),
             PQgetvalue(res, i, 3)
         );
-        // Vérification débordement tampon (simplifié)
+
+        // strcat va automatiquement ajouter 'ligne' APRÈS "false|"
         if (strlen(buffer_envoi) + strlen(ligne) < TAILLE_BUFF - 1) {
             strcat(buffer_envoi, ligne);
         }
     }
+    
     PQclear(res);
     send(cnx, buffer_envoi, strlen(buffer_envoi), 0);
 }
@@ -102,7 +121,7 @@ void traiter_update(char *buffer,int capacite_max, PGconn *conn, int verbose) {
 
     query[0] = '\0';
     // Construction de la requête SQL dynamique
-    if(!(nb_commandes >= capacite_max)){
+    if(!(nb_commandes > capacite_max)){
         snprintf(query, sizeof(query), 
             "UPDATE public.commande SET etape=%s, statut='%s', priorite=%s, details_etape='%s', raison='%s', chemin_image_refuse='%s', date_maj=NOW() WHERE id_commande=%s;",
             etape ? etape : "0",
@@ -369,7 +388,7 @@ int main(int argc, char *argv[]){
         strtol(buf, &fin, 10);
         if (strcmp(buf, "GET_LIST") == 0) {
             // Cas 1 : Le PHP demande la liste des commandes
-            traiter_get_list(cnx, conn);
+            traiter_get_list(cnx, conn,capacite_max);
         } 
         else if (strncmp(buf, "UPDATE", 6) == 0) {
             // Cas 2 : Le PHP demande une mise à jour

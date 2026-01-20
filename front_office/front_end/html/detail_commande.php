@@ -45,20 +45,33 @@
     $id_commande = $_GET['id'];
 
     try {
-        $raw_commande = envoyer_au_c('CHECK'. ";" . $id_commande);
-        $all_commande = explode(';', $raw_commande);
-        $commande = [
-            'id_commande'       => $id_commande,
-            'statut'            => $all_commande[4],
-            'etape'             => $all_commande[5],
-            'date_maj'          => $all_commande[6],
-            'details_etape'     => $all_commande[7],
-            'date_commande'     => $all_commande[0],
-            'montant_total_ht'  => $all_commande[1],
-            'montant_total_ttc' => $all_commande[2]
-        ];
-        echo $all_commande[4];
-        echo $commande['statut'];
+        $reponse = envoyer_au_c("CHECK;$id_commande");
+
+        if ($reponse && $reponse !== "NOT_FOUND") {
+            // On enlève le pipe à la fin
+            $reponse = rtrim($reponse, "|");
+            $cols = explode(';', $reponse);
+
+            // NOUVEAU MAPPING (selon ton SELECT C) :
+            // 0: date_commande
+            // 1: montant_ht
+            // 2: montant_ttc
+            // 3: bordereau
+            // 4: statut
+            // 5: etape
+            // 6: date_maj
+            // 7: details_etape
+            // 8: priorite
+
+            $bordereau = $cols[3];
+            $statut = $cols[4];
+            $etape = $cols[5];
+            $details = $cols[7]; 
+            
+            // ... affichage ...
+        } else {
+            echo "Commande introuvable.";
+        }
         //  Récupération des infos principales de la commande
         /*$stmt = $pdo->prepare("
             SELECT 

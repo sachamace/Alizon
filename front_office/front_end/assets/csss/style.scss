@@ -1617,15 +1617,117 @@ footer.footer {
           font-size: 0.95rem;
         }
       }
-      
-      select {
+
+      // Container de notation
+      .rating-container {
+        margin: 1rem 0;
+
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 600;
+          color: $gray-darker;
+        }
+      }
+
+      // Système d'étoiles
+      .stars-rating {
+        display: flex;
+        gap: 0.25rem;
+        align-items: center;
+      }
+
+      .star-wrapper {
+        display: inline-block;
+        position: relative;
+        font-size: $star-size;
+        line-height: 1;
         cursor: pointer;
-        appearance: none;
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 1rem center;
-        background-size: 1.2rem;
-        padding-right: 3rem;
+        user-select: none;
+        width: 1em;
+        height: 1em;
+
+        // Étoile de base grise
+        &::before {
+          content: '★';
+          color: $star-inactive-color;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+        }
+      }
+
+      .star-half {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        color: transparent;
+        @include transition(color);
+        z-index: 1;
+
+        &.active,
+        &.hover {
+          color: $star-color;
+        }
+      }
+
+      .star-left {
+        clip-path: inset(0 50% 0 0); // Coupe la moitié droite
+      }
+
+      .star-right {
+        clip-path: inset(0 0 0 50%); // Coupe la moitié gauche
+      }
+
+      .rating-text {
+        margin-left: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $gray-dark;
+        min-width: 150px;
+      }
+
+      // Affichage des avis existants
+      .avis-etoiles {
+        color: #ffc107;
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+      }
+
+      // Responsive - Mobile
+      @media (max-width: 428px) {
+        .rating-container {
+          margin: 1rem 0;
+
+          label {
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+          }
+        }
+
+        .stars-rating {
+          flex-direction: row;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+
+        .star-wrapper {
+          font-size: $star-size-mobile;
+        }
+
+        .rating-text {
+          margin: 10px auto auto 0;
+          font-size: 1rem;
+          min-width: 30px;
+        }
+
+        .avis-etoiles {
+          font-size: 1rem;
+          letter-spacing: 1px;
+        }
       }
       
       textarea {

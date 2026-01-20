@@ -137,3 +137,7 @@
     left: 100%;
   }
 }
+
+@mixin transition($properties...) {
+  transition: $properties $transition-speed ease;
+}

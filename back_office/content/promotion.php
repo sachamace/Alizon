@@ -108,6 +108,40 @@ if (isset($_GET['page']) && $_GET['page'] === 'promotion') {
         } elseif ($type === 'liste') {
             // Liste de toutes les promotions du vendeur
             include __DIR__ . '/promotion_liste.php';
+            
+        } elseif ($type === 'supprimer' && isset($_GET['id'])) {
+            // Suppression d'une promotion
+            $id_promotion = intval($_GET['id']);
+            
+            try {
+                // Vérifier que la promotion appartient bien au vendeur
+                $stmt = $pdo->prepare("SELECT id_promotion FROM promotion WHERE id_promotion = ? AND id_vendeur = ?");
+                $stmt->execute([$id_promotion, $id_vendeur_connecte]);
+                
+                if ($stmt->fetch()) {
+                    // Supprimer la promotion (CASCADE supprimera automatiquement les lignes dans promotion_produit)
+                    $stmtDelete = $pdo->prepare("DELETE FROM promotion WHERE id_promotion = ? AND id_vendeur = ?");
+                    $stmtDelete->execute([$id_promotion, $id_vendeur_connecte]);
+                    
+                    echo "<script>
+                        alert('Promotion supprimée avec succès');
+                        window.location.href = 'index.php?page=promotion&type=liste';
+                    </script>";
+                    exit();
+                } else {
+                    echo "<script>
+                        alert('Promotion introuvable ou vous n\\'avez pas les droits');
+                        window.location.href = 'index.php?page=promotion&type=liste';
+                    </script>";
+                    exit();
+                }
+            } catch (PDOException $e) {
+                echo "<script>
+                    alert('Erreur lors de la suppression : " . addslashes($e->getMessage()) . "');
+                    window.location.href = 'index.php?page=promotion&type=liste';
+                </script>";
+                exit();
+            }
         }
     } else {
         // Page d'accueil : hub des promotions

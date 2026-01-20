@@ -46,7 +46,7 @@
 
     try {
         $reponse = envoyer_au_c("CHECK;$id_commande");
-
+        var_dump($response);
         if ($reponse && $reponse !== "NOT_FOUND") {
             $reponse = rtrim($reponse, "|");
             $cols = explode(';', $reponse);

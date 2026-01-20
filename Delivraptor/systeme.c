@@ -290,8 +290,7 @@ void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
     PQclear(res);
     
     // Envoi au client
-    int sent = send(cnx, message_retour, strlen(message_retour), 0);
-    if (verbose) printf("Octets envoyés au PHP : %d\n--------------------------\n", sent);
+    send(cnx, message_retour, strlen(message_retour), 0);
 }
 
 // --- FONCTION DE LOG ---

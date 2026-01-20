@@ -47,6 +47,7 @@
     try {
         $raw_commande = envoyer_au_c('CHECK'. ";" . $id_commande);
         $all_commande = explode(';', $raw_commande);
+        var_dump(($all_commande));
         $commande = [
             'id_commande'       => $id_commande,
             'statut'            => $all_commande[4],
@@ -57,6 +58,8 @@
             'montant_total_ht'  => $all_commande[1],
             'montant_total_ttc' => $all_commande[2]
         ];
+        echo $all_commande[4];
+        echo $commande['statut'];
         //  Récupération des infos principales de la commande
         /*$stmt = $pdo->prepare("
             SELECT 
@@ -254,7 +257,7 @@
                     <span><?= number_format($commande['montant_total_ht'], 2, ',', ' ') ?> €</span>
                 </div>
                 <div class="ligne-recap">
-                    <span>TVA (20%)</span> <span><?= number_format($commande['montant_total_ttc'] - $commande['montant_total_ht'], 2, ',', ' ') ?> €</span>
+                    <span>TVA</span> <span><?= number_format($commande['montant_total_ttc'] - $commande['montant_total_ht'], 2, ',', ' ') ?> €</span>
                 </div>
                 <div class="ligne-recap total-final">
                     <span>Total TTC</span>

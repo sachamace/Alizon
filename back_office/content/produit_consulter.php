@@ -60,6 +60,15 @@
                     <p class="prix-final-consultation"><?php echo number_format($prix_ht_final, 2, ',', ' ') ?> €</p>
                     <p class="prix-original-consultation"><?php echo number_format($produit['prix_unitaire_ht'], 2, ',', ' ') ?> €</p>
 
+                    <?php if ($produit['poids_unite'] && $produit['unite_mesure']): ?>
+                        <h4>Prix au <?= htmlentities($produit['unite_mesure']) ?> avec remise</h4>
+                        <p class="prix-final-consultation"><?php echo number_format($prix_par_unite_final, 2, ',', ' ') ?> €/<?= htmlentities($produit['unite_mesure']) ?></p>
+                        <p class="prix-original-consultation"><?php echo number_format($produit['prix_ttc_par_unite'], 2, ',', ' ') ?> €/<?= htmlentities($produit['unite_mesure']) ?></p>
+                        <p style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                            (<?= htmlentities($produit['poids_unite']) ?> <?= htmlentities($produit['unite_mesure']) ?> par unité)
+                        </p>
+                    <?php endif; ?>
+
                 <?php else: ?>
                     <!-- Affichage sans remise -->
                     <h4>Prix TTC</h4>
@@ -67,6 +76,14 @@
 
                     <h4>Prix HT</h4>
                     <p><?php echo number_format($produit['prix_unitaire_ht'], 2, ',', ' ') ?> €</p>
+
+                    <?php if ($produit['poids_unite'] && $produit['unite_mesure']): ?>
+                        <h4>Prix au <?= htmlentities($produit['unite_mesure']) ?></h4>
+                        <p><?php echo number_format($produit['prix_ttc_par_unite'], 2, ',', ' ') ?> €/<?= htmlentities($produit['unite_mesure']) ?></p>
+                        <p style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                            (<?= htmlentities($produit['poids_unite']) ?> <?= htmlentities($produit['unite_mesure']) ?> par unité)
+                        </p>
+                    <?php endif; ?>
                 <?php endif; ?>
 
                 <h4>TVA</h4>

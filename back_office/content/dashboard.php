@@ -95,11 +95,11 @@ try {
         HAVING $having
         ORDER BY $orderBy
     ");
+    // ✅ FICHIER CORRIGÉ PAR CLAUDE - VERSION 2026-01-19 - Si tu vois cette ligne, c'est le bon fichier !
     $params['id_vendeur'] = $id_vendeur_connecte;
-    $tmt = $pdo->prepare($sql);
-    $tmt->execute($params);
+    $stmt->execute($params);
 
-    $produits = $tmt->fetchAll();
+    $produits = $stmt->fetchAll();
 } catch (PDOException $e) {
     die("Erreur lors de la récupération des produits : " . $e->getMessage());
 }

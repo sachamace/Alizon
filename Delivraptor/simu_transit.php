@@ -115,7 +115,6 @@ try{
                         $statut = "REFUS";
                         break;
                 }
-                echo "Commande $id : Passage à l'étape 9 ($details_etape)\n";
 
             }
             else{

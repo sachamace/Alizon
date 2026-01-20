@@ -123,7 +123,6 @@ try{
                 
                 $details_etape = $etapes_list[$nouvelle_etape - 1];
 
-                echo "Commande $id : Passage à l'étape $nouvelle_etape\n";
             }
         }
 

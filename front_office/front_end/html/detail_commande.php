@@ -9,6 +9,12 @@
         $host = "10.253.5.108";
         $port = 8080;
         $response = "";
+        $login = "alizon";
+        $hash_md5 = "e54d588ca06c9f379b36d0b616421376"; 
+
+        // On préfixe le message original (qui contient déjà "CMD;ARGS")
+        $message_complet = "$login;$hash_md5;$message";
+        // ------------------------------
 
         $socket = @fsockopen($host, $port, $errno, $errstr, 2);
         if (!$socket) {
@@ -16,19 +22,20 @@
             return null;
         }
 
-        fwrite($socket, $message);
-        
+        // On envoie le message formaté avec l'auth
+        fwrite($socket, $message_complet);
+
         // Si on demande la liste, on attend une grosse réponse
         if ($message === "GET_LIST") {
             while (!feof($socket)) {
                 $response .= fread($socket, 4096);
             }
         }
-        
+    
         fclose($socket);
         return $response;
     }
-    
+
     // Vérification de l'ID commande dans l'URL
     if (!isset($_GET['id']) || empty($_GET['id'])) {
         header('Location: commandes.php'); // Redirection si pas d'ID
@@ -38,9 +45,20 @@
     $id_commande = $_GET['id'];
 
     try {
-        // 1. Récupération des infos principales de la commande
-        // J'ai ajouté 'date_mise_a_jour' et 'etape_detail' comme demandé (à adapter selon ta BDD)
-        $stmt = $pdo->prepare("
+        $raw_commande = envoyer_au_c('CHECK'. ";" . $id_commande);
+        $all_commande = explode(';', $raw_commande);
+        $commande = [
+            'id_commande'       => $id_commande,
+            'statut'            => $all_commande[1],
+            'etape'             => $all_commande[2],
+            'date_maj'          => $all_commande[3],
+            'details_etape'     => $all_commande[4],
+            'date_commande'     => $all_commande[6],
+            'montant_total_ht'  => $all_commande[7],
+            'montant_total_ttc' => $all_commande[8]
+        ];
+        //  Récupération des infos principales de la commande
+        /*$stmt = $pdo->prepare("
             SELECT 
                 id_commande, 
                 date_commande, 
@@ -48,8 +66,8 @@
                 montant_total_ttc, 
                 statut,
                 etape,
-                date_maj,      -- Adapte ce nom de colonne si nécessaire
-                details_etape           -- Adapte ce nom (ex: 'colis remis au transporteur')
+                date_maj,
+                details_etape  
             FROM commande
             WHERE id_commande = :id_cmd AND id_client = :id_client
         ");
@@ -58,13 +76,13 @@
 
         if (!$commande) {
             die("Commande introuvable ou vous n'avez pas les droits.");
-        }
+        }*/
 
-        // 2. Récupération des articles (lignes de commande)
+        // Récupération des articles (lignes de commande)
         $stmt_lignes = $pdo->prepare("
             SELECT 
                 lc.quantite, 
-                lc.prix_unitaire_ht,  -- Assure-toi d'avoir le prix unitaire ici
+                lc.prix_unitaire_ht,
                 p.nom_produit, 
                 m.chemin_image,
                 v.raison_sociale as nom_vendeur

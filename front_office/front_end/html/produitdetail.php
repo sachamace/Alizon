@@ -78,7 +78,7 @@ $stock_dispo = (int) $stmt_stock->fetchColumn();
 
 // php avis du produit
 $requete_avis = $pdo->prepare("
-    SELECT * 
+    SELECT *
     FROM avis
     WHERE id_produit = :id_produit 
     ORDER BY id_produit ASC
@@ -491,7 +491,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             <?php
                 echo '<h1>' . count($avis) . ' avis</h1>';
                 if (count($avis) > 0) {
-                    $req_client = $pdo->prepare("SELECT * FROM compte_client WHERE id_client = ?");
+                    $req_client = $pdo->prepare("SELECT prenom, nom FROM compte_client WHERE id_client = ?");
                     foreach ($avis as $un_avis) {
                         $id_client = (int) $un_avis['id_client'];
                         $est_signale = isset($_SESSION['avis_signales']) && in_array($id_client, $_SESSION['avis_signales']);

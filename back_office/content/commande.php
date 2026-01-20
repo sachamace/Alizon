@@ -1,17 +1,8 @@
 <?php
-session_start();
-require_once '../includes/db.php';
-require_once '../includes/functions.php';
+$id_vendeur = $_SESSION['vendeur_id'];
 
-if (!isset($_SESSION['id_vendeur'])) {
-    header('Location: connexion.php');
-    exit;
-}
-
-$id_vendeur = $_SESSION['id_vendeur'];
-
-// Requête simple : récupérer les commandes contenant mes produits
-$sql = "
+// Requête : récupérer les commandes contenant mes produits
+$stmt = $pdo->prepare("
     SELECT 
         c.id_commande,
         c.date_commande,
@@ -21,7 +12,6 @@ $sql = "
         a.ville,
         p.id_produit,
         p.nom_produit,
-        p.categorie,
         (SELECT mp.chemin_image FROM media_produit mp WHERE mp.id_produit = p.id_produit LIMIT 1) AS image_produit,
         lc.quantite,
         lc.prix_unitaire_ttc,
@@ -31,15 +21,14 @@ $sql = "
     LEFT JOIN adresse a ON c.id_adresse_livraison = a.id_adresse
     JOIN ligne_commande lc ON c.id_commande = lc.id_commande
     JOIN produit p ON lc.id_produit = p.id_produit
-    WHERE p.id_vendeur = $1
+    WHERE p.id_vendeur = ?
     ORDER BY c.date_commande DESC, c.id_commande
-";
-
-$result = pg_query_params($conn, $sql, [$id_vendeur]);
+");
+$stmt->execute([$id_vendeur]);
 
 // Regrouper par commande
 $commandes = [];
-while ($row = pg_fetch_assoc($result)) {
+while ($row = $stmt->fetch()) {
     $id = $row['id_commande'];
     if (!isset($commandes[$id])) {
         $commandes[$id] = [
@@ -61,9 +50,6 @@ while ($row = pg_fetch_assoc($result)) {
     ];
     $commandes[$id]['total'] += $row['total_ligne_ttc'];
 }
-
-$pageTitle = "Récapitulatif des Commandes";
-include '../includes/header_backoffice.php';
 ?>
 
 <div class="recapitulatif-container">
@@ -116,5 +102,3 @@ include '../includes/header_backoffice.php';
         </div>
     <?php endif; ?>
 </div>
-
-<?php include '../includes/footer_backoffice.php'; ?>

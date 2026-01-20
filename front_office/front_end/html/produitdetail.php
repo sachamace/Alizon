@@ -420,8 +420,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                 </div>
                                 
                                 <div class="prix-container-detail">
-                                    <p class="prix prix-original-detail"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</p>
-                                    <p class="prix prix-final-detail"><?= number_format($prix_final, 2, ',', ' ') ?>€</p>
+                                    <p class="prix-original-detail"><?= number_format($infos['prix_ttc'], 2, ',', ' ') ?>€</p>
+                                    <p class="prix-final-detail"><?= number_format($prix_final, 2, ',', ' ') ?>€</p>
                                 </div>
                                 
                                 <p class="prix-ht-detail">Prix HT avec remise : <?= number_format($prix_ht_final, 2, ',', ' ') ?>€</p>

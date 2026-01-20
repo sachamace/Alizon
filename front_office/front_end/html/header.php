@@ -3,28 +3,32 @@
     include __DIR__ . '/sessionindex.php';
     $parametres = $_GET;// On récupère d'abord TOUS les filtres qui sont déjà dans l'URL ($_GET)
     
-    if (isset($_POST['texte-recherche']) && !empty($_POST['texte-recherche'])) {
-
-        // On ajoute (ou écrase) le nouveau mot-clé de recherche
-        $parametres['search'] = htmlspecialchars($_POST['texte-recherche']);
-
-        $queryString = http_build_query($parametres);
-
-        // Redirection
-        echo "<script>
-            window.location.href = 'index.php?' . $queryString;
-        </script>";
-        exit();
-    }
-    
 
 ?>
 <nav>
     <nav>
         <a href="/index.php"><img src="/front_office/front_end/assets/images/Logo_TABLETTE.png" height="61" width="110"></a>
         <a class="notif" href="notification.php"><svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><<path d="M224 0c-13.3 0-24 10.7-24 24l0 9.7C118.6 45.3 56 115.4 56 200l0 14.5c0 37.7-10 74.7-29 107.3L5.1 359.2C1.8 365 0 371.5 0 378.2 0 399.1 16.9 416 37.8 416l372.4 0c20.9 0 37.8-16.9 37.8-37.8 0-6.7-1.8-13.3-5.1-19L421 321.7c-19-32.6-29-69.6-29-107.3l0-14.5c0-84.6-62.6-154.7-144-166.3l0-9.7c0-13.3-10.7-24-24-24zM392.4 368l-336.9 0 12.9-22.1C91.7 306 104 260.6 104 214.5l0-14.5c0-66.3 53.7-120 120-120s120 53.7 120 120l0 14.5c0 46.2 12.3 91.5 35.5 131.4L392.4 368zM156.1 464c9.9 28 36.6 48 67.9 48s58-20 67.9-48l-135.8 0z"/></svg></a>
-        <form action="" method="POST" role="search" aria-label="Site search" style="position: relative;">
-            <input type="search" id="site-search" name="texte-recherche" autocomplete="off" placeholder="Recherche un produit, une marque..." />
+        <form action="" method="GET" role="search" aria-label="Site search" style="position: relative;">
+            <input type="search" id="site-search" name="search" autocomplete="off" 
+            placeholder="Recherche un produit, une marque..." 
+            value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>" />
+
+            <?php 
+                foreach($_GET as $key => $value){
+                    if($key === 'search') continue;
+
+                    if(is_array($value)){
+                        foreach($value as $val){
+                            echo '<input type="hidden" name="'.htmlspecialchars($key).'[]" value="'.htmlspecialchars($val).'">';
+                        }
+                    }
+                    else {
+                        echo '<input type="hidden" name="'.htmlspecialchars($key).'" value="'.htmlspecialchars($value).'">';
+                    }
+                }
+            ?>
+            
             <button type="submit">Search</button>
 
             <div id="resultats-recherche"></div>

@@ -175,9 +175,11 @@
                         <div class="step-detail-bulle">
                             <?= htmlspecialchars($details) ?>
                             <?php if(strcmp($details,"Colis livré en l’absence du destinataire")==0):?>
+                                <br>
                                 <a href=<?php htmlentities($chemin_image);?>>Voir la boite au lettre</a>
                             <?php endif; ?>
                             <?php if(!empty($raison)):?>
+                                <br>
                                 <?= htmlspecialchars($raison) ?>
                             <?php endif; ?>
                         </div>

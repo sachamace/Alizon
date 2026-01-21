@@ -113,7 +113,6 @@ try {
                             Achat min: <?= number_format($remise['condition_min_achat'], 2, ',', ' ') ?>€
                         </div>
                     <?php endif; ?>
-<<<<<<< HEAD
                     
                     <!-- Pour les remises avec produits multiples, afficher un badge -->
                     <?php if ($remise['nb_produits_associes'] > 0): ?>

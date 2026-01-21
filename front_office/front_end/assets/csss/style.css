@@ -3678,12 +3678,7 @@ footer.footer.mobile, footer.footer.tablette {
     align-items: flex-start;
     margin-top: 1rem;
   }
-  .detail-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  .detail-container .suivi-timeline {
+  .suivi-timeline {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -3692,33 +3687,33 @@ footer.footer.mobile, footer.footer.tablette {
   }
 }
 @media (max-width: 600px) and (max-width: 768px) {
-  .detail-container .suivi-timeline {
+  .suivi-timeline {
     flex-direction: column;
     gap: 0;
   }
-  .detail-container .suivi-timeline .step {
+  .suivi-timeline .step {
     width: 100%;
     display: flex;
     align-items: center;
     padding: 20px 0;
     position: relative;
   }
-  .detail-container .suivi-timeline .step:nth-child(odd) {
+  .suivi-timeline .step:nth-child(odd) {
     flex-direction: row;
     text-align: left;
     padding-left: 10%;
   }
-  .detail-container .suivi-timeline .step:nth-child(even) {
+  .suivi-timeline .step:nth-child(even) {
     flex-direction: row-reverse;
     text-align: right;
     padding-right: 10%;
   }
-  .detail-container .suivi-timeline .step .step-label {
+  .suivi-timeline .step .step-label {
     font-size: 0.75rem;
     margin: 0 15px;
     flex: 1;
   }
-  .detail-container .suivi-timeline .step .step-icon {
+  .suivi-timeline .step .step-icon {
     z-index: 5;
     background: white;
     border: 2px solid #ddd;
@@ -3729,12 +3724,12 @@ footer.footer.mobile, footer.footer.tablette {
     align-items: center;
     justify-content: center;
   }
-  .detail-container .suivi-timeline .step.active .step-icon {
+  .suivi-timeline .step.active .step-icon {
     border-color: #007bff;
     background: #007bff;
     color: white;
   }
-  .detail-container .suivi-timeline .step-line {
+  .suivi-timeline .step-line {
     position: absolute;
     width: 2px;
     height: 100%;
@@ -3744,12 +3739,12 @@ footer.footer.mobile, footer.footer.tablette {
     top: 0;
     z-index: 1;
   }
-  .detail-container .suivi-timeline .step-line.full {
+  .suivi-timeline .step-line.full {
     background: #007bff;
   }
 }
 @media (max-width: 600px) {
-  .detail-container .step-detail-bulle {
+  .step-detail-bulle {
     background: #fff3cd;
     border: 1px solid #ffeeba;
     padding: 12px;
@@ -3758,7 +3753,7 @@ footer.footer.mobile, footer.footer.tablette {
     font-size: 0.85rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   }
-  .detail-container .step-detail-bulle .btn-boite {
+  .step-detail-bulle .btn-boite {
     background: #007bff;
     color: white;
     border: none;
@@ -3768,19 +3763,19 @@ footer.footer.mobile, footer.footer.tablette {
     margin-top: 8px;
     font-size: 0.8rem;
   }
-  .detail-container .detail-content {
+  .detail-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 25px;
   }
 }
 @media (max-width: 600px) and (max-width: 768px) {
-  .detail-container .detail-content {
+  .detail-content {
     grid-template-columns: 1fr;
   }
 }
 @media (max-width: 600px) {
-  .detail-container .detail-content .vendeur-group {
+  .detail-content .vendeur-group {
     background: #fff;
     border: 1px solid #eee;
     border-radius: 8px;

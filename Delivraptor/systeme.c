@@ -258,7 +258,7 @@ void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
     snprintf(query, sizeof(query), 
         "SELECT date_commande, montant_total_ht, montant_total_ttc, bordereau, statut, etape, date_maj, details_etape, priorite, chemin_image_refuse, raison FROM commande WHERE id_commande = '%s';", 
         id_cmd
-    );
+    ); // test 
 
     if (verbose) printf("SQL : %s\n", query);
 

@@ -87,8 +87,7 @@ try {
                         </div>
                     <?php endif; ?>
                     
-<<<<<<< HEAD
-=======
+
                     <div class="remise-produit">
                         <?php if ($remise['nom_produit']): ?>
                             Sur: <?= htmlentities($remise['nom_produit']) ?>
@@ -96,8 +95,6 @@ try {
                             Sur: Tous les produits
                         <?php endif; ?>
                     </div>
-                    
->>>>>>> aef5c3a (remise cote back office)
                     <div class="remise-dates">
                         <div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">

@@ -251,6 +251,7 @@
                 if ($chemin_image != null){
                     ?>
                     <img src=<?php echo $chemin_image?> alt="" width="200em">
+                    <caption>livraison effectuée</caption>
                     <?php 
                 }
                 ?>

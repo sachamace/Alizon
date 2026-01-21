@@ -104,11 +104,6 @@ try {
                 <p>********</p>
             </article>
 
-            <article>
-                <h3>Numéro de téléphone</h3>
-                <p><?php echo htmlentities($profil["telephone"]) ?></p>
-            </article>
-
             <!-- SECTION ADRESSE PAR DÉFAUT -->
             <div class="adresse-card" style="margin-top: 2rem; padding: 1.5rem; background: #f9f9f9; border-radius: 8px; border: 2px solid #ddd;">
                 <h3 style="margin-top: 0; color: #333;">Adresse de livraison/facturation par défaut</h3>

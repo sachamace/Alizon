@@ -75,7 +75,7 @@ $numero_commande = "CMD-" . date('Ymd', strtotime($commande['date_commande'])) .
         <div class="confirmation-container">
             <div class="success-icon">✓</div>
             
-            <h1>🎉 Commande confirmée !</h1>
+            <h1>Commande confirmée !</h1>
             
             <p>Merci <?= htmlspecialchars($client['prenom']) ?> ! Votre commande a été validée avec succès.</p>
 

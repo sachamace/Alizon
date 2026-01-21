@@ -2507,21 +2507,6 @@ footer.footer {
 // PAGE CONFIRMATION ACHAT
 // =============================================================================
 
-// Animations
-@keyframes successPulse {
-    0% {
-        transform: scale(0) rotate(0deg);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.3) rotate(180deg);
-    }
-    100% {
-        transform: scale(1) rotate(360deg);
-        opacity: 1;
-    }
-}
-
 // Main container
 .confirmation-container {
     max-width: 700px;
@@ -2551,7 +2536,6 @@ footer.footer {
 .success-icon {
     font-size: 100px;
     color: $success-color;
-    animation: successPulse 1s ease-in-out;
 }
 
 // Client info section
@@ -3884,5 +3868,216 @@ footer.footer {
     // Timeline simplifiée sur mobile
     .suivi-timeline .step-label {
         font-size: 0.75rem;
+    }
+}
+
+//FACTURE
+@page {
+    margin: 20mm;
+}
+
+body {
+    font-family: 'DejaVu Sans', Arial, sans-serif;
+    color: $gray-darker;
+    line-height: 1.6;
+}
+
+.page-break {
+    page-break-after: always;
+}
+
+.header {
+    display: table;
+    width: 100%;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+}
+
+.logo-section {
+    display: table-cell;
+    width: 50%;
+    vertical-align: top;
+}
+
+.logo-section img {
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.logo-section p {
+    margin: 5px 0;
+    color: $gray-dark;
+    font-size: 12px;
+}
+
+.facture-info {
+    display: table-cell;
+    width: 50%;
+    text-align: right;
+    vertical-align: top;
+}
+
+.facture-info h2 {
+    color: $gray-darker;
+    font-size: 28px;
+    margin: 0 0 10px 0;
+}
+
+.facture-numero {
+    background: $blue-vendor;
+    color: $black;
+    padding: 8px 15px;
+    border-radius: 5px;
+    display: inline-block;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.facture-date {
+    margin-top: 15px;
+}
+
+.commande-ref {
+    font-size: 10px;
+    color: #999;
+    margin-top: 5px;
+}
+
+.addresses {
+    display: table;
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.address-box {
+    display: table-cell;
+    width: 48%;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    vertical-align: top;
+}
+
+.address-box h3 {
+    color: $blue-vendor;
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    border-bottom: 2px solid $blue-vendor;
+    padding-bottom: 5px;
+}
+
+.address-box p {
+    margin: 5px 0;
+    font-size: 12px;
+}
+
+.spacer {
+    display: table-cell;
+    width: 4%;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+table thead {
+    background: $blue-vendor;
+    color: $black;
+}
+
+table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid $border-light;
+    font-size: 11px;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.remise-badge {
+    color: $black;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.totaux-ligne {
+    background: #f0f0f0;
+    font-weight: bold;
+}
+
+.totals {
+    width: 50%;
+    float: right;
+    margin-top: 20px;
+}
+
+.totals table {
+    margin-bottom: 0;
+}
+
+.totals td {
+    padding: 8px 12px;
+    font-size: 12px;
+}
+
+.total-row {
+    background: $blue-vendor !important;
+    font-weight: bold;
+    font-size: 14px !important;
+}
+
+.total-row td {
+    padding: 12px !important;
+    color: $black;
+}
+
+.footer {
+    clear: both;
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 2px solid $border-light;
+    text-align: center;
+    font-size: 10px;
+    color: $gray-dark;
+}
+
+.footer p {
+    margin: 5px 0;
+}
+
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .page-break {
+        page-break-after: always;
+    }
+    
+    table tbody tr:hover {
+        background: transparent;
     }
 }

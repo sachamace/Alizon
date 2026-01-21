@@ -57,11 +57,10 @@
             $bordereau = $cols[3];
             $statut = $cols[4];
             $etape = $cols[5];
-            $details = $cols[7]; 
             $date_maj = $cols[6];
-            $chemin_image = $cols[7];
-            $raison = $cols[8];//commit ??? 
-            var_dump($raison);
+            $details = $cols[7]; 
+            $chemin_image = $cols[9];
+            $raison = $cols[10];
             // ... affichage ...
         } else {
             echo "Commande introuvable.";

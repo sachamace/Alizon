@@ -137,7 +137,7 @@
     </header>
 
     <div class="compte__header disabled">
-        <a href="commandes.php">← Retour à mes commandes</a>
+        <a href="commande.php">← Retour à mes commandes</a>
     </div>
 
     <main class="detail-container">

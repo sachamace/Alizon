@@ -176,9 +176,16 @@
                             <?= htmlspecialchars($details) ?>
                             <?php if(strcmp($details,"Colis livré en l’absence du destinataire")==0):?>
                                 <br>
-                                <a href="#" class="btn-voir-image" data-image="<?= htmlspecialchars($chemin_image); ?>" style="cursor:pointer; color:#7028e4; text-decoration:underline; font-weight:bold;">
-                                    Voir la boite au lettre
-                                </a>
+                                <button type="button" class="btn-boite" data-image="<?= htmlentities($chemin_image); ?>">
+                                        Voir la boite au lettre
+                                </button>
+
+                                <div id="monPopup" class="popup-overlay">
+                                    <div class="popup-content">
+                                        <span class="fermer-popup">&times;</span>
+                                        <img id="imgDansPopup" src="" alt="Photo de livraison">
+                                    </div>
+                                </div>
                             <?php endif; ?>
                             <?php if(!empty($raison)):?>
                                 <br>
@@ -265,10 +272,5 @@
     <footer class="footer mobile">
         <?php include 'footer.php'?>
     </footer>
-    <div id="monPopup" class="popup-overlay">
-        <div class="popup-content">
-            <img id="imgDansPopup" src="" alt="Photo de la boîte aux lettres">
-        </div>
-    </div>
 </body>
 </html>

@@ -1,33 +1,24 @@
-window.onload = function() {
-    const popup = document.getElementById("monPopup");
-    const imgDansPopup = document.getElementById("imgDansPopup");
-    const boutonFermer = document.querySelector(".fermer-popup");
 
-    // On utilise document.body.addEventListener pour que ça marche 
-    // même si le lien est généré dynamiquement
-    document.body.addEventListener('click', function(e) {
-        if (e.target.classList.contains('btn-voir-image')) {
-            e.preventDefault();
-            const urlImage = e.target.getAttribute('data-image');
-            console.log("Clic détecté, image : " + urlImage); // Pour vérifier dans la console (F12)
-            
-            imgDansPopup.src = urlImage;
-            popup.style.display = "flex";
+document.addEventListener('click', function (event) {
+    // 1. Vérifie si on a cliqué sur le bouton "Voir la boite"
+    if (event.target.classList.contains('btn-boite')) {
+        const popup = document.getElementById('monPopup');
+        const img = document.getElementById('imgDansPopup');
+        const source = event.target.getAttribute('data-image');
+
+        if (source) {
+            img.src = source;
+            popup.style.display = 'flex';
         }
-    });
-
-    // Fermer le popup
-    if(boutonFermer) {
-        boutonFermer.onclick = function() {
-            popup.style.display = "none";
-            imgDansPopup.src = "";
-        };
     }
 
-    // Fermer si clic sur le fond noir
-    popup.onclick = function(e) {
-        if (e.target === popup) {
-            popup.style.display = "none";
-        }
-    };
-};
+    // 2. Vérifie si on a cliqué sur la croix pour fermer
+    if (event.target.classList.contains('fermer-popup')) {
+        document.getElementById('monPopup').style.display = 'none';
+    }
+
+    // 3. Vérifie si on a cliqué sur le fond noir pour fermer
+    if (event.target.classList.contains('popup-overlay')) {
+        event.target.style.display = 'none';
+    }
+});

@@ -621,4 +621,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
     </script>
     <script src="/front_office/front_end/assets/js/noteEtoile.js"></script>
+    <script src="/front_office/front_end/assets/js/reponseVendeur.js"></script>
 </body>

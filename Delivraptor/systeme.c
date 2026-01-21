@@ -113,7 +113,7 @@ void traiter_get_list(int cnx, PGconn *conn, int capacite_max) {
 // Fonction pour parser et exécuter l'UPDATE reçu du PHP
 void traiter_update(char *buffer, int capacite_max, PGconn *conn, int verbose) {
     // Protocole attendu: id;etape;statut;priorite;details;raison;image
-    // NOTE : Le "UPDATE" a déjà été retiré dans le main() !
+
 
     char *saveptr;
     char query[2048];
@@ -126,10 +126,8 @@ void traiter_update(char *buffer, int capacite_max, PGconn *conn, int verbose) {
     }
     PQclear(res_count);
 
-    // --- CORRECTION ICI : ON NE SAUTE PLUS RIEN ---
-    // On attaque directement la récupération de l'ID
+    //récupération de l'ID
     char *id = strtok_r(buffer, ";", &saveptr); 
-    // ----------------------------------------------
 
     char *etape = strtok_r(NULL, ";", &saveptr);
     char *statut = strtok_r(NULL, ";", &saveptr);
@@ -140,7 +138,6 @@ void traiter_update(char *buffer, int capacite_max, PGconn *conn, int verbose) {
 
     if (!id) return;
 
-    // ... Le reste de ta fonction reste identique ...
     query[0] = '\0';
     // Construction de la requête SQL dynamique
     if(!(nb_commandes > capacite_max)){
@@ -167,7 +164,7 @@ void traiter_update(char *buffer, int capacite_max, PGconn *conn, int verbose) {
         );
     }
 
-    if (verbose) log_message(query, NULL, verbose); // Petit bonus : log la requête SQL aussi
+    if (verbose) log_message(query, NULL, verbose); 
 
     PGresult *res_upd = PQexec(conn, query);
 

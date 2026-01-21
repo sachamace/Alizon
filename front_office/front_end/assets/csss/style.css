@@ -3385,6 +3385,7 @@ footer.footer.mobile, footer.footer.tablette {
 @media (max-width: 768px) {
   .commandes-container {
     padding-top: 0;
+    padding-bottom: 30px;
   }
   .commandes-container .commande-card {
     width: 100%;

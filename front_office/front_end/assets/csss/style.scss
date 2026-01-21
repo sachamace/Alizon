@@ -3912,11 +3912,11 @@ footer.footer {
 // RESPONSIVE - DÉTAIL COMMANDE (MOBILE < 600px)
 // =============================================================================
 
-@media (max-width: 600px) {
+@media (max-width: 430px) {
   
   // 1. Ajustement du conteneur principal
   .detail-container {
-    padding-top: 180px; // On laisse de la place pour le header fixe
+    padding-top: 30px; // On laisse de la place pour le header fixe
     padding-left: 15px;
     padding-right: 15px;
     gap: 1.5rem; // Réduit l'espace entre les blocs

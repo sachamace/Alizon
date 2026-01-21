@@ -3663,9 +3663,9 @@ footer.footer.mobile, footer.footer.tablette {
   text-align: center;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 430px) {
   .detail-container {
-    padding-top: 180px;
+    padding-top: 30px;
     padding-left: 15px;
     padding-right: 15px;
     gap: 1.5rem;

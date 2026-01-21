@@ -57,7 +57,7 @@
             <?php
                 echo '<h1>' . count($avis) . ' avis</h1>';
                 if (count($avis) > 0) {
-                    $req_client = $pdo->prepare("SELECT prenom, nom FROM compte_client WHERE id_client = ?");
+                    $req_client = $pdo->prepare("SELECT prenom, nom FROM compte_client WHERE id_client = ?"); // test changement
                     foreach ($avis as $un_avis) {
                         $id_client = (int) $un_avis['id_client'];
 

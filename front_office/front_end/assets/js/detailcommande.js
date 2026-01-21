@@ -1,33 +1,38 @@
-var popup = document.getElementById("monPopup");
-var imagePopup = document.getElementById("imgDansPopup");
-var lien = document.querySelector(".lien-image");
-var boutonFermer = document.querySelector(".fermer");
+document.addEventListener('DOMContentLoaded', function() {
+    var popup = document.getElementById("monPopup");
+    var imagePopup = document.getElementById("imgDansPopup");
+    var liens = document.querySelectorAll(".lien-image");
+    var boutonFermer = document.querySelector(".fermer");
 
-// On vérifie si le lien existe bien sur la page avant d'ajouter l'écouteur
-if (lien) {
-    lien.addEventListener('click', function(event) {
-        event.preventDefault(); 
-        
-        // On récupère le lien de l'image stocké dans le href
-        var cheminImage = this.getAttribute("href"); 
-        
-        if (cheminImage) {
-            imagePopup.src = cheminImage;
-            popup.style.display = "flex"; // Utilise flex pour le centrage
-        }
+    // Pour chaque lien trouvé (au cas où il y en a plusieurs)
+    liens.forEach(function(lien) {
+        lien.addEventListener('click', function(event) {
+            event.preventDefault(); // EMPECHE DE CHANGER DE PAGE
+            
+            // On récupère le chemin de l'image dans l'attribut data-image
+            var chemin = this.getAttribute("data-image");
+            
+            // On l'injecte dans l'image du popup
+            imagePopup.src = chemin;
+            
+            // On affiche le popup en mode "flex" pour le centrage
+            popup.style.display = "flex";
+        });
     });
-}
 
-// Fermer avec la croix
-if (boutonFermer) {
-    boutonFermer.onclick = function() {
-        popup.style.display = "none";
+    // Fermer quand on clique sur la croix
+    if(boutonFermer) {
+        boutonFermer.onclick = function() {
+            popup.style.display = "none";
+            imagePopup.src = ""; // On vide la source par sécurité
+        };
     }
-}
 
-// Fermer en cliquant sur le fond noir
-window.onclick = function(event) {
-    if (event.target == popup) {
-        popup.style.display = "none";
-    }
-}
+    // Fermer quand on clique sur le fond noir
+    window.onclick = function(event) {
+        if (event.target == popup) {
+            popup.style.display = "none";
+            imagePopup.src = "";
+        }
+    };
+});

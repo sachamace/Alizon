@@ -3591,7 +3591,7 @@ footer.footer {
 // -----------------------------------------------------------------------------
 @media (max-width: 768px) {
     .commandes-container .commande-card {
-        width: 75%;
+        width: 100%;
 
         .commande-info {
             grid-template-columns: 1fr;
@@ -3912,7 +3912,7 @@ footer.footer {
 // RESPONSIVE - DÉTAIL COMMANDE (MOBILE < 600px)
 // =============================================================================
 
-@media (max-width: 430px) {
+@media (max-width: 430) {
   
   // 1. Ajustement du conteneur principal
   .detail-container {

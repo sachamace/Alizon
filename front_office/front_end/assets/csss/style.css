@@ -3384,7 +3384,7 @@ footer.footer.mobile, footer.footer.tablette {
 
 @media (max-width: 768px) {
   .commandes-container .commande-card {
-    width: 75%;
+    width: 100%;
   }
   .commandes-container .commande-card .commande-info {
     grid-template-columns: 1fr;
@@ -3663,7 +3663,7 @@ footer.footer.mobile, footer.footer.tablette {
   text-align: center;
 }
 
-@media (max-width: 430px) {
+@media (max-width: 430) {
   .detail-container {
     padding-top: 30px;
     padding-left: 15px;

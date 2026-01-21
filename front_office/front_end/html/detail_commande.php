@@ -60,7 +60,7 @@
             $details = $cols[7]; 
             $date_maj = $cols[6];
             $chemin_image = $cols[7];
-            $raison = $cols[8];
+            $raison = $cols[8];//commit ??? 
             // ... affichage ...
         } else {
             echo "Commande introuvable.";

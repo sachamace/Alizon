@@ -176,14 +176,9 @@
                             <?= htmlspecialchars($details) ?>
                             <?php if(strcmp($details,"Colis livré en l’absence du destinataire")==0):?>
                                 <br>
-                                <a href="#" class="lien-image" data-image=<?php echo htmlentities($chemin_image);?>>
+                                <a href="#" class="btn-voir-image" data-image="<?= htmlspecialchars($chemin_image); ?>" style="cursor:pointer; color:#7028e4; text-decoration:underline; font-weight:bold;">
                                     Voir la boite au lettre
                                 </a>
-                                <div id="monPopup" class="popup-overlay">
-                                    <div class="popup-content">
-                                        <img id="imgDansPopup" src="" alt="Photo de la boîte aux lettres">
-                                    </div>
-                                </div>
                             <?php endif; ?>
                             <?php if(!empty($raison)):?>
                                 <br>
@@ -262,14 +257,6 @@
                     <span>Total TTC</span>
                     <span><?= number_format($montant_ttc, 2, ',', ' ') ?> €</span>
                 </div>
-                <?php 
-                if ($chemin_image != null){
-                    ?>
-                    <img src=<?php echo $chemin_image?> alt="" width="200em">
-                    <caption>livraison effectuée</caption>
-                    <?php 
-                }
-                ?>
             </div>
         </section>
 
@@ -278,5 +265,10 @@
     <footer class="footer mobile">
         <?php include 'footer.php'?>
     </footer>
+    <div id="monPopup" class="popup-overlay">
+        <div class="popup-content">
+            <img id="imgDansPopup" src="" alt="Photo de la boîte aux lettres">
+        </div>
+    </div>
 </body>
 </html>

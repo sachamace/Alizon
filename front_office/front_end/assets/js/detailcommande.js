@@ -1,29 +1,33 @@
-document.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
     const popup = document.getElementById("monPopup");
-    const imgPopup = document.getElementById("imgDansPopup");
-    const lien = document.querySelector(".lien-image");
-    const croix = document.querySelector(".fermer");
+    const imgDansPopup = document.getElementById("imgDansPopup");
+    const boutonFermer = document.querySelector(".fermer-popup");
 
-    if (lien) {
-        lien.addEventListener('click', function(e) {
-            e.preventDefault(); // Empêche de remonter en haut de page
-            const sourceImage = this.getAttribute('data-image');
-            imgPopup.src = sourceImage;
-            popup.style.display = "flex"; // Affiche le popup
-        });
-    }
+    // On utilise document.body.addEventListener pour que ça marche 
+    // même si le lien est généré dynamiquement
+    document.body.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-voir-image')) {
+            e.preventDefault();
+            const urlImage = e.target.getAttribute('data-image');
+            console.log("Clic détecté, image : " + urlImage); // Pour vérifier dans la console (F12)
+            
+            imgDansPopup.src = urlImage;
+            popup.style.display = "flex";
+        }
+    });
 
-    // Fermer avec la croix
-    if (croix) {
-        croix.onclick = function() {
+    // Fermer le popup
+    if(boutonFermer) {
+        boutonFermer.onclick = function() {
             popup.style.display = "none";
+            imgDansPopup.src = "";
         };
     }
 
-    // Fermer en cliquant sur le fond noir
-    window.onclick = function(e) {
-        if (e.target == popup) {
+    // Fermer si clic sur le fond noir
+    popup.onclick = function(e) {
+        if (e.target === popup) {
             popup.style.display = "none";
         }
     };
-});
+};

@@ -2897,12 +2897,15 @@ footer.footer.mobile, footer.footer.tablette {
   align-items: flex-end;
 }
 .has-badge-front .promo-badge-front, .has-badge-front .remise-badge-front {
+  margin-top: 10px;
   padding: 8px 15px;
   border-radius: 8px;
   font-weight: bold;
   font-size: 1.1rem;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   animation: pulse-remise 2s infinite;
+  --base-scale: 1;
+  transform-origin: top right;
 }
 .has-badge-front .promo-badge-front {
   background: linear-gradient(135deg, yellow, #fffd6b);
@@ -2915,10 +2918,10 @@ footer.footer.mobile, footer.footer.tablette {
 
 @keyframes pulse-remise {
   0%, 100% {
-    transform: scale(1);
+    transform: scale(var(--base-scale, 1));
   }
   50% {
-    transform: scale(1.05);
+    transform: scale(calc(var(--base-scale, 1) * 1.05));
   }
 }
 .prix-container-front {
@@ -3205,11 +3208,20 @@ footer.footer.mobile, footer.footer.tablette {
   }
 }
 @media (max-width: 428px) {
-  .has-remise-front .remise-badge-front {
-    top: 8px;
-    right: 8px;
-    padding: 5px 10px;
-    font-size: 0.85rem;
+  .has-badge-front .badge-container {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .has-badge-front .remise-badge-front, .has-badge-front .promo-badge-front {
+    font-size: 0.8rem;
+    right: 10px;
+    padding: 6px 12px;
+    --base-scale: 0.8;
   }
   .prix-container-detail .prix-final-detail {
     font-size: 1.4em;

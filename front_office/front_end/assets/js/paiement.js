@@ -7,7 +7,7 @@ const btnPayer = document.querySelector(".payer-btn");
 
 let carteVisible = false;
 
-btnPayer.disabled = true; //on désactive le bouton
+btnPayer.disabled = true; //on désactive le bouton test 
 
 radioCarte.addEventListener("click", () => {
     if (carteVisible) {

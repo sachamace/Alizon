@@ -59,6 +59,7 @@
             $etape = $cols[5];
             $details = $cols[7]; 
             $date_maj = $cols[6];
+            $chemin_image = $cols[7];
             
             // ... affichage ...
         } else {
@@ -128,7 +129,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détail Commande #<?= $id_commande ?></title>
     <link rel="stylesheet" href="../assets/csss/style.css">
-    <link rel="stylesheet" href="../assets/csss/detail_commande.css">
 </head>
 
 <body class="body_profilClient">
@@ -247,6 +247,14 @@
                     <span>Total TTC</span>
                     <span><?= number_format($montant_ttc, 2, ',', ' ') ?> €</span>
                 </div>
+                <?php 
+                if ($chemin_image != null){
+                    ?>
+                    <img src=<?php echo $chemin_image?> alt="" width="200em">
+                    <caption>livraison effectuée</caption>
+                    <?php 
+                }
+                ?>
             </div>
         </section>
 

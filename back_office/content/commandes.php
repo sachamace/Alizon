@@ -114,12 +114,7 @@ foreach ($ids_commandes as $id_commande) {
                         <?php endif; ?>
                     </div>
                     
-                    <?php if ($cmd['details_etape']): ?>
-                        <div class="commande-etape">
-                            <span>Étape <?= $cmd['etape'] ?> : <?= htmlspecialchars($cmd['details_etape']) ?></span>
-                        </div>
-                    <?php endif; ?>
-                    
+                   
                     <div class="commande-produits">
                         <?php foreach ($cmd['produits'] as $prod): ?>
                             <div class="produit-ligne">

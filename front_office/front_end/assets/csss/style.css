@@ -3663,19 +3663,191 @@ footer.footer.mobile, footer.footer.tablette {
   text-align: center;
 }
 
-@media (max-width: 900px) {
-  .detail-content {
-    grid-template-columns: 1fr;
-  }
-}
 @media (max-width: 600px) {
+  .detail-container {
+    padding-top: 180px;
+    padding-left: 15px;
+    padding-right: 15px;
+    gap: 1.5rem;
+  }
   .detail-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 10px;
+  }
+  .detail-header .header-left {
+    width: 100%;
+  }
+  .detail-header .header-left h1 {
+    font-size: 1.4rem;
+    margin-bottom: 5px;
+  }
+  .detail-header .header-left h1 span {
+    font-size: 1.4rem;
+  }
+  .detail-header .header-left .statut-simple {
+    font-size: 0.9rem;
   }
   .detail-header .header-right {
     width: 100%;
-    align-items: flex-start;
-    margin-top: 1rem;
+    margin-top: 5px;
+    padding-top: 10px;
+    border-top: 1px dashed #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .detail-header .header-right .last-update {
+    font-size: 0.85rem;
+    flex-direction: row;
+    display: flex;
+    gap: 5px;
+  }
+  .suivi-timeline {
+    padding: 0;
+    margin-bottom: 1.5rem;
+  }
+  .suivi-timeline .step {
+    min-width: auto;
+  }
+  .suivi-timeline .step .step-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+    border-width: 2px;
+    margin-bottom: 0.3rem;
+  }
+  .suivi-timeline .step .step-label {
+    font-size: 0.7rem;
+    line-height: 1.1;
+    max-width: 70px;
+    margin: 0 auto;
+  }
+  .suivi-timeline .step .step-detail-bulle {
+    font-size: 0.7rem;
+    padding: 5px;
+    min-width: 100px;
+    width: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 5px;
+  }
+  .suivi-timeline .step .step-detail-bulle .btn-boite {
+    font-size: 0.7rem;
+  }
+  .suivi-timeline .step-line {
+    margin-top: 13px;
+    height: 2px;
+  }
+  .detail-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .detail-content .articles-box,
+  .detail-content .recap-box {
+    padding: 1rem;
+  }
+  .detail-content .articles-box h3,
+  .detail-content .recap-box h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  .table-articles {
+    display: block;
+    width: 100%;
+  }
+  .table-articles thead {
+    display: none;
+  }
+  .table-articles tbody {
+    display: block;
+    width: 100%;
+  }
+  .table-articles tr {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
+    position: relative;
+  }
+  .table-articles tr:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .table-articles td {
+    display: block;
+    padding: 0.2rem 0;
+    border: none;
+    width: 100%;
+    text-align: left !important;
+  }
+  .table-articles td.col-produit {
+    margin-bottom: 0.5rem;
+  }
+  .table-articles td.col-produit .produit-wrapper {
+    gap: 10px;
+  }
+  .table-articles td.col-produit .produit-wrapper img {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+  }
+  .table-articles td.col-produit .produit-wrapper .nom {
+    font-size: 0.95rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .table-articles td:nth-child(2) {
+    display: inline-block;
+    width: auto;
+    margin-right: 15px;
+    color: #666;
+    font-size: 0.9rem;
+  }
+  .table-articles td:nth-child(2)::before {
+    content: "PU : ";
+    font-weight: 600;
+  }
+  .table-articles td:nth-child(3) {
+    display: inline-block;
+    width: auto;
+    color: #666;
+    font-size: 0.9rem;
+  }
+  .table-articles td:nth-child(3)::before {
+    content: "Qté : ";
+    font-weight: 600;
+  }
+  .table-articles td:nth-child(4) {
+    margin-top: 5px;
+    font-size: 1.1rem;
+    color: #000;
+    background: rgba(255, 108, 226, 0.1);
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-align: right !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .table-articles td:nth-child(4) strong {
+    color: #ff6ce2;
+  }
+  .recap-box {
+    background-color: #f9f9f9;
+    border: none;
+  }
+  .recap-box .ligne-recap {
+    font-size: 0.9rem;
+  }
+  .recap-box .ligne-recap.total-final {
+    font-size: 1.2rem;
+  }
+  .recap-box .ligne-recap.total-final span:last-child {
+    color: #ff6ce2;
   }
 }/*# sourceMappingURL=style.css.map */

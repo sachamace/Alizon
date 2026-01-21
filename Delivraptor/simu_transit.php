@@ -111,7 +111,7 @@ try{
                     case 3:
                         $raisons = ["Colis endommagé", "Destinataire inconnu", "Refusé par le client"];
                         $details_etape = "Colis refusé";
-                        $raison = "Réfusé par le destinataire - Raison : " . $raisons[array_rand($raisons)];
+                        $raison = "Réfusé par le destinataire - ". $raisons[array_rand($raisons)];
                         $statut = "REFUS";
                         break;
                 }

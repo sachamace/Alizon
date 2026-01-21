@@ -54,6 +54,15 @@
   position: relative;
 }
 
+
+
+// Mixin pour faciliter le responsive
+@mixin ecran-mobile {
+  @media (max-width: #{$suivi-mobile-breakpoint}) {
+    @content;
+  }
+}
+
 // Mixins pour les statuts des produits
 @mixin status-badge {
   position: absolute;

@@ -179,9 +179,11 @@
                                 <a href="#" class="lien-image" data-image="/docker/data/web/htmlDelivraptor/boite.jpg">
                                     Voir la boite au lettre
                                 </a>
-                                <div id="monPopup" class="popup">
-                                    <span class="fermer">&times;</span>
-                                    <img class="popup-contenu" id="imgDansPopup" src="" alt="Photo de la boîte aux lettres">
+                                <div id="monPopup" class="popup-overlay">
+                                    <div class="popup-content">
+                                        <span class="fermer">&times;</span>
+                                        <img id="imgDansPopup" src="" alt="Photo de la boîte aux lettres">
+                                    </div>
                                 </div>
                             <?php endif; ?>
                             <?php if(!empty($raison)):?>

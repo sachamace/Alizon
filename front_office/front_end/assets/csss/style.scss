@@ -3723,45 +3723,48 @@ footer.footer {
                 border-color: transparent transparent darken(#eef2f5, 5%) transparent;
             }
 
-            /* Le fond noir du popup */
-            .popup {
-                display: none; /* CACHÉ PAR DÉFAUT */
+            /* L'overlay : occupe tout l'écran, fond sombre, CACHÉ par défaut */
+            .popup-overlay {
+                display: none; /* C'est ce qui cache l'image au début */
                 position: fixed;
-                z-index: 9999;
-                left: 0;
                 top: 0;
+                left: 0;
                 width: 100%;
                 height: 100%;
-                background-color: rgba(0, 0, 0, 0.9);
-                
-                /* Centrage parfait de l'image */
+                background-color: rgba(0, 0, 0, 0.8); /* Fond noir transparent */
+                z-index: 9999; /* Pour passer devant tout le reste */
                 justify-content: center;
                 align-items: center;
             }
 
-            /* L'image à l'intérieur */
-            .popup-contenu {
+            /* Le conteneur de l'image dans le popup */
+            .popup-content {
+                position: relative;
                 max-width: 80%;
                 max-height: 80%;
-                border: 3px solid white;
-                border-radius: 5px;
-                box-shadow: 0 0 20px rgba(0,0,0,0.5);
-                animation: zoomDoux 0.3s ease-out;
             }
 
-            @keyframes zoomDoux {
-                from { transform: scale(0.8); opacity: 0; }
-                to { transform: scale(1); opacity: 1; }
+            .popup-content img {
+                width: 100%;
+                height: auto;
+                border: 5px solid white;
+                border-radius: 8px;
             }
 
-            /* La croix pour fermer */
+            /* La croix de fermeture */
             .fermer {
                 position: absolute;
-                top: 20px;
-                right: 40px;
+                top: -40px;
+                right: 0;
                 color: white;
-                font-size: 50px;
-                font-weight: bold;
+                font-size: 40px;
+                cursor: pointer;
+            }
+
+            /* Style du lien pour qu'il ressemble à un bouton ou lien bleu */
+            .lien-image {
+                color: #7028e4;
+                text-decoration: underline;
                 cursor: pointer;
             }
         }

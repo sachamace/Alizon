@@ -3383,15 +3383,21 @@ footer.footer.mobile, footer.footer.tablette {
 }
 
 @media (max-width: 768px) {
+  .commandes-container {
+    padding-top: 0;
+  }
   .commandes-container .commande-card {
     width: 100%;
   }
-  .commandes-container .commande-card .commande-info {
+  .commandes-container .commande-info {
     grid-template-columns: 1fr;
   }
-  .commandes-container .commande-card .commande-actions {
+  .commandes-container .commande-actions {
     flex-direction: column-reverse;
     gap: 0.8rem;
+  }
+  .commandes-container .btn {
+    width: 300px;
   }
   .btn {
     width: 100%;

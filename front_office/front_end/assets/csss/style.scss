@@ -3590,9 +3590,11 @@ footer.footer {
 // Responsive
 // -----------------------------------------------------------------------------
 @media (max-width: 768px) {
-    .commandes-container .commande-card {
+    .commandes-container{
+        padding-top: 0;
+        .commande-card {
         width: 100%;
-
+        }
         .commande-info {
             grid-template-columns: 1fr;
         }
@@ -3600,6 +3602,9 @@ footer.footer {
         .commande-actions {
             flex-direction: column-reverse; // Met le bouton principal en haut sur mobile
             gap: 0.8rem;
+        }
+        .btn{
+          width: 300px;
         }
     }
 

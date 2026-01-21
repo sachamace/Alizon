@@ -128,5 +128,6 @@ $numero_commande = "CMD-" . date('Ymd', strtotime($commande['date_commande'])) .
     <footer class="footer mobile">
         <?php include 'footer.php'; ?>
     </footer>
+    <script src="../assets/js/detailcommande.js"></script>
 </body>
 </html>

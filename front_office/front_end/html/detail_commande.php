@@ -128,7 +128,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détail Commande #<?= $id_commande ?></title>
     <link rel="stylesheet" href="../assets/csss/style.css">
-    <link rel="stylesheet" href="../assets/csss/detail_commande.css">
 </head>
 
 <body class="body_profilClient">

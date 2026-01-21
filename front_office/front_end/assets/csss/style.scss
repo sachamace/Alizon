@@ -3723,7 +3723,51 @@ footer.footer {
                 border-color: transparent transparent darken(#eef2f5, 5%) transparent;
             }
 
+            /* Style du bouton pour qu'il ressemble à un lien */
+            .btn-boite {
+                background: none;
+                border: none;
+                color: #7028e4;
+                text-decoration: underline;
+                font-size: 1em;
+                cursor: pointer;
+                padding: 0;
+            }
 
+            /* Structure du Popup */
+            .popup-overlay {
+                display: none; /* CACHÉ PAR DÉFAUT */
+                position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background-color: rgba(0, 0, 0, 0.9);
+                z-index: 9999; /* Devant tout le reste */
+                justify-content: center;
+                align-items: center;
+            }
+
+            .popup-content {
+                position: relative;
+                max-width: 85%;
+                max-height: 85%;
+            }
+
+            .popup-content img {
+                max-width: 100%;
+                max-height: 80vh;
+                border: 4px solid white;
+                border-radius: 10px;
+            }
+
+            /* La croix */
+            .fermer-popup {
+                position: absolute;
+                top: -50px;
+                right: 0;
+                color: white;
+                font-size: 45px;
+                cursor: pointer;
+            }
         }
 
         // État Actif (Passé ou Courant)
@@ -3889,48 +3933,3 @@ footer.footer {
     }
 }
 
-/* Style du bouton pour qu'il ressemble à un lien */
-.btn-boite {
-    background: none;
-    border: none;
-    color: #7028e4;
-    text-decoration: underline;
-    font-size: 1em;
-    cursor: pointer;
-    padding: 0;
-}
-
-/* Structure du Popup */
-.popup-overlay {
-    display: none; /* CACHÉ PAR DÉFAUT */
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    z-index: 9999; /* Devant tout le reste */
-    justify-content: center;
-    align-items: center;
-}
-
-.popup-content {
-    position: relative;
-    max-width: 85%;
-    max-height: 85%;
-}
-
-.popup-content img {
-    max-width: 100%;
-    max-height: 80vh;
-    border: 4px solid white;
-    border-radius: 10px;
-}
-
-/* La croix */
-.fermer-popup {
-    position: absolute;
-    top: -50px;
-    right: 0;
-    color: white;
-    font-size: 45px;
-    cursor: pointer;
-}

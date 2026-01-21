@@ -104,7 +104,7 @@ try{
                         break;
                     case 2:
                         $details_etape = "Colis livré en l’absence du destinataire";
-                        $chemin_image_refuse = "test.png";
+                        $chemin_image_refuse = "/docker/data/web/html/Delivraptor/boite.png";
                         $statut = "ACCEPTER";
                         $raison = "";
                         break;

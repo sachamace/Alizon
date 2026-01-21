@@ -60,7 +60,7 @@
             $details = $cols[7]; 
             $date_maj = $cols[6];
             $chemin_image = $cols[7];
-            
+            $raison = $cols[8];
             // ... affichage ...
         } else {
             echo "Commande introuvable.";
@@ -171,9 +171,14 @@
                     </div>
                     <div class="step-label"><?= $nom_etape ?></div>
                     
-                    <?php if($isCurrent && !empty($details)): ?>
+                    <?php if($isCurrent && !empty($details)):?>
                         <div class="step-detail-bulle">
                             <?= htmlspecialchars($details) ?>
+                            <?php if(strcmp($details,"Colis livré en l’absence du destinataire")==0):?>
+                                <a href=<?php htmlentities($chemin_image);?>>Voir la boite au lettre</a>
+                            <?php elseif(!empty($raison)):?>
+                                <?= htmlspecialchars($raison) ?>
+                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
                 </div>

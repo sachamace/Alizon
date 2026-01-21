@@ -256,7 +256,7 @@ void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
 
     // Construction de la requête
     snprintf(query, sizeof(query), 
-        "SELECT date_commande, montant_total_ht, montant_total_ttc, bordereau, statut, etape, date_maj, details_etape, priorite, chemin_image_refuse FROM commande WHERE id_commande = '%s';", 
+        "SELECT date_commande, montant_total_ht, montant_total_ttc, bordereau, statut, etape, date_maj, details_etape, priorite, chemin_image_refuse, raison FROM commande WHERE id_commande = '%s';", 
         id_cmd
     );
 
@@ -267,7 +267,7 @@ void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
     // Vérification du succès de la requête
     if (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0) {
         
-        snprintf(message_retour, sizeof(message_retour), "%s;%s;%s;%s;%s;%s;%s;%s;%s|",
+        snprintf(message_retour, sizeof(message_retour), "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s|",
             PQgetvalue(res, 0, 0), // date_commande
             PQgetvalue(res, 0, 1), // montant_total_ht
             PQgetvalue(res, 0, 2), // montant_total_ttc
@@ -276,7 +276,8 @@ void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
             PQgetvalue(res, 0, 5), // etape
             PQgetvalue(res, 0, 6), // date_maj
             PQgetvalue(res, 0, 7), // details_etape 
-            PQgetvalue(res, 0, 8)  // priorite
+            PQgetvalue(res, 0, 8),  // priorite
+            PQgetvalue(res, 0, 9)  // raison
         );
 
         if (verbose) printf("Réponse générée : %s\n", message_retour);

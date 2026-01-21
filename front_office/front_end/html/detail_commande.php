@@ -176,7 +176,8 @@
                             <?= htmlspecialchars($details) ?>
                             <?php if(strcmp($details,"Colis livré en l’absence du destinataire")==0):?>
                                 <a href=<?php htmlentities($chemin_image);?>>Voir la boite au lettre</a>
-                            <?php elseif(!empty($raison)):?>
+                            <?php endif; ?>
+                            <?php if(!empty($raison)):?>
                                 <?= htmlspecialchars($raison) ?>
                             <?php endif; ?>
                         </div>

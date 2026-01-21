@@ -104,7 +104,7 @@ try{
                         break;
                     case 2:
                         $details_etape = "Colis livré en l’absence du destinataire";
-                        $chemin_image_refuse = "/front_office/front_end/assets/images/boite.png";
+                        $chemin_image_refuse = "/front_office/front_end/assets/images/boite.jpg";
                         $statut = "ACCEPTER";
                         $raison = "";
                         break;

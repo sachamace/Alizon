@@ -282,7 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="" crossorigin="anonymous">-->
 </head>
 <body>
-    <header class="disabled">
+    <header>
         <?php include 'header.php'?>
     </header>
     <main class="main_produit" style="padding-top: 50px;">

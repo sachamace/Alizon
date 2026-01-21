@@ -104,14 +104,14 @@ try{
                         break;
                     case 2:
                         $details_etape = "Colis livré en l’absence du destinataire";
-                        $chemin_image_refuse = "test.png";
+                        $chemin_image_refuse = "/front_office/front_end/assets/images/boite.jpg";
                         $statut = "ACCEPTER";
                         $raison = "";
                         break;
                     case 3:
-                        $raisons = ["Colis endommagé", "Destinataire inconnu", "Refusé par le client"];
+                        $raisons = ["Colis endommagé", "Mauvais destinataire", "Refusé par le client"];
                         $details_etape = "Colis refusé";
-                        $raison = "Réfusé par le destinataire - Raison : " . $raisons[array_rand($raisons)];
+                        $raison = $raisons[array_rand($raisons)];
                         $statut = "REFUS";
                         break;
                 }

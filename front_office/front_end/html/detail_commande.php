@@ -57,10 +57,10 @@
             $bordereau = $cols[3];
             $statut = $cols[4];
             $etape = $cols[5];
-            $details = $cols[7]; 
             $date_maj = $cols[6];
-            $chemin_image = $cols[7];
-            
+            $details = $cols[7]; 
+            $chemin_image = $cols[9];
+            $raison = $cols[10];
             // ... affichage ...
         } else {
             echo "Commande introuvable.";
@@ -137,7 +137,7 @@
     </header>
 
     <div class="compte__header disabled">
-        <a href="commandes.php">← Retour à mes commandes</a>
+        <a href="commande.php">← Retour à mes commandes</a>
     </div>
 
     <main class="detail-container">
@@ -171,9 +171,26 @@
                     </div>
                     <div class="step-label"><?= $nom_etape ?></div>
                     
-                    <?php if($isCurrent && !empty($details)): ?>
+                    <?php if($isCurrent && !empty($details)):?>
                         <div class="step-detail-bulle">
                             <?= htmlspecialchars($details) ?>
+                            <?php if(strcmp($details,"Colis livré en l’absence du destinataire")==0):?>
+                                <br>
+                                <button type="button" class="btn-boite" data-image="<?= htmlentities($chemin_image); ?>">
+                                        Voir la boite au lettre
+                                </button>
+
+                                <div id="monPopup" class="popup-overlay">
+                                    <div class="popup-content">
+                                        <span class="fermer-popup">&times;</span>
+                                        <img id="imgDansPopup" src="" alt="Photo de livraison">
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                            <?php if(!empty($raison)):?>
+                                <br>
+                                <?= htmlspecialchars($raison) ?>
+                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -247,14 +264,6 @@
                     <span>Total TTC</span>
                     <span><?= number_format($montant_ttc, 2, ',', ' ') ?> €</span>
                 </div>
-                <?php 
-                if ($chemin_image != null){
-                    ?>
-                    <img src=<?php echo $chemin_image?> alt="" width="200em">
-                    <caption>livraison effectuée</caption>
-                    <?php 
-                }
-                ?>
             </div>
         </section>
 
@@ -263,5 +272,6 @@
     <footer class="footer mobile">
         <?php include 'footer.php'?>
     </footer>
+    <script src="../assets/js/detailcommande.js"></script>
 </body>
 </html>

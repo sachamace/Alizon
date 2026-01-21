@@ -113,7 +113,7 @@ void traiter_get_list(int cnx, PGconn *conn, int capacite_max) {
 // Fonction pour parser et exécuter l'UPDATE reçu du PHP
 void traiter_update(char *buffer, int capacite_max, PGconn *conn, int verbose) {
     // Protocole attendu: id;etape;statut;priorite;details;raison;image
-    // NOTE : Le "UPDATE" a déjà été retiré dans le main() !
+
 
     char *saveptr;
     char query[2048];
@@ -126,10 +126,8 @@ void traiter_update(char *buffer, int capacite_max, PGconn *conn, int verbose) {
     }
     PQclear(res_count);
 
-    // --- CORRECTION ICI : ON NE SAUTE PLUS RIEN ---
-    // On attaque directement la récupération de l'ID
+    //récupération de l'ID
     char *id = strtok_r(buffer, ";", &saveptr); 
-    // ----------------------------------------------
 
     char *etape = strtok_r(NULL, ";", &saveptr);
     char *statut = strtok_r(NULL, ";", &saveptr);
@@ -140,7 +138,6 @@ void traiter_update(char *buffer, int capacite_max, PGconn *conn, int verbose) {
 
     if (!id) return;
 
-    // ... Le reste de ta fonction reste identique ...
     query[0] = '\0';
     // Construction de la requête SQL dynamique
     if(!(nb_commandes > capacite_max)){
@@ -167,7 +164,7 @@ void traiter_update(char *buffer, int capacite_max, PGconn *conn, int verbose) {
         );
     }
 
-    if (verbose) log_message(query, NULL, verbose); // Petit bonus : log la requête SQL aussi
+    if (verbose) log_message(query, NULL, verbose); 
 
     PGresult *res_upd = PQexec(conn, query);
 
@@ -256,9 +253,9 @@ void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
 
     // Construction de la requête
     snprintf(query, sizeof(query), 
-        "SELECT date_commande, montant_total_ht, montant_total_ttc, bordereau, statut, etape, date_maj, details_etape, priorite, chemin_image_refuse FROM commande WHERE id_commande = '%s';", 
+        "SELECT date_commande, montant_total_ht, montant_total_ttc, bordereau, statut, etape, date_maj, details_etape, priorite, chemin_image_refuse, raison FROM commande WHERE id_commande = '%s';", 
         id_cmd
-    );
+    ); // test 
 
     if (verbose) printf("SQL : %s\n", query);
 
@@ -267,7 +264,7 @@ void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
     // Vérification du succès de la requête
     if (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0) {
         
-        snprintf(message_retour, sizeof(message_retour), "%s;%s;%s;%s;%s;%s;%s;%s;%s|",
+        snprintf(message_retour, sizeof(message_retour), "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s|",
             PQgetvalue(res, 0, 0), // date_commande
             PQgetvalue(res, 0, 1), // montant_total_ht
             PQgetvalue(res, 0, 2), // montant_total_ttc
@@ -276,7 +273,9 @@ void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
             PQgetvalue(res, 0, 5), // etape
             PQgetvalue(res, 0, 6), // date_maj
             PQgetvalue(res, 0, 7), // details_etape 
-            PQgetvalue(res, 0, 8)  // priorite
+            PQgetvalue(res, 0, 8),  // priorite
+            PQgetvalue(res, 0, 9), // chemin_image_refuse
+            PQgetvalue(res, 0, 10)  // raison
         );
 
         if (verbose) printf("Réponse générée : %s\n", message_retour);

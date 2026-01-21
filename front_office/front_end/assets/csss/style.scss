@@ -2769,7 +2769,7 @@ footer.footer {
     color: #000;
     text-decoration: none;
   }
-  @media (min-width: 1440px) {
+  @media (min-width: 500px) {
     &.disabled{
       display: none;
     }
@@ -3574,9 +3574,12 @@ footer.footer {
 // Responsive
 // -----------------------------------------------------------------------------
 @media (max-width: 768px) {
-    .commandes-container .commande-card {
+    .commandes-container{
+        padding-top: 0;
+        padding-bottom: 30px;
+        .commande-card {
         width: 100%;
-
+        }
         .commande-info {
             grid-template-columns: 1fr;
         }
@@ -3584,6 +3587,9 @@ footer.footer {
         .commande-actions {
             flex-direction: column-reverse; // Met le bouton principal en haut sur mobile
             gap: 0.8rem;
+        }
+        .btn{
+          width: 300px;
         }
     }
 
@@ -3705,6 +3711,52 @@ footer.footer {
                 border-width: 0 5px 5px 5px;
                 border-style: solid;
                 border-color: transparent transparent darken(#eef2f5, 5%) transparent;
+            }
+
+            /* Style du bouton pour qu'il ressemble à un lien */
+            .btn-boite {
+                background: none;
+                border: none;
+                color: #7028e4;
+                text-decoration: underline;
+                font-size: 1em;
+                cursor: pointer;
+                padding: 0;
+            }
+
+            /* Structure du Popup */
+            .popup-overlay {
+                display: none; /* CACHÉ PAR DÉFAUT */
+                position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background-color: rgba(0, 0, 0, 0.9);
+                z-index: 9999; /* Devant tout le reste */
+                justify-content: center;
+                align-items: center;
+            }
+
+            .popup-content {
+                position: relative;
+                max-width: 85%;
+                max-height: 85%;
+            }
+
+            .popup-content img {
+                max-width: 100%;
+                max-height: 80vh;
+                border: 4px solid white;
+                border-radius: 10px;
+            }
+
+            /* La croix */
+            .fermer-popup {
+                position: absolute;
+                top: -50px;
+                right: 0;
+                color: white;
+                font-size: 45px;
+                cursor: pointer;
             }
         }
 
@@ -3846,238 +3898,248 @@ footer.footer {
 .text-right { text-align: right; }
 .text-center { text-align: center; }
 
-// Responsive Mobile
-@media (max-width: 900px) {
-    .detail-content {
-        grid-template-columns: 1fr; // Empilement vertical
-    }
-}
+// =============================================================================
+// RESPONSIVE - DÉTAIL COMMANDE (MOBILE < 600px)
+// =============================================================================
 
-@media (max-width: 600px) {
-    .detail-header {
-        flex-direction: column;
-        align-items: flex-start;
+@media (max-width: 430px) {
+  
+  // 1. Ajustement du conteneur principal
+  .detail-container {
+    padding-top: 30px; // On laisse de la place pour le header fixe
+    padding-left: 15px;
+    padding-right: 15px;
+    gap: 1.5rem; // Réduit l'espace entre les blocs
+  }
+
+  // 2. En-tête de la commande (Titre, Statut, Date)
+  .detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+
+    .header-left {
+      width: 100%;
+      
+      h1 {
+        font-size: 1.4rem;
+        margin-bottom: 5px;
         
-        .header-right {
-            width: 100%;
-            align-items: flex-start;
-            margin-top: 1rem;
+        span {
+          font-size: 1.4rem; // Le numéro de commande
         }
+      }
+      
+      .statut-simple {
+        font-size: 0.9rem;
+      }
     }
+
+    .header-right {
+      width: 100%;
+      margin-top: 5px;
+      padding-top: 10px;
+      border-top: 1px dashed $gray-light;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .last-update {
+        font-size: 0.85rem;
+        flex-direction: row;
+        display: flex;
+        gap: 5px;
+      }
+    }
+  }
+
+  // 3. Timeline de suivi (Barre de progression)
+  .suivi-timeline {
+    padding: 0;
+    margin-bottom: 1.5rem;
     
-    // Timeline simplifiée sur mobile
-    .suivi-timeline .step-label {
-        font-size: 0.75rem;
+    // On réduit la taille des étapes
+    .step {
+      min-width: auto; // Permet de réduire la largeur
+      
+      .step-icon {
+        width: 30px;      // Plus petit rond
+        height: 30px;
+        font-size: 0.8rem;
+        border-width: 2px;
+        margin-bottom: 0.3rem;
+      }
+      
+      .step-label {
+        font-size: 0.7rem; // Texte plus petit
+        line-height: 1.1;
+        max-width: 70px;   // Force le retour à la ligne si trop long
+        margin: 0 auto;
+      }
+
+      // Bulle de détail (ex: bouton boite aux lettres)
+      .step-detail-bulle {
+        font-size: 0.7rem;
+        padding: 5px;
+        min-width: 100px;
+        width: 120px;
+        left: 50%;
+        transform: translateX(-50%); // Centre la bulle par rapport au step
+        margin-top: 5px;
+        
+        .btn-boite {
+            font-size: 0.7rem;
+        }
+      }
     }
-}
 
-//FACTURE
-@page {
-    margin: 20mm;
-}
-
-body {
-    font-family: 'DejaVu Sans', Arial, sans-serif;
-    color: $gray-darker;
-    line-height: 1.6;
-}
-
-.page-break {
-    page-break-after: always;
-}
-
-.header {
-    display: table;
-    width: 100%;
-    margin-bottom: 40px;
-    padding-bottom: 20px;
-}
-
-.logo-section {
-    display: table-cell;
-    width: 50%;
-    vertical-align: top;
-}
-
-.logo-section img {
-    max-width: 200px;
-    height: auto;
-    margin-bottom: 10px;
-}
-
-.logo-section p {
-    margin: 5px 0;
-    color: $gray-dark;
-    font-size: 12px;
-}
-
-.facture-info {
-    display: table-cell;
-    width: 50%;
-    text-align: right;
-    vertical-align: top;
-}
-
-.facture-info h2 {
-    color: $gray-darker;
-    font-size: 28px;
-    margin: 0 0 10px 0;
-}
-
-.facture-numero {
-    background: $blue-vendor;
-    color: $black;
-    padding: 8px 15px;
-    border-radius: 5px;
-    display: inline-block;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.facture-date {
-    margin-top: 15px;
-}
-
-.commande-ref {
-    font-size: 10px;
-    color: #999;
-    margin-top: 5px;
-}
-
-.addresses {
-    display: table;
-    width: 100%;
-    margin-bottom: 40px;
-}
-
-.address-box {
-    display: table-cell;
-    width: 48%;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    vertical-align: top;
-}
-
-.address-box h3 {
-    color: $blue-vendor;
-    margin: 0 0 15px 0;
-    font-size: 16px;
-    border-bottom: 2px solid $blue-vendor;
-    padding-bottom: 5px;
-}
-
-.address-box p {
-    margin: 5px 0;
-    font-size: 12px;
-}
-
-.spacer {
-    display: table-cell;
-    width: 4%;
-}
-
-.mt-10 {
-    margin-top: 10px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 30px;
-}
-
-table thead {
-    background: $blue-vendor;
-    color: $black;
-}
-
-table th {
-    padding: 12px;
-    text-align: left;
-    font-weight: bold;
-    font-size: 12px;
-}
-
-table td {
-    padding: 10px 12px;
-    border-bottom: 1px solid $border-light;
-    font-size: 11px;
-}
-
-.text-right {
-    text-align: right;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.remise-badge {
-    color: $black;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 9px;
-    font-weight: bold;
-    margin-left: 5px;
-}
-
-.totaux-ligne {
-    background: #f0f0f0;
-    font-weight: bold;
-}
-
-.totals {
-    width: 50%;
-    float: right;
-    margin-top: 20px;
-}
-
-.totals table {
-    margin-bottom: 0;
-}
-
-.totals td {
-    padding: 8px 12px;
-    font-size: 12px;
-}
-
-.total-row {
-    background: $blue-vendor !important;
-    font-weight: bold;
-    font-size: 14px !important;
-}
-
-.total-row td {
-    padding: 12px !important;
-    color: $black;
-}
-
-.footer {
-    clear: both;
-    margin-top: 60px;
-    padding-top: 20px;
-    border-top: 2px solid $border-light;
-    text-align: center;
-    font-size: 10px;
-    color: $gray-dark;
-}
-
-.footer p {
-    margin: 5px 0;
-}
-
-@media print {
-    body {
-        margin: 0;
-        padding: 0;
+    // La ligne entre les ronds
+    .step-line {
+      margin-top: 13px; // Ajusté pour s'aligner au centre du rond de 30px
+      height: 2px;     // Ligne plus fine
     }
+  }
+
+  // 4. Structure du contenu (Passe en une seule colonne)
+  .detail-content {
+    grid-template-columns: 1fr; // Empile Articles puis Récap
+    gap: 1.5rem;
+
+    .articles-box, 
+    .recap-box {
+      padding: 1rem; // Moins de padding interne
+      
+      h3 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  // 5. Transformation du Tableau des articles en mode "Cartes"
+  .table-articles {
+    display: block;
+    width: 100%;
+
+    // On cache l'en-tête du tableau
+    thead {
+      display: none;
+    }
+
+    tbody {
+      display: block;
+      width: 100%;
+    }
+
+    // Chaque ligne (produit) devient un bloc
+    tr {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid $gray-light;
+      padding-bottom: 1rem;
+      position: relative;
+
+      &:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+    }
+
+    // Ajustement des cellules
+    td {
+      display: block;
+      padding: 0.2rem 0;
+      border: none;
+      width: 100%;
+      text-align: left !important; // Force l'alignement à gauche
+      
+      // La colonne produit (Image + Nom)
+      &.col-produit {
+        margin-bottom: 0.5rem;
+        
+        .produit-wrapper {
+          gap: 10px;
+          
+          img {
+            width: 50px;
+            height: 50px;
+            min-width: 50px; // Empêche l'écrasement
+          }
+          
+          .nom {
+            font-size: 0.95rem;
+            line-height: 1.3;
+            // Limite le nom à 2 lignes
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+        }
+      }
+
+      // Ajout de labels artificiels pour Prix et Qté (puisque le header est caché)
+      &:nth-child(2) { // Prix Unitaire
+        display: inline-block;
+        width: auto;
+        margin-right: 15px;
+        color: $gray-dark;
+        font-size: 0.9rem;
+        
+        &::before {
+          content: "PU : ";
+          font-weight: 600;
+        }
+      }
+
+      &:nth-child(3) { // Quantité
+        display: inline-block;
+        width: auto;
+        color: $gray-dark;
+        font-size: 0.9rem;
+
+        &::before {
+          content: "Qté : ";
+          font-weight: 600;
+        }
+      }
+
+      &:nth-child(4) { // Total Ligne
+        margin-top: 5px;
+        font-size: 1.1rem;
+        color: $black;
+        background: rgba($primary-color, 0.1);
+        padding: 5px 10px;
+        border-radius: 5px;
+        text-align: right !important; // Le total reste à droite pour le style
+        width: 100%;
+        box-sizing: border-box;
+        
+        strong {
+            color: $primary-color;
+        }
+      }
+    }
+  }
+
+  // 6. Récapitulatif (Total HT/TTC)
+  .recap-box {
+    background-color: #f9f9f9; // Fond légèrement différent pour séparer visuellement
+    border: none;
     
-    .page-break {
-        page-break-after: always;
+    .ligne-recap {
+      font-size: 0.9rem;
+      
+      &.total-final {
+        font-size: 1.2rem;
+        
+        span:last-child {
+          color: $primary-color;
+        }
+      }
     }
-    
-    table tbody tr:hover {
-        background: transparent;
-    }
+  }
 }
+

@@ -63,7 +63,7 @@
                 <h3>›</h3>
             </a>
 
-            <a class="compte__button">
+            <a href="commande.php" class="compte__button">
                 <img src="../assets/images/commande.png" class="compte__image">
                 <h3>Vos commandes</h3>
                 <h3>›</h3>

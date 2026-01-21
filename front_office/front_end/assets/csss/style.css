@@ -3384,7 +3384,7 @@ footer.footer.mobile, footer.footer.tablette {
 
 @media (max-width: 768px) {
   .commandes-container .commande-card {
-    width: 100%;
+    width: 75%;
   }
   .commandes-container .commande-card .commande-info {
     grid-template-columns: 1fr;

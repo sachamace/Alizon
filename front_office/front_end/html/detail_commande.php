@@ -176,7 +176,11 @@
                             <?= htmlspecialchars($details) ?>
                             <?php if(strcmp($details,"Colis livré en l’absence du destinataire")==0):?>
                                 <br>
-                                <a href=<?php htmlentities($chemin_image);?>>Voir la boite au lettre</a>
+                                <a class="lien-image">Voir la boite au lettre</a>
+                                <div id="monPopup" class="popup">
+                                    <span class="fermer">&times;</span>
+                                    <img class="popup-contenu" id="imgDansPopup">
+                                </div>
                             <?php endif; ?>
                             <?php if(!empty($raison)):?>
                                 <br>

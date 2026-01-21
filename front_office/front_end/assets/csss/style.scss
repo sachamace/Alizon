@@ -3722,6 +3722,73 @@ footer.footer {
                 border-style: solid;
                 border-color: transparent transparent darken(#eef2f5, 5%) transparent;
             }
+
+            .ma-miniature {
+              width: 200px;
+              cursor: pointer;
+              transition: 0.3s;
+              border-radius: 8px;
+            }
+            .ma-miniature:hover {
+                opacity: 0.8;
+            }
+
+            /* 2. LE POPUP (Modifié pour le centrage) */
+            .popup {
+                display: none; /* Caché par défaut */
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.85); /* Fond plus sombre */
+                
+                /* CENTRAGE PARFAIT */
+                justify-content: center;
+                align-items: center;
+            }
+
+            /* 3. L'IMAGE DANS LE POPUP (Modifiée pour la transition) */
+            .popup-contenu {
+                display: block;
+                max-width: 90%;
+                max-height: 90%;
+                border-radius: 4px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.5);
+                
+                /* ANIMATION DOUCE */
+                animation: apparitionDouce 0.3s ease-out;
+            }
+
+            /* Animation : l'image arrive avec un léger zoom (0.95 vers 1) et un fondu */
+            @keyframes apparitionDouce {
+                from {
+                    opacity: 0;
+                    transform: scale(0.95);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+
+            /* 4. LA CROIX DE FERMETURE */
+            .fermer {
+                position: absolute;
+                top: 20px;
+                right: 30px;
+                color: white;
+                font-size: 50px;
+                font-weight: 300; /* Plus fine pour être plus élégante */
+                cursor: pointer;
+                transition: 0.2s;
+                line-height: 1;
+            }
+            .fermer:hover {
+                color: #ccc;
+                transform: scale(1.1);
+            }
         }
 
         // État Actif (Passé ou Courant)

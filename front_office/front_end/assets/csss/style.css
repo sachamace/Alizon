@@ -3491,6 +3491,10 @@ footer.footer.mobile, footer.footer.tablette {
   max-width: 150px;
   text-align: center;
   border: 1px solid rgb(221.9444444444, 229.7222222222, 235.5555555556);
+  /* 2. LE POPUP (Modifié pour le centrage) */
+  /* 3. L'IMAGE DANS LE POPUP (Modifiée pour la transition) */
+  /* Animation : l'image arrive avec un léger zoom (0.95 vers 1) et un fondu */
+  /* 4. LA CROIX DE FERMETURE */
 }
 .suivi-timeline .step .step-detail-bulle::before {
   content: "";
@@ -3501,6 +3505,62 @@ footer.footer.mobile, footer.footer.tablette {
   border-width: 0 5px 5px 5px;
   border-style: solid;
   border-color: transparent transparent rgb(221.9444444444, 229.7222222222, 235.5555555556) transparent;
+}
+.suivi-timeline .step .step-detail-bulle .ma-miniature {
+  width: 200px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 8px;
+}
+.suivi-timeline .step .step-detail-bulle .ma-miniature:hover {
+  opacity: 0.8;
+}
+.suivi-timeline .step .step-detail-bulle .popup {
+  display: none; /* Caché par défaut */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85); /* Fond plus sombre */
+  /* CENTRAGE PARFAIT */
+  justify-content: center;
+  align-items: center;
+}
+.suivi-timeline .step .step-detail-bulle .popup-contenu {
+  display: block;
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 4px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  /* ANIMATION DOUCE */
+  animation: apparitionDouce 0.3s ease-out;
+}
+@keyframes apparitionDouce {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.suivi-timeline .step .step-detail-bulle .fermer {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: white;
+  font-size: 50px;
+  font-weight: 300; /* Plus fine pour être plus élégante */
+  cursor: pointer;
+  transition: 0.2s;
+  line-height: 1;
+}
+.suivi-timeline .step .step-detail-bulle .fermer:hover {
+  color: #ccc;
+  transform: scale(1.1);
 }
 .suivi-timeline .step.active .step-icon {
   background: #ff6ce2;

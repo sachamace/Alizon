@@ -2973,12 +2973,15 @@ footer.footer {
         align-items: flex-end;
     }
     .promo-badge-front, .remise-badge-front {
+      margin-top: 10px;
         padding: 8px 15px;
         border-radius: 8px;
         font-weight: bold;
         font-size: 1.1rem;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         animation: pulse-remise 2s infinite;
+        --base-scale: 1;
+        transform-origin: top right;
     }
 
     .promo-badge-front {
@@ -2994,10 +2997,10 @@ footer.footer {
 
 @keyframes pulse-remise {
     0%, 100% {
-        transform: scale(1);
+        transform: scale(var(--base-scale, 1));
     }
     50% {
-        transform: scale(1.05);
+        transform: scale(calc(var(--base-scale, 1) * 1.05));
     }
 }
 
@@ -3358,12 +3361,21 @@ footer.footer {
 }
 
 @media (max-width: 428px) {
-    .has-remise-front {
-        .remise-badge-front {
-            top: 8px;
-            right: 8px;
-            padding: 5px 10px;
-            font-size: 0.85rem;
+    .has-badge-front {
+        .badge-container {
+          position: absolute;
+          top: 15px;
+          right: 15px;
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+        }
+        .remise-badge-front, .promo-badge-front {
+          font-size: 0.8rem;
+          right: 10px;
+          padding: 6px 12px;
+          --base-scale: 0.8;
         }
     }
     

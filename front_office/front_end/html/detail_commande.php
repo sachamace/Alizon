@@ -59,6 +59,7 @@
             $etape = $cols[5];
             $details = $cols[7]; 
             $date_maj = $cols[6];
+            $chemin_image = $cols[7];
             
             // ... affichage ...
         } else {
@@ -246,6 +247,13 @@
                     <span>Total TTC</span>
                     <span><?= number_format($montant_ttc, 2, ',', ' ') ?> €</span>
                 </div>
+                <?php 
+                if ($chemin_image != null){
+                    ?>
+                    <img src=<?php echo $chemin_image?> alt="" width="200em">
+                    <?php 
+                }
+                ?>
             </div>
         </section>
 

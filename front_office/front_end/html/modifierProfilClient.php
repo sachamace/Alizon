@@ -14,13 +14,8 @@ try {
             cc.date_naissance,
             cc.adresse_mail AS email,
             cc.num_tel AS telephone,
-            cc.id_num,
-            a.adresse,
-            a.code_postal,
-            a.ville,
-            a.pays
+            cc.id_num
         FROM compte_client cc
-        LEFT JOIN adresse a ON cc.id_client = a.id_client
         WHERE cc.id_client = :id_client
     ");
     $stmt->execute(['id_client' => $id_client_connecte]);
@@ -35,6 +30,15 @@ try {
     $stmt->execute(['id' => $profil['id_num']]);
     $profil_mdp = $stmt->fetchColumn();
 
+    // Récupération de toutes les adresses
+    $stmt_adresses = $pdo->prepare("
+        SELECT * FROM adresse 
+        WHERE id_client = :id_client 
+        ORDER BY est_defaut DESC, date_creation ASC
+    ");
+    $stmt_adresses->execute(['id_client' => $id_client_connecte]);
+    $adresses = $stmt_adresses->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (PDOException $e) {
     die("Erreur SQL : " . $e->getMessage());
 }
@@ -48,13 +52,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $date_naissance = trim($_POST['date_naissance']);
     $email = trim($_POST['email']);
     $telephone = trim($_POST['telephone']);
-    $mdp_actuel = trim($_POST['mdp_actuel']);
-    $mdp_nouveau = trim($_POST['mdp_nouveau']);
-    $mdp_confirmation = trim($_POST['mdp_confirmation']);
-    $adresse = trim($_POST['adresse']);
-    $code_postal = trim($_POST['code_postal']);
-    $ville = trim($_POST['ville']);
-    $pays = trim($_POST['pays']);
+    $mdp_actuel = trim($_POST['mdp_actuel'] ?? '');
+    $mdp_nouveau = trim($_POST['mdp_nouveau'] ?? '');
+    $mdp_confirmation = trim($_POST['mdp_confirmation'] ?? '');
+    
+    // Récupérer l'adresse par défaut sélectionnée
+    $adresse_defaut_selectionnee = isset($_POST['adresse_defaut']) ? (int)$_POST['adresse_defaut'] : null;
 
     // Validations
     if (empty($prenom)) {
@@ -106,84 +109,72 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    // Validation du code postal
-    if (!empty($code_postal) && !preg_match("/^[0-9]{5}$/", $code_postal)) {
-        $errors['code_postal'] = "Code postal invalide (5 chiffres requis)";
-    }
-
     // Si pas d'erreurs, mise à jour
     if (empty($errors)) {
-        if ($email != $profil['email']) {
-            $sqlident = "UPDATE identifiants SET login = :login WHERE id_num = :num";
-            $stmt = $pdo->prepare($sqlident);
-            $stmt->execute([
-                'num' => $profil['id_num'],
-                'login' => $email
-            ]);
-        }
-
-        if (!empty($mdp_actuel) && !empty($mdp_nouveau) && !empty($mdp_confirmation)) {
-            $sqlPass = "UPDATE identifiants SET mdp = :mdp WHERE id_num = :num";
-            $stmtPass = $pdo->prepare($sqlPass);
-            $stmtPass->execute([
-                'num' => $profil['id_num'],
-                'mdp' => $mdp_nouveau
-            ]);
-        }
-
-        $sqlclient = "UPDATE compte_client SET 
-            prenom = :prenom, 
-            nom = :nom, 
-            date_naissance = :date_naissance, 
-            num_tel = :telephone, 
-            adresse_mail = :email 
-            WHERE id_num = :id_num";
-        $stmtclient = $pdo->prepare($sqlclient);
-        $stmtclient->execute([
-            'prenom' => $prenom,
-            'nom' => $nom,
-            'date_naissance' => $date_naissance,
-            'telephone' => $telephone,
-            'email' => $email,
-            'id_num' => $profil['id_num']
-        ]);
-
-        $stmt_check = $pdo->prepare("SELECT COUNT(*) FROM adresse WHERE id_client = :id_client");
-        $stmt_check->execute(['id_client' => $profil['id_client']]);
-        $adresse_exists = $stmt_check->fetchColumn() > 0;
-
-        if ($adresse_exists) {
-            $sqladresse = "UPDATE adresse SET 
-                adresse = :adresse, 
-                code_postal = :code_postal, 
-                ville = :ville, 
-                pays = :pays 
-                WHERE id_client = :id_client";
-            $stmtadresse = $pdo->prepare($sqladresse);
-            $stmtadresse->execute([
-                'adresse' => $adresse,
-                'code_postal' => $code_postal,
-                'ville' => $ville,
-                'pays' => $pays,
-                'id_client' => $profil['id_client']
-            ]);
-        } else {
-            if (!empty($adresse) || !empty($code_postal) || !empty($ville) || !empty($pays)) {
-                $sqladresse = "INSERT INTO adresse (id_client, adresse, code_postal, ville, pays) 
-                    VALUES (:id_client, :adresse, :code_postal, :ville, :pays)";
-                $stmtadresse = $pdo->prepare($sqladresse);
-                $stmtadresse->execute([
-                    'id_client' => $profil['id_client'],
-                    'adresse' => $adresse,
-                    'code_postal' => $code_postal,
-                    'ville' => $ville,
-                    'pays' => $pays
+        try {
+            $pdo->beginTransaction();
+            
+            // Mise à jour de l'email dans identifiants
+            if ($email != $profil['email']) {
+                $sqlident = "UPDATE identifiants SET login = :login WHERE id_num = :num";
+                $stmt = $pdo->prepare($sqlident);
+                $stmt->execute([
+                    'num' => $profil['id_num'],
+                    'login' => $email
                 ]);
             }
-        }
 
-        header("Location: consulterProfilClient.php");
-        exit();
+            // Mise à jour du mot de passe
+            if (!empty($mdp_actuel) && !empty($mdp_nouveau) && !empty($mdp_confirmation)) {
+                $sqlPass = "UPDATE identifiants SET mdp = :mdp WHERE id_num = :num";
+                $stmtPass = $pdo->prepare($sqlPass);
+                $stmtPass->execute([
+                    'num' => $profil['id_num'],
+                    'mdp' => $mdp_nouveau
+                ]);
+            }
+
+            // Mise à jour du compte client
+            $sqlclient = "UPDATE compte_client SET 
+                prenom = :prenom, 
+                nom = :nom, 
+                date_naissance = :date_naissance, 
+                num_tel = :telephone, 
+                adresse_mail = :email 
+                WHERE id_num = :id_num";
+            $stmtclient = $pdo->prepare($sqlclient);
+            $stmtclient->execute([
+                'prenom' => $prenom,
+                'nom' => $nom,
+                'date_naissance' => $date_naissance,
+                'telephone' => $telephone,
+                'email' => $email,
+                'id_num' => $profil['id_num']
+            ]);
+
+            // Mise à jour de l'adresse par défaut si sélectionnée
+            if ($adresse_defaut_selectionnee) {
+                // Le trigger se charge de retirer le défaut des autres
+                $stmt_defaut = $pdo->prepare("
+                    UPDATE adresse 
+                    SET est_defaut = TRUE 
+                    WHERE id_adresse = :id_adresse AND id_client = :id_client
+                ");
+                $stmt_defaut->execute([
+                    'id_adresse' => $adresse_defaut_selectionnee,
+                    'id_client' => $id_client_connecte
+                ]);
+            }
+            
+            $pdo->commit();
+            
+            header("Location: consulterProfilClient.php");
+            exit();
+            
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+            $errors['general'] = "Erreur lors de la mise à jour : " . $e->getMessage();
+        }
     }
 }
 ?>
@@ -199,7 +190,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <link rel="stylesheet" href="../assets/csss/style.css">
 </head>
 <body class="body_profilClient">
-    <header class = "disabled">
+    <header class="disabled">
         <?php include 'header.php'?>
     </header>
 
@@ -211,6 +202,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <section class="profil-container">
             <form action="" method="POST">
                 <h2>Modifier votre profil</h2>
+                
+                <?php if (isset($errors['general'])): ?>
+                    <div style="background: #ffebee; border: 1px solid #f44336; padding: 15px; border-radius: 5px; margin-bottom: 20px; color: #c62828;">
+                        <strong>Erreur :</strong> <?= htmlspecialchars($errors['general']) ?>
+                    </div>
+                <?php endif; ?>
                 
                 <article>
                     <h3>Prénom</h3>
@@ -288,34 +285,38 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <p class="error"><?php echo $errors['telephone']; ?></p>
                 <?php } ?>
 
-                <h3>Adresse de livraison et facturation</h3>
-
-                <article>
-                    <h3>Adresse</h3>
-                    <input type="text" name="adresse" id="adresse"
-                        value="<?php echo isset($_POST['adresse']) ? htmlentities($_POST['adresse']) : htmlentities($profil['adresse'] ?? ''); ?>">
-                </article>
-
-                <article>
-                    <h3>Code postal</h3>
-                    <input type="text" name="code_postal" id="code_postal"
-                        value="<?php echo isset($_POST['code_postal']) ? htmlentities($_POST['code_postal']) : htmlentities($profil['code_postal'] ?? ''); ?>">
-                </article>
-                <?php if (isset($errors['code_postal'])) { ?>
-                    <p class="error"><?php echo $errors['code_postal']; ?></p>
-                <?php } ?>
-
-                <article>
-                    <h3>Ville</h3>
-                    <input type="text" name="ville" id="ville"
-                        value="<?php echo isset($_POST['ville']) ? htmlentities($_POST['ville']) : htmlentities($profil['ville'] ?? ''); ?>">
-                </article>
-
-                <article>
-                    <h3>Pays</h3>
-                    <input type="text" name="pays" id="pays"
-                        value="<?php echo isset($_POST['pays']) ? htmlentities($_POST['pays']) : htmlentities($profil['pays'] ?? ''); ?>">
-                </article>
+                <!-- SECTION ADRESSE PAR DÉFAUT -->
+                <div class="adresse-section" style="margin-top: 2rem; padding: 1.5rem; background: #f9f9f9; border-radius: 8px;">
+                    <h3>Adresse de livraison/facturation par défaut</h3>
+                    
+                    <?php if (empty($adresses)): ?>
+                        <p>Vous n'avez pas encore d'adresse enregistrée.</p>
+                        <a href="gererAdresses.php" style="display: inline-block; margin-top: 1rem; padding: 0.7rem 1.5rem; background: #ff6ce2; color: #000; text-decoration: none; border-radius: 8px; font-weight: 600;">
+                            Ajouter une adresse
+                        </a>
+                    <?php else: ?>
+                        <select name="adresse_defaut" style="width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; margin-bottom: 1rem;">
+                            <?php foreach ($adresses as $adr): ?>
+                                <option value="<?= $adr['id_adresse'] ?>" <?= $adr['est_defaut'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($adr['libelle']) ?> - 
+                                    <?= htmlspecialchars($adr['adresse']) ?>, 
+                                    <?= htmlspecialchars($adr['ville']) ?>
+                                    <?= $adr['est_defaut'] ? ' ★' : '' ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        
+                        <div style="background: #e3f2fd; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                            <p style="margin: 0; color: #1976d2; font-size: 0.9rem;">
+                                Cette adresse sera utilisée par défaut pour vos commandes.
+                            </p>
+                        </div>
+                        
+                        <a href="gererAdresses.php" style="display: inline-block; padding: 0.5rem 1rem; background: #6c757d; color: white; text-decoration: none; border-radius: 6px; font-size: 0.9rem;">
+                            Gérer mes adresses (<?= count($adresses) ?>)
+                        </a>
+                    <?php endif; ?>
+                </div>
 
                 <div class="btn-modif">
                     <input type="submit" name="confirmer" class="confirmer" value="Confirmer">

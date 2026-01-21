@@ -14,13 +14,8 @@ try {
             cc.date_naissance,
             cc.adresse_mail AS email,
             cc.num_tel AS telephone,
-            cc.id_num,
-            a.adresse,
-            a.code_postal,
-            a.ville,
-            a.pays
+            cc.id_num
         FROM compte_client cc
-        LEFT JOIN adresse a ON cc.id_client = a.id_client
         WHERE cc.id_client = :id_client
     ");
     $stmt->execute(['id_client' => $id_client_connecte]);
@@ -34,6 +29,20 @@ try {
     $stmt = $pdo->prepare("SELECT mdp FROM identifiants WHERE id_num = :id");
     $stmt->execute(['id' => $profil['id_num']]);
     $profil_mdp = $stmt->fetchColumn();
+
+    // Récupération de l'adresse par défaut
+    $stmt_adresse = $pdo->prepare("
+        SELECT * FROM adresse 
+        WHERE id_client = :id_client AND est_defaut = TRUE
+        LIMIT 1
+    ");
+    $stmt_adresse->execute(['id_client' => $id_client_connecte]);
+    $adresse_defaut = $stmt_adresse->fetch(PDO::FETCH_ASSOC);
+
+    // Compter le nombre total d'adresses
+    $stmt_count = $pdo->prepare("SELECT COUNT(*) FROM adresse WHERE id_client = :id_client");
+    $stmt_count->execute(['id_client' => $id_client_connecte]);
+    $nb_adresses = $stmt_count->fetchColumn();
 
 } catch (PDOException $e) {
     die("Erreur SQL : " . $e->getMessage());
@@ -49,9 +58,16 @@ try {
     <meta name="description" content="Consultez votre profil">
     <meta name="keywords" content="MarketPlace, Shopping, Ventes, Breton, Produit" lang="fr">
     <link rel="stylesheet" href="../assets/csss/style.css">
+    <style>
+        .adresse-card p strong{
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #5a5a5a
+        }
+    </style>
 </head>
 <body class="body_profilClient">
-    <header class = "disabled">
+    <header class="disabled">
         <?php include 'header.php'?>
     </header>
 
@@ -93,29 +109,34 @@ try {
                 <p><?php echo htmlentities($profil["telephone"]) ?></p>
             </article>
 
-            <article>
-                <h3>Adresse</h3>
-                <p><?php echo htmlentities($profil["adresse"] ?? 'Non renseignée') ?></p>
-            </article>
-
-            <article>
-                <h3>Code postal</h3>
-                <p><?php echo htmlentities($profil["code_postal"] ?? 'Non renseigné') ?></p>
-            </article>
-
-            <article>
-                <h3>Ville</h3>
-                <p><?php echo htmlentities($profil["ville"] ?? 'Non renseignée') ?></p>
-            </article>
-
-            <article>
-                <h3>Pays</h3>
-                <p><?php echo htmlentities($profil["pays"] ?? 'Non renseigné') ?></p>
-            </article>
+            <!-- SECTION ADRESSE PAR DÉFAUT -->
+            <div class="adresse-card" style="margin-top: 2rem; padding: 1.5rem; background: #f9f9f9; border-radius: 8px; border: 2px solid #ddd;">
+                <h3 style="margin-top: 0; color: #333;">Adresse de livraison/facturation par défaut</h3>
+                
+                <?php if ($adresse_defaut): ?>
+                    <p><strong>Libellé :</strong> <?php echo htmlentities($adresse_defaut['libelle']) ?></p>
+                    <p><strong>Adresse :</strong> <?php echo htmlentities($adresse_defaut['adresse']) ?></p>
+                    <p><strong>Code postal :</strong> <?php echo htmlentities($adresse_defaut['code_postal']) ?></p>
+                    <p><strong>Ville :</strong> <?php echo htmlentities($adresse_defaut['ville']) ?></p>
+                    <p><strong>Pays :</strong> <?php echo htmlentities($adresse_defaut['pays']) ?></p>
+                    <?php if ($adresse_defaut['num_tel']): ?>
+                        <p><strong>Téléphone :</strong> <?php echo htmlentities($adresse_defaut['num_tel']) ?></p>
+                    <?php endif; ?>
+                    
+                    <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                        Vous avez <strong><?php echo $nb_adresses ?></strong> adresse(s) enregistrée(s)
+                    </p>
+                <?php else: ?>
+                    <p style="color: #999;">Vous n'avez pas encore d'adresse enregistrée.</p>
+                <?php endif; ?>
+                
+                <a href="gererAdresses.php" style="display: inline-block; margin-top: 1rem; padding: 0.7rem 1.5rem; background: #ff6ce2; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600;">
+                    Gérer mes adresses (<?php echo $nb_adresses ?>)
+                </a>
+            </div>
 
             <div class="btn-modif">
                 <a href="modifierProfilClient.php" class="modifier">Modifier</a>
-                <a href="anonymeCompte.php" class="ano">Anonymiser mon compte</a>
             </div>
         </section>
     </main>

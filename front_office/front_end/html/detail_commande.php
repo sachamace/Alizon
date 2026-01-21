@@ -176,12 +176,11 @@
                             <?= htmlspecialchars($details) ?>
                             <?php if(strcmp($details,"Colis livré en l’absence du destinataire")==0):?>
                                 <br>
-                                <a href="#" class="lien-image" data-image="/docker/data/web/htmlDelivraptor/boite.jpg">
+                                <a href="#" class="lien-image" data-image=<?php echo htmlentities($chemin_image);?>>
                                     Voir la boite au lettre
                                 </a>
                                 <div id="monPopup" class="popup-overlay">
                                     <div class="popup-content">
-                                        <span class="fermer">&times;</span>
                                         <img id="imgDansPopup" src="" alt="Photo de la boîte aux lettres">
                                     </div>
                                 </div>

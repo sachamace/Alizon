@@ -22,8 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['motdepasse'])) {
                 nom = 'ANONYME', 
                 prenom = 'anonyme', 
                 adresse_mail = 'anonyme@exemple.com',
-                num_tel = NULL,
-                date_naissance = NULL,
+                num_tel = 0000000000,
+                date_naissance = 0000-00-00,
                 somme_avoir = 0 
                 WHERE id_client = ?";
         

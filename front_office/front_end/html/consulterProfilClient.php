@@ -44,6 +44,11 @@ try {
     $stmt_count->execute(['id_client' => $id_client_connecte]);
     $nb_adresses = $stmt_count->fetchColumn();
 
+    // Savoir si l'a2f est déja activé 
+    $stmt_a2f = $pdo->prepare("SELECT codea2f FROM adresse WHERE id_client = :id_client");
+    $stmt_a2f->execute(['id_client' => $id_client_connecte]);
+    $a2f = $stmt_a2f->fetchColumn();
+
 } catch (PDOException $e) {
     die("Erreur SQL : " . $e->getMessage());
 }
@@ -133,6 +138,14 @@ try {
             <div class="btn-modif">
                 <a href="modifierProfilClient.php" class="modifier">Modifier</a>
                 <a href="anonymeCompte.php" class="ano">supprimer mon compte</a>
+            </div>
+
+            <div class="profil-container">
+                <?php if(strcmp($a2f," ") == 0){?>
+                    <a href="activerA2f.php">Activer l'A2F</a>
+                <?php }else{?>
+                    <a href="desactiverA2f.php">Désactiver l'A2F</a>
+                <?php }?>
             </div>
         </section>
     </main>

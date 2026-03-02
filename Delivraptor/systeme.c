@@ -293,7 +293,7 @@ void traiter_affiche(char *id_cmd, int cnx, PGconn *conn, int verbose) {
 }
 
 // --- FONCTION DE LOG ---
-void log_message(const char *msg, struct sockaddr_in *client_addr, int verbose) { // Généré par Gémini le 20 janvir 15:17 
+void log_message(const char *msg, struct sockaddr_in *client_addr, int verbose) { 
     FILE *fichier_log;
     time_t now = time(NULL);
     struct tm *t = localtime(&now);

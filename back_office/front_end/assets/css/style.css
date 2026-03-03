@@ -6146,21 +6146,21 @@ textarea.error:focus {
 }
 
 .stats-page {
-  padding: 2rem;
-  background: #fff;
+  padding: 2rem 2.5rem;
   overflow-y: auto;
   flex: 1;
+  background: #fff;
 }
 .stats-page h2 {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 0.2rem;
 }
 
 .stats-subtitle {
   color: #666;
-  margin-bottom: 1.5rem;
   font-size: 0.9rem;
+  margin-bottom: 2rem;
 }
 
 .stats-filtres {
@@ -6168,10 +6168,10 @@ textarea.error:focus {
   flex-wrap: wrap;
   gap: 1rem;
   align-items: flex-end;
-  margin-bottom: 1.5rem;
-  background: #e6e6e6;
-  padding: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.2rem;
   border-radius: 1em;
+  background: #e6e6e6;
 }
 .stats-filtres .filtre-group {
   display: flex;
@@ -6183,7 +6183,7 @@ textarea.error:focus {
   color: #666;
 }
 .stats-filtres input, .stats-filtres select {
-  padding: 0.4rem 0.7rem;
+  padding: 0.45rem 0.8rem;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
   font-size: 0.9rem;
@@ -6191,7 +6191,7 @@ textarea.error:focus {
   outline: none;
 }
 .stats-filtres button {
-  padding: 0.4rem 1.2rem;
+  padding: 0.45rem 1.3rem;
   background: #6CD3FF;
   border: none;
   border-radius: 6px;
@@ -6206,37 +6206,50 @@ textarea.error:focus {
 
 .stats-kpi {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+@media (max-width: 768px) {
+  .stats-kpi {
+    grid-template-columns: 1fr;
+  }
 }
 
 .kpi-card {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 3px solid #6CD3FF;
   background: #e6e6e6;
   border-radius: 1em;
-  padding: 1rem 1.2rem;
-  border: 1px solid #e0e0e0;
+}
+.kpi-card.kpi-montant {
+  border-bottom-color: #27ae60;
+}
+.kpi-card.kpi-produits {
+  border-bottom-color: #666;
 }
 .kpi-card .kpi-label {
   font-size: 0.85rem;
   color: #666;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.4rem;
 }
 .kpi-card .kpi-value {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: 700;
+  color: #000;
+  line-height: 1.1;
 }
 .kpi-card .kpi-sub {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #666;
-  margin-top: 0.2rem;
+  margin-top: 0.4rem;
 }
 
 .stats-charts {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
 }
 @media (max-width: 900px) {
   .stats-charts {
@@ -6245,29 +6258,29 @@ textarea.error:focus {
 }
 
 .chart-card {
+  padding: 1.5rem;
   background: #e6e6e6;
   border-radius: 1em;
-  padding: 1.2rem;
-  border: 1px solid #e0e0e0;
 }
 .chart-card h3 {
   font-size: 0.95rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  color: #333;
+  margin-bottom: 1.2rem;
 }
 .chart-card canvas {
-  max-height: 280px;
+  max-height: 260px;
 }
 
 .stats-table-wrap {
+  padding: 1.5rem;
   background: #e6e6e6;
   border-radius: 1em;
-  padding: 1.2rem;
-  border: 1px solid #e0e0e0;
 }
 .stats-table-wrap h3 {
   font-size: 0.95rem;
   font-weight: 600;
+  color: #333;
   margin-bottom: 1rem;
 }
 
@@ -6278,13 +6291,14 @@ textarea.error:focus {
 }
 .stats-table th {
   text-align: left;
-  padding: 0.5rem 0.8rem;
-  background: #e0e0e0;
-  color: #333;
+  padding: 0.6rem 1rem;
+  border-bottom: 2px solid #e0e0e0;
+  color: #666;
   font-weight: 600;
+  font-size: 0.82rem;
 }
 .stats-table td {
-  padding: 0.6rem 0.8rem;
+  padding: 0.7rem 1rem;
   border-bottom: 1px solid #e0e0e0;
   color: #333;
 }
@@ -6298,10 +6312,12 @@ textarea.error:focus {
 .badge-volume {
   font-weight: 600;
   font-size: 0.9rem;
+  color: #333;
 }
 
 .stats-no-data {
   text-align: center;
   color: #666;
-  padding: 2rem;
+  padding: 3rem;
+  font-size: 0.95rem;
 }/*# sourceMappingURL=style.css.map */

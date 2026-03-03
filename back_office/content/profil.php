@@ -18,5 +18,6 @@ if (isset($_GET['page']) && $_GET['page'] === 'profil') {
             include 'profil_modifier.php';
         }
     }
+
 }
 ?>

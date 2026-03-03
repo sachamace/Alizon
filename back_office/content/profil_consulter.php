@@ -1,3 +1,10 @@
+<?php
+    $id_vendeur_connecte = $_SESSION['vendeur_id'];
+    // Savoir si l'a2f est déja activé 
+    $stmt_a2f = $pdo->prepare("SELECT codea2f FROM compte_vendeur WHERE id_vendeur = :id_vendeur");
+    $stmt_a2f->execute(['id_vendeur' => $id_vendeur_connecte]);
+    $a2f = $stmt_a2f->fetchColumn();
+?>
 <section class="profil-container">
     <h2>Votre profil</h2>
     <article>
@@ -32,5 +39,13 @@
 
     <div class="btn-modif">
         <a href="index.php?page=profil&type=modifier" class="modifier">Modifier</a>
+    </div>
+
+    <div class="profil-container">
+        <?php if(strcmp($a2f,"") == 0){?>
+            <a href="activerA2f.php">Activer l'A2F</a>
+        <?php }else{?>
+            <a href="desactiverA2f.php">Désactiver l'A2F</a>
+        <?php }?>
     </div>
 </section>

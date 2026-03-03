@@ -6509,3 +6509,91 @@ textarea.error {
     font-size: 1.2rem;
     letter-spacing: 2px;
 }
+.popup-overlay {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: white;
+    padding: 50px;
+    border-radius: 15px;
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.popup-content h2 {
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 26px;
+}
+
+.popup-content p {
+    color: #555;
+    margin-bottom: 30px;
+    font-size: 18px;
+}
+
+.popup-content input[type="text"] {
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.popup-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.btn-popup {
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-valider {
+    background-color: #28a745;
+    color: white;
+    width: 100%; /* Plus large pour l'A2F */
+}
+
+.btn-valider:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+.btn-non {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-non:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+.erreur-msg {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid #f5c6cb;
+}

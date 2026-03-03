@@ -1,15 +1,52 @@
 <?php
 session_start();
 include 'config.php';
+// --- AJOUT : Import de la bibliothèque OTPHP ---
+require_once '../vendor/autoload.php';
+use OTPHP\TOTP;
 
 $erreur = "";
+$erreur_a2f = ""; 
+$attente_a2f = false; // État pour afficher la popup A2F
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+// 1. GESTION DE LA VÉRIFICATION DU CODE A2F (Étape 2)
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f'])) {
+    $code_saisi = trim($_POST['code_a2f']);
+    $secret = $_SESSION['temp_secret'] ?? null;
+    
+    if ($secret) {
+        $otp = TOTP::createFromSecret($secret);
+        if ($otp->verify($code_saisi)) {
+            // La vérification A2F a réussi
+            if(isset($_SESSION['temp_vendeur'])) {
+                $vendeur = $_SESSION['temp_vendeur'];
+                
+                // Connexion définitive (Variables originales de connecter.php)
+                $_SESSION['vendeur_id'] = $vendeur['id_vendeur'];
+                $_SESSION['vendeur_nom'] = $vendeur['raison_sociale'];
+                $_SESSION['vendeur_email'] = $vendeur['login'];
+                $_SESSION['est_connecte'] = true;
+                
+                // Nettoyage
+                unset($_SESSION['temp_vendeur']);
+                unset($_SESSION['temp_secret']);
+                
+                echo "<script>window.location.href = 'index.php?page=dashboard';</script>";
+                exit();
+            }
+        } else {
+            $erreur_a2f = "Code de vérification incorrect.";
+            $attente_a2f = true; 
+        }
+    }
+}
+
+// 2. CONNEXION INITIALE (Étape 1 : Login/MDP)
+elseif ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['email'])) {
     $email = trim($_POST['email']);
     $motdepasse = trim($_POST['motdepasse']);
     
     try {
-        // Vérifier si l'email existe dans la table identifiants pour un vendeur
         $stmt = $pdo->prepare("
             SELECT i.id_num, i.login, i.mdp, cv.id_vendeur, cv.raison_sociale 
             FROM public.identifiants i 
@@ -19,21 +56,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->execute([$email]);
         $vendeur = $stmt->fetch();
         
-        // Vérifier si le vendeur existe ET si le mot de passe correspond (en clair)
         if ($vendeur && $motdepasse === $vendeur['mdp']) {
-            // Connexion réussie
-            $_SESSION['vendeur_id'] = $vendeur['id_vendeur'];
-            $_SESSION['vendeur_nom'] = $vendeur['raison_sociale'];
-            $_SESSION['vendeur_email'] = $vendeur['login'];
-            $_SESSION['est_connecte'] = true;
             
-            // Redirection vers le tableau de bord
-            echo "<script>
-                window.location.href = 'index.php?page=dashboard';
-            </script>";
-            exit();
+            // --- ALGO A2F INTÉGRÉ ---
+            // On vérifie si le vendeur a un code A2F activé
+            $stmtsecret = $pdo->prepare("SELECT codea2f FROM compte_vendeur WHERE id_vendeur = :id_vendeur");
+            $stmtsecret->execute(['id_vendeur' => $vendeur['id_vendeur']]);
+            $secret = $stmtsecret->fetchColumn();
+
+            if($secret && strcmp($secret, "") != 0){
+                // On stocke temporairement les infos et on demande le code
+                $_SESSION['temp_vendeur'] = $vendeur;
+                $_SESSION['temp_secret'] = $secret;
+                $attente_a2f = true; 
+            }
+            else {
+                // Pas d'A2F : Connexion directe (Logique originale)
+                $_SESSION['vendeur_id'] = $vendeur['id_vendeur'];
+                $_SESSION['vendeur_nom'] = $vendeur['raison_sociale'];
+                $_SESSION['vendeur_email'] = $vendeur['login'];
+                $_SESSION['est_connecte'] = true;
+                
+                echo "<script>window.location.href = 'index.php?page=dashboard';</script>";
+                exit();
+            }
         } else {
-            // Identifiants incorrects
             $erreur = "Email ou mot de passe incorrect";
         }
     } catch (PDOException $e) {
@@ -55,7 +102,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="logo__connexion">
         <img src="front_end/assets/images/logo_Alizon.png" alt="Logo Alizon" width="150">
     </div>
-    
+        <?php if ($attente_a2f): ?>
+    <div class="popup-overlay">
+        <div class="popup-content">
+            <h2>Double Authentification</h2>
+            
+            <form action="" class="form__connexion" method="post" enctype="multipart/form-data">
+                <p>Veuillez entrer le code de vérification à 6 chiffres pour sécuriser votre connexion.</p>
+                
+                <input type="text" name="code_a2f" placeholder="000000" maxlength="6" required autofocus autocomplete="one-time-code">
+                
+                <div class="popup-buttons">
+                    <button type="submit" class="btn-popup btn-valider" >
+                        Vérifier
+                    </button>
+                </div>
+                <div style="margin-top: 15px;">
+                     <a href="connecter.php" style="color: #666; text-decoration: none; font-size: 14px;">Annuler et retourner à la connexion</a>
+                </div>
+            </form>
+
+            <?php if (!empty($erreur_a2f)): ?>
+                <div class="erreur-msg">
+                    <?= htmlspecialchars($erreur_a2f) ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endif; ?>
     <div class="container__connexion">
         <div class="header__connexion">
             <h2>Rebonjour</h2>

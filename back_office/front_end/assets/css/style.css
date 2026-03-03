@@ -6212,11 +6212,6 @@ textarea.error:focus {
   gap: 1.5rem;
   margin-bottom: 2.5rem;
 }
-@media (max-width: 768px) {
-  .stats-kpi {
-    grid-template-columns: 1fr;
-  }
-}
 
 .kpi-card {
   padding: 1.5rem;
@@ -6246,11 +6241,6 @@ textarea.error:focus {
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   margin-bottom: 2rem;
-}
-@media (max-width: 900px) {
-  .stats-charts {
-    grid-template-columns: 1fr;
-  }
 }
 
 .chart-card {
@@ -6301,9 +6291,6 @@ textarea.error:focus {
   padding: 0.8rem 1rem;
   border-top: 1px solid #e0e0e0;
   color: #333;
-}
-.stats-table tr:hover td {
-  background: #e6e6e6;
 }
 
 .badge-volume {

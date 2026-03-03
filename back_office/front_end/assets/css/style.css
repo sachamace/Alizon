@@ -6147,7 +6147,7 @@ textarea.error:focus {
 
 .stats-page {
   padding: 2rem;
-  background: #e6e6e6;
+  background: #fff;
   overflow-y: auto;
   flex: 1;
 }
@@ -6169,7 +6169,7 @@ textarea.error:focus {
   gap: 1rem;
   align-items: flex-end;
   margin-bottom: 1.5rem;
-  background: #fff;
+  background: #e6e6e6;
   padding: 1rem;
   border-radius: 1em;
 }
@@ -6212,9 +6212,10 @@ textarea.error:focus {
 }
 
 .kpi-card {
-  background: #fff;
+  background: #e6e6e6;
   border-radius: 1em;
   padding: 1rem 1.2rem;
+  border: 1px solid #e0e0e0;
 }
 .kpi-card .kpi-label {
   font-size: 0.85rem;
@@ -6244,9 +6245,10 @@ textarea.error:focus {
 }
 
 .chart-card {
-  background: #fff;
+  background: #e6e6e6;
   border-radius: 1em;
   padding: 1.2rem;
+  border: 1px solid #e0e0e0;
 }
 .chart-card h3 {
   font-size: 0.95rem;
@@ -6258,9 +6260,10 @@ textarea.error:focus {
 }
 
 .stats-table-wrap {
-  background: #fff;
+  background: #e6e6e6;
   border-radius: 1em;
   padding: 1.2rem;
+  border: 1px solid #e0e0e0;
 }
 .stats-table-wrap h3 {
   font-size: 0.95rem;
@@ -6276,8 +6279,8 @@ textarea.error:focus {
 .stats-table th {
   text-align: left;
   padding: 0.5rem 0.8rem;
-  background: #e6e6e6;
-  color: #666;
+  background: #e0e0e0;
+  color: #333;
   font-weight: 600;
 }
 .stats-table td {
@@ -6289,15 +6292,12 @@ textarea.error:focus {
   border-bottom: none;
 }
 .stats-table tr:hover td {
-  background: #fafafa;
+  background: #fff;
 }
 
 .badge-volume {
-  background: #6CD3FF;
-  padding: 0.15rem 0.5rem;
-  border-radius: 20px;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 .stats-no-data {

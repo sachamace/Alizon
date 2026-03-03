@@ -1,92 +1,124 @@
 <?php
-session_start();
-include 'config.php';
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    include 'config.php';
+    require_once '../../../vendor/autoload.php';
 
-$erreur_mdp = "";
-$erreur_ident = "";
-$erreur_a2f = ""; // Nouvelle variable pour les erreurs A2F
-$mdp = "";
-$email = "";
+    use OTPHP\TOTP;
 
-// Vérifier si l'utilisateur a déjà validé son âge dans cette session
-$age_verifie = isset($_SESSION['age_verifie']) && $_SESSION['age_verifie'] === true;
-$attente_a2f = false; // Nouvel état pour savoir si on doit afficher la popup A2F
+    session_start();
 
-// Gestion de la vérification d'âge
-if (isset($_POST['verif_age'])) {
-    if ($_POST['verif_age'] === 'oui') {
-        $_SESSION['age_verifie'] = true;
-        $age_verifie = true;
-    } else {
-        $erreur_age = "Vous devez avoir 18 ans ou plus pour vous connecter.";
-    }
-}
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Gestion de la vérification du code A2F
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f'])) {
-    $code_saisi = trim($_POST['code_a2f']);
-    
-    if ($code_saisi === $code_attendu) {
-        // La vérification A2F a réussi, on connecte l'utilisateur
-        // On récupère les infos temporaires stockées en session lors de la première étape
-        if(isset($_SESSION['temp_user'])) {
-            $user = $_SESSION['temp_user'];
-            
-            // Récup panier
-            $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_client = ?");
-            $panier_sql->execute([$user['id_client']]); 
-            $panier = $panier_sql->fetch();
+    $erreur_mdp = "";
+    $erreur_ident = "";
+    $erreur_a2f = ""; 
+    $mdp = "";
+    $email = "";
 
-            // Connexion définitive
-            $_SESSION['id'] = $user['id_num'];
-            $_SESSION['login'] = $user['login'];
-            $_SESSION['id_client'] = $user['id_client'];
-            $_SESSION['id_panier'] = $panier['id_panier'];
-            
-            // Nettoyage
-            unset($_SESSION['temp_user']);
+    // Vérifier si l'utilisateur a déjà validé son âge dans cette session
+    $age_verifie = isset($_SESSION['age_verifie']) && $_SESSION['age_verifie'] === true;
+    $attente_a2f = false; // Nouvel état pour savoir si on doit afficher la popup A2F
 
-            echo "<script>window.location.href = '/index.php';</script>";
-            exit();
+    // Gestion de la vérification d'âge
+    if (isset($_POST['verif_age'])) {
+        if ($_POST['verif_age'] === 'oui') {
+            $_SESSION['age_verifie'] = true;
+            $age_verifie = true;
+        } else {
+            $erreur_age = "Vous devez avoir 18 ans ou plus pour vous connecter.";
         }
-    } else {
-        // Code incorrect, on réaffiche la popup A2F avec une erreur
-        $erreur_a2f = "Code de vérification incorrect.";
-        $attente_a2f = true; 
     }
-}
+    // Gestion de la vérification du code A2F
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f'])) {
+        $code_saisi = trim($_POST['code_a2f']);
+        // --- AJOUT ICI : On récupère le secret de la session ---
+        $secret = $_SESSION['temp_secret'] ?? null;
+        
+        if ($secret) {
+            $otp = TOTP::createFromSecret($secret);
+            if ($otp->verify($code_saisi)) {
+                // La vérification A2F a réussi, on connecte l'utilisateur
+                // On récupère les infos temporaires stockées en session lors de la première étape
+                if(isset($_SESSION['temp_user'])) {
+                    $user = $_SESSION['temp_user'];
+                    
+                    // Récup panier
+                    $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_client = ?");
+                    $panier_sql->execute([$user['id_client']]); 
+                    $panier = $panier_sql->fetch();
 
-// Connexion normale (Etape 1 : Vérif Login/MDP) uniquement si l'âge est vérifié et qu'on ne traite pas l'A2F
-elseif ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['motdepasse']) && $age_verifie) {
-    $email = trim($_POST['adresse_mail']);
-    $mdp = trim($_POST['motdepasse']);
-    
-    $user_sql = $pdo->prepare("
-        SELECT i.id_num, i.login, i.mdp, cv.id_client 
-        FROM public.identifiants i 
-        JOIN public.compte_client cv ON i.id_num = cv.id_num 
-        WHERE i.login = ?
-    ");
-    $user_sql->execute([$email]);
-    $user = $user_sql->fetch();
-    
-    // 1) LOGIN INCORRECT
-    if (!$user) {
-        $erreur_ident = "Identifiant incorrect";
+                    // Connexion définitive
+                    $_SESSION['id'] = $user['id_num'];
+                    $_SESSION['login'] = $user['login'];
+                    $_SESSION['id_client'] = $user['id_client'];
+                    $_SESSION['id_panier'] = $panier['id_panier'];
+                    
+                    // Nettoyage
+                    unset($_SESSION['temp_user']);
+                    unset($_SESSION['temp_secret']);
+                    
+                    echo "<script>window.location.href = '/index.php';</script>";
+                    exit();
+                }
+            } else {
+                // Code incorrect, on réaffiche la popup A2F avec une erreur
+                $erreur_a2f = "Code de vérification incorrect.";
+                $attente_a2f = true; 
+            }
+        }
     }
-    // 2) MOT DE PASSE INCORRECT
-    elseif ($mdp !== $user['mdp']) {
-        $erreur_mdp = "Mot de passe incorrect";
+    // Connexion normale (Etape 1 : Vérif Login/MDP) uniquement si l'âge est vérifié et qu'on ne traite pas l'A2F
+    elseif ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['motdepasse']) && $age_verifie) {
+        $mdp = trim($_POST['motdepasse']);
+        $email = trim($_POST['adresse_mail']);
+        $user_sql = $pdo->prepare("
+            SELECT i.id_num, i.login, i.mdp, cv.id_client 
+            FROM public.identifiants i 
+            JOIN public.compte_client cv ON i.id_num = cv.id_num 
+            WHERE i.login = ?
+        ");
+        $user_sql->execute([$email]);
+        $user = $user_sql->fetch();
+        
+        // 1) LOGIN INCORRECT
+        if (!$user) {
+            $erreur_ident = "Identifiant incorrect";
+        }
+        // 2) MOT DE PASSE INCORRECT
+        elseif ($mdp !== $user['mdp']) {
+            $erreur_mdp = "Mot de passe incorrect";
+        }
+        // 3) OK → DECLENCHER A2F (Au lieu de connecter direct)
+        else {
+            // On stocke temporairement les infos de l'utilisateur en session
+            // pour finaliser la connexion après la vérification A2F
+            $_SESSION['temp_user'] = $user;
+
+            $stmtsecret = $pdo->prepare("SELECT codea2f FROM compte_client WHERE adresse_mail = :adresse_mail");
+            $stmtsecret->execute([
+                'adresse_mail' => $email
+            ]);
+            $secret = $stmtsecret->fetchColumn();
+
+            if(strcmp($secret,"") != 0){
+                $_SESSION['temp_secret'] = $secret;
+                $attente_a2f = true; // On active l'affichage de la popup A2F
+            }
+            else{
+                // Connexion définitive
+                $_SESSION['id'] = $user['id_num'];
+                $_SESSION['login'] = $user['login'];
+                $_SESSION['id_client'] = $user['id_client'];
+                $_SESSION['id_panier'] = $panier['id_panier'];
+                
+                // Nettoyage
+                unset($_SESSION['temp_user']);
+
+                echo "<script>window.location.href = '/index.php';</script>";
+                exit();
+            }
+            
+        }
     }
-    // 3) OK → DECLENCHER A2F (Au lieu de connecter direct)
-    else {
-        // On stocke temporairement les infos de l'utilisateur en session
-        // pour finaliser la connexion après la vérification A2F
-        $_SESSION['temp_user'] = $user;
-        $attente_a2f = true; // On active l'affichage de la popup A2F
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -98,99 +130,6 @@ elseif ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['motdepasse']) && 
     <meta name="description" content="Ceci est le profil du compte de notre market place !">
     <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
     <link rel="stylesheet" href="../assets/csss/style.css">
-    <style>
-        /* Styles pour les popups (Age et A2F) */
-        .popup-overlay {
-            display: flex;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(236, 236, 236, 0.7); /* Légèrement plus opaque pour l'A2F */
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .popup-content {
-            background: white;
-            padding: 50px;
-            border-radius: 15px;
-            max-width: 450px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        }
-        
-        .popup-content h2 {
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 26px;
-        }
-        
-        .popup-content p {
-            color: #555;
-            margin-bottom: 30px;
-            font-size: 18px;
-        }
-
-        .popup-content input[type="text"] {
-            width: 80%;
-            padding: 10px;
-            margin-bottom: 20px;
-            font-size: 18px;
-            text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        
-        .popup-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-        }
-        
-        .btn-popup {
-            padding: 15px 40px;
-            font-size: 18px;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn-valider {
-            background-color: #28a745;
-            color: white;
-            width: 100%; /* Plus large pour l'A2F */
-        }
-        
-        .btn-valider:hover {
-            background-color: #218838;
-            transform: scale(1.05);
-        }
-        
-        .btn-non {
-            background-color: #dc3545;
-            color: white;
-        }
-        
-        .btn-non:hover {
-            background-color: #c82333;
-            transform: scale(1.05);
-        }
-        
-        .erreur-msg {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
 </head>
 
 <body class="body__connexion">
@@ -229,13 +168,13 @@ elseif ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['motdepasse']) && 
         <div class="popup-content">
             <h2>Double Authentification</h2>
             
-            <form method="post" action="">
+            <form action="" class="form__connexion" method="post" enctype="multipart/form-data">
                 <p>Veuillez entrer le code de vérification à 6 chiffres pour sécuriser votre connexion.</p>
                 
                 <input type="text" name="code_a2f" placeholder="000000" maxlength="6" required autofocus autocomplete="one-time-code">
                 
                 <div class="popup-buttons">
-                    <button type="submit" class="btn-popup btn-valider" onclick="verifierCode(code_a2f)">
+                    <button type="submit" class="btn-popup btn-valider" >
                         Vérifier
                     </button>
                 </div>

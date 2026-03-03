@@ -4360,7 +4360,6 @@ table td {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(236, 236, 236, 0.7); /* Légèrement plus opaque pour l'A2F */
     z-index: 9999;
     justify-content: center;
     align-items: center;
@@ -4389,7 +4388,6 @@ table td {
 }
 
 .popup-content input[type="text"] {
-    width: 80%;
     padding: 10px;
     margin-bottom: 20px;
     font-size: 18px;

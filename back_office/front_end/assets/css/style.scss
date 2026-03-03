@@ -6513,6 +6513,9 @@ textarea.error {
 // --- Page wrapper ---
 .stats-page {
     padding: 2rem;
+    background: $background-color;
+    overflow-y: auto;
+    flex: 1;
 
     h2 {
         font-size: 1.4rem;

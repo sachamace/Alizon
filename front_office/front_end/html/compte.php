@@ -49,6 +49,13 @@
                     <p>Déconnecter vous de votre compte</p>
                 </div>
             </a>
+            <a href="CGV_CGU.php" class="card">
+                <img src="../assets/images/Hermine.png" alt="">
+                <div class="text">
+                    <h3>À propos</h3>
+                    <p>À propos d'Alizon, des conditions générales de ventes et d'utilisation</p>
+                </div>
+            </a>
         </div>
     </main>
 
@@ -72,6 +79,11 @@
             <a href="deconnecter.php" class="compte__button">
                 <img src="../assets/images/logout.png" class="compte__image">
                 <h3>Se déconnecter</h3>
+                <h3>›</h3>
+            </a>
+            <a href="CGV_CGU.php" class="compte__button">
+                <img src="../assets/images/Hermine.png" class="compte__image">
+                <h3>A propos</h3>
                 <h3>›</h3>
             </a>
         </div>

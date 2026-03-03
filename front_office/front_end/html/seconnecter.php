@@ -126,7 +126,7 @@ if (isset($_POST['verif_age'])) {
             }
             
         }
-    }
+    } 
 ?>
 
 <!DOCTYPE html>

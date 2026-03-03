@@ -140,7 +140,7 @@ try {
             </div>
 
             <div class="profil-container">
-                <?php if(strcmp($a2f,"") == 0){?>
+                <?php if(strcmp($a2f,"") == 0 || $a2f == NULL){?>
                     <a href="activerA2f.php">Activer l'A2F</a>
                 <?php }else{?>
                     <a href="desactiverA2f.php">Désactiver l'A2F</a>

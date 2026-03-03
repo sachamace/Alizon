@@ -14,6 +14,11 @@
     $erreur_a2f = ""; 
     $mdp = "";
     $email = "";
+    $erreur_mdp = "";
+    $erreur_ident = "";
+    $erreur_a2f = ""; 
+    $mdp = "";
+    $email = "";
 
 $age_verifie = isset($_COOKIE['age_verifie']) && $_COOKIE['age_verifie'] === '1';
 $attente_a2f = false;
@@ -122,6 +127,12 @@ if (isset($_POST['verif_age'])) {
             
         }
     }
+                echo "<script>window.location.href = '/index.php';</script>";
+                exit();
+            }
+            
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -137,7 +148,10 @@ if (isset($_POST['verif_age'])) {
 
 <body class="body__connexion">
 
+
     <?php if (!$age_verifie): ?>
+    <div class="popup-overlay">
+        <div class="popup-content">
     <div class="popup-overlay">
         <div class="popup-content">
             <h2>Vérification d'âge</h2>
@@ -150,8 +164,12 @@ if (isset($_POST['verif_age'])) {
                 <br><br>
                 <div class="popup-buttons">
                     <button type="submit" name="verif_age" value="oui" class="btn-popup btn-valider" style="width: auto;">
+                <br><br>
+                <div class="popup-buttons">
+                    <button type="submit" name="verif_age" value="oui" class="btn-popup btn-valider" style="width: auto;">
                         Oui
                     </button>
+                    <button type="submit" name="verif_age" value="non" class="btn-popup btn-non">
                     <button type="submit" name="verif_age" value="non" class="btn-popup btn-non">
                         Non
                     </button>
@@ -159,12 +177,43 @@ if (isset($_POST['verif_age'])) {
             </form>
             <?php if (isset($erreur_age)): ?>
                 <div class="erreur-msg">
+                <div class="erreur-msg">
                     <?= htmlspecialchars($erreur_age) ?>
                 </div>
             <?php endif; ?>
         </div>
     </div>
     <?php endif; ?>
+
+    <?php if ($attente_a2f): ?>
+    <div class="popup-overlay">
+        <div class="popup-content">
+            <h2>Double Authentification</h2>
+            
+            <form action="" class="form__connexion" method="post" enctype="multipart/form-data">
+                <p>Veuillez entrer le code de vérification à 6 chiffres pour sécuriser votre connexion.</p>
+                
+                <input type="text" name="code_a2f" placeholder="000000" maxlength="6" required autofocus autocomplete="one-time-code">
+                
+                <div class="popup-buttons">
+                    <button type="submit" class="btn-popup btn-valider" >
+                        Vérifier
+                    </button>
+                </div>
+                <div style="margin-top: 15px;">
+                     <a href="seconnecter.php" style="color: #666; text-decoration: none; font-size: 14px;">Annuler et retourner à la connexion</a>
+                </div>
+            </form>
+
+            <?php if (!empty($erreur_a2f)): ?>
+                <div class="erreur-msg">
+                    <?= htmlspecialchars($erreur_a2f) ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
 
     <?php if ($attente_a2f): ?>
     <div class="popup-overlay">
@@ -226,6 +275,7 @@ if (isset($_POST['verif_age'])) {
             <a href="../../../back_office/connecter.php" class="forgot-password">Côté Vendeur</a>
         </form>
     </div>
+
 
 </body>
 </html>

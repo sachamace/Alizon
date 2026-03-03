@@ -1,8 +1,17 @@
 <?php
     include __DIR__ . '/config.php';
     include __DIR__ . '/sessionindex.php';
-    $parametres = $_GET;// On récupère d'abord TOUS les filtres qui sont déjà dans l'URL ($_GET)
-    
+    $current_page = $_SERVER['REQUEST_URI'];
+    $pattern = '/index.php/i';
+    if (preg_match_all($pattern, $current_page) == 1){ // test si on est sur la page d'accueil
+        $parametres = $_GET;// On récupère d'abord TOUS les filtres qui sont déjà dans l'URL ($_GET)
+    }
+
+    if (isset($_GET['search']) && preg_match_all($pattern, $current_page) == 0){
+        $parametres = http_build_query($_GET);
+        header("Location: ../../../index.php?" . $parametres);
+        exit();
+    }
 
 ?>
 <nav>

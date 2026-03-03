@@ -35,29 +35,7 @@ $stmt = $pdo->prepare("
 $stmt->execute($params);
 $stats = $stmt->fetchAll();
 
-$params_jour = [$id_vendeur, $date_debut, $date_fin];
-$filtre_jour = "";
-if ($id_produit !== 'tous') {
-    $filtre_jour = "AND p.id_produit = ?";
-    $params_jour[] = $id_produit;
-}
 
-$stmt = $pdo->prepare("
-    SELECT
-        c.date_commande::date AS jour,
-        SUM(lc.quantite) AS volume_jour,
-        ROUND(SUM(lc.prix_unitaire_ttc * lc.quantite)::numeric, 2) AS montant_jour
-    FROM ligne_commande lc
-    JOIN produit p ON lc.id_produit = p.id_produit
-    JOIN commande c ON lc.id_commande = c.id_commande
-    WHERE p.id_vendeur = ?
-      AND c.date_commande::date BETWEEN ? AND ?
-      $filtre_jour
-    GROUP BY c.date_commande::date
-    ORDER BY jour ASC
-");
-$stmt->execute($params_jour);
-$evolution = $stmt->fetchAll();
 
 $total_volume  = array_sum(array_column($stats, 'volume_total'));
 $total_montant = array_sum(array_column($stats, 'montant_total'));
@@ -65,9 +43,7 @@ $total_montant = array_sum(array_column($stats, 'montant_total'));
 $labels_bar    = json_encode(array_column($stats, 'nom_produit'));
 $data_volume   = json_encode(array_column($stats, 'volume_total'));
 $data_montant  = json_encode(array_column($stats, 'montant_total'));
-$labels_line   = json_encode(array_column($evolution, 'jour'));
-$data_vol_line = json_encode(array_column($evolution, 'volume_jour'));
-$data_mnt_line = json_encode(array_column($evolution, 'montant_jour'));
+
 ?>
 
 <div class="stats-page">
@@ -129,10 +105,7 @@ $data_mnt_line = json_encode(array_column($evolution, 'montant_jour'));
             <h3>CA TTC par produit</h3>
             <canvas id="chartMontant"></canvas>
         </div>
-        <div class="chart-card chart-card--full">
-            <h3>Evolution sur la période</h3>
-            <canvas id="chartEvolution"></canvas>
-        </div>
+
     </div>
 
     <div class="stats-table-wrap">
@@ -165,9 +138,7 @@ $data_mnt_line = json_encode(array_column($evolution, 'montant_jour'));
 const labelsBar   = <?= $labels_bar ?>;
 const dataVolume  = <?= $data_volume ?>;
 const dataMontant = <?= $data_montant ?>;
-const labelsLine  = <?= $labels_line ?>;
-const dataVolLine = <?= $data_vol_line ?>;
-const dataMntLine = <?= $data_mnt_line ?>;
+
 
 const couleurs = ['#6c63ff','#22c55e','#f59e0b','#ef4444','#3b82f6','#ec4899','#14b8a6','#a855f7','#f97316','#84cc16'];
 
@@ -211,41 +182,6 @@ if (labelsBar.length > 0) {
         }
     });
 
-    new Chart(document.getElementById('chartEvolution'), {
-        type: 'line',
-        data: {
-            labels: labelsLine,
-            datasets: [
-                {
-                    label: 'Unités',
-                    data: dataVolLine,
-                    borderColor: '#6c63ff',
-                    backgroundColor: '#6c63ff22',
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 4,
-                    yAxisID: 'y1'
-                },
-                {
-                    label: 'CA TTC (€)',
-                    data: dataMntLine,
-                    borderColor: '#22c55e',
-                    backgroundColor: '#22c55e22',
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 4,
-                    yAxisID: 'y2'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            interaction: { mode: 'index', intersect: false },
-            scales: {
-                y1: { type: 'linear', position: 'left', beginAtZero: true, title: { display: true, text: 'Unités' } },
-                y2: { type: 'linear', position: 'right', beginAtZero: true, title: { display: true, text: 'CA (€)' }, grid: { drawOnChartArea: false } }
-            }
-        }
-    });
+
 }
 </script>

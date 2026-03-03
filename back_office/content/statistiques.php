@@ -149,16 +149,12 @@ if (labelsBar.length > 0) {
             labels: labelsBar,
             datasets: [{
                 data: dataVolume,
-                backgroundColor: labelsBar.map((_, i) => couleurs[i % couleurs.length] + 'cc'),
-                borderColor: labelsBar.map((_, i) => couleurs[i % couleurs.length]),
-                borderWidth: 2,
-                borderRadius: 6,
+                backgroundColor: labelsBar.map((_, i) => couleurs[i % couleurs.length]),
             }]
         },
         options: {
             responsive: true,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            scales: { y: { beginAtZero: true } }
         }
     });
 
@@ -168,17 +164,8 @@ if (labelsBar.length > 0) {
             labels: labelsBar,
             datasets: [{
                 data: dataMontant,
-                backgroundColor: labelsBar.map((_, i) => couleurs[i % couleurs.length] + 'cc'),
-                borderColor: '#fff',
-                borderWidth: 3,
+                backgroundColor: labelsBar.map((_, i) => couleurs[i % couleurs.length]),
             }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'bottom' },
-                tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.toFixed(2).replace('.', ',')} €` } }
-            }
         }
     });
 

@@ -4066,9 +4066,12 @@ table td {
   width: 100%;
   height: 100%;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   background-color: rgba(236, 236, 236, 0.7); /* Légèrement plus opaque pour l'A2F */
 >>>>>>> b0902b5 (:art: css de la popup)
+=======
+>>>>>>> 31499da (:jigsaw: coté frontoffice a2F terminée)
   z-index: 9999;
   justify-content: center;
   align-items: center;
@@ -4098,9 +4101,12 @@ table td {
 
 .popup-content input[type=text] {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   width: 80%;
 >>>>>>> b0902b5 (:art: css de la popup)
+=======
+>>>>>>> 31499da (:jigsaw: coté frontoffice a2F terminée)
   padding: 10px;
   margin-bottom: 20px;
   font-size: 18px;

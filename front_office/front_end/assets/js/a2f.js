@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 document.addEventListener("DOMContentLoaded", () => {
     // On cible la div préparée en PHP
     const qrcodeElement = document.getElementById("qrcode");
@@ -45,20 +44,4 @@ async function valider() {
         console.error("Erreur lors de l'envoi :", error);
     }
 
-=======
-// Exemple d'envoi de code 2FA vers ton script PHP
-async function verifierCode(code) {
-    const response = await fetch('../html/seconnecter.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },      
-        body: `code=${code}`
-    });
-
-    const resultat = await response.json();
-    if (resultat.success) {
-        console.log("Authentification réussie !");
-    }
->>>>>>> fe84cff (installation de la librairie ^pour l'affichage qrcode et code)
 }

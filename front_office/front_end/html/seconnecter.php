@@ -127,12 +127,6 @@ if (isset($_POST['verif_age'])) {
             
         }
     }
-                echo "<script>window.location.href = '/index.php';</script>";
-                exit();
-            }
-            
-        }
-    }
 ?>
 
 <!DOCTYPE html>

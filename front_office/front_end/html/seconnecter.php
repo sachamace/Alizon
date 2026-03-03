@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Europe/Paris');
 session_start();
 include 'config.php';
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -8,14 +9,14 @@ $erreur_ident = "";
 $mdp = "";
 $email = "";
 
-// Vérifier si l'utilisateur a déjà validé son âge dans cette session
-$age_verifie = isset($_SESSION['age_verifie']) && $_SESSION['age_verifie'] === true;
-
+$age_verifie = isset($_COOKIE['age_verifie']) && $_COOKIE['age_verifie'] === '1';
 // Gestion de la vérification d'âge
 if (isset($_POST['verif_age'])) {
     if ($_POST['verif_age'] === 'oui') {
-        $_SESSION['age_verifie'] = true;
-        $age_verifie = true;
+        setcookie('age_verifie', '1', time() + 86400, '/');
+
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
     } else {
         // L'utilisateur a dit non, on le redirige ou on affiche un message
         $erreur_age = "Vous devez avoir 18 ans ou plus pour vous connecter.";

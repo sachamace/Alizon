@@ -6147,6 +6147,9 @@ textarea.error:focus {
 
 .stats-page {
   padding: 2rem;
+  background: #e6e6e6;
+  overflow-y: auto;
+  flex: 1;
 }
 .stats-page h2 {
   font-size: 1.4rem;

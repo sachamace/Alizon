@@ -6513,7 +6513,7 @@ textarea.error {
 // --- Page wrapper ---
 .stats-page {
     padding: 2rem;
-    background: $background-color;
+    background: $white;
     overflow-y: auto;
     flex: 1;
 
@@ -6536,7 +6536,7 @@ textarea.error {
     gap: 1rem;
     align-items: flex-end;
     margin-bottom: 1.5rem;
-    background: $white;
+    background: $background-color;
     padding: 1rem;
     border-radius: $border-radius;
 
@@ -6584,9 +6584,10 @@ textarea.error {
 }
 
 .kpi-card {
-    background: $white;
+    background: $background-color;
     border-radius: $border-radius;
     padding: 1rem 1.2rem;
+    border: 1px solid $gray-medium;
 
     .kpi-label {
         font-size: 0.85rem;
@@ -6618,9 +6619,10 @@ textarea.error {
 }
 
 .chart-card {
-    background: $white;
+    background: $background-color;
     border-radius: $border-radius;
     padding: 1.2rem;
+    border: 1px solid $gray-medium;
 
     h3 {
         font-size: 0.95rem;
@@ -6634,9 +6636,10 @@ textarea.error {
 }
 
 .stats-table-wrap {
-    background: $white;
+    background: $background-color;
     border-radius: $border-radius;
     padding: 1.2rem;
+    border: 1px solid $gray-medium;
 
     h3 {
         font-size: 0.95rem;
@@ -6653,8 +6656,8 @@ textarea.error {
     th {
         text-align: left;
         padding: 0.5rem 0.8rem;
-        background: $background-color;
-        color: $gray-dark;
+        background: $gray-medium;
+        color: $gray-darker;
         font-weight: 600;
     }
 
@@ -6665,15 +6668,12 @@ textarea.error {
     }
 
     tr:last-child td { border-bottom: none; }
-    tr:hover td { background: $gray-light; }
+    tr:hover td { background: $white; }
 }
 
 .badge-volume {
-    background: $primary-color;
-    padding: 0.15rem 0.5rem;
-    border-radius: 20px;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
 }
 
 .stats-no-data {

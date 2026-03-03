@@ -6145,6 +6145,7 @@ textarea.error:focus {
   letter-spacing: 2px;
 }
 
+<<<<<<< HEAD
 .stats-page {
   padding: 2rem 2.5rem;
   overflow-y: auto;
@@ -6308,6 +6309,8 @@ textarea.error:focus {
   border-radius: 12px;
 }
 
+=======
+>>>>>>> 06a756c (:jigsaw: coté vendeur a2f terminé coté technique)
 .popup-overlay {
   display: flex;
   position: fixed;

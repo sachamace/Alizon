@@ -148,12 +148,14 @@ if (labelsBar.length > 0) {
         data: {
             labels: labelsBar,
             datasets: [{
+                label: 'Unités',
                 data: dataVolume,
                 backgroundColor: labelsBar.map((_, i) => couleurs[i % couleurs.length]),
             }]
         },
         options: {
             responsive: true,
+            plugins: { legend: { display: false } },
             scales: { y: { beginAtZero: true } }
         }
     });

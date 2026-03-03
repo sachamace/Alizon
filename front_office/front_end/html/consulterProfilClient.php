@@ -48,7 +48,9 @@ try {
     $stmt_a2f = $pdo->prepare("SELECT codea2f FROM compte_client WHERE id_client = :id_client");
     $stmt_a2f->execute(['id_client' => $id_client_connecte]);
     $a2f = $stmt_a2f->fetchColumn();
-
+    if($a2f == NULL){
+        $a2f = "";
+    }
 } catch (PDOException $e) {
     die("Erreur SQL : " . $e->getMessage());
 }
@@ -141,7 +143,7 @@ try {
             </div>
 
             <div class="profil-container">
-                <?php if(strcmp($a2f,"") == 0 || $a2f == NULL){?>
+                <?php if(strcmp($a2f,"") == 0 ){?>
                     <a href="activerA2f.php">Activer l'A2F</a>
                 <?php }else{?>
                     <a href="desactiverA2f.php">Désactiver l'A2F</a>

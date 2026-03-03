@@ -452,12 +452,14 @@ Structure de Consulter, Créer, Modifier produit
   height: 20px;
   background-color: #ef4444;
   color: #fff;
-  border-radius: 6px;
-  border: none;
-  transition: all 0.3s ease;
 }
 .produit-container .media-gallery button:hover {
   background-color: rgb(235.7842364532, 30.4157635468, 30.4157635468);
+}
+.produit-container .media-gallery button {
+  border-radius: 6px;
+  border: none;
+  transition: all 0.3s ease;
 }
 .produit-container .media-gallery .image-delete {
   display: flex;
@@ -538,10 +540,12 @@ Structure du tableau de bord
 }
 .content article.inactif {
   border: 2px solid #6c757d;
-  opacity: 0.6;
 }
 .content article.inactif .statut-badge {
   background-color: #6c757d;
+}
+.content article.inactif {
+  opacity: 0.6;
 }
 .content article.rupture-stock {
   border: 2px solid #dc3545;
@@ -2112,8 +2116,6 @@ Fin de la structure de Consulter/Modifier Profil
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
-  background-color: #ef4444;
-  color: #fff;
 }
 .remise-actions .supprimer:hover {
   transform: translateY(-2px);
@@ -2121,6 +2123,10 @@ Fin de la structure de Consulter/Modifier Profil
 }
 .remise-actions .supprimer:active {
   transform: translateY(0);
+}
+.remise-actions .supprimer {
+  background-color: #ef4444;
+  color: #fff;
 }
 .remise-actions .supprimer:hover {
   background-color: rgb(235.7842364532, 30.4157635468, 30.4157635468);
@@ -3005,8 +3011,6 @@ Fin de la structure de Consulter/Modifier Profil
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
-  background-color: #ef4444;
-  color: #fff;
 }
 .remise-actions .supprimer:hover {
   transform: translateY(-2px);
@@ -3014,6 +3018,10 @@ Fin de la structure de Consulter/Modifier Profil
 }
 .remise-actions .supprimer:active {
   transform: translateY(0);
+}
+.remise-actions .supprimer {
+  background-color: #ef4444;
+  color: #fff;
 }
 .remise-actions .supprimer:hover {
   background-color: rgb(235.7842364532, 30.4157635468, 30.4157635468);
@@ -3631,9 +3639,6 @@ Fin de la structure de Consulter/Modifier Profil
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
-  background-color: #666;
-  color: #fff;
-  font-size: 0.95rem;
 }
 .produits-promo-header .btn-retour-hub:hover {
   transform: translateY(-2px);
@@ -3642,8 +3647,15 @@ Fin de la structure de Consulter/Modifier Profil
 .produits-promo-header .btn-retour-hub:active {
   transform: translateY(0);
 }
+.produits-promo-header .btn-retour-hub {
+  background-color: #666;
+  color: #fff;
+}
 .produits-promo-header .btn-retour-hub:hover {
   background-color: rgb(81.6, 81.6, 81.6);
+}
+.produits-promo-header .btn-retour-hub {
+  font-size: 0.95rem;
 }
 
 .aucun-produit-promo {
@@ -3682,6 +3694,15 @@ Fin de la structure de Consulter/Modifier Profil
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
+}
+.aucun-produit-promo .empty-actions a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.aucun-produit-promo .empty-actions a:active {
+  transform: translateY(0);
+}
+.aucun-produit-promo .empty-actions a {
   padding: 0.9rem 2rem;
   font-size: 1rem;
   font-weight: 600;
@@ -3691,13 +3712,6 @@ Fin de la structure de Consulter/Modifier Profil
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-}
-.aucun-produit-promo .empty-actions a:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-.aucun-produit-promo .empty-actions a:active {
-  transform: translateY(0);
 }
 .aucun-produit-promo .empty-actions .btn-creer-remise {
   background: #6CD3FF;
@@ -3746,9 +3760,6 @@ Fin de la structure de Consulter/Modifier Profil
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
-  background-color: #e0e0e0;
-  color: #000;
-  font-size: 0.95rem;
 }
 .remise-liste-header .btn-retour:hover {
   transform: translateY(-2px);
@@ -3757,8 +3768,15 @@ Fin de la structure de Consulter/Modifier Profil
 .remise-liste-header .btn-retour:active {
   transform: translateY(0);
 }
+.remise-liste-header .btn-retour {
+  background-color: #e0e0e0;
+  color: #000;
+}
 .remise-liste-header .btn-retour:hover {
   background-color: rgb(203.6, 203.6, 203.6);
+}
+.remise-liste-header .btn-retour {
+  font-size: 0.95rem;
 }
 
 .remise-form .radio-group {
@@ -4004,7 +4022,6 @@ textarea.error:focus {
 .content {
   background: #fff;
   padding: 20px;
-  /* CARTES DE PROMOTION - */
 }
 .content .promotion-liste-header {
   display: flex;
@@ -4080,6 +4097,9 @@ textarea.error:focus {
   text-decoration: none;
   box-sizing: border-box;
 }
+.content {
+  /* CARTES DE PROMOTION - */
+}
 .content .promotion-article {
   background: #fff;
   border-radius: 1em;
@@ -4090,7 +4110,6 @@ textarea.error:focus {
   min-height: 350px;
   display: flex;
   flex-direction: column;
-  /* BORDURES COLORÉES SELON LE STATUT - */
 }
 .content .promotion-article:hover {
   transform: translateY(-8px);
@@ -4109,6 +4128,9 @@ textarea.error:focus {
   color: #fff;
   z-index: 10;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.content .promotion-article {
+  /* BORDURES COLORÉES SELON LE STATUT - */
 }
 .content .promotion-article.promotion-active {
   border: 2px solid #28a745; /* BORDURE VERTE */
@@ -4914,15 +4936,15 @@ textarea.error:focus {
 /* ========================================
    LISTE DES PROMOTIONS
    ======================================== */
-.content {
-  /* CARTES DE PROMOTION - EXACTEMENT comme remise-article */
-}
 .content .promotion-card-wrapper {
   display: block;
   height: 100%;
   color: inherit;
   text-decoration: none;
   box-sizing: border-box;
+}
+.content {
+  /* CARTES DE PROMOTION - EXACTEMENT comme remise-article */
 }
 .content .promotion-article {
   background: #fff;
@@ -4934,7 +4956,6 @@ textarea.error:focus {
   min-height: 350px;
   display: flex;
   flex-direction: column;
-  /* BORDURES COLORÉES SELON LE STATUT - comme les remises */
 }
 .content .promotion-article:hover {
   transform: translateY(-8px);
@@ -4953,6 +4974,9 @@ textarea.error:focus {
   color: #fff;
   z-index: 10;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.content .promotion-article {
+  /* BORDURES COLORÉES SELON LE STATUT - comme les remises */
 }
 .content .promotion-article.promotion-active {
   border: 2px solid #28a745;
@@ -6119,4 +6143,202 @@ textarea.error:focus {
   color: #ffc107;
   font-size: 1.2rem;
   letter-spacing: 2px;
+}
+
+.stats-page {
+  padding: 2rem;
+  background: #f4f6fb;
+  min-height: 100vh;
+}
+.stats-page h2 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 0.3rem;
+}
+
+.stats-subtitle {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.stats-filtres {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.stats-filtres .filtre-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.stats-filtres label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.stats-filtres input,
+.stats-filtres select {
+  padding: 0.5rem 0.8rem;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: #fafafa;
+  color: #222;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.stats-filtres input:focus,
+.stats-filtres select:focus {
+  border-color: #6c63ff;
+}
+.stats-filtres button {
+  padding: 0.55rem 1.4rem;
+  background: #6c63ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-self: flex-end;
+}
+.stats-filtres button:hover {
+  background: #574fd6;
+}
+
+.stats-kpi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.kpi-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.3rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid #6c63ff;
+}
+.kpi-card.kpi-montant {
+  border-left-color: #22c55e;
+}
+.kpi-card.kpi-produits {
+  border-left-color: #f59e0b;
+}
+.kpi-card .kpi-label {
+  font-size: 0.78rem;
+  color: #888;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+.kpi-card .kpi-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #1a1a2e;
+}
+.kpi-card .kpi-sub {
+  font-size: 0.8rem;
+  color: #aaa;
+  margin-top: 0.2rem;
+}
+
+.stats-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+@media (max-width: 900px) {
+  .stats-charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.chart-card--full {
+  grid-column: 1/-1;
+}
+.chart-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 1rem;
+}
+.chart-card canvas {
+  max-height: 280px;
+}
+
+.stats-table-wrap {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.stats-table-wrap h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 1rem;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.stats-table th {
+  text-align: left;
+  padding: 0.6rem 1rem;
+  background: #f4f6fb;
+  color: #555;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.stats-table td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  color: #333;
+}
+.stats-table tr:last-child td {
+  border-bottom: none;
+}
+.stats-table tr:hover td {
+  background: #fafafa;
+}
+
+.badge-volume {
+  background: #ede9ff;
+  color: #6c63ff;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.stats-no-data {
+  text-align: center;
+  color: #bbb;
+  padding: 3rem;
+  font-size: 1rem;
 }/*# sourceMappingURL=style.css.map */

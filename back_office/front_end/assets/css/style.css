@@ -6149,7 +6149,6 @@ textarea.error:focus {
   padding: 2rem 2.5rem;
   overflow-y: auto;
   flex: 1;
-  background: #fff;
 }
 .stats-page h2 {
   font-size: 1.5rem;
@@ -6168,36 +6167,39 @@ textarea.error:focus {
   flex-wrap: wrap;
   gap: 1rem;
   align-items: flex-end;
-  margin-bottom: 2rem;
-  padding: 1.2rem;
-  border-radius: 1em;
-  background: #e6e6e6;
+  margin-bottom: 2.5rem;
 }
 .stats-filtres .filtre-group {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.4rem;
 }
 .stats-filtres label {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: #666;
+  font-weight: 500;
 }
 .stats-filtres input, .stats-filtres select {
-  padding: 0.45rem 0.8rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
+  padding: 0.5rem 0.8rem;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
   font-size: 0.9rem;
   background: #fff;
   outline: none;
+  font-family: "Space Grotesk", sans-serif;
+}
+.stats-filtres input:focus, .stats-filtres select:focus {
+  border-color: #6CD3FF;
 }
 .stats-filtres button {
-  padding: 0.45rem 1.3rem;
+  padding: 0.5rem 1.4rem;
   background: #6CD3FF;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
+  font-family: "Space Grotesk", sans-serif;
   align-self: flex-end;
 }
 .stats-filtres button:hover {
@@ -6207,8 +6209,8 @@ textarea.error:focus {
 .stats-kpi {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.2rem;
-  margin-bottom: 2rem;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 @media (max-width: 768px) {
   .stats-kpi {
@@ -6217,38 +6219,32 @@ textarea.error:focus {
 }
 
 .kpi-card {
-  padding: 1.2rem 1.5rem;
-  border-bottom: 3px solid #6CD3FF;
-  background: #e6e6e6;
-  border-radius: 1em;
-}
-.kpi-card.kpi-montant {
-  border-bottom-color: #27ae60;
-}
-.kpi-card.kpi-produits {
-  border-bottom-color: #666;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1.5px solid #e0e0e0;
 }
 .kpi-card .kpi-label {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: #666;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
 }
 .kpi-card .kpi-value {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #000;
-  line-height: 1.1;
+  line-height: 1;
+  margin-bottom: 0.5rem;
 }
 .kpi-card .kpi-sub {
   font-size: 0.78rem;
   color: #666;
-  margin-top: 0.4rem;
 }
 
 .stats-charts {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.2rem;
+  gap: 1.5rem;
   margin-bottom: 2rem;
 }
 @media (max-width: 900px) {
@@ -6259,14 +6255,16 @@ textarea.error:focus {
 
 .chart-card {
   padding: 1.5rem;
-  background: #e6e6e6;
-  border-radius: 1em;
+  border-radius: 12px;
+  border: 1.5px solid #e0e0e0;
 }
 .chart-card h3 {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #333;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #e0e0e0;
 }
 .chart-card canvas {
   max-height: 260px;
@@ -6274,14 +6272,17 @@ textarea.error:focus {
 
 .stats-table-wrap {
   padding: 1.5rem;
-  background: #e6e6e6;
-  border-radius: 1em;
+  border-radius: 12px;
+  border: 1.5px solid #e0e0e0;
+  margin-bottom: 2rem;
 }
 .stats-table-wrap h3 {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #333;
   margin-bottom: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .stats-table {
@@ -6292,21 +6293,17 @@ textarea.error:focus {
 .stats-table th {
   text-align: left;
   padding: 0.6rem 1rem;
-  border-bottom: 2px solid #e0e0e0;
   color: #666;
   font-weight: 600;
   font-size: 0.82rem;
 }
 .stats-table td {
-  padding: 0.7rem 1rem;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 0.8rem 1rem;
+  border-top: 1px solid #e0e0e0;
   color: #333;
 }
-.stats-table tr:last-child td {
-  border-bottom: none;
-}
 .stats-table tr:hover td {
-  background: #fff;
+  background: #e6e6e6;
 }
 
 .badge-volume {
@@ -6318,6 +6315,8 @@ textarea.error:focus {
 .stats-no-data {
   text-align: center;
   color: #666;
-  padding: 3rem;
+  padding: 4rem;
   font-size: 0.95rem;
+  border: 1.5px dashed #e0e0e0;
+  border-radius: 12px;
 }/*# sourceMappingURL=style.css.map */

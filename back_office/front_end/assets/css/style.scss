@@ -6585,9 +6585,7 @@ textarea.error {
     gap: 1.5rem;
     margin-bottom: 2.5rem;
 
-    @media (max-width: 768px) {
-        grid-template-columns: 1fr;
-    }
+
 }
 
 .kpi-card {
@@ -6622,9 +6620,7 @@ textarea.error {
     gap: 1.5rem;
     margin-bottom: 2rem;
 
-    @media (max-width: 900px) {
-        grid-template-columns: 1fr;
-    }
+
 }
 
 .chart-card {
@@ -6681,9 +6677,7 @@ textarea.error {
         color: $gray-darker;
     }
 
-    tr:hover td {
-        background: $background-color;
-    }
+
 }
 
 .badge-volume {

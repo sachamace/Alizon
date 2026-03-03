@@ -13,6 +13,16 @@
     <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
     <link rel="stylesheet" href="front_office/front_end/assets/csss/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 350px;
+            width: 100%;
+            margin: 0 20px 20px 20px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -58,6 +68,7 @@
                             <?php echo $is_checked; ?> /> <label for="vend_<?php echo $vendeur['id_vendeur'];?>"><?php echo $vendeur['raison_sociale'];?></label><br>
                     <?php } ?>
                 </fieldset>
+                <button id="btnmap"> Voir carte</button>
                 <label>Note</label>
                 <div class="inputs">
                     <input type="number" placeholder="Min" id="noteMinInput" name="noteMin" min="0" max="5" value="<?= htmlspecialchars($_GET['noteMin'] ?? '') ?>">
@@ -68,6 +79,7 @@
                 </button>
             </form>
         </aside>
+        <div id="map"></div>
         <?php
             $tri = $_GET['tri'] ?? '';
             switch ($tri) {
@@ -291,5 +303,34 @@
     </footer>
     <script src="/front_office/front_end/assets/js/filtre.js"></script>
     <script src="/front_office/front_end/assets/js/autocompletion.js"></script>
+    <script>
+        let displayMap = document.getElementById("map");
+        let boutonMap = document.getElementById("btnmap");
+
+        let map = L.map('map').setView([48.1173, -1.6778], 8);
+        let breizh = L.marker([48.18257, -2.751912]).addTo(map);
+        let kouign = L.marker([47.742952, -3.355796]).addTo(map);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        document.getElementById('map').style.cursor = 'crosshair';
+        
+        //Affiche un popup avec message quand on clique sur le marker
+        breizh.bindPopup("<b>Breizh Saveurs Tradition</b><br>SAS bretonne qui vend des produits locaux frais");
+        kouign.bindPopup("<b>Kouign Aman Artisanal</b><br>SARL bretonne proche du port, produits locaux...");
+
+        boutonMap.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (getComputedStyle(displayMap).display !== "none") {
+                displayMap.style.display = "none";
+            } else {
+                displayMap.style.display = "block";
+                setTimeout(() => map.invalidateSize(), 100);
+            }
+        });
+    </script>
 </body>
 </html>

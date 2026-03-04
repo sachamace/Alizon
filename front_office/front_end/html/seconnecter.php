@@ -1,10 +1,13 @@
 <?php
+    date_default_timezone_set('Europe/Paris');
+    session_start();
     include 'config.php';
+    
     require_once '../../../vendor/autoload.php';
 
     use OTPHP\TOTP;
 
-    session_start();
+    
 
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -14,21 +17,23 @@
     $mdp = "";
     $email = "";
 
-    // Vérifier si l'utilisateur a déjà validé son âge dans cette session
-    $age_verifie = isset($_SESSION['age_verifie']) && $_SESSION['age_verifie'] === true;
-    $attente_a2f = false; // Nouvel état pour savoir si on doit afficher la popup A2F
-
+    $age_verifie = isset($_COOKIE['age_verifie']) && $_COOKIE['age_verifie'] === '1';
+    $attente_a2f = false;
     // Gestion de la vérification d'âge
     if (isset($_POST['verif_age'])) {
         if ($_POST['verif_age'] === 'oui') {
-            $_SESSION['age_verifie'] = true;
-            $age_verifie = true;
+            setcookie('age_verifie', '1', time() + 86400, '/');
+
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
         } else {
             $erreur_age = "Vous devez avoir 18 ans ou plus pour vous connecter.";
         }
     }
+
+// Gestion de la vérification du code A2F
     // Gestion de la vérification du code A2F
-    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f'])) {
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f']) && $attente_a2f == true) {
         $code_saisi = trim($_POST['code_a2f']);
         // --- AJOUT ICI : On récupère le secret de la session ---
         $secret = $_SESSION['temp_secret'] ?? null;

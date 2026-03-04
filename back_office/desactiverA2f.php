@@ -1,4 +1,5 @@
 <?php
+    session_start();
     include 'config.php';
     $id_vendeur_connecte = $_SESSION['vendeur_id'];
 

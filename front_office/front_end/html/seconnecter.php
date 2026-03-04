@@ -109,17 +109,20 @@
             ]);
             $secret = $stmtsecret->fetchColumn();
 
-            if(strcmp($secret,"") != 0){
+            if($secret && strcmp($secret, "") != 0){
                 $_SESSION['temp_secret'] = $secret;
                 $attente_a2f = true; // On active l'affichage de la popup A2F
             }
             else{
+                
                 // Connexion définitive
                 $_SESSION['id'] = $user['id_num'];
                 $_SESSION['login'] = $user['login'];
                 $_SESSION['id_client'] = $user['id_client'];
                 $_SESSION['id_panier'] = $panier['id_panier'];
-                
+                var_dump($_SESSION['login']);
+                var_dump($_SESSION['id']);
+                sleep(50);
                 // Nettoyage
                 unset($_SESSION['temp_user']);
 

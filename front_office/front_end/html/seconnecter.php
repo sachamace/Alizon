@@ -122,7 +122,6 @@
                 $_SESSION['id_panier'] = $panier['id_panier'];
                 var_dump($_SESSION['login']);
                 var_dump($_SESSION['id']);
-                sleep(50);
                 // Nettoyage
                 unset($_SESSION['temp_user']);
 

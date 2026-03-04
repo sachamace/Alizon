@@ -34,10 +34,10 @@ try {
     // Récupération des informations du client
     $stmt_client = $pdo->prepare("
         SELECT nom, prenom, adresse_mail, num_tel
-        FROM compte_client
-        WHERE id_client = :id_client
+        FROM commande
+        WHERE id_commande = :id_commande
     ");
-    $stmt_client->execute([':id_client' => $id_client]);
+    $stmt_client->execute([':id_commande' => $id_commande]);
     $client = $stmt_client->fetch(PDO::FETCH_ASSOC);
     
     // Récupération de l'adresse de livraison

@@ -88,22 +88,22 @@ try {
             
             <article>
                 <h3>Prénom</h3>
-                <p><?php echo htmlentities($profil["prenom"]) ?></p>
+                <p><?php echo htmlentities($profil["prenom"] ?? '') ?></p>
             </article>
-
+            
             <article>
                 <h3>Nom</h3>
-                <p><?php echo htmlentities($profil["nom"]) ?></p>
+                <p><?php echo htmlentities($profil["nom"] ?? '') ?></p>
             </article>
 
             <article>
                 <h3>Date de naissance</h3>
-                <p><?php echo htmlentities($profil["date_naissance"]) ?></p>
+                <p><?php echo htmlentities($profil["date_naissance"] ?? '') ?></p>
             </article>
 
             <article>
                 <h3>Adresse email</h3>
-                <p><?php echo htmlentities($profil["email"]) ?></p>
+                <p><?php echo htmlentities($profil["email"] ?? '') ?></p>
             </article>
 
             <article>

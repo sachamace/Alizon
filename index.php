@@ -1,6 +1,13 @@
 <?php
     include 'front_office/front_end/html/config.php';
     include 'front_office/front_end/html/sessionindex.php';
+
+    if (isset($_SESSION['message_suppression'])) {
+        unset($_SESSION['message_suppression']);
+        header('Location: /front_office/front_end/html/deconnecter.php');
+        exit;
+    }
+
     $stmt = $pdo->query("SELECT version();");
 ?>
 <!DOCTYPE html>

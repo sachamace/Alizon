@@ -36,9 +36,9 @@
         }
     }
 
-// Gestion de la vérification du code A2F
     // Gestion de la vérification du code A2F
-    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f']) && $attente_a2f == true) {
+    // Gestion de la vérification du code A2F
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f']) && $attente_a2f) {
         $code_saisi = trim($_POST['code_a2f']);
         // --- AJOUT ICI : On récupère le secret de la session ---
         $secret = $_SESSION['temp_secret'] ?? null;

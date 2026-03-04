@@ -18,7 +18,7 @@
     <?php if (isset($_SESSION['message_suppression'])) { 
         echo "<script>alert('" . $_SESSION['message_suppression'] . "');</script>";
         unset($_SESSION['message_suppression']);
-        session_destroy();
+        header("Location: deconnecter.php");
     } ?>
     <header>
         <?php include 'front_office/front_end/html/header.php' ?>

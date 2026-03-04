@@ -4,7 +4,7 @@ include 'config.php';
 $id_vendeur = $_SESSION['vendeur_id'];
 
 $date_debut = $_GET['date_debut'] ?? date('Y-01-01');
-$date_fin   = $_GET['date_fin']   ?? date('Y-m-d');
+$date_fin   = $_GET['date_fin']   ?? date();
 $id_produit = $_GET['id_produit'] ?? 'tous';
 $categorie  = $_GET['categorie']  ?? 'toutes';
 $vue        = $_GET['vue']        ?? 'produit';

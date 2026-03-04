@@ -139,6 +139,7 @@ try {
 
             <div class="btn-modif">
                 <a href="modifierProfilClient.php" class="modifier">Modifier</a>
+                <a href="anonymeCompte.php" class="ano">supprimer mon compte</a>
             </div>
 
             <div class="profil-container">

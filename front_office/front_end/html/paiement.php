@@ -13,9 +13,10 @@ $id_client_connecte = $_SESSION['id'];
 --------------------------------------------------- */
 try {
     $stmt = $pdo->prepare("
-        SELECT adresse, code_postal, ville, pays
+        SELECT adresse, code_postal, ville, pays, adresse_mail, nom, prenom, c.num_tel AS num_tel
         FROM public.adresse a
-        WHERE id_client = :id_client
+        JOIN public.compte_client c ON a.id_client = c.id_client
+        WHERE a.id_client = :id_client
         ORDER BY id_adresse DESC 
         LIMIT 1
     ");
@@ -178,14 +179,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 //CRÉER LA COMMANDE
                 $stmt_commande = $pdo->prepare("
-                    INSERT INTO commande (id_client, date_commande, montant_total_ht, montant_total_ttc,date_maj)
-                    VALUES (:id_client, NOW(), :montant_ht, :montant_ttc, NOW() )
+                    INSERT INTO commande (id_client, date_commande, montant_total_ht, montant_total_ttc, date_maj, adresse_mail, nom, prenom, num_tel)
+                    VALUES (:id_client, NOW(), :montant_ht, :montant_ttc, NOW(), :adresse_mail, :nom, :prenom, :num_tel)
                     RETURNING id_commande
                 ");
                 $stmt_commande->execute([
                     ':id_client' => $id_client_connecte,
                     ':montant_ht' => $total_ht,
-                    ':montant_ttc' => $total_ttc
+                    ':montant_ttc' => $total_ttc,
+                    ':adresse_mail' => $client['adresse_mail'] ?? '',
+                    ':nom' => $client['nom'] ?? '',
+                    ':prenom' => $client['prenom'] ?? '',
+                    ':num_tel' => $client['num_tel'] ?? ''
                 ]);
                 $id_commande = $stmt_commande->fetchColumn();
 

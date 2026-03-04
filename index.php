@@ -15,6 +15,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <?php if (isset($_SESSION['message_suppression'])) { 
+        echo "<script>alert('" . $_SESSION['message_suppression'] . "');</script>";
+        unset($_SESSION['message_suppression']);
+        session_destroy();
+    } ?>
     <header>
         <?php include 'front_office/front_end/html/header.php' ?>
     </header>

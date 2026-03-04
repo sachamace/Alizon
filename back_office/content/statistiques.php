@@ -98,9 +98,6 @@ $cmp_volumes  = json_encode(array_values(array_column($cmp_data, 'volume_total')
 $cmp_montants = json_encode(array_values(array_column($cmp_data, 'montant_total')));
 $data_volume  = json_encode(array_column($stats, 'volume_total'));
 $data_montant = json_encode(array_column($stats, 'montant_total'));
-$data_ticket  = json_encode(array_map(function($s) {
-    return $s['volume_total'] > 0 ? round($s['montant_total'] / $s['volume_total'], 2) : 0;
-}, $stats));
 ?>
 
 <div class="stats-page">
@@ -170,13 +167,6 @@ $data_ticket  = json_encode(array_map(function($s) {
         <div class="chart-card">
             <h3>CA TTC <?= $vue === 'categorie' ? 'par categorie' : 'par produit' ?></h3>
             <canvas id="chartMontant"></canvas>
-        </div>
-    </div>
-
-    <div class="stats-charts" style="grid-template-columns: 1fr;">
-        <div class="chart-card">
-            <h3>Ticket moyen par <?= $vue === 'categorie' ? 'categorie' : 'produit' ?> (CA / unite)</h3>
-            <canvas id="chartTicket"></canvas>
         </div>
     </div>
 
@@ -273,23 +263,6 @@ if (labelsBar.length > 0) {
     new Chart(document.getElementById('chartMontant'), {
         type: 'doughnut',
         data: { labels: labelsBar, datasets: [{ data: dataMontant, backgroundColor: labelsBar.map((_, i) => couleurs[i % couleurs.length]) }] }
-    });
-}
-
-const dataTicket  = <?= $data_ticket ?>;
-
-if (labelsBar.length > 0) {
-    new Chart(document.getElementById('chartTicket'), {
-        type: 'bar',
-        data: {
-            labels: labelsBar,
-            datasets: [{ label: 'Ticket moyen', data: dataTicket, backgroundColor: labelsBar.map((_, i) => couleurs[i % couleurs.length]), maxBarThickness: 60 }]
-        },
-        options: {
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' euro' } } }
-        }
     });
 }
 

@@ -74,7 +74,7 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
             <input type="date" name="date_fin" value="<?= htmlspecialchars($date_fin) ?>">
         </div>
         <div class="filtre-group">
-            <label>Type</label>
+            <label>Vue</label>
             <select name="vue" onchange="this.form.submit()">
                 <option value="produit"   <?= $vue === 'produit'   ? 'selected' : '' ?>>Par produit</option>
                 <option value="categorie" <?= $vue === 'categorie' ? 'selected' : '' ?>>Par categorie</option>
@@ -167,7 +167,7 @@ if (labelsBar.length > 0) {
         type: 'bar',
         data: {
             labels: labelsBar,
-            datasets: [{ label: 'Unites', data: dataVolume, backgroundColor: labelsBar.map((_, i) => couleurs[i % couleurs.length]) }]
+            datasets: [{ label: 'Unites', data: dataVolume, backgroundColor: labelsBar.map((_, i) => couleurs[i % couleurs.length]), maxBarThickness: 60 }]
         },
         options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
     });

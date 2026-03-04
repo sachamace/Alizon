@@ -114,14 +114,17 @@
                 $attente_a2f = true; // On active l'affichage de la popup A2F
             }
             else{
-                
+
+                // Récup panier
+                $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_client = ?");
+                $panier_sql->execute([$user['id_client']]); 
+                $panier = $panier_sql->fetch();
+
                 // Connexion définitive
                 $_SESSION['id'] = $user['id_num'];
                 $_SESSION['login'] = $user['login'];
                 $_SESSION['id_client'] = $user['id_client'];
                 $_SESSION['id_panier'] = $panier['id_panier'];
-                var_dump($_SESSION['login']);
-                var_dump($_SESSION['id']);
                 // Nettoyage
                 unset($_SESSION['temp_user']);
 

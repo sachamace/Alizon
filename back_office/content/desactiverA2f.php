@@ -1,6 +1,4 @@
 <?php
-    session_start();
-    include 'config.php';
     $id_vendeur_connecte = $_SESSION['vendeur_id'];
 
     $stmt_a2f = $pdo->prepare("UPDATE compte_vendeur SET codea2f = '' WHERE id_vendeur = :id_vendeur");

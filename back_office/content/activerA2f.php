@@ -1,6 +1,4 @@
 <?php
-    session_start();
-    include 'config.php';
     require_once '../vendor/autoload.php';
     
     $id_vendeur_connecte = $_SESSION['vendeur_id'];   

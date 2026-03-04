@@ -6,24 +6,15 @@ $id_vendeur = $_SESSION['vendeur_id'];
 $date_debut = $_GET['date_debut'] ?? date('Y-01-01');
 $date_fin   = $_GET['date_fin']   ?? date('Y-m-d');
 $id_produit = $_GET['id_produit'] ?? 'tous';
-$categorie  = $_GET['categorie']  ?? 'toutes';
 $vue        = $_GET['vue']        ?? 'produit';
 
 $stmt = $pdo->prepare("SELECT id_produit, nom_produit FROM produit WHERE id_vendeur = ? ORDER BY nom_produit");
 $stmt->execute([$id_vendeur]);
 $liste_produits = $stmt->fetchAll();
 
-$stmt = $pdo->prepare("SELECT DISTINCT categorie FROM produit WHERE id_vendeur = ? AND categorie IS NOT NULL ORDER BY categorie");
-$stmt->execute([$id_vendeur]);
-$liste_categories = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
 if ($vue === 'categorie') {
     $params = [$id_vendeur, $date_debut, $date_fin];
-    $filtre = "";
-    if ($categorie !== 'toutes') {
-        $filtre = "AND p.categorie = ?";
-        $params[] = $categorie;
-    }
     $stmt = $pdo->prepare("
         SELECT p.categorie AS nom_produit,
                SUM(lc.quantite) AS volume_total,
@@ -33,7 +24,6 @@ if ($vue === 'categorie') {
         JOIN commande c ON lc.id_commande = c.id_commande
         WHERE p.id_vendeur = ?
           AND c.date_commande::date BETWEEN ? AND ?
-          $filtre
         GROUP BY p.categorie
         ORDER BY montant_total DESC
     ");
@@ -53,7 +43,6 @@ if ($vue === 'categorie') {
         JOIN commande c ON lc.id_commande = c.id_commande
         WHERE p.id_vendeur = ?
           AND c.date_commande::date BETWEEN ? AND ?
-          $filtre
         GROUP BY p.id_produit, p.nom_produit
         ORDER BY montant_total DESC
     ");
@@ -85,7 +74,7 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
             <input type="date" name="date_fin" value="<?= htmlspecialchars($date_fin) ?>">
         </div>
         <div class="filtre-group">
-            <label>Type</label>
+            <label>Vue</label>
             <select name="vue" onchange="this.form.submit()">
                 <option value="produit"   <?= $vue === 'produit'   ? 'selected' : '' ?>>Par produit</option>
                 <option value="categorie" <?= $vue === 'categorie' ? 'selected' : '' ?>>Par categorie</option>
@@ -99,18 +88,6 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
                 <?php foreach ($liste_produits as $p): ?>
                     <option value="<?= $p['id_produit'] ?>" <?= $id_produit == $p['id_produit'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($p['nom_produit']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <?php else: ?>
-        <div class="filtre-group">
-            <label>Categorie</label>
-            <select name="categorie">
-                <option value="toutes" <?= $categorie === 'toutes' ? 'selected' : '' ?>>Toutes</option>
-                <?php foreach ($liste_categories as $cat): ?>
-                    <option value="<?= htmlspecialchars($cat) ?>" <?= $categorie === $cat ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($cat) ?>
                     </option>
                 <?php endforeach; ?>
             </select>

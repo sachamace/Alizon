@@ -48,7 +48,9 @@
         if (isset($_SESSION['temp_secret_a2f'])) {
             $otp = TOTP::create($_SESSION['temp_secret_a2f']);
         } else {
-            header("Location: activerA2f.php");
+            echo "<script>
+                window.location.href = 'index.php?page=activerA2f';
+            </script>";
             exit();
         }
     }

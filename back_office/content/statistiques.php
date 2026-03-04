@@ -115,7 +115,7 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
             <input type="date" name="date_fin" value="<?= htmlspecialchars($date_fin) ?>">
         </div>
         <div class="filtre-group">
-            <label>Type</label>
+            <label>Vue</label>
             <select name="vue" onchange="this.form.submit()">
                 <option value="produit"   <?= $vue === 'produit'   ? 'selected' : '' ?>>Par produit</option>
                 <option value="categorie" <?= $vue === 'categorie' ? 'selected' : '' ?>>Par categorie</option>
@@ -134,36 +134,6 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
             </select>
         </div>
         <?php endif; ?>
-        <div class="filtre-group">
-            <label>Comparer A</label>
-            <select name="cmp_a">
-                <option value="">--</option>
-                <?php if ($vue === 'categorie'): ?>
-                    <?php foreach (array_unique(array_column($stats, 'nom_produit')) as $opt): ?>
-                        <option value="<?= htmlspecialchars($opt) ?>" <?= $cmp_a === $opt ? 'selected' : '' ?>><?= htmlspecialchars($opt) ?></option>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <?php foreach ($liste_produits as $p): ?>
-                        <option value="<?= $p['id_produit'] ?>" <?= $cmp_a == $p['id_produit'] ? 'selected' : '' ?>><?= htmlspecialchars($p['nom_produit']) ?></option>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </select>
-        </div>
-        <div class="filtre-group">
-            <label>Comparer B</label>
-            <select name="cmp_b">
-                <option value="">--</option>
-                <?php if ($vue === 'categorie'): ?>
-                    <?php foreach (array_unique(array_column($stats, 'nom_produit')) as $opt): ?>
-                        <option value="<?= htmlspecialchars($opt) ?>" <?= $cmp_b === $opt ? 'selected' : '' ?>><?= htmlspecialchars($opt) ?></option>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <?php foreach ($liste_produits as $p): ?>
-                        <option value="<?= $p['id_produit'] ?>" <?= $cmp_b == $p['id_produit'] ? 'selected' : '' ?>><?= htmlspecialchars($p['nom_produit']) ?></option>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </select>
-        </div>
         <button type="submit">Appliquer</button>
     </form>
 
@@ -200,14 +170,52 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
         </div>
     </div>
 
-    <?php if (!empty($cmp_data)): ?>
-    <div class="stats-charts" style="grid-template-columns: 1fr;">
-        <div class="chart-card">
-            <h3>Comparaison</h3>
-            <canvas id="chartComparaison"></canvas>
-        </div>
+    <div class="chart-card" style="margin-bottom: 1.5rem;">
+        <h3>Comparaison</h3>
+        <form method="GET" action="" class="stats-filtres" style="margin-bottom: 1.2rem; padding: 0; background: none;">
+            <input type="hidden" name="page" value="statistiques">
+            <input type="hidden" name="date_debut" value="<?= htmlspecialchars($date_debut) ?>">
+            <input type="hidden" name="date_fin" value="<?= htmlspecialchars($date_fin) ?>">
+            <input type="hidden" name="vue" value="<?= htmlspecialchars($vue) ?>">
+            <input type="hidden" name="id_produit" value="<?= htmlspecialchars($id_produit) ?>">
+            <div class="filtre-group">
+                <label>Element A</label>
+                <select name="cmp_a">
+                    <option value="">--</option>
+                    <?php if ($vue === 'categorie'): ?>
+                        <?php foreach (array_unique(array_column($stats, 'nom_produit')) as $opt): ?>
+                            <option value="<?= htmlspecialchars($opt) ?>" <?= $cmp_a === $opt ? 'selected' : '' ?>><?= htmlspecialchars($opt) ?></option>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <?php foreach ($liste_produits as $p): ?>
+                            <option value="<?= $p['id_produit'] ?>" <?= $cmp_a == $p['id_produit'] ? 'selected' : '' ?>><?= htmlspecialchars($p['nom_produit']) ?></option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+            </div>
+            <div class="filtre-group">
+                <label>Element B</label>
+                <select name="cmp_b">
+                    <option value="">--</option>
+                    <?php if ($vue === 'categorie'): ?>
+                        <?php foreach (array_unique(array_column($stats, 'nom_produit')) as $opt): ?>
+                            <option value="<?= htmlspecialchars($opt) ?>" <?= $cmp_b === $opt ? 'selected' : '' ?>><?= htmlspecialchars($opt) ?></option>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <?php foreach ($liste_produits as $p): ?>
+                            <option value="<?= $p['id_produit'] ?>" <?= $cmp_b == $p['id_produit'] ? 'selected' : '' ?>><?= htmlspecialchars($p['nom_produit']) ?></option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+            </div>
+            <button type="submit">Comparer</button>
+        </form>
+        <?php if (!empty($cmp_data)): ?>
+        <canvas id="chartComparaison"></canvas>
+        <?php else: ?>
+        <p style="color: #999; font-size: 0.9rem;">Selectionnez deux elements pour afficher la comparaison.</p>
+        <?php endif; ?>
     </div>
-    <?php endif; ?>
 
     <div class="stats-table-wrap">
         <h3>Detail</h3>

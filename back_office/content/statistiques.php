@@ -7,6 +7,8 @@ $date_debut = $_GET['date_debut'] ?? date('Y-01-01');
 $date_fin   = $_GET['date_fin']   ?? date('Y-m-d');
 $id_produit = $_GET['id_produit'] ?? 'tous';
 $vue        = $_GET['vue']        ?? 'produit';
+$cmp_a      = $_GET['cmp_a']      ?? '';
+$cmp_b      = $_GET['cmp_b']      ?? '';
 
 $stmt = $pdo->prepare("SELECT id_produit, nom_produit FROM produit WHERE id_vendeur = ? ORDER BY nom_produit");
 $stmt->execute([$id_vendeur]);
@@ -51,10 +53,49 @@ if ($vue === 'categorie') {
 $stmt->execute($params);
 $stats = $stmt->fetchAll();
 
+$cmp_data = [];
+if ($cmp_a !== '' && $cmp_b !== '') {
+    if ($vue === 'categorie') {
+        $s = $pdo->prepare("
+            SELECT p.categorie AS label,
+                   SUM(lc.quantite) AS volume_total,
+                   ROUND(SUM(lc.prix_unitaire_ttc * lc.quantite)::numeric, 2) AS montant_total
+            FROM ligne_commande lc
+            JOIN produit p ON lc.id_produit = p.id_produit
+            JOIN commande c ON lc.id_commande = c.id_commande
+            WHERE p.id_vendeur = ?
+              AND c.date_commande::date BETWEEN ? AND ?
+              AND p.categorie IN (?, ?)
+            GROUP BY p.categorie
+        ");
+        $s->execute([$id_vendeur, $date_debut, $date_fin, $cmp_a, $cmp_b]);
+    } else {
+        $s = $pdo->prepare("
+            SELECT p.nom_produit AS label,
+                   SUM(lc.quantite) AS volume_total,
+                   ROUND(SUM(lc.prix_unitaire_ttc * lc.quantite)::numeric, 2) AS montant_total
+            FROM ligne_commande lc
+            JOIN produit p ON lc.id_produit = p.id_produit
+            JOIN commande c ON lc.id_commande = c.id_commande
+            WHERE p.id_vendeur = ?
+              AND c.date_commande::date BETWEEN ? AND ?
+              AND p.id_produit IN (?, ?)
+            GROUP BY p.id_produit, p.nom_produit
+        ");
+        $s->execute([$id_vendeur, $date_debut, $date_fin, $cmp_a, $cmp_b]);
+    }
+    foreach ($s->fetchAll() as $r) {
+        $cmp_data[$r['label']] = $r;
+    }
+}
+
 $total_volume  = array_sum(array_column($stats, 'volume_total'));
 $total_montant = array_sum(array_column($stats, 'montant_total'));
 
 $labels_bar   = json_encode(array_column($stats, 'nom_produit'));
+$cmp_labels   = json_encode(array_keys($cmp_data));
+$cmp_volumes  = json_encode(array_values(array_column($cmp_data, 'volume_total')));
+$cmp_montants = json_encode(array_values(array_column($cmp_data, 'montant_total')));
 $data_volume  = json_encode(array_column($stats, 'volume_total'));
 $data_montant = json_encode(array_column($stats, 'montant_total'));
 ?>
@@ -74,7 +115,7 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
             <input type="date" name="date_fin" value="<?= htmlspecialchars($date_fin) ?>">
         </div>
         <div class="filtre-group">
-            <label>Vue</label>
+            <label>Type</label>
             <select name="vue" onchange="this.form.submit()">
                 <option value="produit"   <?= $vue === 'produit'   ? 'selected' : '' ?>>Par produit</option>
                 <option value="categorie" <?= $vue === 'categorie' ? 'selected' : '' ?>>Par categorie</option>
@@ -93,6 +134,36 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
             </select>
         </div>
         <?php endif; ?>
+        <div class="filtre-group">
+            <label>Comparer A</label>
+            <select name="cmp_a">
+                <option value="">--</option>
+                <?php if ($vue === 'categorie'): ?>
+                    <?php foreach (array_unique(array_column($stats, 'nom_produit')) as $opt): ?>
+                        <option value="<?= htmlspecialchars($opt) ?>" <?= $cmp_a === $opt ? 'selected' : '' ?>><?= htmlspecialchars($opt) ?></option>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <?php foreach ($liste_produits as $p): ?>
+                        <option value="<?= $p['id_produit'] ?>" <?= $cmp_a == $p['id_produit'] ? 'selected' : '' ?>><?= htmlspecialchars($p['nom_produit']) ?></option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </select>
+        </div>
+        <div class="filtre-group">
+            <label>Comparer B</label>
+            <select name="cmp_b">
+                <option value="">--</option>
+                <?php if ($vue === 'categorie'): ?>
+                    <?php foreach (array_unique(array_column($stats, 'nom_produit')) as $opt): ?>
+                        <option value="<?= htmlspecialchars($opt) ?>" <?= $cmp_b === $opt ? 'selected' : '' ?>><?= htmlspecialchars($opt) ?></option>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <?php foreach ($liste_produits as $p): ?>
+                        <option value="<?= $p['id_produit'] ?>" <?= $cmp_b == $p['id_produit'] ? 'selected' : '' ?>><?= htmlspecialchars($p['nom_produit']) ?></option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </select>
+        </div>
         <button type="submit">Appliquer</button>
     </form>
 
@@ -128,6 +199,15 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
             <canvas id="chartMontant"></canvas>
         </div>
     </div>
+
+    <?php if (!empty($cmp_data)): ?>
+    <div class="stats-charts" style="grid-template-columns: 1fr;">
+        <div class="chart-card">
+            <h3>Comparaison</h3>
+            <canvas id="chartComparaison"></canvas>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <div class="stats-table-wrap">
         <h3>Detail</h3>
@@ -175,6 +255,24 @@ if (labelsBar.length > 0) {
     new Chart(document.getElementById('chartMontant'), {
         type: 'doughnut',
         data: { labels: labelsBar, datasets: [{ data: dataMontant, backgroundColor: labelsBar.map((_, i) => couleurs[i % couleurs.length]) }] }
+    });
+}
+
+const cmpLabels   = <?= $cmp_labels ?? '[]' ?>;
+const cmpVolumes  = <?= $cmp_volumes ?? '[]' ?>;
+const cmpMontants = <?= $cmp_montants ?? '[]' ?>;
+
+if (cmpLabels.length === 2) {
+    new Chart(document.getElementById('chartComparaison'), {
+        type: 'bar',
+        data: {
+            labels: ['Unites vendues', 'CA TTC'],
+            datasets: [
+                { label: cmpLabels[0], data: [cmpVolumes[0], cmpMontants[0]], backgroundColor: couleurs[0], maxBarThickness: 80 },
+                { label: cmpLabels[1], data: [cmpVolumes[1], cmpMontants[1]], backgroundColor: couleurs[1], maxBarThickness: 80 }
+            ]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true } } }
     });
 }
 </script>

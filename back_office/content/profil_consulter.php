@@ -42,7 +42,7 @@
     </div>
 
     <div class="profil-container">
-        <?php if($secret && strcmp($secret, "") != 0){?>
+        <?php if($a2f && strcmp($a2f, "") != 0){?>
             <a href="index.php?page=activerA2f">Activer l'A2F</a>
         <?php }else{?>
             <a href="index.php?page=desactiverA2f">Désactiver l'A2F</a>

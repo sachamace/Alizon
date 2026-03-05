@@ -167,6 +167,64 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_P
 
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'voter_avis') {
+    header('Content-Type: application/json');
+
+    $id_client_votant = $_SESSION['id_client'];
+    $id_client_auteur = (int) $_POST['id_auteur'];
+    $id_produit = (int) $_POST['id_produit'];
+    $valeur_vote = (int) $_POST['valeur_vote'];
+
+    try {
+
+        $stmt_check = $pdo->prepare("SELECT valeur_vote FROM vote_avis WHERE id_client_votant = ? AND id_client_auteur = ? AND id_produit = ?");
+        $stmt_check->execute([$id_client_votant, $id_client_auteur, $id_produit]);
+        $vote_existant = $stmt_check->fetchColumn();
+        $mon_vote = 0;
+        if ($vote_existant !== false){
+            if($vote_existant == $valeur_vote){
+                $stmt_delete = $pdo->prepare("DELETE FROM vote_avis WHERE id_client_votant = ? AND id_client_auteur = ? AND id_produit = ?");
+                $stmt_delete->execute([$id_client_votant, $id_client_auteur, $id_produit]);
+                $mon_vote = 0;
+            }
+            else{
+                $stmt_delete = $pdo->prepare("DELETE FROM vote_avis WHERE id_client_votant = ? AND id_client_auteur = ? AND id_produit = ?");
+                $stmt_delete->execute([$id_client_votant, $id_client_auteur, $id_produit]);
+                $stmt_insert = $pdo->prepare("INSERT INTO vote_avis (id_client_votant, id_client_auteur, id_produit, valeur_vote) VALUES (?, ?, ?, ?)");
+                $stmt_insert->execute([$id_client_votant, $id_client_auteur, $id_produit, $valeur_vote]);
+                $mon_vote = $valeur_vote;
+            }
+        }
+        else {
+            $stmt_insert = $pdo->prepare("INSERT INTO vote_avis (id_client_votant, id_client_auteur, id_produit, valeur_vote) VALUES (?, ?, ?, ?)");
+            $stmt_insert->execute([$id_client_votant, $id_client_auteur, $id_produit, $valeur_vote]);
+            $mon_vote = $valeur_vote;
+        }
+
+        $stmt_count = $pdo->prepare("
+            SELECT 
+                COALESCE(SUM(CASE WHEN valeur_vote = 1 THEN 1 ELSE 0 END), 0) as total_positif,
+                COALESCE(SUM(CASE WHEN valeur_vote = -1 THEN 1 ELSE 0 END), 0) as total_negatif
+            FROM vote_avis 
+            WHERE id_client_auteur = ? AND id_produit = ?
+        ");
+        $stmt_count->execute([$id_client_auteur, $id_produit]);
+        $totaux = $stmt_count->fetch(PDO::FETCH_ASSOC);
+
+        echo json_encode([
+            'success' => true,
+            'mon_vote' => $mon_vote,
+            'total_positif' => $totaux['total_positif'],
+            'total_negatif' => $totaux['total_negatif']
+        ]);
+        exit();
+
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Erreur BDD : ' . $e->getMessage()]);
+        exit();
+    }
+}
+
 // traitement des autres actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     
@@ -423,6 +481,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                             ':id_produit' => $id_produit,
                             ':id_vendeur' => $id_vendeur
                         ]);
+                        $req_vote = $pdo->prepare("SELECT id_client_votant, valeur_vote FROM vote_avis WHERE id_client_auteur = :id_client_auteur AND id_produit = :id_produit");
+                        $req_vote->execute([
+                            ':id_client_auteur' => $id_client,
+                            ':id_produit' => $id_produit
+                        ]);
+                        $vote_pos = 0;
+                        $vote_neg = 0;
+                        $vote = 0;
+                        while ($vote = $req_vote->fetch(PDO::FETCH_ASSOC)){
+                            if ($vote['valeur_vote'] == -1){
+                                $vote_neg++;
+                                if (isset($_SESSION['id_client'])){
+                                    if ($vote['id_client_votant'] == $_SESSION['id_client']){
+                                        $vote = -1;
+                                    }
+                                }
+                            }
+                            if ($vote['valeur_vote'] == 1){
+                                $vote_pos++;
+                                if (isset($_SESSION['id_client'])){
+                                    if ($vote['id_client_votant'] == $_SESSION['id_client']){
+                                        $vote = 1;
+                                    }
+                                }
+                            }
+                        }
                         // Si signalé : Remplissage ROUGE, Bordure ROUGE
                         // Si pas signalé : Remplissage BLANC, Bordure NOIRE (pour qu'on voie la forme)
                         $couleur_fill   = $est_signale ? 'red' : 'white';
@@ -450,11 +534,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         }
                         if (isset($_SESSION["id_client"])){
                             if ($_SESSION["id_client"] == $un_avis["id_client"]) {
-                                echo '
+                                ?>
                                 <form method="post">
                                     <input type="hidden" name="action" value="supprimer_avis">
                                     <button type="submit" class="btn-supprimer-avis">Supprimer mon avis</button>
-                                </form>';
+                                </form>
+                                <div class="avis-votes">
+                                    <button type="button" class="btn-vote btn-upvote <?= ($vote === 1) ? 'active' : '' ?>" aria-label="Avis utile" data-id-avis="<?= $un_avis['id_client'] ?>">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                                        </svg>
+                                        <span class="vote-count"><?php echo $vote_pos ?></span> </button>
+
+                                    <button type="button" class="btn-vote btn-downvote <?= ($vote === -1) ? 'active' : '' ?>" aria-label="Avis inutile" data-id-avis="<?= $un_avis['id_client'] ?>">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path>
+                                        </svg>
+                                        <span class="vote-count"><?php echo $vote_neg ?></span> </button>
+                                </div>
+                                <?php
+                                
                             }
                             else{
                                 ?>
@@ -471,6 +570,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                         <line x1="4" y1="22" x2="4" y2="15"></line>
                                     </svg>
                                 </button>
+                                <div class="avis-votes">
+                                    <button type="button" class="btn-vote btn-upvote <?= ($vote === 1) ? 'active' : '' ?>" aria-label="Avis utile" data-id-avis="<?= $un_avis['id_client'] ?>">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                                        </svg>
+                                        <span class="vote-count"><?php echo $vote_pos ?></span> </button>
+
+                                    <button type="button" class="btn-vote btn-downvote <?= ($vote === -1) ? 'active' : '' ?>" aria-label="Avis inutile" data-id-avis="<?= $un_avis['id_client'] ?>">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path>
+                                        </svg>
+                                        <span class="vote-count"><?php echo $vote_neg ?></span> </button>
+                                </div>
                                 <?php
                             }
                         }
@@ -489,6 +601,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                     <line x1="4" y1="22" x2="4" y2="15"></line>
                                 </svg>
                             </button>
+                                <div class="avis-votes">
+                                    <button type="button" class="btn-vote btn-upvote <?= ($vote === 1) ? 'active' : '' ?>" aria-label="Avis utile" data-id-avis="<?= $un_avis['id_client'] ?>">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                                        </svg>
+                                        <span class="vote-count"><?php echo $vote_pos ?></span> </button>
+
+                                    <button type="button" class="btn-vote btn-downvote <?= ($vote === -1) ? 'active' : '' ?>" aria-label="Avis inutile" data-id-avis="<?= $un_avis['id_client'] ?>">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path>
+                                        </svg>
+                                        <span class="vote-count"><?php echo $vote_neg ?></span> </button>
+                                </div>
                             <?php
                         }
                         ?>
@@ -499,6 +624,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         </div>
                         <?php
                     }
+                    
                 } else {
                     echo '<p>Aucun avis pour ce produit pour le moment.</p>';
                 }
@@ -620,6 +746,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
 
     </script>
+    <script src="/front_office/front_end/assets/js/AvisLike.js"></script>
     <script src="/front_office/front_end/assets/js/noteEtoile.js"></script>
     <script src="/front_office/front_end/assets/js/reponseVendeur.js"></script>
 </body>

@@ -94,7 +94,7 @@
     </div>
 </div>
 <?php } else{?>
-<div class="container__connexion">
+<div class="container__connexion" style="align-self: center;">
     <p>Scannez ce QR code avec Google Authenticator ou Authy :<br>
     <strong>ATTENTION : CE CODE ET LE QR CODE NE SONT AFFICHÉS QUE MAINTENANT !</strong></p>
     

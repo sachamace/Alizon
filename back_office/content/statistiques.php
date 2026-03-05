@@ -45,6 +45,7 @@ if ($vue === 'categorie') {
         JOIN commande c ON lc.id_commande = c.id_commande
         WHERE p.id_vendeur = ?
           AND c.date_commande::date BETWEEN ? AND ?
+          $filtre
         GROUP BY p.id_produit, p.nom_produit
         ORDER BY montant_total DESC
     ");

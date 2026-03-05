@@ -67,65 +67,52 @@
     $otp = $otp->withLabel($mail); 
     $otp = $otp->withIssuer('AuthentikATOR');
     $provisioningUri = $otp->getProvisioningUri();  
+    if ($attente_a2f){ 
 ?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Se connecter</title>
-    <meta name="description" content="Ceci est le profil du compte de notre market place !">
-    <meta name="keywords" content="MarketPlace, Shopping,Ventes,Breton,Produit" lang="fr">
-    <link rel="stylesheet" href="front_end/assets/css/style.css">
-</head>
-    <body class="body__connexion">
-        <?php if ($attente_a2f){ ?>
-        <div class="popup-overlay">
-            <div class="popup-content">
-                <div class="header__connexion">
-                    <h2>Vérification de ton Auth</h2>
-                </div>    
-                <div class="form__connexion">
-                    <p>Veuillez entrer le code de vérification à 6 chiffres pour sécuriser votre connexion.</p>
-                    
-                    <input type="text" id="code_2fa" placeholder="000000" maxlength="6" required autofocus autocomplete="one-time-code">
-                    
-                    <div class="popup-buttons">
-                        <button type="submit" class="btn-popup btn-valider" onclick="valider()">
-                            Vérifier
-                        </button>
-                    </div>
-                </div>
-
-                <?php if (!empty($erreur_a2f)){?>
-                    <div class="erreur-msg">
-                        <?= htmlspecialchars($erreur_a2f) ?>
-                    </div>
-                <?php }?>
+<div class="popup-overlay">
+    <div class="popup-content">
+        <div class="header__connexion">
+            <h2>Vérification de ton Auth</h2>
+        </div>    
+        <div class="form__connexion">
+            <p>Veuillez entrer le code de vérification à 6 chiffres pour sécuriser votre connexion.</p>
+            
+            <input type="text" id="code_2fa" placeholder="000000" maxlength="6" required autofocus autocomplete="one-time-code">
+            
+            <div class="popup-buttons">
+                <button type="submit" class="btn-popup btn-valider" onclick="valider()">
+                    Vérifier
+                </button>
             </div>
         </div>
-        <?php } else{?>
-        <div class="container__connexion">
-            <p>Scannez ce QR code avec Google Authenticator ou Authy :<br>
-            <strong>ATTENTION : CE CODE ET LE QR CODE NE SONT AFFICHÉS QUE MAINTENANT !</strong></p>
-            
-            <div id="qrcode" data-uri="<?php echo htmlspecialchars($provisioningUri); ?>" style = "width: 80%; max-width: 250px; margin: 0px auto;"></div>
-            
-            <p>Clé de configuration manuelle : </p>
-            <p style = "white-space: normal;
-                        overflow: visible;
-                        text-overflow: clip;
-                        word-break: break-word;
-                        box-sizing: border-box;"
-            >
-            <strong><?php echo $code_secret; ?></strong></p>
-            <form method="POST">
-                <button type="submit" class="btn__connexion">Vérification </button>
-            </form>
-            
-        </div>
+
+        <?php if (!empty($erreur_a2f)){?>
+            <div class="erreur-msg">
+                <?= htmlspecialchars($erreur_a2f) ?>
+            </div>
         <?php }?>
-        <script src="front_end/assets/js/a2f.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    </body>
-</html>
+    </div>
+</div>
+<?php } else{?>
+<div class="container__connexion">
+    <p>Scannez ce QR code avec Google Authenticator ou Authy :<br>
+    <strong>ATTENTION : CE CODE ET LE QR CODE NE SONT AFFICHÉS QUE MAINTENANT !</strong></p>
+    
+    <div id="qrcode" data-uri="<?php echo htmlspecialchars($provisioningUri); ?>" style = "width: 80%; max-width: 250px; margin: 0px auto;"></div>
+    
+    <p>Clé de configuration manuelle : </p>
+    <p style = "white-space: normal;
+                overflow: visible;
+                text-overflow: clip;
+                word-break: break-word;
+                box-sizing: border-box;"
+    >
+    <strong><?php echo $code_secret; ?></strong></p>
+    <form method="POST">
+        <button type="submit" class="btn__connexion">Vérification </button>
+    </form>
+    
+</div>
+<?php }?>
+<script src="../front_end/assets/js/a2f.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>

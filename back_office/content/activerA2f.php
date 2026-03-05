@@ -19,13 +19,20 @@
                     'codea2f' => $_SESSION['temp_secret_a2f']
                 ]);
                 unset($_SESSION['temp_secret_a2f']);
-                
+                while (ob_get_level()) {
+                    ob_end_clean();
+                }
                 // On répond au JS que c'est un succès (format JSON)
+                header('Content-Type: application/json');
                 echo json_encode(['success' => true]);
                 exit();
             } else {
                 // On répond au JS que le code est faux
                 $erreur_a2f = "Le code à 6 chiffres est incorrect.";
+                while (ob_get_level()) {
+                    ob_end_clean();
+                }
+                header('Content-Type: application/json');
                 echo json_encode(['success' => false, 'message' => "Le code à 6 chiffres n'est pas bon !"]);
                 exit();
             }

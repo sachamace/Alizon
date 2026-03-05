@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Exemple d'envoi de code 2FA vers ton script PHP
 async function valider() {
     const btnValider = document.querySelector('.btn-valider');
-    const codeSaisi = document.getElementById('code_2fa').value;
+    const inputCode = document.getElementById('code_2fa');
     const divErreur = document.getElementById('erreur-msg-js');
     if (nombreEssais >= MAX_ESSAIS) {
         return;
@@ -34,14 +34,13 @@ async function valider() {
 
     nombreEssais++;
     const essaisRestants = MAX_ESSAIS - nombreEssais;
-
+    const codeSaisi = inputCode.value;
     //Vérification avec la regex
     const regexA2F = /^\d{6}$/;
     
     if (!regexA2F.test(codeSaisi)) {
         // Si le test échoue, on affiche une erreur et on arrête tout (return)
         divErreur.innerText = "Veuillez entrer un code valide de 6 chiffres. Pas de lettre ou de caractères spéciaux";
-        return; 
     }
 
     try {
@@ -57,7 +56,7 @@ async function valider() {
             window.location.href = "/back_office/index.php?page=profil&type=consulter";
         } else {
             // Affichage de l'erreur renvoyée par PHP
-            gererErreur(divErreur, codeSaisi, btnValider, `${result.message} Il vous reste ${essaisRestants} essai(s).`);
+            gererErreur(divErreur, inputCode, btnValider, `${result.message} Il vous reste ${essaisRestants} essai(s).`);
         }
     } catch (error) {
         console.error("Erreur lors de l'envoi :", error);

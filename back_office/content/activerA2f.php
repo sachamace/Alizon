@@ -6,7 +6,19 @@
     if (isset($_POST['code'])) {
         // On enlève les éventuels espaces invisibles avant/après avec trim()
         $code_recu = trim($_POST['code']); 
-        
+        if (!isset($_SESSION['tentatives_a2f'])) {
+            $_SESSION['tentatives_a2f'] = 0;
+        }
+        if ($_SESSION['tentatives_a2f'] >= 5) {
+            // Par sécurité, on détruit le secret temporaire. 
+            // L'utilisateur DOIT recharger la page et scanner un nouveau QR Code.
+            unset($_SESSION['temp_secret_a2f']); 
+            
+            while (ob_get_level()) { ob_end_clean(); }
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => "Sécurité : Trop de tentatives échouées. Veuillez recharger la page pour générer un nouveau QR Code."]);
+            exit();
+        }
         // 2. VÉRIFICATION DE LA VALIDITÉ DU CODE (si le format est bon)
         if (isset($_SESSION['temp_secret_a2f'])) {
             $otp = TOTP::create($_SESSION['temp_secret_a2f']);
@@ -20,7 +32,7 @@
                 ]);
                 unset($_SESSION['temp_secret_a2f']);
                 
-                // On nettoie tout le HTML précédent et on renvoie le succès
+                // On nettoie tout le HTML précédent 
                 while (ob_get_level()) {
                     ob_end_clean();
                 }
@@ -29,12 +41,12 @@
                 exit();
                 
             } else {
-                // Le code a le bon format, mais il est périmé ou faux
-                while (ob_get_level()) {
-                    ob_end_clean();
-                }
+                $_SESSION['tentatives_a2f']++; 
+                $essais_restants = 5 - $_SESSION['tentatives_a2f'];
+                
+                while (ob_get_level()) { ob_end_clean(); }
                 header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => "Le code à 6 chiffres est incorrect ou a expiré."]);
+                echo json_encode(['success' => false, 'message' => "Le code est incorrect. Il vous reste $essais_restants essai(s)."]);
                 exit();
             }
         }

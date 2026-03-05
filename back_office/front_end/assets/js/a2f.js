@@ -1,3 +1,5 @@
+let nombreEssais = 0;
+const MAX_ESSAIS = 5;
 document.addEventListener("DOMContentLoaded", () => {
     // On cible la div préparée en PHP
     const qrcodeElement = document.getElementById("qrcode");
@@ -23,10 +25,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Exemple d'envoi de code 2FA vers ton script PHP
 async function valider() {
+    const btnValider = document.querySelector('.btn-valider');
     const codeSaisi = document.getElementById('code_2fa').value;
     const divErreur = document.getElementById('erreur-msg-js');
+    if (nombreEssais >= MAX_ESSAIS) {
+        return;
+    }
 
-    // 1. Vérification avec la regex
+    nombreEssais++;
+    const essaisRestants = MAX_ESSAIS - nombreEssais;
+
+    //Vérification avec la regex
     const regexA2F = /^\d{6}$/;
     
     if (!regexA2F.test(codeSaisi)) {
@@ -34,9 +43,6 @@ async function valider() {
         divErreur.innerText = "Veuillez entrer un code valide de 6 chiffres. Pas de lettre ou de caractères spéciaux";
         return; 
     }
-
-    // Si on arrive ici, c'est que la regex est passée. On nettoie les anciennes erreurs.
-    divErreur.innerText = ""; 
 
     try {
         const response = await fetch('/back_office/index.php?page=activerA2f', {
@@ -51,9 +57,20 @@ async function valider() {
             window.location.href = "/back_office/index.php?page=profil&type=consulter";
         } else {
             // Affichage de l'erreur renvoyée par PHP
-            divErreur.innerText = result.message;
+            gererErreur(divErreur, inputCode, btnValider, `${result.message} Il vous reste ${essaisRestants} essai(s).`);
         }
     } catch (error) {
         console.error("Erreur lors de l'envoi :", error);
+    }
+}
+function gererErreur(divErreur, inputCode, btnValider, message) {
+    if (nombreEssais >= MAX_ESSAIS) {
+        divErreur.innerText = "Trop de tentatives échouées. Veuillez recharger la page ou réessayer plus tard.";
+        inputCode.disabled = true; 
+        btnValider.disabled = true; 
+    } else {
+        divErreur.innerText = message;
+        inputCode.value = ""; 
+        inputCode.focus(); 
     }
 }

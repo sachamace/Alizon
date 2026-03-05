@@ -31,7 +31,7 @@ async function valider() {
     
     if (!regexA2F.test(codeSaisi)) {
         // Si le test échoue, on affiche une erreur et on arrête tout (return)
-        divErreur.innerText = "Veuillez entrer un code valide de 6 chiffres.";
+        divErreur.innerText = "Veuillez entrer un code valide de 6 chiffres. Pas de lettre ou de caractères spéciaux";
         return; 
     }
 

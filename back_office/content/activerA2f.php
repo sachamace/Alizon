@@ -3,22 +3,9 @@
     
     $id_vendeur_connecte = $_SESSION['vendeur_id'];   
     use OTPHP\TOTP;
-    $erreur_a2f = true;
     if (isset($_POST['code'])) {
         // On enlève les éventuels espaces invisibles avant/après avec trim()
         $code_recu = trim($_POST['code']); 
-        
-        // 1. VÉRIFICATION DU FORMAT (exactement 6 chiffres)
-        if (!preg_match('/^\d{6}$/', $code_recu)) {
-            $erreur_a2f = false;
-            // Le format n'est pas bon, on nettoie le tampon et on renvoie une erreur direct
-            while (ob_get_level()) {
-                ob_end_clean();
-            }
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => "Format invalide : Veuillez entrer exactement 6 chiffres."]);
-            exit();
-        }
         
         // 2. VÉRIFICATION DE LA VALIDITÉ DU CODE (si le format est bon)
         if (isset($_SESSION['temp_secret_a2f'])) {
@@ -42,7 +29,6 @@
                 exit();
                 
             } else {
-                $erreur_a2f = false;
                 // Le code a le bon format, mais il est périmé ou faux
                 while (ob_get_level()) {
                     ob_end_clean();
@@ -105,10 +91,8 @@
                 </button>
             </div>
         </div>
-
-        <?php if (!$erreur_a2f){?>
-            <div id="erreur-msg-js" class="erreur-msg"></div>
-        <?php }?>
+        <div id="erreur-msg-js" class="erreur-msg"></div>
+        
     </div>
 </div>
 <?php } else{?>

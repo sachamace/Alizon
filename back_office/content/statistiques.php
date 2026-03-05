@@ -1,21 +1,27 @@
 <?php
+// statistiques.php - Page de statistiques de ventes du vendeur connecte
+// Affiche : KPI, graphes (barres, donut, ligne, comparaison), tableau de detail
 include 'config.php';
 
+// Recuperation de l identifiant du vendeur connecte depuis la session
 $id_vendeur = $_SESSION['vendeur_id'];
 
-$date_debut = $_GET['date_debut'] ?? date('Y-01-01');
-$date_fin   = $_GET['date_fin']   ?? date('Y-m-d');
-$id_produit = $_GET['id_produit'] ?? 'tous';
-$vue        = $_GET['vue']        ?? 'produit';
-$cmp_a      = $_GET['cmp_a']      ?? '';
-$cmp_b      = $_GET['cmp_b']      ?? '';
+// Parametres de filtrage recuperes depuis l URL (avec valeurs par defaut)
+$date_debut = $_GET['date_debut'] ?? date('Y-01-01'); // par defaut : 1er janvier de l annee en cours
+$date_fin   = $_GET['date_fin']   ?? date('Y-m-d');   // par defaut : aujourd hui
+$id_produit = $_GET['id_produit'] ?? 'tous';           // filtre produit (optionnel)
+$vue        = $_GET['vue']        ?? 'produit';        // produit ou categorie
+$cmp_a      = $_GET['cmp_a']      ?? '';               // element A pour la comparaison
+$cmp_b      = $_GET['cmp_b']      ?? '';               // element B pour la comparaison
 
+// Liste des produits du vendeur pour le select du formulaire
 $stmt = $pdo->prepare("SELECT id_produit, nom_produit FROM produit WHERE id_vendeur = ? ORDER BY nom_produit");
 $stmt->execute([$id_vendeur]);
 $liste_produits = $stmt->fetchAll();
 
-
+// Requete principale : stats agregees par produit ou par categorie selon la vue
 if ($vue === 'categorie') {
+    // Vue categorie : on groupe par categorie, pas de filtre individuel
     $params = [$id_vendeur, $date_debut, $date_fin];
     $stmt = $pdo->prepare("
         SELECT p.categorie AS nom_produit,
@@ -30,6 +36,7 @@ if ($vue === 'categorie') {
         ORDER BY montant_total DESC
     ");
 } else {
+    // Vue produit : filtre optionnel sur un produit specifique
     $params = [$id_vendeur, $date_debut, $date_fin];
     $filtre = "";
     if ($id_produit !== 'tous') {
@@ -54,9 +61,11 @@ if ($vue === 'categorie') {
 $stmt->execute($params);
 $stats = $stmt->fetchAll();
 
-// Graphe ligne : ventes par jour pour un produit/categorie specifique
+// Graphe ligne : quantite vendue jour par jour
+// Visible uniquement si un produit est selectionne (vue produit) ou en vue categorie
 $ligne_data = [];
 if ($vue === 'produit' && $id_produit !== 'tous') {
+    // Un seul produit selectionne : on trace ses ventes jour par jour
     $s = $pdo->prepare("
         SELECT c.date_commande::date AS jour, SUM(lc.quantite) AS qte
         FROM ligne_commande lc
@@ -68,6 +77,7 @@ if ($vue === 'produit' && $id_produit !== 'tous') {
     $s->execute([$id_produit, $date_debut, $date_fin]);
     foreach ($s->fetchAll() as $r) $ligne_data[$r['jour']] = $r['qte'];
 } elseif ($vue === 'categorie') {
+    // Vue categorie : on trace toutes les ventes du vendeur jour par jour
     $s = $pdo->prepare("
         SELECT c.date_commande::date AS jour, SUM(lc.quantite) AS qte
         FROM ligne_commande lc
@@ -83,6 +93,8 @@ if ($vue === 'produit' && $id_produit !== 'tous') {
 $ligne_labels = json_encode(array_keys($ligne_data));
 $ligne_qtes   = json_encode(array_values($ligne_data));
 
+// Comparaison entre 2 produits ou 2 categories
+// Ne s execute que si les deux elements sont selectionnes
 $cmp_data = [];
 if ($cmp_a !== '' && $cmp_b !== '') {
     if ($vue === 'categorie') {
@@ -119,9 +131,11 @@ if ($cmp_a !== '' && $cmp_b !== '') {
     }
 }
 
+// Totaux pour les KPI
 $total_volume  = array_sum(array_column($stats, 'volume_total'));
 $total_montant = array_sum(array_column($stats, 'montant_total'));
 
+// Serialisation des donnees en JSON pour Chart.js
 $labels_bar   = json_encode(array_column($stats, 'nom_produit'));
 $cmp_labels   = json_encode(array_keys($cmp_data));
 $cmp_volumes  = json_encode(array_values(array_column($cmp_data, 'volume_total')));
@@ -145,7 +159,7 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
             <input type="date" name="date_fin" value="<?= htmlspecialchars($date_fin) ?>">
         </div>
         <div class="filtre-group">
-            <label>Vue</label>
+            <label>Type</label>
             <select name="vue" onchange="this.form.submit()">
                 <option value="produit"   <?= $vue === 'produit'   ? 'selected' : '' ?>>Par produit</option>
                 <option value="categorie" <?= $vue === 'categorie' ? 'selected' : '' ?>>Par categorie</option>
@@ -283,13 +297,17 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-const labelsBar   = <?= $labels_bar ?>;
-const dataVolume  = <?= $data_volume ?>;
-const dataMontant = <?= $data_montant ?>;
+// Donnees injectees depuis PHP
+const labelsBar   = <?= $labels_bar ?>;   // noms des produits ou categories
+const dataVolume  = <?= $data_volume ?>;  // quantites vendues par produit
+const dataMontant = <?= $data_montant ?>; // CA TTC par produit
 
+// Palette de couleurs partagee par tous les graphes
+// Le % couleurs.length permet de boucler si on a plus de produits que de couleurs
 const couleurs = ['#6c63ff','#22c55e','#f59e0b','#ef4444','#3b82f6','#ec4899','#14b8a6','#a855f7','#f97316','#84cc16'];
 
 if (labelsBar.length > 0) {
+    // Graphe barres : volume par produit/categorie
     new Chart(document.getElementById('chartVolume'), {
         type: 'bar',
         data: {
@@ -299,15 +317,19 @@ if (labelsBar.length > 0) {
         options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
     });
 
+    // Graphe donut : repartition du CA TTC par produit/categorie
     new Chart(document.getElementById('chartMontant'), {
         type: 'doughnut',
         data: { labels: labelsBar, datasets: [{ data: dataMontant, backgroundColor: labelsBar.map((_, i) => couleurs[i % couleurs.length]) }] }
     });
 }
 
+// Graphe ligne : ventes jour par jour
+// Visible seulement si un produit est selectionne ou en vue categorie
 const ligneLabels = <?= $ligne_labels ?? '[]' ?>;
 const ligneQtes   = <?= $ligne_qtes ?? '[]' ?>;
 
+// Conversion des dates ISO (2026-03-04) en labels lisibles (Mer 4/3)
 const jours = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 const ligneJours = ligneLabels.map(d => {
     const date = new Date(d);
@@ -323,23 +345,24 @@ if (ligneLabels.length > 0) {
                 label: 'Unites vendues',
                 data: ligneQtes,
                 borderColor: couleurs[0],
-                backgroundColor: couleurs[0] + '22',
+                backgroundColor: couleurs[0] + '22', // '22' en hex = ~13% opacite pour le fill
                 fill: true,
-                tension: 0.3,
+                tension: 0.3,  // legere courbe sur la ligne
                 pointRadius: 4,
             }]
         },
         options: {
             responsive: true,
             plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } 
         }
     });
 }
 
-const cmpLabels   = <?= $cmp_labels ?? '[]' ?>;
-const cmpVolumes  = <?= $cmp_volumes ?? '[]' ?>;
-const cmpMontants = <?= $cmp_montants ?? '[]' ?>;
+// Graphe comparaison : barres groupees cote a cote pour 2 produits/categories
+const cmpLabels   = <?= $cmp_labels ?? '[]' ?>;   // noms des 2 elements compares
+const cmpVolumes  = <?= $cmp_volumes ?? '[]' ?>;  // volumes des 2 elements
+const cmpMontants = <?= $cmp_montants ?? '[]' ?>; // CA des 2 elements
 
 if (cmpLabels.length === 2) {
     new Chart(document.getElementById('chartComparaison'), {

@@ -30,6 +30,11 @@
         <p><?php echo htmlentities($profil["num_tel"]) ?></p>
     </article>
 
+    <article>
+        <h3>Adresse</h3>
+        <p><?php echo htmlentities($profil_adresse['adresse'] ?? 'Non renseignée') ?></p>
+    </article>
+
     <div class="btn-modif">
         <a href="index.php?page=profil&type=modifier" class="modifier">Modifier</a>
     </div>

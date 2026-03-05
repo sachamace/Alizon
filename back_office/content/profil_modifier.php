@@ -10,6 +10,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $mdp_actuel = trim($_POST['mdp_actuel']);
     $mdp_nouveau = trim($_POST['mdp_nouveau']);
     $mdp_confirmation = trim($_POST['mdp_confirmation']);
+    $adresse = trim($_POST['adresse'] ?? '');
+    $latitude  = !empty($_POST['latitude'])  ? (float) $_POST['latitude']  : null;
+    $longitude = !empty($_POST['longitude']) ? (float) $_POST['longitude'] : null;
 
     if (empty($raison_sociale)) {
         $errors['raison_sociale'] = "Veuillez entrer une raison sociale";
@@ -89,6 +92,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             'num_tel' => $num_tel,
             'adresse_mail' => $adresse_mail,
             'id_num' => $profil['id_num']
+        ]);
+
+        // Mettre à jour ou insérer l'adresse vendeur
+        $stmtCheck = $pdo->prepare("SELECT id_adresse_vendeur FROM adresse_vendeur WHERE id_vendeur = :id");
+        $stmtCheck->execute(['id' => $profil['id_vendeur']]);
+
+        if ($stmtCheck->fetch()) {
+            // UPDATE si existe déjà
+            $sqlAdr = "UPDATE adresse_vendeur SET adresse = :adresse, latitude = :lat, longitude = :lng 
+                    WHERE id_vendeur = :id_vendeur";
+        } else {
+            // INSERT si nouveau vendeur sans adresse
+            $sqlAdr = "INSERT INTO adresse_vendeur (adresse, latitude, longitude, id_vendeur) 
+                    VALUES (:adresse, :lat, :lng, :id_vendeur)";
+        }
+        $stmtAdr = $pdo->prepare($sqlAdr);
+        $stmtAdr->execute([
+            'adresse'    => $adresse,
+            'lat'        => $latitude,
+            'lng'        => $longitude,
+            'id_vendeur' => $profil['id_vendeur']
         ]);
         echo "<script>
             window.location.href = 'index.php?page=profil&type=consulter';
@@ -186,6 +210,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 value="<?php echo isset($_POST['num_tel']) ? htmlentities($_POST['num_tel']) : htmlentities($profil['num_tel']); ?>">
 
         </article>
+
+        <article>
+            <h3>Adresse</h3>
+            <input type="text" id="adresse" name="adresse"
+                value="<?php echo isset($_POST['adresse']) ? htmlentities($_POST['adresse']) : htmlentities($profil_adresse['adresse'] ?? '') ?>">
+            <input type="hidden" name="latitude" id="latitude" 
+                value="<?= $profil_adresse['latitude'] ?? '' ?>">
+            <input type="hidden" name="longitude" id="longitude" 
+                value="<?= $profil_adresse['longitude'] ?? '' ?>">
+        </article>
         <?php if (isset($errors['num_tel'])) { ?>
             <p class="error"><?php echo $errors['num_tel']; ?></p>
         <?php } ?>
@@ -206,3 +240,44 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     });
 
 </script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+<style>
+        .suggestions-list {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            list-style: none;
+            margin: 0;
+            padding: 6px;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .suggestions-list li {
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #333;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.15s;
+        }
+
+        .suggestions-list li:hover {
+            background: #f4f6ff;
+            color: #1a3f6f;
+        }
+
+        .suggestions-list li + li {
+            border-top: 1px solid #f0f0f0;
+        }
+    </style>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<script src="/front_office/front_end/assets/js/geocoder.js"></script>

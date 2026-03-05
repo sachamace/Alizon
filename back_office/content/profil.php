@@ -12,6 +12,10 @@ if (isset($_GET['page']) && $_GET['page'] === 'profil') {
         $stmt->execute(['id' => $profil['id_num']]);
         $profil_mdp = $stmt->fetchColumn();
 
+        $stmt_adr = $pdo->prepare("SELECT adresse, latitude, longitude FROM adresse_vendeur WHERE id_vendeur = :id");
+        $stmt_adr->execute(['id' => $id_vendeur_connecte]);
+        $profil_adresse = $stmt_adr->fetch() ?: [];
+
         if ($type == "consulter") {
             include 'profil_consulter.php';
         } else if ($type == 'modifier') {

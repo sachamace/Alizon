@@ -16,11 +16,91 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        #map {
-            height: 350px;
-            width: 100%;
-            margin: 0 20px 20px 20px;
+        /* Overlay blur en fond */
+        #map-overlay {
             display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #map-overlay.visible {
+            opacity: 1;
+        }
+
+        /* La carte en popup centré */
+        #map {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: 100px;
+            transform: translate(-50%, -60%) scale(0.85);
+            width: 75%;
+            height: 70%;
+            z-index: 1000;
+            border-radius: 16px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            opacity: 0;
+        }
+
+        #map.visible {
+            opacity: 1;
+        }
+
+
+        #closeMap {
+            position: absolute;
+            top: 12px;
+            left: 60px;
+            z-index: 1001;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, background 0.2s;
+        }
+
+        .dept-tooltip {
+            background: white;
+            border: 1px solid #2c5f8a;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-weight: bold;
+            font-size: 13px;
+            color: #1a3f6f;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .leaflet-control-layers {
+            border-radius: 10px !important;
+            border: none !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+            font-family: inherit;
+        }
+
+        .leaflet-control-layers-toggle {
+            background-color: white;
+            border-radius: 10px;
+            width: 50px !important;
+            height: 50px !important;
+        }
+
+        .leaflet-control-layers-expanded {
+            padding: 10px 14px !important;
+            font-size: 13px;
         }
     </style>
 </head>
@@ -68,7 +148,9 @@
                             <?php echo $is_checked; ?> /> <label for="vend_<?php echo $vendeur['id_vendeur'];?>"><?php echo $vendeur['raison_sociale'];?></label><br>
                     <?php } ?>
                 </fieldset>
-                <button id="btnmap"> Voir carte</button>
+                <div class="inputs">
+                    <input id="btnmap" type="button" name="button" value="Voir la carte"/>
+                </div>
                 <label>Note</label>
                 <div class="inputs">
                     <input type="number" placeholder="Min" id="noteMinInput" name="noteMin" min="0" max="5" value="<?= htmlspecialchars($_GET['noteMin'] ?? '') ?>">
@@ -79,7 +161,10 @@
                 </button>
             </form>
         </aside>
-        <div id="map"></div>
+        <div id="map-overlay"></div>
+        <div id="map">
+            <button id="closeMap">✕</button>
+        </div>
         <?php
             $tri = $_GET['tri'] ?? '';
             switch ($tri) {
@@ -308,8 +393,6 @@
         let boutonMap = document.getElementById("btnmap");
 
         let map = L.map('map').setView([48.1173, -1.6778], 8);
-        let breizh = L.marker([48.18257, -2.751912]).addTo(map);
-        let kouign = L.marker([47.742952, -3.355796]).addTo(map);
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -318,9 +401,77 @@
 
         document.getElementById('map').style.cursor = 'crosshair';
         
-        //Affiche un popup avec message quand on clique sur le marker
-        breizh.bindPopup("<b>Breizh Saveurs Tradition</b><br>SAS bretonne qui vend des produits locaux frais");
-        kouign.bindPopup("<b>Kouign Aman Artisanal</b><br>SARL bretonne proche du port, produits locaux...");
+        // Chargement dynamique depuis la BDD
+        fetch('front_office/front_end/html/get_vendeur_map.php')
+            .then(r => r.json())
+            .then(vendeurs => {
+                vendeurs.forEach(v => {
+                    const marker = L.marker([v.latitude, v.longitude]).addTo(map);
+
+                    marker.bindPopup(`<b>${v.raison_sociale}</b><br>${v.adresse}`);
+                    marker.on('mouseover', function (e) {
+                        this.openPopup();
+                    });
+                    marker.on('mouseout', function (e) {
+                        this.closePopup();
+                    });
+
+                    marker.on('click', function () {
+                        const checkbox = document.getElementById('vend_' + v.id_vendeur);
+                        if (checkbox) {
+                            checkbox.checked = !checkbox.checked;
+                            document.getElementById('tri-form').submit();
+                        }
+                    });
+                });
+            });
+        
+        fetch('https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/departements.geojson')
+            .then(r => r.json())
+            .then(data => {
+                const bretagne = {
+                    type: 'FeatureCollection',
+                    features: data.features.filter(f =>
+                        ['22', '29', '35', '56'].includes(f.properties.code)
+                    )
+                };
+
+                const styleNormal = {
+                    color: '#2c5f8a',
+                    weight: 2,
+                    fillColor: '#a8c8e8',
+                    fillOpacity: 0.15,
+                    dashArray: '4'
+                };
+
+                const styleHover = {
+                    weight: 3,
+                    color: '#1a3f6f',
+                    fillOpacity: 0.35,
+                    dashArray: ''
+                };
+
+                const geoLayer = L.geoJSON(bretagne, {
+                    style: styleNormal,
+                    onEachFeature: function(feature, layer) {
+                        layer.on('mouseover', function() {
+                            layer.setStyle(styleHover);
+                            layer.bringToFront();
+                        });
+                        layer.on('mouseout', function() {
+                            geoLayer.resetStyle(layer); // ✅ remet styleNormal
+                        });
+                        layer.on('click', function() {
+                            map.fitBounds(layer.getBounds(), { padding: [40, 40] });
+                        });
+                        layer.bindTooltip(feature.properties.nom, {
+                            permanent: false,
+                            direction: 'center',
+                            className: 'dept-tooltip'
+                        });
+                    }
+                }).addTo(map);
+            });
 
         boutonMap.addEventListener("click", (e) => {
             e.preventDefault();
@@ -331,6 +482,72 @@
                 setTimeout(() => map.invalidateSize(), 100);
             }
         });
+
+        const overlay = document.getElementById('map-overlay');
+
+        function ouvrirMap() {
+            overlay.style.display = 'block';
+            displayMap.style.display = 'block';
+
+            // Force le reflow pour que la transition se déclenche
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    overlay.classList.add('visible');
+                    displayMap.classList.add('visible');
+                    setTimeout(() => map.invalidateSize(), 350);
+                });
+            });
+        }
+
+        function fermerMap() {
+            overlay.classList.remove('visible');
+            displayMap.classList.remove('visible');
+
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                displayMap.style.display = 'none';
+            }, 400); // attend la fin de la transition
+        }
+
+        boutonMap.addEventListener("click", (e) => {
+            e.preventDefault();
+            displayMap.classList.contains('visible') ? fermerMap() : ouvrirMap();
+        });
+
+        document.getElementById('closeMap').addEventListener('click', fermerMap);
+
+        // Clic sur l'overlay pour fermer
+        overlay.addEventListener('click', fermerMap);
+
+        //Définition des fonds de carte
+        const baseLayers = {
+            "Standard": L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }),
+            "Nuit NASA": L.tileLayer('https://map1.vis.earthdata.nasa.gov/wmts-webmercator/VIIRS_CityLights_2012/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpg', {
+                maxZoom: 8,
+                attribution: '© NASA'
+            }),
+            "Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 19,
+                attribution: '© Esri'
+            }),
+            "Terrain": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 19,
+                attribution: '© Esri'
+            }),
+            "Sombre": L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19,
+                attribution: '© CartoDB'
+            })
+        };
+
+        // Ajouter le fond par défaut
+        baseLayers["Standard"].addTo(map);
+
+        // Contrôle natif Leaflet (en haut à droite)
+        L.control.layers(baseLayers, null, { position: 'topright' }).addTo(map);
     </script>
 </body>
 </html>

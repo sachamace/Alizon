@@ -57,7 +57,7 @@ async function valider() {
             window.location.href = "/back_office/index.php?page=profil&type=consulter";
         } else {
             // Affichage de l'erreur renvoyée par PHP
-            gererErreur(divErreur, inputCode, btnValider, `${result.message} Il vous reste ${essaisRestants} essai(s).`);
+            gererErreur(divErreur, codeSaisi, btnValider, `${result.message} Il vous reste ${essaisRestants} essai(s).`);
         }
     } catch (error) {
         console.error("Erreur lors de l'envoi :", error);

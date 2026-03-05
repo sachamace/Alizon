@@ -23,25 +23,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Exemple d'envoi de code 2FA vers ton script PHP
 async function valider() {
-    const codeSaisi = document.getElementById('code_2fa').value; // Le code tapé par l'utilisateur
+    const codeSaisi = document.getElementById('code_2fa').value;
+    const divErreur = document.getElementById('erreur-msg-js');
+
+    // 1. Vérification avec la regex
+    const regexA2F = /^\d{6}$/;
+    
+    if (!regexA2F.test(codeSaisi)) {
+        // Si le test échoue, on affiche une erreur et on arrête tout (return)
+        divErreur.innerText = "Veuillez entrer un code valide de 6 chiffres.";
+        return; 
+    }
+
+    // Si on arrive ici, c'est que la regex est passée. On nettoie les anciennes erreurs.
+    divErreur.innerText = ""; 
+
     try {
-        const response = await fetch('/back_office/index.php?page=activerA2f',
-        {
+        const response = await fetch('/back_office/index.php?page=activerA2f', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `code=${encodeURIComponent(codeSaisi)}` // On envoie le code au serveur
+            body: `code=${encodeURIComponent(codeSaisi)}`
         });
-        console.log("Requête envoyée !");
         
         const result = await response.json();
 
         if (result.success === true) {                                                                                                    
             window.location.href = "/back_office/index.php?page=profil&type=consulter";
         } else {
-            document.getElementById('erreur-msg-js').innerText = result.message;
+            // Affichage de l'erreur renvoyée par PHP
+            divErreur.innerText = result.message;
         }
     } catch (error) {
         console.error("Erreur lors de l'envoi :", error);
     }
-
 }

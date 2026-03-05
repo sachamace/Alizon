@@ -114,5 +114,5 @@
     
 </div>
 <?php }?>
-<script src="../front_end/assets/js/a2f.js"></script>
+<script src="back_office/front_end/assets/js/a2f.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>

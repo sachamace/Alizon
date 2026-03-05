@@ -53,6 +53,35 @@ if ($vue === 'categorie') {
 $stmt->execute($params);
 $stats = $stmt->fetchAll();
 
+// Graphe ligne : ventes par jour pour un produit/categorie specifique
+$ligne_data = [];
+if ($vue === 'produit' && $id_produit !== 'tous') {
+    $s = $pdo->prepare("
+        SELECT c.date_commande::date AS jour, SUM(lc.quantite) AS qte
+        FROM ligne_commande lc
+        JOIN commande c ON lc.id_commande = c.id_commande
+        WHERE lc.id_produit = ?
+          AND c.date_commande::date BETWEEN ? AND ?
+        GROUP BY jour ORDER BY jour ASC
+    ");
+    $s->execute([$id_produit, $date_debut, $date_fin]);
+    foreach ($s->fetchAll() as $r) $ligne_data[$r['jour']] = $r['qte'];
+} elseif ($vue === 'categorie') {
+    $s = $pdo->prepare("
+        SELECT c.date_commande::date AS jour, SUM(lc.quantite) AS qte
+        FROM ligne_commande lc
+        JOIN produit p ON lc.id_produit = p.id_produit
+        JOIN commande c ON lc.id_commande = c.id_commande
+        WHERE p.id_vendeur = ?
+          AND c.date_commande::date BETWEEN ? AND ?
+        GROUP BY jour ORDER BY jour ASC
+    ");
+    $s->execute([$id_vendeur, $date_debut, $date_fin]);
+    foreach ($s->fetchAll() as $r) $ligne_data[$r['jour']] = $r['qte'];
+}
+$ligne_labels = json_encode(array_keys($ligne_data));
+$ligne_qtes   = json_encode(array_values($ligne_data));
+
 $cmp_data = [];
 if ($cmp_a !== '' && $cmp_b !== '') {
     if ($vue === 'categorie') {
@@ -115,7 +144,7 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
             <input type="date" name="date_fin" value="<?= htmlspecialchars($date_fin) ?>">
         </div>
         <div class="filtre-group">
-            <label>Type</label>
+            <label>Vue</label>
             <select name="vue" onchange="this.form.submit()">
                 <option value="produit"   <?= $vue === 'produit'   ? 'selected' : '' ?>>Par produit</option>
                 <option value="categorie" <?= $vue === 'categorie' ? 'selected' : '' ?>>Par categorie</option>
@@ -169,6 +198,15 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
             <canvas id="chartMontant"></canvas>
         </div>
     </div>
+
+    <?php if (!empty($ligne_data)): ?>
+    <div class="stats-charts" style="grid-template-columns: 1fr; margin-bottom: 1.2rem;">
+        <div class="chart-card">
+            <h3>Ventes par jour</h3>
+            <canvas id="chartLigne"></canvas>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <div class="chart-card" style="margin-bottom: 1.5rem;">
         <h3>Comparaison</h3>
@@ -263,6 +301,31 @@ if (labelsBar.length > 0) {
     new Chart(document.getElementById('chartMontant'), {
         type: 'doughnut',
         data: { labels: labelsBar, datasets: [{ data: dataMontant, backgroundColor: labelsBar.map((_, i) => couleurs[i % couleurs.length]) }] }
+    });
+}
+
+const ligneLabels = <?= $ligne_labels ?? '[]' ?>;
+const ligneQtes   = <?= $ligne_qtes ?? '[]' ?>;
+
+if (ligneLabels.length > 0) {
+    new Chart(document.getElementById('chartLigne'), {
+        type: 'line',
+        data: {
+            labels: ligneLabels,
+            datasets: [{
+                label: 'Unites vendues',
+                data: ligneQtes,
+                borderColor: couleurs[0],
+                backgroundColor: couleurs[0] + '22',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
     });
 }
 

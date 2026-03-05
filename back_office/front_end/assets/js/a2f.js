@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function valider() {
     const codeSaisi = document.getElementById('code_2fa').value; // Le code tapé par l'utilisateur
     try {
-        const response = await fetch('activerA2f.php',
+        const response = await fetch('/back_office/index.php?page=activerA2f',
         {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

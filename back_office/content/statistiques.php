@@ -308,11 +308,17 @@ if (labelsBar.length > 0) {
 const ligneLabels = <?= $ligne_labels ?? '[]' ?>;
 const ligneQtes   = <?= $ligne_qtes ?? '[]' ?>;
 
+const jours = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+const ligneJours = ligneLabels.map(d => {
+    const date = new Date(d);
+    return jours[date.getDay()] + ' ' + date.getDate() + '/' + (date.getMonth() + 1);
+});
+
 if (ligneLabels.length > 0) {
     new Chart(document.getElementById('chartLigne'), {
         type: 'line',
         data: {
-            labels: ligneLabels,
+            labels: ligneJours,
             datasets: [{
                 label: 'Unites vendues',
                 data: ligneQtes,
@@ -325,6 +331,7 @@ if (ligneLabels.length > 0) {
         },
         options: {
             responsive: true,
+            plugins: { legend: { display: false } },
             scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
         }
     });

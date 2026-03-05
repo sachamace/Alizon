@@ -5,9 +5,21 @@
     use OTPHP\TOTP;
 
     if (isset($_POST['code'])) {
-        $code_recu = $_POST['code'];
-
-        // On recrée l'objet OTP à partir du secret sauvegardé en session
+        // On enlève les éventuels espaces invisibles avant/après avec trim()
+        $code_recu = trim($_POST['code']); 
+        
+        // 1. VÉRIFICATION DU FORMAT (exactement 6 chiffres)
+        if (!preg_match('/^\d{6}$/', $code_recu)) {
+            // Le format n'est pas bon, on nettoie le tampon et on renvoie une erreur direct
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => "Format invalide : Veuillez entrer exactement 6 chiffres."]);
+            exit();
+        }
+        
+        // 2. VÉRIFICATION DE LA VALIDITÉ DU CODE (si le format est bon)
         if (isset($_SESSION['temp_secret_a2f'])) {
             $otp = TOTP::create($_SESSION['temp_secret_a2f']);
             
@@ -19,25 +31,26 @@
                     'codea2f' => $_SESSION['temp_secret_a2f']
                 ]);
                 unset($_SESSION['temp_secret_a2f']);
+                
+                // On nettoie tout le HTML précédent et on renvoie le succès
                 while (ob_get_level()) {
                     ob_end_clean();
                 }
                 header('Content-Type: application/json');
-                // On répond au JS que c'est un succès (format JSON)
                 echo json_encode(['success' => true]);
                 exit();
+                
             } else {
-                // On répond au JS que le code est faux
-                $erreur_a2f = "Le code à 6 chiffres est incorrect.";
+                // Le code a le bon format, mais il est périmé ou faux
                 while (ob_get_level()) {
                     ob_end_clean();
                 }
                 header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => "Le code à 6 chiffres n'est pas bon !"]);
+                echo json_encode(['success' => false, 'message' => "Le code à 6 chiffres est incorrect ou a expiré."]);
                 exit();
             }
         }
-    }   
+    } 
 
     $attente_a2f = false;
     if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['code'])){
@@ -93,9 +106,9 @@
             </div>
         </div>
 
-        
+        <?php if (!empty($erreur_a2f)){?>
             <div id="erreur-msg-js" class="erreur-msg"></div>
-        
+        <?php }?>
     </div>
 </div>
 <?php } else{?>

@@ -22,6 +22,7 @@
                 while (ob_get_level()) {
                     ob_end_clean();
                 }
+                header('Content-Type: application/json');
                 // On répond au JS que c'est un succès (format JSON)
                 echo json_encode(['success' => true]);
                 exit();
@@ -31,6 +32,7 @@
                 while (ob_get_level()) {
                     ob_end_clean();
                 }
+                header('Content-Type: application/json');
                 echo json_encode(['success' => false, 'message' => "Le code à 6 chiffres n'est pas bon !"]);
                 exit();
             }

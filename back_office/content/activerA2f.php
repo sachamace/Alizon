@@ -62,6 +62,7 @@
         };
         $otp = TOTP::generate($clock);
         $_SESSION['temp_secret_a2f'] = $otp->getSecret(); 
+        unset($_SESSION['tentatives_a2f']);
     } else {
         if (isset($_SESSION['temp_secret_a2f'])) {
             $otp = TOTP::create($_SESSION['temp_secret_a2f']);

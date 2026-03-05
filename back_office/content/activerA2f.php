@@ -93,11 +93,7 @@
             </div>
         </div>
 
-        <?php if (!empty($erreur_a2f)){?>
-            <div class="erreur-msg">
-                <?= htmlspecialchars($erreur_a2f) ?>
-            </div>
-        <?php }?>
+        <div id="erreur-msg-js" class="erreur-msg" style="color: red; margin-top: 10px;"></div>
     </div>
 </div>
 <?php } else{?>

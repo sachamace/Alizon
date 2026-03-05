@@ -4,6 +4,9 @@
     $stmt_a2f = $pdo->prepare("SELECT codea2f FROM compte_vendeur WHERE id_vendeur = :id_vendeur");
     $stmt_a2f->execute(['id_vendeur' => $id_vendeur_connecte]);
     $a2f = $stmt_a2f->fetchColumn();
+    if($a2f == NULL){
+        $a2f = "";
+    }
 ?>
 <section class="profil-container">
     <h2>Votre profil</h2>

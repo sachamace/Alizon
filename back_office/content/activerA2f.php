@@ -93,7 +93,9 @@
             </div>
         </div>
 
-        <div id="erreur-msg-js" class="erreur-msg" style="color: red; margin-top: 10px;"></div>
+        
+            <div id="erreur-msg-js" class="erreur-msg"></div>
+        
     </div>
 </div>
 <?php } else{?>

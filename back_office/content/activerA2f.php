@@ -1,5 +1,5 @@
 <?php
-    require_once '/var/www/html/back_office/content/vendor/autoload.php';
+    require_once __DIR__ . '/../../vendor/autoload.php';
     
     $id_vendeur_connecte = $_SESSION['vendeur_id'];   
     use OTPHP\TOTP;

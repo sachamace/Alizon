@@ -2,7 +2,7 @@
 session_start();
 include 'config.php';
 // --- AJOUT : Import de la bibliothèque OTPHP ---
-require_once '../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 use OTPHP\TOTP;
 
 $erreur = "";

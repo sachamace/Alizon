@@ -3,39 +3,49 @@
     
     $id_vendeur_connecte = $_SESSION['vendeur_id'];   
     use OTPHP\TOTP;
-
     if (isset($_POST['code'])) {
         $code_recu = $_POST['code'];
-        
-        // On recrée l'objet OTP à partir du secret sauvegardé en session
-        if (isset($_SESSION['temp_secret_a2f'])) {
-            $otp = TOTP::create($_SESSION['temp_secret_a2f']);
-            
-            if ($otp->verify($code_recu)) {
-                // Le code est bon ! On met à jour la BDD
-                $stmtcode = $pdo->prepare("UPDATE compte_vendeur SET codea2f = :codea2f WHERE id_vendeur = :id_vendeur");
-                $stmtcode->execute([
-                    'id_vendeur' => $id_vendeur_connecte,
-                    'codea2f' => $_SESSION['temp_secret_a2f']
-                ]);
-                unset($_SESSION['temp_secret_a2f']);
-                while (ob_get_level()) {
-                    ob_end_clean();
-                }
-                header('Content-Type: application/json');
-                // On répond au JS que c'est un succès (format JSON)
-                echo json_encode(['success' => true]);
-                exit();
-            } else {
+        if(!preg_match('/^\d{6}$/', $code_recu)) {
+            // On recrée l'objet OTP à partir du secret sauvegardé en session
+            if (isset($_SESSION['temp_secret_a2f'])) {
+                $otp = TOTP::create($_SESSION['temp_secret_a2f']);
+                
+                if ($otp->verify($code_recu)) {
+                    // Le code est bon ! On met à jour la BDD
+                    $stmtcode = $pdo->prepare("UPDATE compte_vendeur SET codea2f = :codea2f WHERE id_vendeur = :id_vendeur");
+                    $stmtcode->execute([
+                        'id_vendeur' => $id_vendeur_connecte,
+                        'codea2f' => $_SESSION['temp_secret_a2f']
+                    ]);
+                    unset($_SESSION['temp_secret_a2f']);
+                    while (ob_get_level()) {
+                        ob_end_clean();
+                    }
+                    header('Content-Type: application/json');
+                    // On répond au JS que c'est un succès (format JSON)
+                    echo json_encode(['success' => true]);
+                    exit();
+                } 
+        }
+        else {
                 // On répond au JS que le code est faux
                 $erreur_a2f = "Le code à 6 chiffres est incorrect.";
                 while (ob_get_level()) {
                     ob_end_clean();
                 }
                 header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => "Le code à 6 chiffres n'est pas bon !"]);
+                echo json_encode(['success' => false, 'message' => "Le code à 6 chiffres n'est pas bon ou a expiré !"]);
                 exit();
             }
+        }
+        else{
+            $erreur_a2f = "Le code doit etre des chiffres !";
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => "Le code doit etre 6 chiffres !"]);
+            exit();
         }
     }   
 
@@ -84,7 +94,7 @@
         <div class="form__connexion">
             <p>Veuillez entrer le code de vérification à 6 chiffres pour sécuriser votre connexion.</p>
             
-            <input type="text" id="code_2fa" placeholder="000000" maxlength="6" required autofocus autocomplete="one-time-code">
+            <input type="text" id="code_2fa"  placeholder="000000" maxlength="6" required autofocus autocomplete="one-time-code">
             
             <div class="popup-buttons">
                 <button type="submit" class="btn-popup btn-valider" onclick="valider()">
@@ -92,10 +102,9 @@
                 </button>
             </div>
         </div>
-
-        
+        <?php if (!empty($erreur_a2f)){?>
             <div id="erreur-msg-js" class="erreur-msg"></div>
-        
+        <?php }?>
     </div>
 </div>
 <?php } else{?>

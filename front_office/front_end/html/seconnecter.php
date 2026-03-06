@@ -39,7 +39,6 @@
     }
 
     // Gestion de la vérification du code A2F
-    // Gestion de la vérification du code A2F
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f'])) {
         $time = time();
         $code_saisi = trim($_POST['code_a2f']);
@@ -224,11 +223,7 @@
                     <?= htmlspecialchars($erreur_age) ?>
                 </div>
             <?php endif; ?>
-            <?php if (isset($message)): ?>
-                <div class="erreur-msg">
-                    <?= htmlspecialchars($message) ?>
-                </div>
-            <?php endif; ?>
+
         </div>
     </div>
     <?php endif; ?>
@@ -256,6 +251,11 @@
             <?php if (!empty($erreur_a2f)): ?>
                 <div class="erreur-msg">
                     <?= htmlspecialchars($erreur_a2f) ?>
+                </div>
+            <?php endif; ?>
+            <?php if (!empty($message)): ?>
+                <div class="erreur-msg">
+                    <?= htmlspecialchars($message) ?>
                 </div>
             <?php endif; ?>
         </div>

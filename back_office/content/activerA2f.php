@@ -86,7 +86,6 @@
     $provisioningUri = $otp->getProvisioningUri();  
     if ($attente_a2f){ 
 ?>
-<link rel="stylesheet" href="../../front_office/front_end/assets/csss/style.css">
 <div class="popup-overlay">
     <div class="popup-content">
         <div class="header__connexion">

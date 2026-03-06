@@ -253,11 +253,7 @@
                     <?= htmlspecialchars($erreur_a2f) ?>
                 </div>
             <?php endif; ?>
-            <?php if (!empty($message)): ?>
-                <div class="erreur-msg">
-                    <?= htmlspecialchars($message) ?>
-                </div>
-            <?php endif; ?>
+
         </div>
     </div>
     <?php endif; ?>
@@ -286,6 +282,11 @@
             <?php if (!empty($erreur_a2f)): ?>
                 <div class="erreur-msg">
                     <?= htmlspecialchars($erreur_a2f) ?>
+                </div>
+            <?php endif; ?>
+            <?php if (!empty($message)): ?>
+                <div class="erreur-msg">
+                    <?= htmlspecialchars($message) ?>
                 </div>
             <?php endif; ?>
         </div>

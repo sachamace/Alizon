@@ -1,5 +1,3 @@
-// let nombreEssais = 0;
-// const MAX_ESSAIS = 5;
 document.addEventListener("DOMContentLoaded", () => {
     // On cible la div préparée en PHP
     const qrcodeElement = document.getElementById("qrcode");
@@ -24,15 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Exemple d'envoi de code 2FA vers ton script PHP
 async function valider() {
-    const btnValider = document.querySelector('.btn-valider');
     const inputCode = document.getElementById('code_2fa');
     const divErreur = document.getElementById('erreur-msg-js');
-    // if (nombreEssais >= MAX_ESSAIS) {
-    //     return;
-    // }
-
-    // nombreEssais++;
-    // const essaisRestants = MAX_ESSAIS - nombreEssais;
     const codeSaisi = inputCode.value;
     //Vérification avec la regex
     const regexA2F = /^\d{6}$/;
@@ -55,22 +46,12 @@ async function valider() {
         if (result.success === true) {                                                                                                    
             window.location.href = "/back_office/index.php?page=profil&type=consulter";
         } else {
-            divErreur.innerText = result.message;  
             // Affichage de l'erreur renvoyée par PHP
-            gererErreur(divErreur, inputCode, btnValider, result.message);
+            divErreur.innerText = result.message;
+            inputCode.value = ""; 
+            inputCode.focus(); 
         }
     } catch (error) {
         console.error("Erreur lors de l'envoi :", error);
-    }
-}
-function gererErreur(divErreur, inputCode, btnValider, message) {
-    if (nombreEssais >= MAX_ESSAIS) {
-        divErreur.innerText = "Trop de tentatives échouées. Veuillez recharger la page ou réessayer plus tard.";
-        inputCode.disabled = true; 
-        btnValider.disabled = true; 
-    } else {
-        divErreur.innerText = message;
-        inputCode.value = ""; 
-        inputCode.focus(); 
     }
 }

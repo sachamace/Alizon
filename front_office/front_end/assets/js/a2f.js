@@ -21,27 +21,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// Exemple d'envoi de code 2FA vers ton script PHP
 async function valider() {
-    const codeSaisi = document.getElementById('code_2fa').value; // Le code tapé par l'utilisateur
+    const inputCode = document.getElementById('code_2fa');
+    const divErreur = document.getElementById('erreur-msg-js');
+    const codeSaisi = inputCode.value;
+    //Vérification avec la regex
+    const regexA2F = /^\d{6}$/;
+    
+    if (!regexA2F.test(codeSaisi)) {
+        // Si le test échoue, on affiche une erreur et on arrête tout (return)
+        divErreur.innerText = "Veuillez entrer un code valide de 6 chiffres. Pas de lettre ou de caractères spéciaux";
+        return;
+    }
+
     try {
-        const response = await fetch('activerA2f.php',
-        {
+        const response = await fetch('activerA2f.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `code=${encodeURIComponent(codeSaisi)}` // On envoie le code au serveur
+            body: `code=${encodeURIComponent(codeSaisi)}`
         });
-        console.log("Requête envoyée !");
         
         const result = await response.json();
 
         if (result.success === true) {                                                                                                    
             window.location.href = "/front_office/front_end/html/consulterProfilClient.php";
         } else {
-            document.getElementById('erreur-msg-js').innerText = result.message;
+            // Affichage de l'erreur renvoyée par PHP
+            divErreur.innerText = result.message;
+            inputCode.value = ""; 
+            inputCode.focus(); 
         }
     } catch (error) {
         console.error("Erreur lors de l'envoi :", error);
     }
-
 }

@@ -1289,59 +1289,6 @@ footer.footer.mobile, footer.footer.tablette {
   cursor: pointer;
   transition: all 0.2s ease;
 }
-.main_produit .avis .avis-item .avis-button .avis-votes {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: auto;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: none;
-  border: 1px solid transparent;
-  cursor: pointer;
-  color: #666;
-  font-size: 0.95rem;
-  font-weight: 500;
-  padding: 6px 12px;
-  border-radius: 20px;
-  transition: all 0.2s ease-in-out;
-  outline: none;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote svg {
-  transition: transform 0.2s ease, fill 0.2s ease, stroke 0.2s ease;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote:hover {
-  background-color: #f5f5f5;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote:hover, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote.active {
-  color: #2e7d32;
-  background-color: #e8f5e9;
-  border-color: #c8e6c9;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote:hover svg, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote.active svg {
-  stroke: #2e7d32;
-  fill: #e8f5e9;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote:active svg {
-  transform: scale(1.1) translateY(-2px);
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote:hover, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote.active {
-  color: #c62828;
-  background-color: #ffebee;
-  border-color: #ffcdd2;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote:hover svg, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote.active svg {
-  stroke: #c62828;
-  fill: #ffebee;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote:active svg {
-  transform: scale(1.1) translateY(2px);
-}
 .main_produit .avis .avis-item:last-child {
   margin-bottom: 0;
 }

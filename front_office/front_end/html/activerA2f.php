@@ -99,7 +99,7 @@
                 </div>
 
                 <?php if (!empty($erreur_a2f)){?>
-                    <div class="erreur-msg">
+                    <div id="erreur-msg-js" class="erreur-msg">
                         <?= htmlspecialchars($erreur_a2f) ?>
                     </div>
                 <?php }?>

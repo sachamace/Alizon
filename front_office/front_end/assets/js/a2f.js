@@ -23,16 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function valider() {
     const inputCode = document.getElementById('code_2fa');
-    const divErreur = document.getElementById('erreur-msg-js');
     const codeSaisi = inputCode.value;
-    //Vérification avec la regex
-    const regexA2F = /^\d{6}$/;
-    
-    if (!regexA2F.test(codeSaisi)) {
-        // Si le test échoue, on affiche une erreur et on arrête tout (return)
-        divErreur.innerText = "Veuillez entrer un code valide de 6 chiffres. Pas de lettre ou de caractères spéciaux";
-        return;
-    }
 
     try {
         const response = await fetch('activerA2f.php', {
@@ -47,7 +38,6 @@ async function valider() {
             window.location.href = "/front_office/front_end/html/consulterProfilClient.php";
         } else {
             // Affichage de l'erreur renvoyée par PHP
-            divErreur.innerText = result.message;
             inputCode.value = ""; 
             inputCode.focus(); 
         }

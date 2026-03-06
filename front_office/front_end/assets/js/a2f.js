@@ -37,6 +37,8 @@ async function valider() {
 
         if (result.success === true) {                                                                                                    
             window.location.href = "/front_office/front_end/html/consulterProfilClient.php";
+        } else {
+            document.getElementById('erreur-msg-js').innerText = result.message;
         }
     } catch (error) {
         console.error("Erreur lors de l'envoi :", error);

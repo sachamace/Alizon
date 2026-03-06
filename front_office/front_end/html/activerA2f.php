@@ -28,7 +28,6 @@
                 exit();
             } else {
                 // On répond au JS que le code est faux
-                $erreur_a2f = "Le code à 6 chiffres est incorrect.";
                 echo json_encode(['success' => false, 'message' => "Le code à 6 chiffres n'est pas bon !"]);
                 exit();
             }
@@ -98,11 +97,7 @@
                     </div>
                 </div>
 
-                <?php if (!empty($erreur_a2f)){?>
-                    <div id="erreur-msg-js" class="erreur-msg">
-                        <?= htmlspecialchars($erreur_a2f) ?>
-                    </div>
-                <?php }?>
+                <div id="erreur-msg-js" class="erreur-msg" style="color: red; margin-top: 15px;"></div>
             </div>
         </div>
         <?php } else{?>

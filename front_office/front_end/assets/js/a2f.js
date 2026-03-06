@@ -21,27 +21,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+// Exemple d'envoi de code 2FA vers ton script PHP
 async function valider() {
-    const inputCode = document.getElementById('code_2fa');
-    const codeSaisi = inputCode.value;
-
+    const codeSaisi = document.getElementById('code_2fa').value; // Le code tapé par l'utilisateur
     try {
-        const response = await fetch('activerA2f.php', {
+        const response = await fetch('activerA2f.php',
+        {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `code=${encodeURIComponent(codeSaisi)}`
+            body: `code=${encodeURIComponent(codeSaisi)}` // On envoie le code au serveur
         });
+        console.log("Requête envoyée !");
         
         const result = await response.json();
 
         if (result.success === true) {                                                                                                    
             window.location.href = "/front_office/front_end/html/consulterProfilClient.php";
         } else {
-            // Affichage de l'erreur renvoyée par PHP
-            inputCode.value = ""; 
-            inputCode.focus(); 
+            document.getElementById('erreur-msg-js').innerText = result.message;
         }
     } catch (error) {
         console.error("Erreur lors de l'envoi :", error);
     }
+
 }

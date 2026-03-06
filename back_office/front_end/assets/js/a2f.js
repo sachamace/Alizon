@@ -1,5 +1,5 @@
-let nombreEssais = 0;
-const MAX_ESSAIS = 5;
+// let nombreEssais = 0;
+// const MAX_ESSAIS = 5;
 document.addEventListener("DOMContentLoaded", () => {
     // On cible la div préparée en PHP
     const qrcodeElement = document.getElementById("qrcode");
@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (qrcodeElement) {
         // On récupère l'URI stockée dans l'attribut HTML "data-uri"
         const otpUri = qrcodeElement.getAttribute("data-uri");
-
         // Si l'URI existe, on génère le QR Code
         if (otpUri) {
             new QRCode(qrcodeElement, {
@@ -28,12 +27,12 @@ async function valider() {
     const btnValider = document.querySelector('.btn-valider');
     const inputCode = document.getElementById('code_2fa');
     const divErreur = document.getElementById('erreur-msg-js');
-    if (nombreEssais >= MAX_ESSAIS) {
-        return;
-    }
+    // if (nombreEssais >= MAX_ESSAIS) {
+    //     return;
+    // }
 
-    nombreEssais++;
-    const essaisRestants = MAX_ESSAIS - nombreEssais;
+    // nombreEssais++;
+    // const essaisRestants = MAX_ESSAIS - nombreEssais;
     const codeSaisi = inputCode.value;
     //Vérification avec la regex
     const regexA2F = /^\d{6}$/;
@@ -58,7 +57,7 @@ async function valider() {
         } else {
             divErreur.innerText = result.message;  
             // Affichage de l'erreur renvoyée par PHP
-            gererErreur(divErreur, inputCode, btnValider, `${result.message} Il vous reste ${essaisRestants} essai(s).`);
+            gererErreur(divErreur, inputCode, btnValider, result.message);
         }
     } catch (error) {
         console.error("Erreur lors de l'envoi :", error);

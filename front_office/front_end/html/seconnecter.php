@@ -57,7 +57,7 @@
             } else {
                 $_SESSION['dernier_envoi'] = $time;
         }
-        
+
         if ($secret) {
             $otp = TOTP::createFromSecret($secret);
             if ($otp->verify($code_saisi)) {
@@ -193,8 +193,12 @@
             </form>
             <?php if (isset($erreur_age)): ?>
                 <div class="erreur-msg">
-                <div class="erreur-msg">
                     <?= htmlspecialchars($erreur_age) ?>
+                </div>
+            <?php endif; ?>
+            <?php if (!empty($message)): ?>
+                <div class="erreur-msg">
+                    <?= htmlspecialchars($message) ?>
                 </div>
             <?php endif; ?>
         </div>

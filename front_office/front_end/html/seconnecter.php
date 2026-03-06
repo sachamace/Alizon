@@ -50,7 +50,7 @@
             $temps_ecoule = $time - $_SESSION['dernier_envoi'];
             if ($temps_ecoule < $delai_attente) {
                 $temps_restant = $delai_attente - $temps_ecoule;
-                $message = "Trop vite ! Veuillez patienter encore <strong>$temps_restant secondes</strong>.";
+                $message = "Trop vite ! Veuillez patienter encore $temps_restant secondes.";
                 $erreur_a2f = "Code de vérification incorrect.";
                 $attente_a2f = true; 
             } else {

@@ -53,6 +53,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f'])) {
         }
     } else {
         $_SESSION['dernier_envoi'] = $time;
+        if ($secret) {
+            $otp = TOTP::createFromSecret($secret);
+            if ($otp->verify($code_saisi)) {
+                // La vérification A2F a réussi
+                if(isset($_SESSION['temp_vendeur'])) {
+                    $vendeur = $_SESSION['temp_vendeur'];
+                    
+                    // Connexion définitive (Variables originales de connecter.php)
+                    $_SESSION['vendeur_id'] = $vendeur['id_vendeur'];
+                    $_SESSION['vendeur_nom'] = $vendeur['raison_sociale'];
+                    $_SESSION['vendeur_email'] = $vendeur['login'];
+                    $_SESSION['est_connecte'] = true;
+                    
+                    // Nettoyage
+                    unset($_SESSION['temp_vendeur']);
+                    unset($_SESSION['temp_secret']);
+                    
+                    echo "<script>window.location.href = 'index.php?page=dashboard';</script>";
+                    exit();
+                }
+            } else {
+                $erreur_a2f = "Code de vérification incorrect.";
+                $attente_a2f = true; 
+            }
+        }
     }
 
 }

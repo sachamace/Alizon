@@ -24,6 +24,8 @@
 
     $age_verifie = isset($_COOKIE['age_verifie']) && $_COOKIE['age_verifie'] === '1';
     $attente_a2f = false;
+    $delai_attente = 5;
+
     // Gestion de la vérification d'âge
     if (isset($_POST['verif_age'])) {
         if ($_POST['verif_age'] === 'oui') {
@@ -39,9 +41,22 @@
     // Gestion de la vérification du code A2F
     // Gestion de la vérification du code A2F
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f'])) {
+        $time = time();
         $code_saisi = trim($_POST['code_a2f']);
         // --- AJOUT ICI : On récupère le secret de la session ---
         $secret = $_SESSION['temp_secret'] ?? null;
+
+        if (isset($_SESSION['dernier_envoi'])) {
+            $temps_ecoule = $time - $_SESSION['dernier_envoi'];
+            if ($temps_ecoule < $delai_attente) {
+                $temps_restant = $delai_attente - $temps_ecoule;
+                $message = "Trop vite ! Veuillez patienter encore <strong>$temps_restant secondes</strong>.";
+            } else {
+                $_SESSION['dernier_envoi'] = $time;
+            }
+            } else {
+                $_SESSION['dernier_envoi'] = $time;
+        }
         
         if ($secret) {
             $otp = TOTP::createFromSecret($secret);

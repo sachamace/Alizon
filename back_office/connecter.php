@@ -8,12 +8,26 @@ use OTPHP\TOTP;
 $erreur = "";
 $erreur_a2f = ""; 
 $attente_a2f = false; // État pour afficher la popup A2F
+$delai_attente = 5;
 
 // 1. GESTION DE LA VÉRIFICATION DU CODE A2F (Étape 2)
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f'])) {
+    $time = time();
     $code_saisi = trim($_POST['code_a2f']);
     $secret = $_SESSION['temp_secret'] ?? null;
-    
+
+    if (isset($_SESSION['dernier_envoi'])) {
+        $temps_ecoule = $time - $_SESSION['dernier_envoi'];
+
+        if ($temps_ecoule < $delai_attente) {
+            $temps_restant = $delai_attente - $temps_ecoule;
+            $message = "Trop vite ! Veuillez patienter encore <strong>$temps_restant secondes</strong>.";
+        } else {
+            $_SESSION['dernier_envoi'] = $time;
+        }
+    } else {
+        $_SESSION['dernier_envoi'] = $time;
+    }
     if ($secret) {
         $otp = TOTP::createFromSecret($secret);
         if ($otp->verify($code_saisi)) {

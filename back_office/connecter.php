@@ -7,7 +7,7 @@ use OTPHP\TOTP;
 
 $erreur = "";
 $erreur_a2f = ""; 
-$attente_a2f = false; // État pour afficher la popup A2F
+$attente_a2f = false; 
 $delai_attente = 5;
 
 // 1. GESTION DE LA VÉRIFICATION DU CODE A2F (Étape 2)
@@ -139,6 +139,11 @@ elseif ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['email'])) {
             <?php if (!empty($erreur_a2f)): ?>
                 <div class="erreur-msg">
                     <?= htmlspecialchars($erreur_a2f) ?>
+                </div>
+            <?php endif; ?>
+            <?php if (!empty($message)): ?>
+                <div class="erreur-msg">
+                    <?= htmlspecialchars($message) ?>
                 </div>
             <?php endif; ?>
         </div>

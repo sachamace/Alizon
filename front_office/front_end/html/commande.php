@@ -118,7 +118,7 @@
                 </div>
 
                 <div class="commande-actions">
-                    <a href="facture.php?id=<?= $commande['id_commande'] ?>" class="btn btn-secondary" target="_blank">
+                    <a href="facture.php?id=<?= $commande['id_commande'] ?>" class="btn btn-primary" target="_blank">
                         Facture
                     </a>
                     <a href="recommander.php?id=<?= $commande['id_commande'] ?>" class="btn btn-primary">

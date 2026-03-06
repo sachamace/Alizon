@@ -6682,6 +6682,74 @@ textarea.error {
     padding: 3rem;
     font-size: 0.9rem;
 }
+
+//FACTURE
+@page {
+    margin: 20mm;
+}
+
+body {
+    font-family: 'DejaVu Sans', Arial, sans-serif;
+    color: $gray-darker;
+    line-height: 1.6;
+}
+
+.page-break {
+    page-break-after: always;
+}
+
+.header {
+    display: table;
+    width: 100%;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+}
+
+.logo-section {
+    display: table-cell;
+    width: 50%;
+    vertical-align: top;
+}
+
+.logo-section img {
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.logo-section p {
+    margin: 5px 0;
+    color: $gray-dark;
+    font-size: 12px;
+}
+
+.facture-info {
+    display: table-cell;
+    width: 50%;
+    text-align: right;
+    vertical-align: top;
+}
+
+.facture-info h2 {
+    color: $gray-darker;
+    font-size: 28px;
+    margin: 0 0 10px 0;
+}
+
+.facture-numero {
+    background: $blue-vendor;
+    color: $black;
+    padding: 8px 15px;
+    border-radius: 5px;
+    display: inline-block;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.facture-date {
+    margin-top: 15px;
+}
+
 @media print { 
     body {
         margin: 0;

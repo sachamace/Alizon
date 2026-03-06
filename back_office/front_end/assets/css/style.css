@@ -6299,22 +6299,12 @@ textarea.error:focus {
 .stats-no-data {
   text-align: center;
   color: #666;
-  padding: 3rem;
-  font-size: 0.9rem;
+  padding: 4rem;
+  font-size: 0.95rem;
+  border: 1.5px dashed #e0e0e0;
+  border-radius: 12px;
 }
 
-@media print {
-  body {
-    margin: 0;
-    padding: 0;
-  }
-  .page-break {
-    page-break-after: always;
-  }
-  table tbody tr:hover {
-    background: transparent;
-  }
-}
 .popup-overlay {
   display: flex;
   position: fixed;

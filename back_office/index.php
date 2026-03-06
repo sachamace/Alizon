@@ -32,10 +32,10 @@ if (isset($_GET['page'])) {
 
 <body>
     <div class="dashboard">
-        <?php include 'sidebar.php' ?>
+        <?php if($page !== 'facture'){ include 'sidebar.php'; ?>
 
         <main>
-            <?php include 'topbar.php' ?>
+            <?php include 'topbar.php'; }?>
 
             <?php
             if ($page !== '') {

@@ -135,6 +135,9 @@ foreach ($ids_commandes as $id_commande) {
                     <div class="commande-footer">
                         <span class="total-label">Votre part :</span>
                         <span class="total-value"><?= number_format($cmd['total'], 2, ',', ' ') ?> € TTC</span>
+                        <a href="index.php?page=facture&id=<?= $cmd['id_commande'] ?>" class="btn btn-primary" target="_blank" style="margin-left: 10px;width: 60px;height: 15px;">
+                            Facture
+                        </a>
                     </div>
                 </div>
             <?php endforeach; ?>

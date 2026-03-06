@@ -16,61 +16,11 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        /* Overlay blur en fond */
-        #map-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            z-index: 999;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        #map-overlay.visible {
-            opacity: 1;
-        }
-
-        /* La carte en popup centré */
         #map {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            margin-top: 100px;
-            transform: translate(-50%, -60%) scale(0.85);
-            width: 75%;
-            height: 70%;
-            z-index: 1000;
-            border-radius: 16px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
-            opacity: 0;
-        }
-
-        #map.visible {
-            opacity: 1;
-        }
-
-
-        #closeMap {
-            position: absolute;
-            top: 12px;
-            left: 60px;
-            z-index: 1001;
-            background: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s ease, background 0.2s;
+            width: 100%;
+            height: 350px;
+            margin : 0 100px 40px 100px;
+            border-radius: 12px;
         }
 
         .dept-tooltip {
@@ -161,7 +111,7 @@
                 </button>
             </form>
         </aside>
-        <div id="map-overlay"></div>
+      
         <div id="map">
             <button id="closeMap">✕</button>
         </div>
@@ -401,25 +351,39 @@
 
         document.getElementById('map').style.cursor = 'crosshair';
         
+        const blueIcon = L.icon({
+            iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-blue.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+            iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+        });
+
+        const redIcon = L.icon({
+            iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+            iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+        });
+
         // Chargement dynamique depuis la BDD
         fetch('front_office/front_end/html/get_vendeur_map.php')
             .then(r => r.json())
             .then(vendeurs => {
                 vendeurs.forEach(v => {
-                    const marker = L.marker([v.latitude, v.longitude]).addTo(map);
+                    const checkbox = document.getElementById('vend_' + v.id_vendeur);
+                    const estCoche = checkbox && checkbox.checked;
+
+                    const marker = L.marker([parseFloat(v.latitude), parseFloat(v.longitude)], {
+                        icon: estCoche ? redIcon : blueIcon
+                    }).addTo(map);
 
                     marker.bindPopup(`<b>${v.raison_sociale}</b><br>${v.adresse}`);
-                    marker.on('mouseover', function (e) {
-                        this.openPopup();
-                    });
-                    marker.on('mouseout', function (e) {
-                        this.closePopup();
-                    });
 
-                    marker.on('click', function () {
-                        const checkbox = document.getElementById('vend_' + v.id_vendeur);
+                    marker.on('mouseover', function() { this.openPopup(); });
+                    marker.on('mouseout', function() { this.closePopup(); });
+
+                    marker.on('click', function() {
                         if (checkbox) {
                             checkbox.checked = !checkbox.checked;
+                            marker.setIcon(checkbox.checked ? redIcon : blueIcon);
                             document.getElementById('tri-form').submit();
                         }
                     });

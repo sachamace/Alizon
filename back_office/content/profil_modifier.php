@@ -122,6 +122,49 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+<style>
+        .suggestions-list {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            list-style: none;
+            margin: 0;
+            padding: 6px;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .suggestions-list li {
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #333;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.15s;
+        }
+
+        .suggestions-list li:hover {
+            background: #f4f6ff;
+            color: #1a3f6f;
+        }
+
+        .suggestions-list li + li {
+            border-top: 1px solid #f0f0f0;
+        }
+    </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
 <section class="profil-container">
     <form action="" method="POST" enctype="multipart/form-data">
         <h2>Votre profil</h2>
@@ -220,6 +263,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <input type="hidden" name="longitude" id="longitude" 
                 value="<?= $profil_adresse['longitude'] ?? '' ?>">
         </article>
+
+        <div id="map-validation" style="height:250px; width:100%; border-radius:10px; display:none; margin-top:10px;"></div>
+        <p id="coords-display" style="font-size:12px; color:#666; display:none;">
+            Coordonnées : <span id="lat-display"></span>, <span id="lng-display"></span>
+            <em style="color:#e67e22;"> — Glissez le marker pour ajuster si nécessaire</em>
+        </p>
         <?php if (isset($errors['num_tel'])) { ?>
             <p class="error"><?php echo $errors['num_tel']; ?></p>
         <?php } ?>
@@ -230,6 +279,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     </form>
 </section>
+<script src="/front_office/front_end/assets/js/geocoder.js"></script>
 <script>
     document.getElementById("toggle-password").addEventListener("click", () => {
         const bloc = document.getElementById("password-edit");
@@ -238,46 +288,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         bloc.classList.toggle("visible");
         arrow.classList.toggle("rotate");
     });
-
 </script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-<style>
-        .suggestions-list {
-            position: absolute;
-            top: calc(100% + 4px);
-            left: 0;
-            right: 0;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-            list-style: none;
-            margin: 0;
-            padding: 6px;
-            z-index: 9999;
-            overflow: hidden;
-        }
-
-        .suggestions-list li {
-            padding: 10px 14px;
-            cursor: pointer;
-            font-size: 13px;
-            color: #333;
-            border-radius: 7px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: background 0.15s;
-        }
-
-        .suggestions-list li:hover {
-            background: #f4f6ff;
-            color: #1a3f6f;
-        }
-
-        .suggestions-list li + li {
-            border-top: 1px solid #f0f0f0;
-        }
-    </style>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-<script src="/front_office/front_end/assets/js/geocoder.js"></script>
+<script>
+    const latExistante = <?= !empty($profil_adresse['latitude']) ? $profil_adresse['latitude'] : 'null' ?>;
+    const lngExistante = <?= !empty($profil_adresse['longitude']) ? $profil_adresse['longitude'] : 'null' ?>;
+    if (latExistante && lngExistante) {
+        afficherCarteValidation(latExistante, lngExistante);
+    }
+</script>

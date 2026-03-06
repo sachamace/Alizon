@@ -53,43 +53,44 @@
                 $message = "Trop vite ! Veuillez patienter encore <strong>$temps_restant secondes</strong>.";
             } else {
                 $_SESSION['dernier_envoi'] = $time;
+                if ($secret) {
+                    $otp = TOTP::createFromSecret($secret);
+                    if ($otp->verify($code_saisi)) {
+                        // La vérification A2F a réussi, on connecte l'utilisateur
+                        // On récupère les infos temporaires stockées en session lors de la première étape
+                        if(isset($_SESSION['temp_user'])) {
+                            $user = $_SESSION['temp_user'];
+                            
+                            // Récup panier
+                            $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_client = ?");
+                            $panier_sql->execute([$user['id_client']]); 
+                            $panier = $panier_sql->fetch();
+
+                            // Connexion définitive
+                            $_SESSION['id'] = $user['id_num'];
+                            $_SESSION['login'] = $user['login'];
+                            $_SESSION['id_client'] = $user['id_client'];
+                            $_SESSION['id_panier'] = $panier['id_panier'];
+                            
+                            // Nettoyage
+                            unset($_SESSION['temp_user']);
+                            unset($_SESSION['temp_secret']);
+                            
+                            echo "<script>window.location.href = '/index.php';</script>";
+                            exit();
+                        }
+                    } else {
+                        // Code incorrect, on réaffiche la popup A2F avec une erreur
+                        $erreur_a2f = "Code de vérification incorrect.";
+                        $attente_a2f = true; 
+                    }
+                }
             }
             } else {
                 $_SESSION['dernier_envoi'] = $time;
         }
 
-        if ($secret) {
-            $otp = TOTP::createFromSecret($secret);
-            if ($otp->verify($code_saisi)) {
-                // La vérification A2F a réussi, on connecte l'utilisateur
-                // On récupère les infos temporaires stockées en session lors de la première étape
-                if(isset($_SESSION['temp_user'])) {
-                    $user = $_SESSION['temp_user'];
-                    
-                    // Récup panier
-                    $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_client = ?");
-                    $panier_sql->execute([$user['id_client']]); 
-                    $panier = $panier_sql->fetch();
 
-                    // Connexion définitive
-                    $_SESSION['id'] = $user['id_num'];
-                    $_SESSION['login'] = $user['login'];
-                    $_SESSION['id_client'] = $user['id_client'];
-                    $_SESSION['id_panier'] = $panier['id_panier'];
-                    
-                    // Nettoyage
-                    unset($_SESSION['temp_user']);
-                    unset($_SESSION['temp_secret']);
-                    
-                    echo "<script>window.location.href = '/index.php';</script>";
-                    exit();
-                }
-            } else {
-                // Code incorrect, on réaffiche la popup A2F avec une erreur
-                $erreur_a2f = "Code de vérification incorrect.";
-                $attente_a2f = true; 
-            }
-        }
     }
     // Connexion normale (Etape 1 : Vérif Login/MDP) uniquement si l'âge est vérifié et qu'on ne traite pas l'A2F
     elseif ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['motdepasse']) && $age_verifie) {

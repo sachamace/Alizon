@@ -224,7 +224,7 @@
                     <?= htmlspecialchars($erreur_age) ?>
                 </div>
             <?php endif; ?>
-            <?php if (!empty($message)): ?>
+            <?php if (isset($message)): ?>
                 <div class="erreur-msg">
                     <?= htmlspecialchars($message) ?>
                 </div>

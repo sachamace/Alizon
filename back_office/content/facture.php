@@ -1,5 +1,4 @@
 <?php
-session_start();
 require 'config.php';
 
 // Vérifier que l'utilisateur est connecté
@@ -175,14 +174,6 @@ foreach ($articles_par_vendeur as $id_vendeur => $data_vendeur):
     $numero_facture_base++;
 ?>
 
-<!DOCTYPE html>
-<html lang='fr'>
-<head>
-    <meta charset='UTF-8'>
-    <title>Facture <?= htmlspecialchars($numero_facture) ?></title>
-    <link rel="stylesheet" href="front_end/assets/css/style.css" media="all">
-</head>
-<body>
     <div class='header'>
         <div class='logo-section'>
             <img src="front_end/assets/images/logo_Alizon.png" alt="Logo Alizon">
@@ -312,9 +303,6 @@ foreach ($articles_par_vendeur as $id_vendeur => $data_vendeur):
     <?php if ($numero_facture_base <= count($articles_par_vendeur)): ?>
     <div class="page-break"></div>
     <?php endif; ?>
-    
-</body>
-</html>
 
 <?php endforeach; ?>
 

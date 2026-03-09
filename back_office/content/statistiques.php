@@ -181,20 +181,17 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
     </form>
 
     <div class="stats-kpi">
-        <div class="kpi-card kpi-volume">
-            <div class="kpi-label">Unites vendues</div>
-            <div class="kpi-value"><?= number_format($total_volume, 0, ',', ' ') ?></div>
-            <div class="kpi-sub">sur la periode</div>
+        <div class="kpi-item">
+            <span class="kpi-label">Unites vendues</span>
+            <span class="kpi-value"><?= number_format($total_volume, 0, ',', ' ') ?></span>
         </div>
-        <div class="kpi-card kpi-montant">
-            <div class="kpi-label">Chiffre d affaires TTC</div>
-            <div class="kpi-value"><?= number_format($total_montant, 2, ',', ' ') ?> euros</div>
-            <div class="kpi-sub">sur la periode</div>
+        <div class="kpi-item">
+            <span class="kpi-label">CA TTC</span>
+            <span class="kpi-value"><?= number_format($total_montant, 2, ',', ' ') ?> €</span>
         </div>
-        <div class="kpi-card kpi-produits">
-            <div class="kpi-label"><?= $vue === 'categorie' ? 'Categories' : 'Produits' ?> vendus</div>
-            <div class="kpi-value"><?= count($stats) ?></div>
-            <div class="kpi-sub">sur la periode</div>
+        <div class="kpi-item">
+            <span class="kpi-label"><?= $vue === 'categorie' ? 'Categories' : 'Produits' ?> vendus</span>
+            <span class="kpi-value"><?= count($stats) ?></span>
         </div>
     </div>
 

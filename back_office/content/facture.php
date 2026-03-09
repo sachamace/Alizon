@@ -174,6 +174,14 @@ foreach ($articles_par_vendeur as $id_vendeur => $data_vendeur):
     $numero_facture_base++;
 ?>
 
+<!DOCTYPE html>
+<html lang='fr'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Facture <?= htmlspecialchars($numero_facture) ?></title>
+    <link rel="stylesheet" href="../front_end/assets/css/style.css" media="all">
+</head>
+<body>
     <div class='header'>
         <div class='logo-section'>
             <img src="front_end/assets/images/logo_Alizon.png" alt="Logo Alizon">
@@ -299,6 +307,7 @@ foreach ($articles_par_vendeur as $id_vendeur => $data_vendeur):
         <p><strong>Mention légale :</strong> En cas de retard de paiement, une pénalité de 10% sera appliquée.</p>
         <p>Merci pour votre confiance !</p>
     </div>
+<body>
     
     <?php if ($numero_facture_base <= count($articles_par_vendeur)): ?>
     <div class="page-break"></div>

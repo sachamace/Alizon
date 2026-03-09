@@ -10,7 +10,7 @@ if (!isset($_SESSION['derniere_commande'])) {
     exit();
 }
 
-$id_client_connecte = $_SESSION['id'];
+$id_client_connecte = $_SESSION['id_client'];
 $id_commande = $_SESSION['derniere_commande'];
 
 try {

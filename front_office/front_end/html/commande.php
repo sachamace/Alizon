@@ -3,7 +3,7 @@
     include 'session.php';
     include 'sessionindex.php';
 
-    $id_client_connecte = $_SESSION['id'];
+    $id_client_connecte = $_SESSION['id_client'];
     
     try {
         // Récupération des commandes

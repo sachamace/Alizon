@@ -3,7 +3,7 @@
     include 'session.php';
     // include 'sessionindex.php'; // À activer si besoin
 
-    $id_client_connecte = $_SESSION['id'];
+    $id_client_connecte = $_SESSION['id_client'];
 
     function envoyer_au_c($message) {
         $host = "10.253.5.108";

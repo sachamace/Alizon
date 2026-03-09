@@ -70,6 +70,7 @@
                             // Connexion définitive
                             $_SESSION['id'] = $user['id_num'];
                             $_SESSION['login'] = $user['login'];
+                            $_SESSION['id_client'] = $user['id_client'];
                             $_SESSION['id_panier'] = $panier['id_panier'];
                             
                             // Nettoyage
@@ -164,6 +165,7 @@
                 // Connexion définitive
                 $_SESSION['id'] = $user['id_num'];
                 $_SESSION['login'] = $user['login'];
+                $_SESSION['id_client'] = $user['id_client'];
                 $_SESSION['id_panier'] = $panier['id_panier'];
                 // Nettoyage
                 unset($_SESSION['temp_user']);
@@ -205,8 +207,12 @@
                 <br><br>
                 <div class="popup-buttons">
                     <button type="submit" name="verif_age" value="oui" class="btn-popup btn-valider" style="width: auto;">
+                <br><br>
+                <div class="popup-buttons">
+                    <button type="submit" name="verif_age" value="oui" class="btn-popup btn-valider" style="width: auto;">
                         Oui
                     </button>
+                    <button type="submit" name="verif_age" value="non" class="btn-popup btn-non">
                     <button type="submit" name="verif_age" value="non" class="btn-popup btn-non">
                         Non
                     </button>

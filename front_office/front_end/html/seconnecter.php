@@ -207,12 +207,8 @@
                 <br><br>
                 <div class="popup-buttons">
                     <button type="submit" name="verif_age" value="oui" class="btn-popup btn-valider" style="width: auto;">
-                <br><br>
-                <div class="popup-buttons">
-                    <button type="submit" name="verif_age" value="oui" class="btn-popup btn-valider" style="width: auto;">
                         Oui
                     </button>
-                    <button type="submit" name="verif_age" value="non" class="btn-popup btn-non">
                     <button type="submit" name="verif_age" value="non" class="btn-popup btn-non">
                         Non
                     </button>

@@ -488,13 +488,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         ]);
                         $vote_pos = 0;
                         $vote_neg = 0;
-                        $vote = 0;
+                        $voteval = 0;
                         while ($vote = $req_vote->fetch(PDO::FETCH_ASSOC)){
                             if ($vote['valeur_vote'] == -1){
                                 $vote_neg++;
                                 if (isset($_SESSION['id_client'])){
                                     if ($vote['id_client_votant'] == $_SESSION['id_client']){
-                                        $vote = -1;
+                                        $voteval = -1;
                                     }
                                 }
                             }
@@ -502,7 +502,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                 $vote_pos++;
                                 if (isset($_SESSION['id_client'])){
                                     if ($vote['id_client_votant'] == $_SESSION['id_client']){
-                                        $vote = 1;
+                                        $voteval = 1;
                                     }
                                 }
                             }

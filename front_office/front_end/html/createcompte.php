@@ -108,16 +108,11 @@
                 'num_tel' => $tel,
                 'id_num' => $id_num
             ]);
-            // 5) Récupération id_client
-            $id_client_sql = "SELECT id_client FROM public.compte_client WHERE id_num = :id_num";
-            $stmtclientid = $pdo->prepare($id_client_sql);
-            $stmtclientid->execute(['id_num' => $id_num]);
-            $id_client = (int) $stmtclientid->fetchColumn();
             // 6) Création du panier vierge
-            $sqlpanier = "INSERT INTO public.panier (id_client, statut_panier)
-                        VALUES (:id_client, 'en cours')";
+            $sqlpanier = "INSERT INTO public.panier (id_num, statut_panier)
+                        VALUES (:id_num, 'en cours')";
             $stmtpanier = $pdo->prepare($sqlpanier);
-            $stmtpanier->execute(['id_client' => $id_client]);
+            $stmtpanier->execute(['id_num' => $id_num]);
             // 7) Ajouter le numéro_téléphone sur adresse 
             $sqlpanier = "INSERT INTO public.adresse (num_tel) VALUES (:num_tel)";
             $stmtpanier = $pdo->prepare($sqlpanier);

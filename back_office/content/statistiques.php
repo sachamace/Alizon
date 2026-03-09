@@ -62,10 +62,10 @@ $stmt->execute($params);
 $stats = $stmt->fetchAll();
 
 // Graphe ligne : quantite vendue jour par jour
-// Visible uniquement si un produit est selectionne (vue produit) ou en vue categorie
+// Toujours visible, filtre sur le produit selectionne si applicable
 $ligne_data = [];
 if ($vue === 'produit' && $id_produit !== 'tous') {
-    // Un seul produit selectionne : on trace ses ventes jour par jour
+    // Un produit specifique selectionne : on trace ses ventes jour par jour
     $s = $pdo->prepare("
         SELECT c.date_commande::date AS jour, SUM(lc.quantite) AS qte
         FROM ligne_commande lc
@@ -75,9 +75,8 @@ if ($vue === 'produit' && $id_produit !== 'tous') {
         GROUP BY jour ORDER BY jour ASC
     ");
     $s->execute([$id_produit, $date_debut, $date_fin]);
-    foreach ($s->fetchAll() as $r) $ligne_data[$r['jour']] = $r['qte'];
-} elseif ($vue === 'categorie') {
-    // Vue categorie : on trace toutes les ventes du vendeur jour par jour
+} else {
+    // Tous les produits ou vue categorie : on trace toutes les ventes du vendeur jour par jour
     $s = $pdo->prepare("
         SELECT c.date_commande::date AS jour, SUM(lc.quantite) AS qte
         FROM ligne_commande lc
@@ -88,8 +87,8 @@ if ($vue === 'produit' && $id_produit !== 'tous') {
         GROUP BY jour ORDER BY jour ASC
     ");
     $s->execute([$id_vendeur, $date_debut, $date_fin]);
-    foreach ($s->fetchAll() as $r) $ligne_data[$r['jour']] = $r['qte'];
 }
+foreach ($s->fetchAll() as $r) $ligne_data[$r['jour']] = $r['qte'];
 $ligne_labels = json_encode(array_keys($ligne_data));
 $ligne_qtes   = json_encode(array_values($ligne_data));
 
@@ -214,14 +213,12 @@ $data_montant = json_encode(array_column($stats, 'montant_total'));
         </div>
     </div>
 
-    <?php if (!empty($ligne_data)): ?>
     <div class="stats-charts" style="grid-template-columns: 1fr; margin-bottom: 1.2rem;">
         <div class="chart-card">
             <h3>Ventes par jour</h3>
             <canvas id="chartLigne"></canvas>
         </div>
     </div>
-    <?php endif; ?>
 
     <div class="chart-card" style="margin-bottom: 1.5rem;">
         <h3>Comparaison</h3>

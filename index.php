@@ -16,11 +16,51 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
+        #map-toggle-btn {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            background: #ff6ce2;
+            color: white;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            width: 36px;
+            height: 60px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+             transition: background 0.2s, right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        #map-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 50vw;
+            min-width: 350px;
+            height: 100vh;
+            z-index: 999;
+            background: white;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        #map-panel.ouvert {
+            right: 0;
+        }
+
         #map {
+            flex: 1;
             width: 100%;
-            height: 350px;
-            margin : 0 100px 40px 100px;
-            border-radius: 12px;
+            height: 100%;
+            border-radius: 0;
         }
 
         .dept-tooltip {
@@ -98,9 +138,6 @@
                             <?php echo $is_checked; ?> /> <label for="vend_<?php echo $vendeur['id_vendeur'];?>"><?php echo $vendeur['raison_sociale'];?></label><br>
                     <?php } ?>
                 </fieldset>
-                <div class="inputs">
-                    <input id="btnmap" type="button" name="button" value="Voir la carte"/>
-                </div>
                 <label>Note</label>
                 <div class="inputs">
                     <input type="number" placeholder="Min" id="noteMinInput" name="noteMin" min="0" max="5" value="<?= htmlspecialchars($_GET['noteMin'] ?? '') ?>">
@@ -112,8 +149,11 @@
             </form>
         </aside>
       
-        <div id="map">
-            <button id="closeMap">✕</button>
+        <button id="map-toggle-btn" title="Voir la carte">›</button>
+
+        <!-- Panneau latéral -->
+        <div id="map-panel">
+            <div id="map"></div>
         </div>
         <?php
             $tri = $_GET['tri'] ?? '';
@@ -341,6 +381,7 @@
     <script>
         let displayMap = document.getElementById("map");
         let boutonMap = document.getElementById("btnmap");
+        let fermerMap = document.getElementById("closeMap");
 
         let map = L.map('map').setView([48.1173, -1.6778], 8);
 
@@ -423,7 +464,7 @@
                             layer.bringToFront();
                         });
                         layer.on('mouseout', function() {
-                            geoLayer.resetStyle(layer); // ✅ remet styleNormal
+                            geoLayer.resetStyle(layer);
                         });
                         layer.on('click', function() {
                             map.fitBounds(layer.getBounds(), { padding: [40, 40] });
@@ -436,52 +477,6 @@
                     }
                 }).addTo(map);
             });
-
-        boutonMap.addEventListener("click", (e) => {
-            e.preventDefault();
-            if (getComputedStyle(displayMap).display !== "none") {
-                displayMap.style.display = "none";
-            } else {
-                displayMap.style.display = "block";
-                setTimeout(() => map.invalidateSize(), 100);
-            }
-        });
-
-        const overlay = document.getElementById('map-overlay');
-
-        function ouvrirMap() {
-            overlay.style.display = 'block';
-            displayMap.style.display = 'block';
-
-            // Force le reflow pour que la transition se déclenche
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    overlay.classList.add('visible');
-                    displayMap.classList.add('visible');
-                    setTimeout(() => map.invalidateSize(), 350);
-                });
-            });
-        }
-
-        function fermerMap() {
-            overlay.classList.remove('visible');
-            displayMap.classList.remove('visible');
-
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                displayMap.style.display = 'none';
-            }, 400); // attend la fin de la transition
-        }
-
-        boutonMap.addEventListener("click", (e) => {
-            e.preventDefault();
-            displayMap.classList.contains('visible') ? fermerMap() : ouvrirMap();
-        });
-
-        document.getElementById('closeMap').addEventListener('click', fermerMap);
-
-        // Clic sur l'overlay pour fermer
-        overlay.addEventListener('click', fermerMap);
 
         //Définition des fonds de carte
         const baseLayers = {
@@ -511,7 +506,22 @@
         baseLayers["Standard"].addTo(map);
 
         // Contrôle natif Leaflet (en haut à droite)
-        L.control.layers(baseLayers, null, { position: 'topright' }).addTo(map);
+        L.control.layers(baseLayers, null, { position: 'bottomleft' }).addTo(map);
+
+        const mapPanel = document.getElementById('map-panel');
+        const toggleBtn = document.getElementById('map-toggle-btn');
+        let mapOuvert = false;
+
+        toggleBtn.addEventListener('click', () => {
+            mapOuvert = !mapOuvert;
+            mapPanel.classList.toggle('ouvert', mapOuvert);
+            toggleBtn.textContent = mapOuvert ? '›' : '‹';
+            toggleBtn.style.right = mapOuvert ? '50vw' : '0'; 
+
+            if (mapOuvert) {
+                setTimeout(() => map.invalidateSize(), 400);
+            }
+        });
     </script>
 </body>
 </html>

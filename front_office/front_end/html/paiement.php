@@ -6,7 +6,7 @@ include 'sessionindex.php';
 /* ---------------------------------------------------
    1. Vérification de la connexion client
 --------------------------------------------------- */
-$id_client_connecte = $_SESSION['id'];
+$id_client_connecte = $_SESSION['id_client'];
 
 /* ---------------------------------------------------
    2. Récupération de l'adresse du client

@@ -4509,9 +4509,9 @@ table td {
         flex-shrink: 0;
       }
 
-      &.dal-deuteranopie .dal-pastille { background: $dal-btn-deuteranopie; }
-      &.dal-protanopie   .dal-pastille { background: $dal-btn-protanopie; }
-      &.dal-tritanopie   .dal-pastille { background: $dal-btn-tritanopie; }
+      &.dal-deuteranopie .dal-pastille,
+      &.dal-protanopie   .dal-pastille,
+      &.dal-tritanopie   .dal-pastille { background: $gray-dark; }
     }
 
     .dal-reset {

@@ -4214,14 +4214,8 @@ table td {
   border-radius: 50%;
   flex-shrink: 0;
 }
-.daltonien-switcher .dal-dropdown .dal-option.dal-deuteranopie .dal-pastille {
-  background: #E8A000;
-}
-.daltonien-switcher .dal-dropdown .dal-option.dal-protanopie .dal-pastille {
-  background: #0077BB;
-}
-.daltonien-switcher .dal-dropdown .dal-option.dal-tritanopie .dal-pastille {
-  background: #CC3399;
+.daltonien-switcher .dal-dropdown .dal-option.dal-deuteranopie .dal-pastille, .daltonien-switcher .dal-dropdown .dal-option.dal-protanopie .dal-pastille, .daltonien-switcher .dal-dropdown .dal-option.dal-tritanopie .dal-pastille {
+  background: #666;
 }
 .daltonien-switcher .dal-dropdown .dal-reset {
   display: block;

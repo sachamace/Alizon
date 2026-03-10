@@ -40,12 +40,25 @@
         </form>
 
         <!-- Switcher daltonien -->
-        <div class="daltonien-switcher" aria-label="Mode daltonien">
-            <button class="dal-btn dal-deuteranopie" data-mode="deuteranopie" title="Deutéranopie (rouge/vert)">D</button>
-            <button class="dal-btn dal-protanopie"   data-mode="protanopie"   title="Protanopie (rouge sombre)">P</button>
-            <button class="dal-btn dal-tritanopie"   data-mode="tritanopie"   title="Tritanopie (bleu/jaune)">T</button>
+        <div class="daltonien-switcher">
+            <button class="dal-trigger" id="dal-trigger">Daltonisme</button>
+            <div class="dal-dropdown" id="dal-dropdown">
+                <p class="dal-dropdown-titre">Mode visuel</p>
+                <button class="dal-option dal-deuteranopie" data-mode="deuteranopie">
+                    <span class="dal-pastille"></span>
+                    <span>Deutéranopie<span class="dal-sous-titre">Confusion rouge / vert</span></span>
+                </button>
+                <button class="dal-option dal-protanopie" data-mode="protanopie">
+                    <span class="dal-pastille"></span>
+                    <span>Protanopie<span class="dal-sous-titre">Rouge sombre</span></span>
+                </button>
+                <button class="dal-option dal-tritanopie" data-mode="tritanopie">
+                    <span class="dal-pastille"></span>
+                    <span>Tritanopie<span class="dal-sous-titre">Confusion bleu / jaune</span></span>
+                </button>
+                <button class="dal-reset" id="dal-reset">Réinitialiser</button>
+            </div>
         </div>
-
         <a href="/front_office/front_end/html/panier.php" data-panier><svg class="icone" width="48" height="48" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M24-16C10.7-16 0-5.3 0 8S10.7 32 24 32l45.3 0c3.9 0 7.2 2.8 7.9 6.6l52.1 286.3c6.2 34.2 36 59.1 70.8 59.1L456 384c13.3 0 24-10.7 24-24s-10.7-24-24-24l-255.9 0c-11.6 0-21.5-8.3-23.6-19.7l-5.1-28.3 303.6 0c30.8 0 57.2-21.9 62.9-52.2L568.9 69.9C572.6 50.2 557.5 32 537.4 32l-412.7 0-.4-2c-4.8-26.6-28-46-55.1-46L24-16zM208 512a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm224 0a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/></svg>Panier</a>
     </nav>
     <nav>

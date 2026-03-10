@@ -4201,36 +4201,111 @@ table td {
 }
 
 .daltonien-switcher {
+  position: relative;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+.daltonien-switcher .dal-trigger {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #333;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.daltonien-switcher .dal-trigger:hover {
+  background: #f0f0f0;
+}
+.daltonien-switcher .dal-trigger.dal-actif {
+  background: #f0f0f0;
+  border-color: #666;
+}
+.daltonien-switcher .dal-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 190px;
+  z-index: 99999;
+  overflow: hidden;
+}
+.daltonien-switcher .dal-dropdown.ouvert {
+  display: block;
+}
+.daltonien-switcher .dal-dropdown .dal-dropdown-titre {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #666;
+  padding: 8px 12px 4px;
+  margin: 0;
+}
+.daltonien-switcher .dal-dropdown .dal-option {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-right: 14px;
-}
-.daltonien-switcher .dal-btn {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 2px solid transparent;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
   cursor: pointer;
-  transition: transform 0.15s, border-color 0.15s;
-  font-size: 0;
-  padding: 0;
+  font-size: 0.82rem;
+  color: #333;
+  text-align: left;
+  transition: background 0.1s;
 }
-.daltonien-switcher .dal-btn:hover {
-  transform: scale(1.15);
+.daltonien-switcher .dal-dropdown .dal-option:hover {
+  background: #f5f5f5;
 }
-.daltonien-switcher .dal-btn.actif {
-  border-color: #000;
-  transform: scale(1.15);
+.daltonien-switcher .dal-dropdown .dal-option.actif {
+  background: #efefef;
+  font-weight: 700;
 }
-.daltonien-switcher .dal-btn.dal-deuteranopie {
+.daltonien-switcher .dal-dropdown .dal-option .dal-pastille {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.daltonien-switcher .dal-dropdown .dal-option.dal-deuteranopie .dal-pastille {
   background: #E8A000;
 }
-.daltonien-switcher .dal-btn.dal-protanopie {
+.daltonien-switcher .dal-dropdown .dal-option.dal-protanopie .dal-pastille {
   background: #0077BB;
 }
-.daltonien-switcher .dal-btn.dal-tritanopie {
+.daltonien-switcher .dal-dropdown .dal-option.dal-tritanopie .dal-pastille {
   background: #CC3399;
+}
+.daltonien-switcher .dal-dropdown .dal-option .dal-sous-titre {
+  font-size: 0.7rem;
+  color: #666;
+  font-weight: 400;
+  display: block;
+}
+.daltonien-switcher .dal-dropdown .dal-reset {
+  display: block;
+  width: 100%;
+  padding: 7px 12px;
+  background: none;
+  border: none;
+  border-top: 1px solid #eee;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: #666;
+  text-align: left;
+  transition: background 0.1s;
+}
+.daltonien-switcher .dal-dropdown .dal-reset:hover {
+  background: #f5f5f5;
 }
 
 body.deuteranopie {

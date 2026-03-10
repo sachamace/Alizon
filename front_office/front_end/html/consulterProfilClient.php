@@ -160,7 +160,7 @@ try {
     <?php if (isset($_SESSION['message'])): ?>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                afficherToast("<?php echo addslashes($_SESSION['message']); ?>", "erreur");
+                afficherToast("<?php echo addslashes($_SESSION['message']); ?>", "succes");
             });
         </script>
         <?php 

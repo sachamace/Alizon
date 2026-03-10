@@ -15,6 +15,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <style>
         #map-toggle-btn {
             position: fixed;
@@ -107,7 +110,7 @@
                 <?php if (isset($_GET['search'])): ?>
                     <input type="hidden" name="search" value="<?= htmlspecialchars($_GET['search']) ?>">
                 <?php endif; ?>
-                <label for="tri">Trier par :</label>
+                <label class="filtre-label" for="tri">Trier par :</label>
                 <select name="tri" id="tri" onchange="this.form.submit()">
                     <option value="">-- Sélectionner --</option>
                     <option value="prix_asc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'prix_asc') echo 'selected'; ?>>Prix croissant</option>
@@ -116,7 +119,7 @@
                     <option value="note_desc" <?php if (isset($_GET['tri']) && $_GET['tri'] === 'note_desc') echo 'selected'; ?>>Note 5-1</option>
                 </select>
 
-                <label>Prix</label>
+                <label class="filtre-label">Prix</label>
                 <div class="inputs">
                     <input type="number" placeholder="Min" id="prixMinInput" name="prixMin" min="0" max="1000" value="<?= htmlspecialchars($_GET['prixMin'] ?? '') ?>">
                     <input type="number" placeholder="Max" id="prixMaxInput" name="prixMax" min="0" max="1000" value="<?= htmlspecialchars($_GET['prixMax'] ?? '') ?>">
@@ -138,7 +141,10 @@
                             <?php echo $is_checked; ?> /> <label for="vend_<?php echo $vendeur['id_vendeur'];?>"><?php echo $vendeur['raison_sociale'];?></label><br>
                     <?php } ?>
                 </fieldset>
-                <label>Note</label>
+                <div class="inputs">
+                    <input id="showmap" type="button" value="Voir la carte">
+                </div>
+                <label class="filtre-label">Note</label>
                 <div class="inputs">
                     <input type="number" placeholder="Min" id="noteMinInput" name="noteMin" min="0" max="5" value="<?= htmlspecialchars($_GET['noteMin'] ?? '') ?>">
                     <input type="number" placeholder="Max" id="noteMaxInput" name="noteMax" min="0" max="5" value="<?= htmlspecialchars($_GET['noteMax'] ?? '') ?>">
@@ -404,6 +410,14 @@
             iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
         });
 
+        const markercluster = L.markerClusterGroup({
+            ShowCoverageOnHover: false,
+            spiderfyOnMaxZoom: true,
+            zoomToBoundsOnClick: true,
+            removeOutsideVisibleBounds : true,
+            maxClusterRadius: 60
+        })
+
         // Chargement dynamique depuis la BDD
         fetch('front_office/front_end/html/get_vendeur_map.php')
             .then(r => r.json())
@@ -414,7 +428,7 @@
 
                     const marker = L.marker([parseFloat(v.latitude), parseFloat(v.longitude)], {
                         icon: estCoche ? redIcon : blueIcon
-                    }).addTo(map);
+                    });
 
                     marker.bindPopup(`<b>${v.raison_sociale}</b><br>${v.adresse}`);
 
@@ -428,7 +442,13 @@
                             document.getElementById('tri-form').submit();
                         }
                     });
+                    markercluster.addLayer(marker);
                 });
+                map.addLayer(markercluster);
+                setTimeout(() => {
+                    map.invalidateSize();
+                    markercluster.refreshClusters();
+                }, 200);
             });
         
         fetch('https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/departements.geojson')
@@ -510,9 +530,21 @@
 
         const mapPanel = document.getElementById('map-panel');
         const toggleBtn = document.getElementById('map-toggle-btn');
+        const showMap = document.getElementById('showmap');
         let mapOuvert = false;
 
         toggleBtn.addEventListener('click', () => {
+            mapOuvert = !mapOuvert;
+            mapPanel.classList.toggle('ouvert', mapOuvert);
+            toggleBtn.textContent = mapOuvert ? '›' : '‹';
+            toggleBtn.style.right = mapOuvert ? '50vw' : '0'; 
+
+            if (mapOuvert) {
+                setTimeout(() => map.invalidateSize(), 400);
+            }
+        });
+
+        showMap.addEventListener('click', () => {
             mapOuvert = !mapOuvert;
             mapPanel.classList.toggle('ouvert', mapOuvert);
             toggleBtn.textContent = mapOuvert ? '›' : '‹';

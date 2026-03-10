@@ -619,7 +619,7 @@ footer.footer {
       flex-direction: column;
       gap: 25px;
 
-      label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]) {
+      label.filtre-label {
         display: block;
         font-weight: 700;
         font-size: 0.85rem;

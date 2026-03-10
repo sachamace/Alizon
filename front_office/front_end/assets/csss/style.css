@@ -1289,59 +1289,6 @@ footer.footer.mobile, footer.footer.tablette {
   cursor: pointer;
   transition: all 0.2s ease;
 }
-.main_produit .avis .avis-item .avis-button .avis-votes {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: auto;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: none;
-  border: 1px solid transparent;
-  cursor: pointer;
-  color: #666;
-  font-size: 0.95rem;
-  font-weight: 500;
-  padding: 6px 12px;
-  border-radius: 20px;
-  transition: all 0.2s ease-in-out;
-  outline: none;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote svg {
-  transition: transform 0.2s ease, fill 0.2s ease, stroke 0.2s ease;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote:hover {
-  background-color: #f5f5f5;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote:hover, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote.active {
-  color: #2e7d32;
-  background-color: #e8f5e9;
-  border-color: #c8e6c9;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote:hover svg, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote.active svg {
-  stroke: #2e7d32;
-  fill: #e8f5e9;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote:active svg {
-  transform: scale(1.1) translateY(-2px);
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote:hover, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote.active {
-  color: #c62828;
-  background-color: #ffebee;
-  border-color: #ffcdd2;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote:hover svg, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote.active svg {
-  stroke: #c62828;
-  fill: #ffebee;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote:active svg {
-  transform: scale(1.1) translateY(2px);
-}
 .main_produit .avis .avis-item:last-child {
   margin-bottom: 0;
 }
@@ -4231,34 +4178,25 @@ table td {
   left: 0;
   background: #fff;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 190px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  min-width: 160px;
   z-index: 99999;
   overflow: hidden;
 }
 .daltonien-switcher .dal-dropdown.ouvert {
   display: block;
 }
-.daltonien-switcher .dal-dropdown .dal-dropdown-titre {
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #666;
-  padding: 8px 12px 4px;
-  margin: 0;
-}
 .daltonien-switcher .dal-dropdown .dal-option {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   width: 100%;
-  padding: 8px 12px;
+  padding: 6px 10px;
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: #333;
   text-align: left;
   transition: background 0.1s;
@@ -4271,8 +4209,8 @@ table td {
   font-weight: 700;
 }
 .daltonien-switcher .dal-dropdown .dal-option .dal-pastille {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -4285,21 +4223,15 @@ table td {
 .daltonien-switcher .dal-dropdown .dal-option.dal-tritanopie .dal-pastille {
   background: #CC3399;
 }
-.daltonien-switcher .dal-dropdown .dal-option .dal-sous-titre {
-  font-size: 0.7rem;
-  color: #666;
-  font-weight: 400;
-  display: block;
-}
 .daltonien-switcher .dal-dropdown .dal-reset {
   display: block;
   width: 100%;
-  padding: 7px 12px;
+  padding: 5px 10px;
   background: none;
   border: none;
   border-top: 1px solid #eee;
   cursor: pointer;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: #666;
   text-align: left;
   transition: background 0.1s;

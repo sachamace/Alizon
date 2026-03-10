@@ -43,18 +43,14 @@
         <div class="daltonien-switcher">
             <button class="dal-trigger" id="dal-trigger">Daltonisme</button>
             <div class="dal-dropdown" id="dal-dropdown">
-                <p class="dal-dropdown-titre">Mode visuel</p>
                 <button class="dal-option dal-deuteranopie" data-mode="deuteranopie">
-                    <span class="dal-pastille"></span>
-                    <span>Deutéranopie<span class="dal-sous-titre">Confusion rouge / vert</span></span>
+                    <span class="dal-pastille"></span> Deutéranopie
                 </button>
                 <button class="dal-option dal-protanopie" data-mode="protanopie">
-                    <span class="dal-pastille"></span>
-                    <span>Protanopie<span class="dal-sous-titre">Rouge sombre</span></span>
+                    <span class="dal-pastille"></span> Protanopie
                 </button>
                 <button class="dal-option dal-tritanopie" data-mode="tritanopie">
-                    <span class="dal-pastille"></span>
-                    <span>Tritanopie<span class="dal-sous-titre">Confusion bleu / jaune</span></span>
+                    <span class="dal-pastille"></span> Tritanopie
                 </button>
                 <button class="dal-reset" id="dal-reset">Réinitialiser</button>
             </div>

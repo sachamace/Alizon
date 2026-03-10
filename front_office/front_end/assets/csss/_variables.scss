@@ -34,3 +34,30 @@ $star-size-mobile: 2rem;
 $star-inactive-color: $gray-light;
 
 $blue-vendor: #6CD3FF;
+
+// =============================================================================
+// VARIABLES DALTONIEN
+// =============================================================================
+
+// Couleurs des boutons switcher dans le header
+$dal-btn-deuteranopie: #E8A000;   // orange
+$dal-btn-protanopie:   #0077BB;   // bleu fort
+$dal-btn-tritanopie:   #CC3399;   // rose/violet
+
+// Deuteranopie (confusion rouge/vert)
+$dal-deut-primary: #E87722;
+$dal-deut-success: #0077BB;
+$dal-deut-error:   #E87722;
+$dal-deut-warning: #885500;
+$dal-deut-neutral: #555555;
+
+// Protanopie (rouge sombre)
+$dal-prot-primary: #0099CC;
+$dal-prot-error:   #FF8C00;
+$dal-prot-neutral: #555555;
+
+// Tritanopie (confusion bleu/jaune)
+$dal-trit-primary: #CC3399;
+$dal-trit-success: #009966;
+$dal-trit-error:   #CC0000;
+$dal-trit-neutral: #555555;

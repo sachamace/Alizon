@@ -4148,37 +4148,81 @@ table td {
 }
 
 .daltonien-switcher {
+  position: relative;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+.daltonien-switcher .dal-trigger {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #333;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.daltonien-switcher .dal-trigger:hover {
+  background: #f0f0f0;
+}
+.daltonien-switcher .dal-trigger.dal-actif {
+  background: #f0f0f0;
+  border-color: #666;
+}
+.daltonien-switcher .dal-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  min-width: 160px;
+  z-index: 99999;
+  overflow: hidden;
+}
+.daltonien-switcher .dal-dropdown.ouvert {
+  display: block;
+}
+.daltonien-switcher .dal-dropdown .dal-option {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-right: 14px;
-}
-.daltonien-switcher .dal-btn {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 2px solid transparent;
+  gap: 7px;
+  width: 100%;
+  padding: 6px 10px;
+  background: none;
+  border: none;
   cursor: pointer;
-  position: relative;
-  transition: transform 0.15s, border-color 0.15s;
-  font-size: 0;
-  padding: 0;
+  font-size: 0.78rem;
+  color: #333;
+  text-align: left;
+  transition: background 0.1s;
 }
-.daltonien-switcher .dal-btn:hover {
-  transform: scale(1.15);
+.daltonien-switcher .dal-dropdown .dal-option:hover {
+  background: #f5f5f5;
 }
-.daltonien-switcher .dal-btn.actif {
-  border-color: #000;
-  transform: scale(1.15);
+.daltonien-switcher .dal-dropdown .dal-option.actif {
+  background: #efefef;
+  font-weight: 700;
 }
-.daltonien-switcher .dal-btn.dal-deuteranopie {
-  background: #E8A000;
+.daltonien-switcher .dal-dropdown .dal-reset {
+  display: block;
+  width: 100%;
+  padding: 5px 10px;
+  background: none;
+  border: none;
+  border-top: 1px solid #eee;
+  cursor: pointer;
+  font-size: 0.72rem;
+  color: #666;
+  text-align: left;
+  transition: background 0.1s;
 }
-.daltonien-switcher .dal-btn.dal-protanopie {
-  background: #0077BB;
-}
-.daltonien-switcher .dal-btn.dal-tritanopie {
-  background: #CC3399;
+.daltonien-switcher .dal-dropdown .dal-reset:hover {
+  background: #f5f5f5;
 }
 
 body.deuteranopie {

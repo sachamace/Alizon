@@ -4447,38 +4447,78 @@ table td {
 // 3 modes : deuteranopie (rouge/vert), protanopie (rouge sombre), tritanopie (bleu/jaune)
 // Chaque mode override les couleurs problématiques via une classe sur le body
 
-// --- Boutons de sélection dans le header ---
+// --- Dropdown accessibilité dans la barre du bas ---
+// --- Switcher daltonien : bouton + dropdown ---
 .daltonien-switcher {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  position: relative;
   margin-right: 14px;
+  flex-shrink: 0;
 
-  .dal-btn {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    border: 2px solid transparent;
+  .dal-trigger {
+    background: none;
+    border: 1px solid $gray-medium;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
     cursor: pointer;
-    position: relative;
-    transition: transform 0.15s, border-color 0.15s;
-    font-size: 0;        // cache le texte du title
-    padding: 0;
+    color: $gray-darker;
+    white-space: nowrap;
+    transition: background 0.15s;
 
-    &:hover {
-      transform: scale(1.15);
+    &:hover { background: #f0f0f0; }
+    &.dal-actif { background: #f0f0f0; border-color: $gray-dark; }
+  }
+
+  .dal-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    background: #fff;
+    border: 1px solid $gray-medium;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    min-width: 160px;
+    z-index: 99999;
+    overflow: hidden;
+
+    &.ouvert { display: block; }
+
+    .dal-option {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      width: 100%;
+      padding: 6px 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.78rem;
+      color: $gray-darker;
+      text-align: left;
+      transition: background 0.1s;
+
+      &:hover { background: #f5f5f5; }
+      &.actif  { background: #efefef; font-weight: 700; }
+
     }
 
-    // cercle actif : bordure noire
-    &.actif {
-      border-color: #000;
-      transform: scale(1.15);
-    }
+    .dal-reset {
+      display: block;
+      width: 100%;
+      padding: 5px 10px;
+      background: none;
+      border: none;
+      border-top: 1px solid #eee;
+      cursor: pointer;
+      font-size: 0.72rem;
+      color: $gray-dark;
+      text-align: left;
+      transition: background 0.1s;
 
-    // couleurs représentatives de chaque mode
-    &.dal-deuteranopie { background: #E8A000; }   // orange (remplace vert pour dalto)
-    &.dal-protanopie   { background: #0077BB; }   // bleu fort
-    &.dal-tritanopie   { background: #CC3399; }   // rose/violet
+      &:hover { background: #f5f5f5; }
+    }
   }
 }
 
@@ -4489,11 +4529,11 @@ table td {
 body.deuteranopie {
 
   // primary rose → orange vif
-  --dal-primary: #E87722;
-  --dal-success: #0077BB;     // vert → bleu
-  --dal-error:   #E87722;     // rouge → orange
-  --dal-warning: #885500;     // jaune/ambre foncé
-  --dal-badge:   #0077BB;
+  --dal-primary: #{$dal-deut-primary};
+  --dal-success: #{$dal-deut-success};
+  --dal-error:   #{$dal-deut-error};
+  --dal-warning: #{$dal-deut-warning};
+  --dal-badge:   #{$dal-deut-success};
 
   // boutons primaires (connexion, panier, etc.)
   .btn__connexion,
@@ -4501,42 +4541,42 @@ body.deuteranopie {
   .payer-btn,
   .confirmer,
   .btn.btn-primary {
-    background-color: #E87722 !important;
-    border-color: #E87722 !important;
+    background-color: $dal-deut-primary !important;
+    border-color: $dal-deut-primary !important;
   }
 
   // badges de remise (normalement rouge/vert)
   .badge-remise-panier,
   .remise-badge,
   .badge-remise {
-    background-color: #0077BB !important;
+    background-color: $dal-deut-success !important;
   }
 
   // statuts de commande
   .commande-statut {
-    &.statut-validée    { background: #0077BB !important; }
-    &.statut-livrée     { background: #0077BB !important; }
-    &.statut-expédiée   { background: #E87722 !important; }
-    &.statut-annulée    { background: #555555 !important; }
+    &.statut-validée    { background: $dal-deut-success !important; }
+    &.statut-livrée     { background: $dal-deut-success !important; }
+    &.statut-expédiée   { background: $dal-deut-primary !important; }
+    &.statut-annulée    { background: $dal-deut-neutral !important; }
   }
 
   // succès (vert → bleu)
-  .succes-message { color: #0077BB !important; }
+  .succes-message { color: $dal-deut-success !important; }
 
   // erreurs (rouge → orange)
   span[style*="color:red"],
   .error,
-  .erreur-msg { color: #E87722 !important; }
+  .erreur-msg { color: $dal-deut-error !important; }
 
   // liens catégories dans le header
   nav nav:last-child div a {
-    background: #E87722 !important;
+    background: $dal-deut-primary !important;
   }
 
   // primary color général
   a.btn__creer-compte,
   .gerer-adresses-btn {
-    background-color: #E87722 !important;
+    background-color: $dal-deut-primary !important;
   }
 }
 
@@ -4546,46 +4586,46 @@ body.deuteranopie {
 // =============================================================================
 body.protanopie {
 
-  --dal-primary: #0099CC;
-  --dal-success: #0099CC;
-  --dal-error:   #FF8C00;
-  --dal-warning: #FF8C00;
-  --dal-badge:   #0099CC;
+  --dal-primary: #{$dal-prot-primary};
+  --dal-success: #{$dal-prot-primary};
+  --dal-error:   #{$dal-prot-error};
+  --dal-warning: #{$dal-prot-error};
+  --dal-badge:   #{$dal-prot-primary};
 
   .btn__connexion,
   .btn-popup.btn-valider,
   .payer-btn,
   .confirmer,
   .btn.btn-primary {
-    background-color: #0099CC !important;
-    border-color: #0099CC !important;
+    background-color: $dal-prot-primary !important;
+    border-color: $dal-prot-primary !important;
   }
 
   .badge-remise-panier,
   .remise-badge,
   .badge-remise {
-    background-color: #0099CC !important;
+    background-color: $dal-prot-primary !important;
   }
 
   .commande-statut {
-    &.statut-validée    { background: #0099CC !important; }
-    &.statut-livrée     { background: #0099CC !important; }
-    &.statut-expédiée   { background: #FF8C00 !important; }
-    &.statut-annulée    { background: #555555 !important; }
+    &.statut-validée    { background: $dal-prot-primary !important; }
+    &.statut-livrée     { background: $dal-prot-primary !important; }
+    &.statut-expédiée   { background: $dal-prot-error !important; }
+    &.statut-annulée    { background: $dal-prot-neutral !important; }
   }
 
-  .succes-message { color: #0099CC !important; }
+  .succes-message { color: $dal-prot-primary !important; }
 
   span[style*="color:red"],
   .error,
-  .erreur-msg { color: #FF8C00 !important; }
+  .erreur-msg { color: $dal-prot-error !important; }
 
   nav nav:last-child div a {
-    background: #0099CC !important;
+    background: $dal-prot-primary !important;
   }
 
   a.btn__creer-compte {
-    background-color: #0099CC !important;
+    background-color: $dal-prot-primary !important;
   }
 }
 
@@ -4595,46 +4635,46 @@ body.protanopie {
 // =============================================================================
 body.tritanopie {
 
-  --dal-primary: #CC3399;
-  --dal-success: #009966;
-  --dal-error:   #CC0000;
-  --dal-warning: #CC3399;
-  --dal-badge:   #009966;
+  --dal-primary: #{$dal-trit-primary};
+  --dal-success: #{$dal-trit-success};
+  --dal-error:   #{$dal-trit-error};
+  --dal-warning: #{$dal-trit-primary};
+  --dal-badge:   #{$dal-trit-success};
 
   .btn__connexion,
   .btn-popup.btn-valider,
   .payer-btn,
   .confirmer,
   .btn.btn-primary {
-    background-color: #CC3399 !important;
-    border-color: #CC3399 !important;
+    background-color: $dal-trit-primary !important;
+    border-color: $dal-trit-primary !important;
   }
 
   .badge-remise-panier,
   .remise-badge,
   .badge-remise {
-    background-color: #009966 !important;
+    background-color: $dal-trit-success !important;
   }
 
   .commande-statut {
-    &.statut-validée    { background: #009966 !important; }
-    &.statut-livrée     { background: #009966 !important; }
-    &.statut-expédiée   { background: #CC3399 !important; }
-    &.statut-annulée    { background: #555555 !important; }
+    &.statut-validée    { background: $dal-trit-success !important; }
+    &.statut-livrée     { background: $dal-trit-success !important; }
+    &.statut-expédiée   { background: $dal-trit-primary !important; }
+    &.statut-annulée    { background: $dal-trit-neutral !important; }
   }
 
-  .succes-message { color: #009966 !important; }
+  .succes-message { color: $dal-trit-success !important; }
 
   span[style*="color:red"],
   .error,
-  .erreur-msg { color: #CC0000 !important; }
+  .erreur-msg { color: $dal-trit-error !important; }
 
   nav nav:last-child div a {
-    background: #CC3399 !important;
+    background: $dal-trit-primary !important;
   }
 
   a.btn__creer-compte {
-    background-color: #CC3399 !important;
+    background-color: $dal-trit-primary !important;
   }
 }
 /* Style de base du toast (caché par défaut) */

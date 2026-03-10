@@ -44,13 +44,13 @@
             <button class="dal-trigger" id="dal-trigger">Daltonisme</button>
             <div class="dal-dropdown" id="dal-dropdown">
                 <button class="dal-option dal-deuteranopie" data-mode="deuteranopie">
-                    <span class="dal-pastille"></span> Deutéranopie
+                    Deutéranopie
                 </button>
                 <button class="dal-option dal-protanopie" data-mode="protanopie">
-                    <span class="dal-pastille"></span> Protanopie
+                    Protanopie
                 </button>
                 <button class="dal-option dal-tritanopie" data-mode="tritanopie">
-                    <span class="dal-pastille"></span> Tritanopie
+                    Tritanopie
                 </button>
                 <button class="dal-reset" id="dal-reset">Réinitialiser</button>
             </div>

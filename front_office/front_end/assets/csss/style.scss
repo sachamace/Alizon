@@ -4502,16 +4502,6 @@ table td {
       &:hover { background: #f5f5f5; }
       &.actif  { background: #efefef; font-weight: 700; }
 
-      .dal-pastille {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        flex-shrink: 0;
-      }
-
-      &.dal-deuteranopie .dal-pastille,
-      &.dal-protanopie   .dal-pastille,
-      &.dal-tritanopie   .dal-pastille { background: $gray-dark; }
     }
 
     .dal-reset {

@@ -4208,15 +4208,6 @@ table td {
   background: #efefef;
   font-weight: 700;
 }
-.daltonien-switcher .dal-dropdown .dal-option .dal-pastille {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.daltonien-switcher .dal-dropdown .dal-option.dal-deuteranopie .dal-pastille, .daltonien-switcher .dal-dropdown .dal-option.dal-protanopie .dal-pastille, .daltonien-switcher .dal-dropdown .dal-option.dal-tritanopie .dal-pastille {
-  background: #666;
-}
 .daltonien-switcher .dal-dropdown .dal-reset {
   display: block;
   width: 100%;

@@ -139,12 +139,16 @@ header nav nav:last-child div button {
   }
 }
 header nav nav:last-child a {
-  margin-left: auto;
   text-decoration: none;
   color: #000;
   font-size: 23px;
   font-weight: bold;
   margin-right: 30px;
+}
+header nav nav:last-child .daltonien-switcher {
+  margin-left: auto;
+  margin-right: 16px;
+  flex-shrink: 0;
 }
 @media (max-width: 428px) {
   header nav nav:last-child {

@@ -174,12 +174,18 @@ header {
         }
 
         a {
-          margin-left: auto;
           text-decoration: none;
           color: $black;
           font-size: 23px;
           font-weight: bold;
           margin-right: 30px;
+        }
+
+        // forcer la visibilité du switcher dans ce contexte
+        .daltonien-switcher {
+          margin-left: auto;
+          margin-right: 16px;
+          flex-shrink: 0;
         }
 
         @media (max-width: 428px) {

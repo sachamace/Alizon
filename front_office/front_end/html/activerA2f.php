@@ -121,6 +121,8 @@
             
         </div>
         <?php }?>
+        <div id="toast-global" class="toast"></div>
+        <script src="../assets/js/toast.js"></script>
         <script src="../assets/js/a2f.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     </body>

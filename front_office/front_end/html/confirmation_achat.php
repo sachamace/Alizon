@@ -124,7 +124,7 @@ $numero_commande = "CMD-" . date('Ymd', strtotime($commande['date_commande'])) .
             </div>
         </div>
     </main>
-
+    <div id="toast-global" class="toast"></div>
     <footer class="footer mobile">
         <?php include 'footer.php'; ?>
     </footer>

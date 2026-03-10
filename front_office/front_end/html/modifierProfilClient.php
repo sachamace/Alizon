@@ -122,6 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     'num' => $profil['id_num'],
                     'login' => $email
                 ]);
+                
             }
 
             // Mise à jour du mot de passe
@@ -167,7 +168,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
             
             $pdo->commit();
-            
+            $_SESSION["message"] = "Vos modifications ont été fait avec succès !";
             header("Location: consulterProfilClient.php");
             exit();
             
@@ -329,7 +330,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <footer class="footer mobile">
         <?php include 'footer.php'?>
     </footer>
-
+    <div id="toast-global" class="toast"></div>
+    <script src="../assets/js/toast.js"></script>
     <script>
         document.getElementById("toggle-password").addEventListener("click", () => {
             const bloc = document.getElementById("password-edit");
@@ -339,5 +341,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             arrow.classList.toggle("rotate");
         });
     </script>
+    <?php if (isset($_SESSION['message'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message']); ?>", "erreur");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message']); 
+        ?>
+    <?php endif; ?>
 </body>
 </html>

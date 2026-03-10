@@ -40,13 +40,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     strtolower(trim($utilisateur['num_tel'])),
                     date('d/m/Y', strtotime($utilisateur['date_naissance']))
                 ];
-                
+                $_SESSION["message_success"] = "Cet email est correct !";
                 echo "<script>
                     window.location.href = 'recupmdp.php?etape=question';
                 </script>";
                 exit();
             } else {
                 $erreur = "Aucun compte client avec cet email.";
+                $_SESSION["message_erreur"] = $erreur;
             }
             
         } elseif ($etape === 'question') {
@@ -58,15 +59,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             
             if ($index_question !== false && isset($_SESSION['reponses_correctes'][$index_question])) {
                 if ($reponse_saisie === $_SESSION['reponses_correctes'][$index_question]) {
+                    $_SESSION["message_success"] = "Cet réponse est correct !";
                     echo "<script>
                         window.location.href = 'recupmdp.php?etape=nouveau_mdp';
                     </script>";
                     exit();
                 } else {
                     $erreur = "Réponse incorrecte. Veuillez réessayer.";
+                    $_SESSION["message_erreur"] = $erreur;
                 }
             } else {
                 $erreur = "Question invalide.";
+                $_SESSION["message_erreur"] = $erreur;
             }
             
         } elseif ($etape === 'nouveau_mdp') {
@@ -76,15 +80,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // Vérifier la longueur du mot de passe
             if (strlen($nouveau_mdp) < 12) {
                 $erreur = "Le mot de passe doit contenir au moins 12 caractères.";
+                $_SESSION["message_erreur"] = $erreur;
             } 
             // Vérifier que les mots de passe correspondent
             elseif ($nouveau_mdp !== $confirmation_mdp) {
                 $erreur = "Les mots de passe ne correspondent pas.";
+                $_SESSION["message_erreur"] = $erreur;
             } 
             // Vérifier que ce n'est pas l'ancien mot de passe
             elseif (isset($_SESSION['ancien_mdp_hash']) && $nouveau_mdp === $_SESSION['ancien_mdp_hash']) {
                 $erreur = "Vous ne pouvez pas utiliser votre ancien mot de passe. Veuillez en choisir un nouveau.";
-            } 
+                $_SESSION["message_erreur"] = $erreur;
+            }
             else {
                 $email = $_SESSION['email_recuperation'];
                 
@@ -99,6 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 
                 $succes = "Mot de passe modifié avec succès !";
                 $etape = 'termine';
+                $_SESSION["message_success"] = $succes;
             }
         }
     } catch (PDOException $e) {
@@ -178,5 +186,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </form>
         <?php endif; ?>
     </div>
+    <div id="toast-global" class="toast"></div>
+    <script src="../assets/js/toast.js"></script>
+    <?php if (isset($_SESSION["message_success"])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION["message_success"]); ?>", "succes");
+            });
+        </script>
+        <?php 
+            unset($_SESSION["message_success"]); 
+        ?>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['message_erreur'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_erreur']); ?>", "erreur");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_erreur']); 
+        ?>
+    <?php endif; ?>
 </body>
 </html>

@@ -251,7 +251,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } 
                 //SAUVEGARDER L'ID DE COMMANDE EN SESSION
                 $_SESSION['derniere_commande'] = $id_commande;
-
+                $_SESSION['message_success'] = "La commande a bien été effectuer !";
                 // REDIRECTION VERS LA PAGE DE CONFIRMATION
                 header("Location: confirmation_achat.php");
                 exit();
@@ -262,6 +262,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $erreurs['general'] = "Erreur lors du traitement de la commande : " . $e->getMessage();
             }
         }
+        else{
+            $_SESSION['message_erreur'] = "La commande n'a pa été effectué à cause du service de livraison !";
+        }
+    }
+    else{
+        $_SESSION['message_erreur'] = "La commande n'a pa été effectué à cause des données de paiement !";
     }
 }
 
@@ -428,9 +434,31 @@ function verifLuhn($numero) {
             <button type="submit" class="payer-btn">Payer</button>
         </form>
     </main>
+    <div id="toast-global" class="toast"></div>
     <footer class="footer mobile">
         <?php include 'footer.php'?>
     </footer>
     <script src="../assets/js/paiement.js"></script>
+    <script src="../assets/js/toast.js"></script>
+    <?php if (isset($_SESSION['message_success'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_success']); ?>", "succes");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_success']); 
+        ?>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['message_erreur'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_erreur']); ?>", "erreur");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_erreur']); 
+        ?>
+    <?php endif; ?>
 </body>
 </html>

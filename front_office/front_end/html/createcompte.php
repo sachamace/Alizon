@@ -49,6 +49,7 @@
         }
         if(!preg_match("/^0\d{9}$/",$tel)){
             $erreur_tel = "Total de chiffres invalides ! Nombre de chiffre qu'on requière = 10 et un zéro au début.";
+            
         }
         if(!preg_match("/^[a-zA-Z0-9._%+-]+@(gmail\.com|outlook\.com|hotmail\.com|yahoo\.fr|yahoo\.com|orange\.fr|free\.fr|sfr\.fr)$/",$mail)){
             $erreur_mail = "Email invalide ou domaine non autorisé.(Gmail , Outlook , Yahoo , Orange , free et sfr acceptés.";
@@ -117,10 +118,14 @@
             $sqlpanier = "INSERT INTO public.adresse (num_tel) VALUES (:num_tel)";
             $stmtpanier = $pdo->prepare($sqlpanier);
             $stmtpanier->execute(['num_tel' => $num_tel]);
+            $_SESSION['message_creation'] = 'Votre compte a été créer avec succès';
             echo "<script>
                 window.location.href = 'seconnecter.php';
             </script>";
             exit();
+        }
+        else{
+            $_SESSION['message_suppression'] = 'Votre création de compte est incorrect !';
         }
     }
 ?>
@@ -231,7 +236,29 @@
             <a href="seconnecter.php" class="btn__creer-compte">Se connecter</a>
         </form>
     </div>
+    <div id="toast-global" class="toast"></div>
     <script src="../assets/js/date.js"></script>
     <script src="../assets/js/normalisation.js" ></script>
+    <script src="../assets/js/toast.js"></script>
+    <?php if (isset($_SESSION['message_creation'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_creation']); ?>", "succes");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_creation']); 
+        ?>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['message_suppression'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_suppression']); ?>", "erreur");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_suppression']); 
+        ?>
+    <?php endif; ?>
 </body>
 </html>

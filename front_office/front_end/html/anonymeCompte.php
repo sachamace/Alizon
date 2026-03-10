@@ -76,14 +76,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['motdepasse'])) {
                     }
                 ?>
                 <div class="btn-modif">
-                    <input type="submit" class="ano" value="Supprimer mon compte">
+                    <input type="submit" class="ano" value="Supprimer mon compte" >
                 </div>
             </form>
         </section>
     </main>
-
+    <div id="toast-global" class="toast"></div>
     <footer class="footer mobile">
         <?php include 'footer.php'?>
     </footer>
+    <script src="../assets/js/toast.js"></script>
+    <?php if (isset($_SESSION['message_suppression'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_suppression']); ?>", "succes");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_suppression']); 
+        ?>
+    <?php endif; ?>
 </body>
 </html>

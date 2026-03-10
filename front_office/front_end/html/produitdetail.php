@@ -282,44 +282,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 WHERE id_produit = :id_produit AND id_panier = :id_panier";
                 $requete_augmente = $pdo->prepare($augmente);
                 $requete_augmente->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+                $_SESSION["message_success"] = "Article ajouté au panier !";
             }
         }else{
             if ($stock_dispo > 0) {
                 $requete_ajout = $pdo->prepare("INSERT INTO panier_produit(id_panier,id_produit,quantite) VALUES(:id_panier, :id_produit, 1);");
                 $requete_ajout->execute([":id_produit"=> $id_produit, ":id_panier"=> $id_panier]);
+                $_SESSION["message_success"] = "Article ajouté au panier !";
+            }
+            else{
+                $_SESSION["message_erreur"] = "Stock Indisponible pour cet article !";
             }
         }
 
-        }else if ($action === 'payer') {
-        $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');
-        $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
-        $verif = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($verif) {
-            $stmt_info = $pdo->prepare("SELECT pp.quantite
-                FROM panier_produit pp
-                WHERE pp.id_produit = :id_produit AND pp.id_panier = :id_panier
-            ");
-            $stmt_info->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
-            $info = $stmt_info->fetch(PDO::FETCH_ASSOC);
-            $quantite_actuelle = (int) $info['quantite'];
-            if ($quantite_actuelle < $stock_dispo) {
-                $augmente = "UPDATE panier_produit 
-                SET quantite = quantite + 1 
-                WHERE id_produit = :id_produit AND id_panier = :id_panier";
-                $requete_augmente = $pdo->prepare($augmente);
-                $requete_augmente->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
-            }
-        }else{
-            if ($stock_dispo > 0) {
-                $requete_ajout = $pdo->prepare("INSERT INTO panier_produit(id_panier,id_produit,quantite) VALUES(:id_panier, :id_produit, 1);");
-                $requete_ajout->execute([":id_produit"=> $id_produit, ":id_panier"=> $id_panier]);
-            }
         }
-        echo "<script>
-            window.location.href = 'panier.php';
-        </script>";
-        exit();
+        else if ($action === 'payer'){
+            $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');
+            $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+            $verif = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($verif) {
+                $stmt_info = $pdo->prepare("SELECT pp.quantite
+                    FROM panier_produit pp
+                    WHERE pp.id_produit = :id_produit AND pp.id_panier = :id_panier
+                ");
+                $stmt_info->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+                $info = $stmt_info->fetch(PDO::FETCH_ASSOC);
+                $quantite_actuelle = (int) $info['quantite'];
+                if ($quantite_actuelle < $stock_dispo) {
+                    $augmente = "UPDATE panier_produit 
+                    SET quantite = quantite + 1 
+                    WHERE id_produit = :id_produit AND id_panier = :id_panier";
+                    $requete_augmente = $pdo->prepare($augmente);
+                    $requete_augmente->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+                }
+                $_SESSION["message_success"] = "Article ajouté au panier !";
+            }else{
+                if ($stock_dispo > 0) {
+                    $requete_ajout = $pdo->prepare("INSERT INTO panier_produit(id_panier,id_produit,quantite) VALUES(:id_panier, :id_produit, 1);");
+                    $requete_ajout->execute([":id_produit"=> $id_produit, ":id_panier"=> $id_panier]);
+                    $_SESSION["message_success"] = "Article ajouté au panier !";
+                }
+                else{
+                    $_SESSION["message_erreur"] = "Stock Indisponible pour cet article !";
+                }
+            }
+            echo "<script>
+                window.location.href = 'panier.php';
+            </script>";
+            exit();
         }
     }
 }
@@ -691,7 +702,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     <footer class="footer mobile">
         <?php include 'footer.php'?>
     </footer>
-
+    <div id="toast-global" class="toast"></div> 
     <script>
         // Sélection des éléments
         const miniatures = document.querySelectorAll('.miniatures img');
@@ -749,4 +760,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     <script src="/front_office/front_end/assets/js/AvisLike.js"></script>
     <script src="/front_office/front_end/assets/js/noteEtoile.js"></script>
     <script src="/front_office/front_end/assets/js/reponseVendeur.js"></script>
+    <script src="../assets/js/toast.js"></script>
+    <?php if (isset($_SESSION['message_success'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_success']); ?>", "succes");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_success']); 
+        ?>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['message_erreur'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_erreur']); ?>", "erreur");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_erreur']); 
+        ?>
+    <?php endif; ?>
 </body>

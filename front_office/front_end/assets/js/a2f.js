@@ -46,7 +46,12 @@ async function valider() {
         const result = await response.json();
 
         if (result.success === true) {                                                                                                    
-            window.location.href = "/front_office/front_end/html/consulterProfilClient.php";
+            
+            afficherToast("Authentification réussie ! Redirection en cours...", "succes");
+            
+            setTimeout(() => {
+                window.location.href = "/front_office/front_end/html/consulterProfilClient.php";
+            }, 1500);
         } else {
             divErreur.innerText = result.message;
         }

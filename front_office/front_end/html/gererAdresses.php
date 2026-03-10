@@ -59,6 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ]);
                     
                     $message_succes = "Adresse ajoutée avec succès !";
+                    
+
                 }
             }
         }
@@ -167,6 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message_succes = "Adresse supprimée avec succès !";
             }
         }
+        $_SESSION['message'] = $message_succes;
         
     } catch (PDOException $e) {
         $message_erreur = "Erreur : " . $e->getMessage();
@@ -701,10 +704,11 @@ try {
             <a href="compte.php" class="btn btn-compte">← Retour au compte</a>
         </div>
     </main>
-
+    <div id="toast-global" class="toast"></div>                
     <footer class="footer mobile">
         <?php include 'footer.php'?>
     </footer>
+    <script src="../assets/js/toast.js"></script>
 
     <script>
         function ouvrirModalModif(id) {
@@ -722,5 +726,15 @@ try {
             }
         }
     </script>
+    <?php if (isset($_SESSION['message'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message']); ?>", "erreur");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message']); 
+        ?>
+    <?php endif; ?>
 </body>
 </html>

@@ -52,6 +52,7 @@
                 $message = "Trop vite ! Veuillez patienter encore $temps_restant secondes.";
                 $erreur_a2f = "Code de vérification incorrect.";
                 $attente_a2f = true; 
+                $_SESSION["message_erreur"] = $erreur_a2f;
             } else {
                 $_SESSION['dernier_envoi'] = $time;
                 if ($secret) {
@@ -72,7 +73,7 @@
                             $_SESSION['login'] = $user['login'];
                             $_SESSION['id_client'] = $user['id_client'];
                             $_SESSION['id_panier'] = $panier['id_panier'];
-                            
+                            $_SESSION["message_success"] = "Connexion avec succès !";
                             // Nettoyage
                             unset($_SESSION['temp_user']);
                             unset($_SESSION['temp_secret']);
@@ -84,6 +85,7 @@
                         // Code incorrect, on réaffiche la popup A2F avec une erreur
                         $erreur_a2f = "Code de vérification incorrect.";
                         $attente_a2f = true; 
+                        $_SESSION["message_erreur"] = $erreur_a2f;
                     }
                 }
             }
@@ -101,7 +103,7 @@
                         $_SESSION['vendeur_nom'] = $vendeur['raison_sociale'];
                         $_SESSION['vendeur_email'] = $vendeur['login'];
                         $_SESSION['est_connecte'] = true;
-                        
+                        $_SESSION["message_success"] = "Connexion avec succès !";
                         // Nettoyage
                         unset($_SESSION['temp_vendeur']);
                         unset($_SESSION['temp_secret']);
@@ -112,6 +114,7 @@
                 } else {
                     $erreur_a2f = "Code de vérification incorrect.";
                     $attente_a2f = true; 
+                    $_SESSION["message_erreur"] = $erreur_a2f;
                 }
             }
         }
@@ -134,10 +137,12 @@
         // 1) LOGIN INCORRECT
         if (!$user) {
             $erreur_ident = "Identifiant incorrect";
+            $_SESSION["message_erreur"] = $erreur_ident;
         }
         // 2) MOT DE PASSE INCORRECT
         elseif ($mdp !== $user['mdp']) {
             $erreur_mdp = "Mot de passe incorrect";
+            $_SESSION["message_erreur"] = $erreur_mdp;
         }
         // 3) OK → DECLENCHER A2F (Au lieu de connecter direct)
         else {
@@ -167,6 +172,7 @@
                 $_SESSION['login'] = $user['login'];
                 $_SESSION['id_client'] = $user['id_client'];
                 $_SESSION['id_panier'] = $panier['id_panier'];
+                $_SESSION["message_success"] = "Connexion avec succès !";
                 // Nettoyage
                 unset($_SESSION['temp_user']);
 
@@ -320,7 +326,27 @@
             <a href="../../../back_office/connecter.php" class="forgot-password">Côté Vendeur</a>
         </form>
     </div>
-
-
+    <div id="toast-global" class="toast"></div>
+    <script src="../assets/js/toast.js"></script>
+    <?php if (isset($_SESSION["message_success"])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION["message_success"]); ?>", "succes");
+            });
+        </script>
+        <?php 
+            unset($_SESSION["message_success"]); 
+        ?>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['message_erreur'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_erreur']); ?>", "erreur");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_erreur']); 
+        ?>
+    <?php endif; ?>
 </body>
 </html>

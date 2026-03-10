@@ -4198,4 +4198,41 @@ table td {
   border-radius: 8px;
   margin-top: 20px;
   border: 1px solid #f5c6cb;
-}/*# sourceMappingURL=style.css.map */
+}
+
+/* Style de base du toast (caché par défaut) */
+.toast {
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #333; /* Couleur par défaut */
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 16px;
+  position: fixed;
+  z-index: 9999;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.4s, visibility 0.4s;
+  font-family: Arial, sans-serif;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Classe ajoutée en JS pour l'afficher */
+.toast.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Différents thèmes selon le contexte */
+.toast.succes {
+  background-color: #4CAF50;
+} /* Vert */
+.toast.erreur {
+  background-color: #F44336;
+} /* Rouge */
+.toast.info {
+  background-color: #2196F3;
+} /* Bleu *//*# sourceMappingURL=style.css.map */

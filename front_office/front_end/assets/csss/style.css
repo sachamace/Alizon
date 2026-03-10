@@ -573,7 +573,7 @@ footer.footer.mobile, footer.footer.tablette {
   flex-direction: column;
   gap: 25px;
 }
-.div__catalogue aside form label.filtre-label {
+.div__catalogue aside form label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]) {
   display: block;
   font-weight: 700;
   font-size: 0.85rem;
@@ -603,7 +603,7 @@ footer.footer.mobile, footer.footer.tablette {
   gap: 10px;
   align-items: center;
 }
-.div__catalogue aside form .inputs input[type=number], .div__catalogue aside form .inputs input[type=button] {
+.div__catalogue aside form .inputs input[type=number] {
   width: 100%;
   padding: 10px;
   border-radius: 8px;
@@ -612,7 +612,7 @@ footer.footer.mobile, footer.footer.tablette {
   margin-bottom: 0;
   transition: border-color 0.2s;
 }
-.div__catalogue aside form .inputs input[type=number]:focus, .div__catalogue aside form .inputs input[type=button]:focus {
+.div__catalogue aside form .inputs input[type=number]:focus {
   outline: none;
   border-color: #ff6ce2;
 }
@@ -1288,59 +1288,6 @@ footer.footer.mobile, footer.footer.tablette {
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: auto;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: none;
-  border: 1px solid transparent;
-  cursor: pointer;
-  color: #666;
-  font-size: 0.95rem;
-  font-weight: 500;
-  padding: 6px 12px;
-  border-radius: 20px;
-  transition: all 0.2s ease-in-out;
-  outline: none;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote svg {
-  transition: transform 0.2s ease, fill 0.2s ease, stroke 0.2s ease;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote:hover {
-  background-color: #f5f5f5;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote:hover, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote.active {
-  color: #2e7d32;
-  background-color: #e8f5e9;
-  border-color: #c8e6c9;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote:hover svg, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote.active svg {
-  stroke: #2e7d32;
-  fill: #e8f5e9;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote:active svg {
-  transform: scale(1.1) translateY(-2px);
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote:hover, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote.active {
-  color: #c62828;
-  background-color: #ffebee;
-  border-color: #ffcdd2;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote:hover svg, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote.active svg {
-  stroke: #c62828;
-  fill: #ffebee;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote:active svg {
-  transform: scale(1.1) translateY(2px);
 }
 .main_produit .avis .avis-item:last-child {
   margin-bottom: 0;
@@ -4198,4 +4145,180 @@ table td {
   border-radius: 8px;
   margin-top: 20px;
   border: 1px solid #f5c6cb;
+}
+
+.daltonien-switcher {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 14px;
+}
+.daltonien-switcher .dal-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s, border-color 0.15s;
+  font-size: 0;
+  padding: 0;
+}
+.daltonien-switcher .dal-btn:hover {
+  transform: scale(1.15);
+}
+.daltonien-switcher .dal-btn.actif {
+  border-color: #000;
+  transform: scale(1.15);
+}
+.daltonien-switcher .dal-btn.dal-deuteranopie {
+  background: #E8A000;
+}
+.daltonien-switcher .dal-btn.dal-protanopie {
+  background: #0077BB;
+}
+.daltonien-switcher .dal-btn.dal-tritanopie {
+  background: #CC3399;
+}
+
+body.deuteranopie {
+  --dal-primary: #E87722;
+  --dal-success: #0077BB;
+  --dal-error: #E87722;
+  --dal-warning: #885500;
+  --dal-badge: #0077BB;
+}
+body.deuteranopie .btn__connexion, body.deuteranopie .btn__link,
+body.deuteranopie .btn-popup.btn-valider,
+body.deuteranopie .payer-btn,
+body.deuteranopie .confirmer,
+body.deuteranopie .btn.btn-primary {
+  background-color: #E87722 !important;
+  border-color: #E87722 !important;
+}
+body.deuteranopie .badge-remise-panier,
+body.deuteranopie .remise-badge,
+body.deuteranopie .badge-remise {
+  background-color: #0077BB !important;
+}
+body.deuteranopie .commande-statut.statut-validée {
+  background: #0077BB !important;
+}
+body.deuteranopie .commande-statut.statut-livrée {
+  background: #0077BB !important;
+}
+body.deuteranopie .commande-statut.statut-expédiée {
+  background: #E87722 !important;
+}
+body.deuteranopie .commande-statut.statut-annulée {
+  background: #555555 !important;
+}
+body.deuteranopie .succes-message {
+  color: #0077BB !important;
+}
+body.deuteranopie span[style*="color:red"],
+body.deuteranopie .error,
+body.deuteranopie .erreur-msg {
+  color: #E87722 !important;
+}
+body.deuteranopie nav nav:last-child div a {
+  background: #E87722 !important;
+}
+body.deuteranopie a.btn__creer-compte,
+body.deuteranopie .gerer-adresses-btn {
+  background-color: #E87722 !important;
+}
+
+body.protanopie {
+  --dal-primary: #0099CC;
+  --dal-success: #0099CC;
+  --dal-error: #FF8C00;
+  --dal-warning: #FF8C00;
+  --dal-badge: #0099CC;
+}
+body.protanopie .btn__connexion, body.protanopie .btn__link,
+body.protanopie .btn-popup.btn-valider,
+body.protanopie .payer-btn,
+body.protanopie .confirmer,
+body.protanopie .btn.btn-primary {
+  background-color: #0099CC !important;
+  border-color: #0099CC !important;
+}
+body.protanopie .badge-remise-panier,
+body.protanopie .remise-badge,
+body.protanopie .badge-remise {
+  background-color: #0099CC !important;
+}
+body.protanopie .commande-statut.statut-validée {
+  background: #0099CC !important;
+}
+body.protanopie .commande-statut.statut-livrée {
+  background: #0099CC !important;
+}
+body.protanopie .commande-statut.statut-expédiée {
+  background: #FF8C00 !important;
+}
+body.protanopie .commande-statut.statut-annulée {
+  background: #555555 !important;
+}
+body.protanopie .succes-message {
+  color: #0099CC !important;
+}
+body.protanopie span[style*="color:red"],
+body.protanopie .error,
+body.protanopie .erreur-msg {
+  color: #FF8C00 !important;
+}
+body.protanopie nav nav:last-child div a {
+  background: #0099CC !important;
+}
+body.protanopie a.btn__creer-compte {
+  background-color: #0099CC !important;
+}
+
+body.tritanopie {
+  --dal-primary: #CC3399;
+  --dal-success: #009966;
+  --dal-error: #CC0000;
+  --dal-warning: #CC3399;
+  --dal-badge: #009966;
+}
+body.tritanopie .btn__connexion, body.tritanopie .btn__link,
+body.tritanopie .btn-popup.btn-valider,
+body.tritanopie .payer-btn,
+body.tritanopie .confirmer,
+body.tritanopie .btn.btn-primary {
+  background-color: #CC3399 !important;
+  border-color: #CC3399 !important;
+}
+body.tritanopie .badge-remise-panier,
+body.tritanopie .remise-badge,
+body.tritanopie .badge-remise {
+  background-color: #009966 !important;
+}
+body.tritanopie .commande-statut.statut-validée {
+  background: #009966 !important;
+}
+body.tritanopie .commande-statut.statut-livrée {
+  background: #009966 !important;
+}
+body.tritanopie .commande-statut.statut-expédiée {
+  background: #CC3399 !important;
+}
+body.tritanopie .commande-statut.statut-annulée {
+  background: #555555 !important;
+}
+body.tritanopie .succes-message {
+  color: #009966 !important;
+}
+body.tritanopie span[style*="color:red"],
+body.tritanopie .error,
+body.tritanopie .erreur-msg {
+  color: #CC0000 !important;
+}
+body.tritanopie nav nav:last-child div a {
+  background: #CC3399 !important;
+}
+body.tritanopie a.btn__creer-compte {
+  background-color: #CC3399 !important;
 }/*# sourceMappingURL=style.css.map */

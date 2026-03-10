@@ -4447,38 +4447,114 @@ table td {
 // 3 modes : deuteranopie (rouge/vert), protanopie (rouge sombre), tritanopie (bleu/jaune)
 // Chaque mode override les couleurs problématiques via une classe sur le body
 
-// --- Boutons de sélection dans le header ---
+// --- Dropdown accessibilité dans la barre du bas ---
 .daltonien-switcher {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-right: 14px;
+  position: relative;
+  margin-left: auto;
+  margin-right: 16px;
 
-  .dal-btn {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    border: 2px solid transparent;
+  // bouton déclencheur
+  .dal-trigger {
+    background: none;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
     cursor: pointer;
-    position: relative;
-    transition: transform 0.15s, border-color 0.15s;
-    font-size: 0;        // cache le texte du title
-    padding: 0;
+    color: $gray-darker;
+    letter-spacing: 0.03em;
+    transition: border-color 0.15s, background 0.15s;
 
     &:hover {
-      transform: scale(1.15);
+      border-color: $gray-dark;
+      background: #f5f5f5;
     }
 
-    // cercle actif : bordure noire
-    &.actif {
-      border-color: #000;
-      transform: scale(1.15);
+    // quand un mode est actif
+    &.dal-actif {
+      border-color: currentColor;
+      background: #f5f5f5;
+    }
+  }
+
+  // dropdown (s'ouvre vers le haut)
+  .dal-dropdown {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+    min-width: 200px;
+    z-index: 9999;
+    overflow: hidden;
+
+    &.ouvert { display: block; }
+
+    .dal-dropdown-titre {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: $gray-dark;
+      padding: 10px 14px 6px;
     }
 
-    // couleurs représentatives de chaque mode
-    &.dal-deuteranopie { background: $dal-btn-deuteranopie; }
-    &.dal-protanopie   { background: $dal-btn-protanopie; }
-    &.dal-tritanopie   { background: $dal-btn-tritanopie; }
+    .dal-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 9px 14px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: $gray-darker;
+      text-align: left;
+      transition: background 0.12s;
+
+      &:hover { background: #f5f5f5; }
+      &.actif  { background: #f0f0f0; font-weight: 700; }
+
+      // pastille colorée
+      .dal-pastille {
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      &.dal-deuteranopie .dal-pastille { background: $dal-btn-deuteranopie; }
+      &.dal-protanopie   .dal-pastille { background: $dal-btn-protanopie; }
+      &.dal-tritanopie   .dal-pastille { background: $dal-btn-tritanopie; }
+
+      .dal-sous-titre {
+        font-size: 0.72rem;
+        color: $gray-dark;
+        font-weight: 400;
+        display: block;
+      }
+    }
+
+    .dal-reset {
+      display: block;
+      width: 100%;
+      padding: 8px 14px;
+      background: none;
+      border: none;
+      border-top: 1px solid #eee;
+      cursor: pointer;
+      font-size: 0.78rem;
+      color: $gray-dark;
+      text-align: left;
+      transition: background 0.12s;
+
+      &:hover { background: #f5f5f5; }
+    }
   }
 }
 

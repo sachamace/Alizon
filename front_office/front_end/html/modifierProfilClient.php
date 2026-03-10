@@ -177,6 +177,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $errors['general'] = "Erreur lors de la mise à jour : " . $e->getMessage();
         }
     }
+    else{
+        $_SESSION["message_erreur"] = "Vos modifications n'ont pas été faites ! ";
+    }
 }
 ?>
 
@@ -340,6 +343,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             arrow.classList.toggle("rotate");
         });
     </script>
-
+    <?php if (isset($_SESSION['message_erreur'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_erreur']); ?>", "erreur");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_erreur']); 
+        ?>
+    <?php endif; ?>
 </body>
 </html>

@@ -620,7 +620,7 @@ footer.footer {
       flex-direction: column;
       gap: 25px;
 
-      label.filtre-label {
+      label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]) {
         display: block;
         font-weight: 700;
         font-size: 0.85rem;
@@ -652,7 +652,7 @@ footer.footer {
         gap: 10px;
         align-items: center;
 
-        input[type="number"], input[type="button"] {
+        input[type="number"] {
           width: 100%;
           padding: 10px;
           border-radius: 8px;
@@ -1430,77 +1430,6 @@ footer.footer {
           border-radius: 6px;
           cursor: pointer;
           transition: all 0.2s ease;
-        }
-        .avis-votes {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          margin-top: 10px;
-          margin-bottom: 10px;
-          margin-left: auto;
-
-          .btn-vote {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: none;
-            border: 1px solid transparent; // Prépare la bordure pour le hover/active
-            cursor: pointer;
-            color: #666;
-            font-size: 0.95rem;
-            font-weight: 500;
-            padding: 6px 12px;
-            border-radius: 20px; // Boutons arrondis (style pilule)
-            transition: all 0.2s ease-in-out;
-            outline: none;
-
-            svg {
-              transition: transform 0.2s ease, fill 0.2s ease, stroke 0.2s ease;
-            }
-
-            // Au survol général
-            &:hover {
-              background-color: #f5f5f5;
-            }
-
-            // --- POUCE VERT (UPVOTE) ---
-            &.btn-upvote {
-              &:hover, &.active {
-                color: #2e7d32; // Vert soutenu
-                background-color: #e8f5e9; // Fond vert très clair
-                border-color: #c8e6c9;
-                
-                svg {
-                  stroke: #2e7d32;
-                  fill: #e8f5e9; // Remplit légèrement l'intérieur de l'icône
-                }
-              }
-              
-              // Petit effet de saut quand on clique
-              &:active svg {
-                transform: scale(1.1) translateY(-2px);
-              }
-            }
-
-            // --- POUCE ROUGE (DOWNVOTE) ---
-            &.btn-downvote {
-              &:hover, &.active {
-                color: #c62828; // Rouge soutenu
-                background-color: #ffebee; // Fond rouge très clair
-                border-color: #ffcdd2;
-
-                svg {
-                  stroke: #c62828;
-                  fill: #ffebee;
-                }
-              }
-              
-              // Petit effet de baisse quand on clique
-              &:active svg {
-                transform: scale(1.1) translateY(2px);
-              }
-            }
-          }
         }
       }
 
@@ -4512,4 +4441,199 @@ table td {
     border-radius: 8px;
     margin-top: 20px;
     border: 1px solid #f5c6cb;
+}// =============================================================================
+// MODE DALTONIEN
+// =============================================================================
+// 3 modes : deuteranopie (rouge/vert), protanopie (rouge sombre), tritanopie (bleu/jaune)
+// Chaque mode override les couleurs problématiques via une classe sur le body
+
+// --- Boutons de sélection dans le header ---
+.daltonien-switcher {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 14px;
+
+  .dal-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.15s, border-color 0.15s;
+    font-size: 0;        // cache le texte du title
+    padding: 0;
+
+    &:hover {
+      transform: scale(1.15);
+    }
+
+    // cercle actif : bordure noire
+    &.actif {
+      border-color: #000;
+      transform: scale(1.15);
+    }
+
+    // couleurs représentatives de chaque mode
+    &.dal-deuteranopie { background: #E8A000; }   // orange (remplace vert pour dalto)
+    &.dal-protanopie   { background: #0077BB; }   // bleu fort
+    &.dal-tritanopie   { background: #CC3399; }   // rose/violet
+  }
+}
+
+// =============================================================================
+// MODE DEUTERANOPIE — confusion rouge/vert (le plus fréquent)
+// Palette : bleu + orange, on évite tout vert et rouge purs
+// =============================================================================
+body.deuteranopie {
+
+  // primary rose → orange vif
+  --dal-primary: #E87722;
+  --dal-success: #0077BB;     // vert → bleu
+  --dal-error:   #E87722;     // rouge → orange
+  --dal-warning: #885500;     // jaune/ambre foncé
+  --dal-badge:   #0077BB;
+
+  // boutons primaires (connexion, panier, etc.)
+  .btn__connexion,
+  .btn-popup.btn-valider,
+  .payer-btn,
+  .confirmer,
+  .btn.btn-primary {
+    background-color: #E87722 !important;
+    border-color: #E87722 !important;
+  }
+
+  // badges de remise (normalement rouge/vert)
+  .badge-remise-panier,
+  .remise-badge,
+  .badge-remise {
+    background-color: #0077BB !important;
+  }
+
+  // statuts de commande
+  .commande-statut {
+    &.statut-validée    { background: #0077BB !important; }
+    &.statut-livrée     { background: #0077BB !important; }
+    &.statut-expédiée   { background: #E87722 !important; }
+    &.statut-annulée    { background: #555555 !important; }
+  }
+
+  // succès (vert → bleu)
+  .succes-message { color: #0077BB !important; }
+
+  // erreurs (rouge → orange)
+  span[style*="color:red"],
+  .error,
+  .erreur-msg { color: #E87722 !important; }
+
+  // liens catégories dans le header
+  nav nav:last-child div a {
+    background: #E87722 !important;
+  }
+
+  // primary color général
+  a.btn__creer-compte,
+  .gerer-adresses-btn {
+    background-color: #E87722 !important;
+  }
+}
+
+// =============================================================================
+// MODE PROTANOPIE — le rouge disparaît, semble très sombre
+// Palette : bleu + cyan, on évite rouge et vert
+// =============================================================================
+body.protanopie {
+
+  --dal-primary: #0099CC;
+  --dal-success: #0099CC;
+  --dal-error:   #FF8C00;
+  --dal-warning: #FF8C00;
+  --dal-badge:   #0099CC;
+
+  .btn__connexion,
+  .btn-popup.btn-valider,
+  .payer-btn,
+  .confirmer,
+  .btn.btn-primary {
+    background-color: #0099CC !important;
+    border-color: #0099CC !important;
+  }
+
+  .badge-remise-panier,
+  .remise-badge,
+  .badge-remise {
+    background-color: #0099CC !important;
+  }
+
+  .commande-statut {
+    &.statut-validée    { background: #0099CC !important; }
+    &.statut-livrée     { background: #0099CC !important; }
+    &.statut-expédiée   { background: #FF8C00 !important; }
+    &.statut-annulée    { background: #555555 !important; }
+  }
+
+  .succes-message { color: #0099CC !important; }
+
+  span[style*="color:red"],
+  .error,
+  .erreur-msg { color: #FF8C00 !important; }
+
+  nav nav:last-child div a {
+    background: #0099CC !important;
+  }
+
+  a.btn__creer-compte {
+    background-color: #0099CC !important;
+  }
+}
+
+// =============================================================================
+// MODE TRITANOPIE — confusion bleu/jaune (rare)
+// Palette : rouge + vert, on évite bleu et jaune
+// =============================================================================
+body.tritanopie {
+
+  --dal-primary: #CC3399;
+  --dal-success: #009966;
+  --dal-error:   #CC0000;
+  --dal-warning: #CC3399;
+  --dal-badge:   #009966;
+
+  .btn__connexion,
+  .btn-popup.btn-valider,
+  .payer-btn,
+  .confirmer,
+  .btn.btn-primary {
+    background-color: #CC3399 !important;
+    border-color: #CC3399 !important;
+  }
+
+  .badge-remise-panier,
+  .remise-badge,
+  .badge-remise {
+    background-color: #009966 !important;
+  }
+
+  .commande-statut {
+    &.statut-validée    { background: #009966 !important; }
+    &.statut-livrée     { background: #009966 !important; }
+    &.statut-expédiée   { background: #CC3399 !important; }
+    &.statut-annulée    { background: #555555 !important; }
+  }
+
+  .succes-message { color: #009966 !important; }
+
+  span[style*="color:red"],
+  .error,
+  .erreur-msg { color: #CC0000 !important; }
+
+  nav nav:last-child div a {
+    background: #CC3399 !important;
+  }
+
+  a.btn__creer-compte {
+    background-color: #CC3399 !important;
+  }
 }

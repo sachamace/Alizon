@@ -16,6 +16,8 @@
     $mdpconfirm = "";
     $raison_sociale = "" ;
     $statut_juridique = "" ;
+    $adresse = "";
+    $erreur_adresse = "";
     
     // Si le bouton créer compte a été cliqué alors .
     if($_SERVER["REQUEST_METHOD"] === "POST"){
@@ -27,6 +29,12 @@
         $mdpconfirm = trim($_POST['confirm']);
         $raison_sociale = trim($_POST['raison']);
         $statut_juridique = trim($_POST['statut']);
+        $adresse = trim($_POST['adresse']);
+        if (empty($adresse)) {
+            $erreur_adresse = "L'adresse est obligatoire";
+        }
+
+
         // TEST SUR Base de données 
         // TEST pour le num_siren.
         $siren_sql = "SELECT num_siren FROM public.compte_vendeur";
@@ -77,38 +85,56 @@
             $erreur_tel,
             $erreur_mdp,
             $erreur_statut,
-            $erreur_mail
+            $erreur_mail,
+            $erreur_adresse
         ];
-        if(!array_filter($erreurs)){ // array_filter permet de vérifier si y'a des élements dans la array en gros si y'a rien ça fait la condition .
-            // La parties pour créer l'identifiants
-            //if(){
-                $sqlident = "INSERT INTO public.identifiants (login,mdp) VALUES (:login, :mdp)";
-                $stmt = $pdo->prepare($sqlident);
-                $stmt->execute([
-                    'login' => $mail,
-                    'mdp' => $mdp
-                ]);
-                // Partie pour récupérer le numéro de l'identifiants qu'on vient de créer .
-                $id_num_sql = "SELECT id_num FROM public.identifiants WHERE login = :login";
-                $stmtid = $pdo->prepare($id_num_sql);
-                $stmtid->execute(['login' => $mail]);
-                $id_num = (int) $stmtid->fetchColumn();
-                // Partie pour créer le compte vendeur avec toute ces informations.
-                $sqlvendeur = "INSERT INTO public.compte_vendeur (raison_sociale,statut_juridique,num_siren,num_tel,adresse_mail,id_num) VALUES (:raison_sociale,:statut_juridique,:num_siren,:num_tel,:adresse_mail,:id_num)";
-                $stmtvendeur = $pdo->prepare($sqlvendeur);
-                $stmtvendeur->execute([
-                    'raison_sociale' => $raison_sociale,
-                    'statut_juridique' => $statut_juridique,
-                    'num_siren' => $num_siren,
-                    'num_tel' => $tel,
-                    'adresse_mail' => $mail,
-                    'id_num' => $id_num
-                ]);
-            echo "<script>
-                window.location.href = 'connecter.php';
-            </script>";
+        if(!array_filter($erreurs)){
+            // Créer l'identifiant
+            $sqlident = "INSERT INTO public.identifiants (login, mdp) VALUES (:login, :mdp)";
+            $stmt = $pdo->prepare($sqlident);
+            $stmt->execute([
+                'login' => $mail,
+                'mdp'   => $mdp
+            ]);
+
+            // Récupérer l'id de l'identifiant créé
+            $id_num_sql = "SELECT id_num FROM public.identifiants WHERE login = :login";
+            $stmtid = $pdo->prepare($id_num_sql);
+            $stmtid->execute(['login' => $mail]);
+            $id_num = (int) $stmtid->fetchColumn();
+
+            // Créer le compte vendeur avec RETURNING pour récupérer l'id
+            $sqlvendeur = "INSERT INTO public.compte_vendeur (raison_sociale, statut_juridique, num_siren, num_tel, adresse_mail, id_num)
+                        VALUES (:raison_sociale, :statut_juridique, :num_siren, :num_tel, :adresse_mail, :id_num)
+                        RETURNING id_vendeur";
+            $stmtvendeur = $pdo->prepare($sqlvendeur);
+            $stmtvendeur->execute([
+                'raison_sociale'   => $raison_sociale,
+                'statut_juridique' => $statut_juridique,
+                'num_siren'        => $num_siren,
+                'num_tel'          => $tel,
+                'adresse_mail'     => $mail,
+                'id_num'           => $id_num
+            ]);
+            $id_vendeur = (int) $stmtvendeur->fetchColumn(); // ✅ PostgreSQL RETURNING
+
+            
+            // Lat/lng envoyés directement par le JS (geocodage côté client)
+            $latitude  = !empty($_POST['latitude'])  ? (float) $_POST['latitude']  : null;
+            $longitude = !empty($_POST['longitude']) ? (float) $_POST['longitude'] : null;
+            // Insérer dans adresse_vendeur
+            $sqlAdresse = "INSERT INTO adresse_vendeur (id_vendeur, adresse, latitude, longitude)
+                        VALUES (:id_vendeur, :adresse, :lat, :lng)";
+            $stmtAdresse = $pdo->prepare($sqlAdresse);
+            $stmtAdresse->execute([
+                'id_vendeur' => $id_vendeur,
+                'adresse'    => $adresse,
+                'lat'        => $latitude,
+                'lng'        => $longitude,
+            ]);
+
+            echo "<script>window.location.href = 'connecter.php';</script>";
             exit();
-            //}   
         }
     }
     
@@ -123,6 +149,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Créer un compte - Alizon</title>
     <link rel="stylesheet" href="front_end/assets/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <style>
+        .suggestions-list {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            list-style: none;
+            margin: 0;
+            padding: 6px;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .suggestions-list li {
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #333;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.15s;
+        }
+
+        .suggestions-list li:hover {
+            background: #f4f6ff;
+            color: #1a3f6f;
+        }
+
+        .suggestions-list li + li {
+            border-top: 1px solid #f0f0f0;
+        }
+    </style>
+    
 </head>
 
 <body class="body__creation-compte">
@@ -224,6 +293,21 @@
             </div>
             </div>
 
+            <div class="input-group">
+                <label class="input-label">Adresse complète</label>
+                <input class="input__creation-compte" type="text" id="adresse" name="adresse"
+                    placeholder="Ex: 12 Rue de la Paix, 29000 Quimper *"
+                    value="<?= htmlspecialchars($adresse) ?>" required />
+                <input type="hidden" name="latitude" id="latitude">
+                <input type="hidden" name="longitude" id="longitude">
+            </div>
+
+            <div id="map-validation" style="height:250px; width:100%; border-radius:10px; display:none; margin-top:10px;"></div>
+            <p id="coords-display" style="font-size:12px; color:#666; display:none;">
+                📍 Coordonnées : <span id="lat-display"></span>, <span id="lng-display"></span>
+                <em style="color:#e67e22;"> — Glissez le marker pour ajuster si nécessaire</em>
+            </p>
+
             <button type="submit" class="btn__creation-compte">Créer mon compte</button>
             
             <div class="separator">Déjà un compte ?</div>
@@ -232,5 +316,6 @@
         </form>
     </div>
     <script src="/front_office/front_end/assets/js/normalisation.js" ></script>
+    <script src="/front_office/front_end/assets/js/geocoder.js"></script>
 </body>
 </html>

@@ -620,7 +620,7 @@ footer.footer {
       flex-direction: column;
       gap: 25px;
 
-      label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]) {
+      label.filtre-label {
         display: block;
         font-weight: 700;
         font-size: 0.85rem;
@@ -652,7 +652,7 @@ footer.footer {
         gap: 10px;
         align-items: center;
 
-        input[type="number"] {
+        input[type="number"], input[type="button"] {
           width: 100%;
           padding: 10px;
           border-radius: 8px;

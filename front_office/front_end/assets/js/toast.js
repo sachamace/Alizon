@@ -16,5 +16,5 @@ function afficherToast(message, type = 'succes') {
     // 4. On cache le toast après 3 secondes (3000 millisecondes)
     toastTimeout = setTimeout(() => {
         toast.className = toast.className.replace("show", "");
-    }, 3000);
+    }, 1500);
 }

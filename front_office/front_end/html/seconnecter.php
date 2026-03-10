@@ -328,16 +328,6 @@
     </div>
     <div id="toast-global" class="toast"></div>
     <script src="../assets/js/toast.js"></script>
-    <?php if (isset($_SESSION["message_success"])): ?>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                afficherToast("<?php echo addslashes($_SESSION["message_success"]); ?>", "succes");
-            });
-        </script>
-        <?php 
-            unset($_SESSION["message_success"]); 
-        ?>
-    <?php endif; ?>
     <?php if (isset($_SESSION['message_erreur'])): ?>
         <script>
             document.addEventListener("DOMContentLoaded", function() {

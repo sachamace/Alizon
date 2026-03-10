@@ -587,5 +587,17 @@
             }
         });
     </script>
+    <div id="toast-global" class="toast"></div>
+    <script src="front_office/front_end/assets/js/toast.js"></script>
+    <?php if (isset($_SESSION["message_success"])): ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            afficherToast("<?php echo addslashes($_SESSION["message_success"]); ?>", "succes");
+        });
+    </script>
+    <?php 
+        unset($_SESSION["message_success"]); 
+    ?>
+<?php endif; ?>
 </body>
 </html>

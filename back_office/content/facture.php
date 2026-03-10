@@ -179,9 +179,9 @@ foreach ($articles_par_vendeur as $id_vendeur => $data_vendeur):
 <head>
     <meta charset='UTF-8'>
     <title>Facture <?= htmlspecialchars($numero_facture) ?></title>
-    <link rel="stylesheet" href="../front_end/assets/css/style.css" media="all">
+    <link rel="stylesheet" href="front_end/assets/css/style.css" media="all">
 </head>
-<body>
+<body class='body__facture'>
     <div class='header'>
         <div class='logo-section'>
             <img src="front_end/assets/images/logo_Alizon.png" alt="Logo Alizon">
@@ -308,6 +308,7 @@ foreach ($articles_par_vendeur as $id_vendeur => $data_vendeur):
         <p>Merci pour votre confiance !</p>
     </div>
 <body>
+</html>
     
     <?php if ($numero_facture_base <= count($articles_par_vendeur)): ?>
     <div class="page-break"></div>

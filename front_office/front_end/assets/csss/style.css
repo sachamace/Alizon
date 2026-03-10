@@ -573,7 +573,7 @@ footer.footer.mobile, footer.footer.tablette {
   flex-direction: column;
   gap: 25px;
 }
-.div__catalogue aside form label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]) {
+.div__catalogue aside form label.filtre-label {
   display: block;
   font-weight: 700;
   font-size: 0.85rem;
@@ -603,7 +603,7 @@ footer.footer.mobile, footer.footer.tablette {
   gap: 10px;
   align-items: center;
 }
-.div__catalogue aside form .inputs input[type=number] {
+.div__catalogue aside form .inputs input[type=number], .div__catalogue aside form .inputs input[type=button] {
   width: 100%;
   padding: 10px;
   border-radius: 8px;
@@ -612,7 +612,7 @@ footer.footer.mobile, footer.footer.tablette {
   margin-bottom: 0;
   transition: border-color 0.2s;
 }
-.div__catalogue aside form .inputs input[type=number]:focus {
+.div__catalogue aside form .inputs input[type=number]:focus, .div__catalogue aside form .inputs input[type=button]:focus {
   outline: none;
   border-color: #ff6ce2;
 }

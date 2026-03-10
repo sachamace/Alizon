@@ -6207,7 +6207,7 @@ textarea.error:focus {
 
 .stats-kpi {
   display: flex;
-  gap: 3rem;
+  gap: 0;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid #e0e0e0;
@@ -6216,16 +6216,24 @@ textarea.error:focus {
 .kpi-item {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.3rem;
+  padding-right: 3rem;
+}
+.kpi-item + .kpi-item {
+  padding-left: 3rem;
+  border-left: 1px solid #e0e0e0;
 }
 .kpi-item .kpi-label {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 .kpi-item .kpi-value {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: #000;
+  line-height: 1;
 }
 
 .stats-charts {

@@ -139,16 +139,12 @@ header nav nav:last-child div button {
   }
 }
 header nav nav:last-child a {
+  margin-left: auto;
   text-decoration: none;
   color: #000;
   font-size: 23px;
   font-weight: bold;
   margin-right: 30px;
-}
-header nav nav:last-child .daltonien-switcher {
-  margin-left: auto;
-  margin-right: 16px;
-  flex-shrink: 0;
 }
 @media (max-width: 428px) {
   header nav nav:last-child {
@@ -1292,59 +1288,6 @@ footer.footer.mobile, footer.footer.tablette {
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: auto;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: none;
-  border: 1px solid transparent;
-  cursor: pointer;
-  color: #666;
-  font-size: 0.95rem;
-  font-weight: 500;
-  padding: 6px 12px;
-  border-radius: 20px;
-  transition: all 0.2s ease-in-out;
-  outline: none;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote svg {
-  transition: transform 0.2s ease, fill 0.2s ease, stroke 0.2s ease;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote:hover {
-  background-color: #f5f5f5;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote:hover, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote.active {
-  color: #2e7d32;
-  background-color: #e8f5e9;
-  border-color: #c8e6c9;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote:hover svg, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote.active svg {
-  stroke: #2e7d32;
-  fill: #e8f5e9;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-upvote:active svg {
-  transform: scale(1.1) translateY(-2px);
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote:hover, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote.active {
-  color: #c62828;
-  background-color: #ffebee;
-  border-color: #ffcdd2;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote:hover svg, .main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote.active svg {
-  stroke: #c62828;
-  fill: #ffebee;
-}
-.main_produit .avis .avis-item .avis-button .avis-votes .btn-vote.btn-downvote:active svg {
-  transform: scale(1.1) translateY(2px);
 }
 .main_produit .avis .avis-item:last-child {
   margin-bottom: 0;
@@ -4205,111 +4148,36 @@ table td {
 }
 
 .daltonien-switcher {
-  position: relative;
-  margin-left: auto;
-  margin-right: 16px;
-}
-.daltonien-switcher .dal-trigger {
-  background: none;
-  border: 1px solid #bbb;
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  color: #333;
-  letter-spacing: 0.03em;
-  transition: border-color 0.15s, background 0.15s;
-}
-.daltonien-switcher .dal-trigger:hover {
-  border-color: #666;
-  background: #f5f5f5;
-}
-.daltonien-switcher .dal-trigger.dal-actif {
-  border-color: currentColor;
-  background: #f5f5f5;
-}
-.daltonien-switcher .dal-dropdown {
-  display: none;
-  position: absolute;
-  bottom: calc(100% + 8px);
-  right: 0;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
-  z-index: 9999;
-  overflow: hidden;
-}
-.daltonien-switcher .dal-dropdown.ouvert {
-  display: block;
-}
-.daltonien-switcher .dal-dropdown .dal-dropdown-titre {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #666;
-  padding: 10px 14px 6px;
-}
-.daltonien-switcher .dal-dropdown .dal-option {
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 9px 14px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 0.85rem;
-  color: #333;
-  text-align: left;
-  transition: background 0.12s;
+  gap: 6px;
+  margin-right: 14px;
 }
-.daltonien-switcher .dal-dropdown .dal-option:hover {
-  background: #f5f5f5;
-}
-.daltonien-switcher .dal-dropdown .dal-option.actif {
-  background: #f0f0f0;
-  font-weight: 700;
-}
-.daltonien-switcher .dal-dropdown .dal-option .dal-pastille {
-  width: 13px;
-  height: 13px;
+.daltonien-switcher .dal-btn {
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  flex-shrink: 0;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+  font-size: 0;
+  padding: 0;
 }
-.daltonien-switcher .dal-dropdown .dal-option.dal-deuteranopie .dal-pastille {
+.daltonien-switcher .dal-btn:hover {
+  transform: scale(1.15);
+}
+.daltonien-switcher .dal-btn.actif {
+  border-color: #000;
+  transform: scale(1.15);
+}
+.daltonien-switcher .dal-btn.dal-deuteranopie {
   background: #E8A000;
 }
-.daltonien-switcher .dal-dropdown .dal-option.dal-protanopie .dal-pastille {
+.daltonien-switcher .dal-btn.dal-protanopie {
   background: #0077BB;
 }
-.daltonien-switcher .dal-dropdown .dal-option.dal-tritanopie .dal-pastille {
+.daltonien-switcher .dal-btn.dal-tritanopie {
   background: #CC3399;
-}
-.daltonien-switcher .dal-dropdown .dal-option .dal-sous-titre {
-  font-size: 0.72rem;
-  color: #666;
-  font-weight: 400;
-  display: block;
-}
-.daltonien-switcher .dal-dropdown .dal-reset {
-  display: block;
-  width: 100%;
-  padding: 8px 14px;
-  background: none;
-  border: none;
-  border-top: 1px solid #eee;
-  cursor: pointer;
-  font-size: 0.78rem;
-  color: #666;
-  text-align: left;
-  transition: background 0.12s;
-}
-.daltonien-switcher .dal-dropdown .dal-reset:hover {
-  background: #f5f5f5;
 }
 
 body.deuteranopie {

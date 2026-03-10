@@ -155,5 +155,17 @@ try {
     <footer class="footer mobile">
         <?php include 'footer.php'?>
     </footer>
+    <div id="toast-global" class="toast"></div>
+    <script src="../assets/js/toast.js"></script>
+    <?php if (isset($_SESSION['message'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message']); ?>", "erreur");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message']); 
+        ?>
+    <?php endif; ?>
 </body>
 </html>

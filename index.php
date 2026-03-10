@@ -73,6 +73,13 @@
             border-radius: 0;
         }
 
+        @media (max-width: 768px) {
+            #map-panel {
+                width: 75vw;
+                min-width: unset;
+            }
+        }
+
         .dept-tooltip {
             background: white;
             border: 1px solid #2c5f8a;
@@ -510,7 +517,7 @@
                 }).addTo(map);
             });
 
-        //Définition des fonds de carte
+        //définition des fonds de carte
         const baseLayers = {
             "Standard": L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
@@ -534,10 +541,10 @@
             })
         };
 
-        // Ajouter le fond par défaut
+        // ajoute le fond par défaut
         baseLayers["Standard"].addTo(map);
 
-        // Contrôle natif Leaflet (en haut à droite)
+        //ajoute le bouton en bas à droite
         L.control.layers(baseLayers, null, { position: 'bottomleft' }).addTo(map);
 
         const mapPanel = document.getElementById('map-panel');
@@ -549,10 +556,23 @@
             mapOuvert = !mapOuvert;
             mapPanel.classList.toggle('ouvert', mapOuvert);
             toggleBtn.textContent = mapOuvert ? '›' : '‹';
-            toggleBtn.style.right = mapOuvert ? '50vw' : '0'; 
 
             if (mapOuvert) {
-                setTimeout(() => map.invalidateSize(), 400);
+                setTimeout(() => {
+                    toggleBtn.style.right = mapPanel.offsetWidth + 'px';
+                    map.invalidateSize();
+                }, 10);
+            } else {
+                toggleBtn.style.right = '0';
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (mapOuvert) {
+                toggleBtn.style.right = mapPanel.offsetWidth + 'px';
+                setTimeout(() => map.invalidateSize(), 100);
+            } else {
+                toggleBtn.style.right = '0';
             }
         });
 

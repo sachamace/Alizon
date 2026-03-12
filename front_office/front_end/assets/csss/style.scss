@@ -4533,15 +4533,14 @@ table td {
 }
 
 
-body.deuteranopie { @include dal-primary-override($dal-deut-primary); }
-body.protanopie   { @include dal-primary-override($dal-prot-primary); }
-body.tritanopie   { @include dal-primary-override($dal-trit-primary); }
+
 
 // =============================================================================
 // MODE DEUTERANOPIE — confusion rouge/vert (le plus fréquent)
 // Palette : bleu + orange, on évite tout vert et rouge purs
 // =============================================================================
 body.deuteranopie {
+  @include dal-primary-override($dal-deut-primary);
 
   // primary rose → orange vif
   --dal-primary: #{$dal-deut-primary};
@@ -4600,6 +4599,7 @@ body.deuteranopie {
 // Palette : bleu + cyan, on évite rouge et vert
 // =============================================================================
 body.protanopie {
+  @include dal-primary-override($dal-prot-primary);
 
   --dal-primary: #{$dal-prot-primary};
   --dal-success: #{$dal-prot-primary};
@@ -4649,6 +4649,7 @@ body.protanopie {
 // Palette : rouge + vert, on évite bleu et jaune
 // =============================================================================
 body.tritanopie {
+  @include dal-primary-override($dal-trit-primary);
 
   --dal-primary: #{$dal-trit-primary};
   --dal-success: #{$dal-trit-success};

@@ -225,6 +225,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
+//traitement ajout favoris
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'toggle_favori') {
+    header('Content-Type: application/json');
+
+    if (!isset($_SESSION['id_client'])) {
+        echo json_encode(['success' => false, 'redirect' => 'seconnecter.php']);
+        exit();
+    }
+
+    $id_client = $_SESSION['id_client'];
+    $id_produit_fav = (int) $_POST['id_produit'];
+
+    try {
+        // verification si le produit est dans les favoris du client
+        $stmt_check_fav = $pdo->prepare("SELECT 1 FROM favoris WHERE id_client = ? AND id_produit = ?");
+        $stmt_check_fav->execute([$id_client, $id_produit_fav]);
+        $est_favori = $stmt_check_fav->fetchColumn();
+
+        if ($est_favori) {
+            $stmt_del_fav = $pdo->prepare("DELETE FROM favoris WHERE id_client = ? AND id_produit = ?");
+            $stmt_del_fav->execute([$id_client, $id_produit_fav]);
+            echo json_encode(['success' => true, 'etat' => 'retire']);
+        } else {
+            // S'il n'y est pas, on l'ajoute
+            $stmt_add_fav = $pdo->prepare("INSERT INTO favoris (id_client, id_produit) VALUES (?, ?)");
+            $stmt_add_fav->execute([$id_client, $id_produit_fav]);
+            echo json_encode(['success' => true, 'etat' => 'ajoute']);
+        }
+        exit();
+
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'error' => 'Erreur BDD : ' . $e->getMessage()]);
+        exit();
+    }
+}
+
 // traitement des autres actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     
@@ -379,13 +415,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     </div>
                     <?php
                     $couleur_fill_heart = "#e8e8e8";
+                    $couleur_stroke_heart = "black";
+
+                    // Si l'utilisateur est connecté, on vérifie s'il a déjà liké ce produit
+                    if (isset($_SESSION['id_client'])) {
+                        $stmt_check_initial = $pdo->prepare("SELECT 1 FROM favoris WHERE id_client = ? AND id_produit = ?");
+                        $stmt_check_initial->execute([$_SESSION['id_client'], $id_produit]);
+                        if ($stmt_check_initial->fetchColumn()) {
+                            $couleur_fill_heart = "red";
+                            $couleur_stroke_heart = "red";
+                        }
+                    }
                     ?>
-                    <button class="btn-favoris" 
-                            data-id-produit="<?= $un_produit['id_produit'] ?>"
-                            <?= $deactiver ?>>
-                        <svg width="24" height="24" viewBox="0 0 24 24" 
+                    <button class="btn-favoris" data-id-produit="<?= $id_produit ?>">
+                        <svg width="3.25em" height="3.25em" viewBox="0 0 24 24" 
                             fill="<?= $couleur_fill_heart ?>" 
-                            stroke="black" 
+                            stroke="<?= $couleur_stroke_heart ?>" 
                             stroke-width="2" 
                             stroke-linecap="round" 
                             stroke-linejoin="round">
@@ -764,4 +809,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     <script src="/front_office/front_end/assets/js/AvisLike.js"></script>
     <script src="/front_office/front_end/assets/js/noteEtoile.js"></script>
     <script src="/front_office/front_end/assets/js/reponseVendeur.js"></script>
+    <script src="/front_office/front_end/assets/js/favoris.js"></script>
 </body>

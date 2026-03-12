@@ -294,9 +294,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $requete_ajout->execute([":id_produit"=> $id_produit, ":id_panier"=> $id_panier]);
                 $_SESSION["message_success"] = "Article ajouté au panier !";
             }
-            else{
-                $_SESSION["message_erreur"] = "Stock Indisponible pour cet article !";
-            }
         }
 
         }
@@ -326,9 +323,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     $requete_ajout = $pdo->prepare("INSERT INTO panier_produit(id_panier,id_produit,quantite) VALUES(:id_panier, :id_produit, 1);");
                     $requete_ajout->execute([":id_produit"=> $id_produit, ":id_panier"=> $id_panier]);
                     $_SESSION["message_success"] = "Article ajouté au panier !";
-                }
-                else{
-                    $_SESSION["message_erreur"] = "Stock Indisponible pour cet article !";
                 }
             }
             echo "<script>
@@ -800,16 +794,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         </script>
         <?php 
             unset($_SESSION['message_success']); 
-        ?>
-    <?php endif; ?>
-    <?php if (isset($_SESSION['message_erreur'])): ?>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                afficherToast("<?php echo addslashes($_SESSION['message_erreur']); ?>", "erreur");
-            });
-        </script>
-        <?php 
-            unset($_SESSION['message_erreur']); 
         ?>
     <?php endif; ?>
 </body>

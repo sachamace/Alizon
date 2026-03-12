@@ -46,7 +46,7 @@ function injecterFiltresSVG() {
 }
 
 function appliquerMode(mode) {
-    document.body.style.filter = '';
+    document.documentElement.style.filter = '';
 
     document.querySelectorAll('.dal-btn, .dal-option').forEach(btn => {
         btn.classList.toggle('actif', btn.dataset.mode === mode);
@@ -55,7 +55,7 @@ function appliquerMode(mode) {
     const trigger = document.getElementById('dal-trigger');
 
     if (mode && MODES[mode]) {
-        document.body.style.filter = MODES[mode];
+        document.documentElement.style.filter = MODES[mode];
         localStorage.setItem('daltonien', mode);
         if (trigger) trigger.classList.add('dal-actif');
     } else {
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.dal-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const mode = btn.dataset.mode;
-            const actif = document.body.style.filter.includes('filter-' + mode);
+            const actif = document.documentElement.style.filter.includes('filter-' + mode);
             appliquerMode(actif ? null : mode);
         });
     });
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.dal-option').forEach(btn => {
         btn.addEventListener('click', () => {
             const mode = btn.dataset.mode;
-            const actif = document.body.style.filter.includes('filter-' + mode);
+            const actif = document.documentElement.style.filter.includes('filter-' + mode);
             appliquerMode(actif ? null : mode);
             if (dropdown) dropdown.classList.remove('ouvert');
         });

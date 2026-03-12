@@ -223,4 +223,19 @@
   // profil
   .modifier { background: $color !important; }
   .profil-container > div > a { color: $color; }
+
+  // page produit — boutons sans classe (.boutons button)
+  .boutons button { background: $color !important; border-color: $color !important; }
+
+  // page produit — bouton supprimer avis
+  .btn-supprimer-avis { background: $color !important; border-color: $color !important; }
+
+  // page produit — bouton envoyer avis
+  .form-avis button[type="submit"] { background: $color !important; border-color: $color !important; }
+
+  // page produit — lien "Voir les X avis"
+  .stock-avis a { color: $color !important; }
+
+  // page produit — textarea focus
+  .form-avis textarea:focus { border-color: $color !important; }
 }

@@ -76,7 +76,7 @@ $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produ
 $stmt_stock->execute([':id_produit' => $id_produit]);
 $stock_dispo = (int) $stmt_stock->fetchColumn();
 
-if($stock_dispo < 0){
+if($stock_dispo == 0){
     $button = false;
 }
 

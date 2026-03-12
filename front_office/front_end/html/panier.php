@@ -93,7 +93,6 @@ try {
             </section>
         <?php else : ?>
             <section>
-                <h2>Votre panier :</h2>
                 <?php
                 $prixtotal = 0;
                 $taxe = 0;
@@ -212,21 +211,62 @@ try {
                 }
                 ?>
             </section>
+            <div class="colonne-droite-panier">
+
+                <aside class="box-droite">
+                    <h4>Prix total: <?= number_format($prixtotal, 2, ',', ' ') ?>€</h4>
+                    <p>prix hors taxe : <?= number_format($prixht, 2, ',', ' ') ?>€ <br>
+                    taxe : <?= number_format($taxe, 2, ',', ' ') ?>€ </p>
+                    <a href="paiement.php" class="btn-paiement">Passer au paiement</a> 
+                </aside>
+
+                <aside class="box-droite liste-souhait">
+                    <h2>Liste de souhait</h2>
+                    <?php
+                    $stmt_fav = $pdo->prepare("
+                        SELECT p.id_produit, p.nom_produit, 
+                            (SELECT chemin_image FROM media_produit WHERE id_produit = p.id_produit LIMIT 1) AS image_produit
+                        FROM favoris f
+                        JOIN produit p ON f.id_produit = p.id_produit
+                        WHERE f.id_client = ?
+                    ");
+                    $stmt_fav->execute([$_SESSION["id_client"]]);
+                    $favoris = $stmt_fav->fetchAll(PDO::FETCH_ASSOC);
+                    if (count($favoris) != 0){
+                        foreach ($favoris as $fav) {
+                            $image_src = !empty($fav['image_produit']) ? htmlspecialchars($fav['image_produit']) : 'front_end/assets/images_produits/default.png';
+                            ?>
+                            <div class="item-souhait">
+                                <img src="<?= $image_src ?>" alt="<?= htmlspecialchars($fav['nom_produit']) ?>" class="img-souhait">
+                                <div class="details-souhait">
+                                    <h5><?= htmlspecialchars($fav['nom_produit']) ?></h5>
+                                    <div class="actions-souhait">
+                                        <form action="" method="post">
+                                            <input type="hidden" name="action" value="ajouter_panier_depuis_fav">
+                                            <input type="hidden" name="id_produit" value="<?= $fav['id_produit'] ?>">
+                                            <button type="submit" class="btn-ajout-panier">Ajouter</button>
+                                        </form>
+                                        <a href="produitdetail.php?article=<?= $fav['id_produit'] ?>" class="lien-savoir-plus">En savoir plus</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="separateur-souhait">
+                            <?php
+                        }
+                    }
+                    else{
+                        ?>
+                        <p>Vos articles mis de côté apparaîtront ici.</p>
+                        <?php
+                    }
+                    ?>
+                </aside>
+            </div>
             <form class="vider-panier" method="post" style="text-align:center; margin-top: 2.5em;">
                 <input type="hidden" name="action" value="vider_panier">
                 <input type="hidden" name="id_produit" value="2">
                 <button type="submit" class="btn-vider">Vider le panier</button>
             </form>
-            <aside>
-                <?php
-                echo '
-                    <h4>Prix total: ' . number_format($prixtotal, 2, ',', ' ') . '€</h4>
-                    <p>prix hors taxe : ' . number_format($prixht, 2, ',', ' ') . '€ <br>
-                    taxe : ' . number_format($taxe, 2, ',', ' ') . '€ </p>
-                    <a href="paiement.php">Passer au paiement</a> 
-                    '
-                    ?>
-            </aside>
         <?php endif; ?>
     </main>
     <footer class="footer mobile">

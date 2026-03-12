@@ -224,25 +224,25 @@
   .modifier { background: $color !important; }
   .profil-container > div > a { color: $color; }
 
-  // page produit — boutons Ajouter au panier / Payer maintenant
+  // page produit — bouton Payer maintenant (fond primary)
   .main_produit .fiche-produit .fiche-container .infos-produit .boutons button {
     background: $color !important;
     box-shadow: none !important;
   }
-  // "Ajouter au panier" (premier bouton = fond noir, on ne touche pas)
-  // "Payer maintenant" (second bouton = primary)
-  .main_produit .fiche-produit .fiche-container .infos-produit .boutons button:not(:first-child) {
+
+  // page produit — lien "Voir les X avis"
+  .main_produit .fiche-produit .fiche-container .infos-produit .stock-avis .avis a {
+    color: $color !important;
+  }
+
+  // page produit — bouton envoyer avis
+  .main_produit .avis .form-avis button {
     background: $color !important;
+    box-shadow: none !important;
   }
 
   // page produit — bouton supprimer avis
   .btn-supprimer-avis { background: $color !important; }
-
-  // page produit — bouton envoyer avis
-  .form-avis button[type="submit"] { background: $color !important; }
-
-  // page produit — lien "Voir les X avis"
-  .stock-avis a { color: $color !important; }
 
   // page produit — textarea focus
   .form-avis textarea:focus { border-color: $color !important; }

@@ -174,15 +174,15 @@
   .btn-primary:hover,
   .payer-btn,
   .confirmer,
-  .compte__button,
   .toggle-view-reponse { background: $color !important; border-color: $color !important; }
 
   // bouton créer compte
   .btn__creer-compte { border-color: $color; }
   .btn__creer-compte:hover { background: $color; }
 
-  // prix produits
+  // prix catalogue et page produit
   .prix { color: $color; }
+  .prix-valeur { background: linear-gradient(135deg, $color 0%, $color 100%) !important; box-shadow: none !important; }
 
   // scrollbar
   ::-webkit-scrollbar-thumb { background: $color; }
@@ -191,18 +191,36 @@
   input[type="checkbox"] { accent-color: $color; }
 
   // page produit
-  .prix-valeur { background: $color !important; }
   .description { border-left-color: $color !important; }
   .avis-item { border-left-color: $color !important; }
+  .toggle-view-reponse { background: $color !important; border-color: $color !important; }
+  i { color: $color; }
 
   // steps commande
-  .step.active .step-icon { background: $color; border-color: $color; }
-  .step-line.full { background: $color; }
+  .step.active .step-icon { background: $color !important; border-color: $color !important; box-shadow: none !important; }
+  .step-line.full { background: $color !important; }
 
   // confirmation achat
   .client-info { border-left-color: $color; }
   .order-details h3 { border-bottom-color: $color; }
 
-  // compte
-  .compte__button { background: $color; }
+  // compte desktop — cards
+  .card { border-color: $color; }
+
+  // compte mobile — boutons
+  .compte__button { background: $color !important; }
+
+  // panier
+  .main_panier a,
+  .en_savoir_plus,
+  aside a { background: $color !important; }
+
+  // adresses
+  a[href*="gererAdresses"],
+  .btn-defaut,
+  .btn-modifier-adresse { background: $color !important; border-color: $color !important; }
+
+  // profil
+  .modifier { background: $color !important; }
+  .profil-container > div > a { color: $color; }
 }

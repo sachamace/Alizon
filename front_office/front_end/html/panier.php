@@ -2,11 +2,6 @@
 include 'config.php';
 include 'sessionindex.php';
 
-// recuperation du stock
-$stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
-$stmt_stock->execute([':id_produit' => $id_produit]);
-$stock_dispo = (int) $stmt_stock->fetchColumn();
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_produit = (int) $_POST['id_produit'];
     $action = $_POST['action'];
@@ -51,6 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
                 
                 $_SESSION["message_moins"] = "Quantité soustraie avec succès !";
+            }else{
+                $_SESSION["message_error"] = "Retirer impossible - Cliquer sur supprimer";
             }
         } elseif ($action === 'supprimer_produit') {
             $stmt = $pdo->prepare("
@@ -108,34 +105,34 @@ try {
                 $taxe = 0;
                 $prixht = 0;
 
-                foreach ($articles as $article):
+                foreach ($articles as $article) {
                     $id_produit = (int) $article['id_produit'];
                     
                     // ✅ REQUÊTE CORRIGÉE - 4 CAS DE REMISES
                     $stmt_produit = $pdo->prepare("
                         SELECT p.*, 
-                            t.taux AS taux_tva,
-                            ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) AS NUMERIC), 2) AS prix_ttc_sans_remise,
-                            r.id_remise,
-                            r.nom_remise,
-                            r.type_remise,
-                            r.valeur_remise,
-                            CASE 
-                                WHEN r.id_remise IS NOT NULL AND r.type_remise = 'pourcentage' THEN
-                                    ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) * (1 - r.valeur_remise / 100) AS NUMERIC), 2)
-                                WHEN r.id_remise IS NOT NULL AND r.type_remise = 'fixe' THEN
-                                    GREATEST(0, ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) - r.valeur_remise AS NUMERIC), 2))
-                                ELSE
-                                    ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) AS NUMERIC), 2)
-                            END AS prix_ttc,
-                            CASE 
-                                WHEN r.id_remise IS NOT NULL AND r.type_remise = 'pourcentage' THEN
-                                    ROUND(CAST(p.prix_unitaire_ht * (1 - r.valeur_remise / 100) AS NUMERIC), 2)
-                                WHEN r.id_remise IS NOT NULL AND r.type_remise = 'fixe' THEN
-                                    ROUND(CAST(p.prix_unitaire_ht * (GREATEST(0, ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) - r.valeur_remise AS NUMERIC), 2)) / NULLIF(ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) AS NUMERIC), 2), 0)) AS NUMERIC), 2)
-                                ELSE
-                                    p.prix_unitaire_ht
-                            END AS prix_unitaire_ht_avec_remise
+                               t.taux AS taux_tva,
+                               ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) AS NUMERIC), 2) AS prix_ttc_sans_remise,
+                               r.id_remise,
+                               r.nom_remise,
+                               r.type_remise,
+                               r.valeur_remise,
+                               CASE 
+                                   WHEN r.id_remise IS NOT NULL AND r.type_remise = 'pourcentage' THEN
+                                       ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) * (1 - r.valeur_remise / 100) AS NUMERIC), 2)
+                                   WHEN r.id_remise IS NOT NULL AND r.type_remise = 'fixe' THEN
+                                       GREATEST(0, ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) - r.valeur_remise AS NUMERIC), 2))
+                                   ELSE
+                                       ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) AS NUMERIC), 2)
+                               END AS prix_ttc,
+                               CASE 
+                                   WHEN r.id_remise IS NOT NULL AND r.type_remise = 'pourcentage' THEN
+                                       ROUND(CAST(p.prix_unitaire_ht * (1 - r.valeur_remise / 100) AS NUMERIC), 2)
+                                   WHEN r.id_remise IS NOT NULL AND r.type_remise = 'fixe' THEN
+                                       ROUND(CAST(p.prix_unitaire_ht * (GREATEST(0, ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) - r.valeur_remise AS NUMERIC), 2)) / NULLIF(ROUND(CAST(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100) AS NUMERIC), 2), 0)) AS NUMERIC), 2)
+                                   ELSE
+                                       p.prix_unitaire_ht
+                               END AS prix_unitaire_ht_avec_remise
                         FROM produit p
                         LEFT JOIN taux_tva t ON p.id_taux_tva = t.id_taux_tva
                         LEFT JOIN remise r ON (
@@ -158,70 +155,67 @@ try {
                     $stmt_produit->execute([$id_produit]);
                     $produit = $stmt_produit->fetch(PDO::FETCH_ASSOC);
 
-                    if ($produit):
+                    if ($produit) {
                         $prixtotal += $produit["prix_ttc"] * $article['quantite'];
                         $taxe += ($produit['prix_ttc'] - $produit['prix_unitaire_ht_avec_remise']) * $article["quantite"];
                         $prixht += $produit['prix_unitaire_ht_avec_remise'] * $article['quantite'];
                         
                         $requete_img = $pdo->prepare('SELECT * FROM media_produit WHERE id_produit = :id_produit');
                         $requete_img->execute([':id_produit' => $id_produit]);
-                        $img = $requete_img->fetch(PDO::FETCH_ASSOC);
-                ?>
-                
-                    <article>
-                        <img src="<?= htmlspecialchars($img['chemin_image'] ?? '') ?>" alt="<?= htmlspecialchars($produit['nom_produit']) ?>">
+                        $img = $requete_img->fetch();
                         
-                        <div class="panier_info">
-                            <h4><?= htmlspecialchars($produit['nom_produit']) ?></h4>
-                            
-                            <?php if ($produit['id_remise']): ?>
-                                <span class="badge-remise-panier">
-                                    <?php if ($produit['type_remise'] === 'pourcentage'): ?>
-                                        -<?= number_format($produit['valeur_remise'], 0) ?>%
-                                    <?php else: ?>
-                                        -<?= number_format($produit['valeur_remise'], 2, ',', ' ') ?>€
-                                    <?php endif; ?>
-                                </span>
-                                <p class="prix-original-panier"><?= number_format($produit['prix_ttc_sans_remise'], 2, ',', ' ') ?> €</p>
-                            <?php endif; ?>
-                            
-                            <p class="prix-panier">Prix : <?= number_format($produit['prix_ttc'], 2, ',', ' ') ?> €</p>
-                            <p class="description-panier"><?= htmlspecialchars($produit['description_produit']) ?></p>
-                            <p class="stock-panier">Stock disponible : <?= htmlspecialchars($produit['stock_disponible']) ?></p>
-                            
-                            <div class="panier_bottom">
-                                <div class="panier_quantite">
-                                    <form action="" method="post" style="display:inline;">
-                                        <input type="hidden" name="action" value="moins">
-                                        <input type="hidden" name="id_produit" value="<?= htmlspecialchars($produit['id_produit']) ?>">
-                                        <button type="submit" >-</button>
-                                    </form>
+                        echo '
+                            <article>
+                                <img src="' . $img["chemin_image"] .'" alt="' . htmlspecialchars($produit['nom_produit']) . '">
+                                <div class="panier_info">
+                                    <h4>' . htmlspecialchars($produit['nom_produit']) . '</h4>';
+                        
+                        if ($produit['id_remise']) {
+                            echo '
+                                    <span class="badge-remise-panier">';
+                            if ($produit['type_remise'] === 'pourcentage') {
+                                echo '-' . number_format($produit['valeur_remise'], 0) . '%';
+                            } else {
+                                echo '-' . number_format($produit['valeur_remise'], 2, ',', ' ') . '€';
+                            }
+                            echo '  </span>
+                                    <p class="prix-original-panier">' . number_format($produit['prix_ttc_sans_remise'], 2, ',', ' ') . ' €</p>';
+                        }
+                        
+                        echo '
+                                    <p class="prix-panier">Prix : ' . number_format($produit['prix_ttc'], 2, ',', ' ') . ' €</p>
+                                    <p class="description-panier">' . htmlspecialchars($produit['description_produit']) . '</p>
+                                    <p class="stock-panier">Stock disponible : ' . htmlspecialchars($produit['stock_disponible']) . '</p>
+                                    <div class="panier_bottom">
+                                        <div class="panier_quantite">
+                                            <form action="" method="post" style="display:inline;">
+                                                <input type="hidden" name="action" value="moins">
+                                                <input type="hidden" name="id_produit" value="' . $produit["id_produit"] . '">
+                                                <button type="submit">-</button>
+                                            </form>
 
-                                    <p><?= htmlspecialchars($article['quantite']) ?></p>
+                                            <p>' . htmlspecialchars($article["quantite"]) . '</p>
 
-                                    <form action="" method="post" style="display:inline;">
-                                        <input type="hidden" name="action" value="plus">
-                                        <input type="hidden" name="id_produit" value="<?= htmlspecialchars($produit['id_produit']) ?>">
-                                        <button type="submit">+</button>
-                                    </form>
-                                </div>
-                                
-                                <div class="panier_actions">
-                                    <a href="produitdetail.php?article=<?= htmlspecialchars($produit['id_produit']) ?>" class="en_savoir_plus">En savoir plus</a>
+                                            <form action="" method="post" style="display:inline;">
+                                                <input type="hidden" name="action" value="plus">
+                                                <input type="hidden" name="id_produit" value="' . $produit["id_produit"] . '">
+                                                <button type="submit">+</button>
+                                            </form>
+                                        </div>
+                                        <div class="panier_actions">
+                                            <a href="produitdetail.php?article=' . $produit["id_produit"] . '" class="en_savoir_plus">En savoir plus</a>
 
-                                    <form class="supprimer-produit" method="post">
-                                        <input type="hidden" name="action" value="supprimer_produit">
-                                        <input type="hidden" name="id_produit" value="<?= htmlspecialchars($produit['id_produit']) ?>">
-                                        <button type="submit" class="btn-supprimer">Supprimer</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>  
-                    </article>
-                    
-                <?php 
-                    endif; // Fin du if ($produit)
-                endforeach; // Fin du foreach ($articles)
+                                            <form class="supprimer-produit" method="post">
+                                                <input type="hidden" name="action" value="supprimer_produit">
+                                                <input type="hidden" name="id_produit" value="' . $produit["id_produit"] . '">
+                                                <button type="submit" class="btn-supprimer">Supprimer</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>  
+                            </article>';
+                    }
+                }
                 ?>
             </section>
             <form class="vider-panier" method="post" style="text-align:center; margin-top: 2.5em;">
@@ -307,6 +301,16 @@ try {
         </script>
         <?php 
             unset($_SESSION['message_vider']); 
+        ?>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['message_error'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_error']); ?>", "error");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_error']); 
         ?>
     <?php endif; ?>
 </body>

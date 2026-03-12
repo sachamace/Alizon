@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'vider_panier') {
         $stmt = $pdo->prepare("DELETE FROM panier_produit WHERE id_panier = :id_panier");
         $stmt->execute([':id_panier' => $id_panier]);
+        $_SESSION["message_vider"] = "Votre panier a été vidé avec succès !";
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
     }
@@ -34,6 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         WHERE id_produit = :id_produit AND id_panier = :id_panier";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+                $_SESSION["message_plus"] = "Quantité ajouté avec succès ! ";
+            }else{
+                $_SESSION["message_error"] = "Ajout impossible - Produit en stock insuffisant";
             }
         } elseif ($action === 'moins') {
             if ($quantite_actuelle > 1) {
@@ -42,6 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         WHERE id_produit = :id_produit AND id_panier = :id_panier";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+                
+                $_SESSION["message_moins"] = "Quantité soustraie avec succès !";
+            }else{
+                $_SESSION["message_error"] = "Retirer impossible - Cliquer sur supprimer";
             }
         } elseif ($action === 'supprimer_produit') {
             $stmt = $pdo->prepare("
@@ -49,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 WHERE id_produit = :id_produit AND id_panier = :id_panier
             ");
             $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+            $_SESSION["message_supprimé"] = "Produit supprimé avec succès !";
         }
     }
 
@@ -228,6 +237,7 @@ try {
             </aside>
         <?php endif; ?>
     </main>
+    <div id="toast-global" class="toast"></div>
     <footer class="footer mobile">
         <?php include 'footer.php'?>
     </footer>
@@ -253,5 +263,55 @@ try {
         }
     });
     </script>
+    <?php if (isset($_SESSION['message_plus'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_plus']); ?>", "info");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_plus']); 
+        ?>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['message_moins'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_moins']); ?>", "info");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_moins']); 
+        ?>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['message_supprimé'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_supprimé']); ?>", "succes");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_supprimé']); 
+        ?>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['message_vider'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_vider']); ?>", "succes");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_vider']); 
+        ?>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['message_error'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                afficherToast("<?php echo addslashes($_SESSION['message_error']); ?>", "error");
+            });
+        </script>
+        <?php 
+            unset($_SESSION['message_error']); 
+        ?>
+    <?php endif; ?>
 </body>
 </html>

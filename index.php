@@ -598,6 +598,6 @@
     <?php 
         unset($_SESSION["message_success"]); 
     ?>
-<?php endif; ?>
+    <?php endif; ?>
 </body>
 </html>

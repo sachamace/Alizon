@@ -4539,50 +4539,6 @@ table td {
 
 
 
-// =============================================================================
-// MODES DALTONIEN — simple override de --primary + couleurs spécifiques
-// =============================================================================
-
-body.deuteranopie {
-  --primary: #{$dal-deut-primary};
-
-  .badge-remise-panier, .remise-badge, .badge-remise { background-color: $dal-deut-success !important; }
-  .commande-statut {
-    &.statut-validée, &.statut-livrée { background: $dal-deut-success !important; }
-    &.statut-expédiée                 { background: $dal-deut-primary !important; }
-    &.statut-annulée                  { background: $dal-deut-neutral !important; }
-  }
-  .succes-message { color: $dal-deut-success !important; }
-  span[style*="color:red"], .error, .erreur-msg { color: $dal-deut-error !important; }
-}
-
-body.protanopie {
-  --primary: #{$dal-prot-primary};
-
-  .badge-remise-panier, .remise-badge, .badge-remise { background-color: $dal-prot-primary !important; }
-  .commande-statut {
-    &.statut-validée, &.statut-livrée { background: $dal-prot-primary !important; }
-    &.statut-expédiée                 { background: $dal-prot-error !important; }
-    &.statut-annulée                  { background: $dal-prot-neutral !important; }
-  }
-  .succes-message { color: $dal-prot-primary !important; }
-  span[style*="color:red"], .error, .erreur-msg { color: $dal-prot-error !important; }
-}
-
-body.tritanopie {
-  --primary: #{$dal-trit-primary};
-
-  .badge-remise-panier, .remise-badge, .badge-remise { background-color: $dal-trit-success !important; }
-  .commande-statut {
-    &.statut-validée, &.statut-livrée { background: $dal-trit-success !important; }
-    &.statut-expédiée                 { background: $dal-trit-primary !important; }
-    &.statut-annulée                  { background: $dal-trit-neutral !important; }
-  }
-  .succes-message { color: $dal-trit-success !important; }
-  span[style*="color:red"], .error, .erreur-msg { color: $dal-trit-error !important; }
-}
-
-
 /* Style de base du toast (caché par défaut) */
 .toast {
     visibility: hidden;

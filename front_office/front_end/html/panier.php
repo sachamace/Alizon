@@ -93,6 +93,7 @@ try {
             </section>
         <?php else : ?>
             <section>
+                <h2>Votre panier :</h2>
                 <?php
                 $prixtotal = 0;
                 $taxe = 0;

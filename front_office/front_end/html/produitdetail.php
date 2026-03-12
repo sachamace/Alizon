@@ -1,6 +1,7 @@
 <?php
 include 'config.php';
 include 'sessionindex.php';
+$button = true;
 try {
     if (isset($_GET['article'])) {
         $id_produit = $_GET['article'];
@@ -291,6 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $_SESSION["message_success"] = "Article ajouté au panier !";
             }
             else{
+                $button = false;
                 $_SESSION["message_erreur"] = "Stock Indisponible pour cet article !";
             }
         }
@@ -324,6 +326,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     $_SESSION["message_success"] = "Article ajouté au panier !";
                 }
                 else{
+                    $button = false;
                     $_SESSION["message_erreur"] = "Stock Indisponible pour cet article !";
                 }
             }
@@ -448,7 +451,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         <?php endif; ?>
                         </div>
                         <div class="boutons">
-                                <?php echo '
+                                <?php if($button){
+                                    echo '
                                 <form action="" method="post" style="display:inline;">
                                     <input type="hidden" name="action" value="panier">
                                     <button type="submit">Ajouter au panier</button>
@@ -457,7 +461,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                 <form action="" method="post" style="display:inline;">
                                     <input type="hidden" name="action" value="payer">
                                     <button type="submit">Payer maintenant</button>
-                                </form>' ?>
+                                </form>';
+                                } else { 
+                                    echo '<form action="" method="post" style="display:inline;">
+                                    <input type="hidden" name="action" value="panier">
+                                    <button type="submit" disabled>Ajouter au panier</button>
+                                </form>
+                                
+                                <form action="" method="post" style="display:inline;">
+                                    <input type="hidden" name="action" value="payer">
+                                    <button type="submit" disabled>Payer maintenant</button>
+                                </form>';
+                                }?>
                         </div>
                     </div>
                     <p class="description">

@@ -450,32 +450,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                             <p class="prix-ht">Prix HT : <?= number_format($infos['prix_unitaire_ht'], 2, ',', ' ') ?>€</p>
                         <?php endif; ?>
                         </div>
-                        
+                        <div class="boutons" > 
                         <?php if($button){?>
-                            <div class="boutons"> 
-                                <form action="" method="post" style="display:inline;">
-                                    <input type="hidden" name="action" value="panier">
-                                    <button type="submit">Ajouter au panier</button>
-                                </form>
-                                
-                                <form action="" method="post" style="display:inline;">
-                                    <input type="hidden" name="action" value="payer">
-                                    <button type="submit">Payer maintenant</button>
-                                </form>
-                            </div>
+                            <form action="" method="post" style="display:inline;">
+                                <input type="hidden" name="action" value="panier">
+                                <button type="submit">Ajouter au panier</button>
+                            </form>
+                            
+                            <form action="" method="post" style="display:inline;">
+                                <input type="hidden" name="action" value="payer">
+                                <button type="submit">Payer maintenant</button>
+                            </form>
+                            
                         <?php } else { ?>
-                            <div class="boutons" style ="background-color : gray;"> 
                                 <form action="" method="post" style="display:inline;">
                                     <input type="hidden" name="action" value="panier">
-                                    <button type="submit" disabled>Ajouter au panier</button>
+                                    <button type="submit" style ="background-color : gray;" disabled>Ajouter au panier</button>
                                 </form>
                                 
                                 <form action="" method="post" style="display:inline;">
                                     <input type="hidden" name="action" value="payer">
-                                    <button type="submit" disabled>Payer maintenant</button>
+                                    <button type="submit" style ="background-color : gray;" disabled>Payer maintenant</button>
                                 </form>
-                            </div>
                         <?php } ?>
+                        </div>
                     </div>
                     <p class="description">
                         <?= htmlspecialchars($infos['description_produit']) ?>

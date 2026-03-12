@@ -4,6 +4,7 @@ include 'sessionindex.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_produit = (int) $_POST['id_produit'];
+    $id_produit_favoris = (int) $_POST['id_produit_favoris'];
     $action = $_POST['action'];
     $id_panier = $_SESSION['id_panier'];
 
@@ -13,42 +14,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
     }
+    if ($action === 'ajouter_panier_depuis_fav') {
+        $stmt = $pdo->prepare("DELETE FROM favoris WHERE id_produit = :id_produit AND id_client = :id_client");
+        $stmt->execute([':id_produit' => $id_produit_favoris, ':id_client' => $_SESSION['id_client']]);
+        $stmt = $pdo->prepare('SELECT * FROM panier_produit WHERE id_produit = :id_produit AND id_panier = :id_panier');
+        $stmt->execute([':id_produit' => $id_produit_favoris, ':id_panier' => $id_panier]);
+        $verif = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $stmt_info = $pdo->prepare("
-        SELECT pp.quantite, p.stock_disponible
-        FROM panier_produit pp
-        JOIN produit p ON pp.id_produit = p.id_produit
-        WHERE pp.id_produit = :id_produit AND pp.id_panier = :id_panier
-    ");
-    $stmt_info->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
-    $info = $stmt_info->fetch(PDO::FETCH_ASSOC);
+        $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
+        $stmt_stock->execute([':id_produit' => $id_produit_favoris]);
+        $stock_dispo = (int) $stmt_stock->fetchColumn();
 
-    if ($info) {
-        $quantite_actuelle = (int) $info['quantite'];
-        $stock_dispo = (int) $info['stock_disponible'];
-
-        if ($action === 'plus') {
-            if ($quantite_actuelle < $stock_dispo) {
-                $sql = "UPDATE panier_produit 
-                        SET quantite = quantite + 1 
-                        WHERE id_produit = :id_produit AND id_panier = :id_panier";
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
-            }
-        } elseif ($action === 'moins') {
-            if ($quantite_actuelle > 1) {
-                $sql = "UPDATE panier_produit 
-                        SET quantite = quantite - 1 
-                        WHERE id_produit = :id_produit AND id_panier = :id_panier";
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
-            }
-        } elseif ($action === 'supprimer_produit') {
-            $stmt = $pdo->prepare("
-                DELETE FROM panier_produit 
-                WHERE id_produit = :id_produit AND id_panier = :id_panier
+        if ($verif) {
+            $stmt_info = $pdo->prepare("SELECT pp.quantite
+                FROM panier_produit pp
+                WHERE pp.id_produit = :id_produit AND pp.id_panier = :id_panier
             ");
-            $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+            $stmt_info->execute([':id_produit' => $id_produit_favoris, ':id_panier' => $id_panier]);
+            $info = $stmt_info->fetch(PDO::FETCH_ASSOC);
+            $quantite_actuelle = (int) $info['quantite'];
+            if ($quantite_actuelle < $stock_dispo) {
+                $augmente = "UPDATE panier_produit 
+                SET quantite = quantite + 1 
+                WHERE id_produit = :id_produit AND id_panier = :id_panier";
+                $requete_augmente = $pdo->prepare($augmente);
+                $requete_augmente->execute([':id_produit' => $id_produit_favoris, ':id_panier' => $id_panier]);
+            }
+        }else{
+            if ($stock_dispo > 0) {
+                $requete_ajout = $pdo->prepare("INSERT INTO panier_produit(id_panier,id_produit,quantite) VALUES(:id_panier, :id_produit, 1);");
+                $requete_ajout->execute([":id_produit"=> $id_produit_favoris, ":id_panier"=> $id_panier]);
+            }
+        }
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    else{
+
+        $stmt_info = $pdo->prepare("
+            SELECT pp.quantite, p.stock_disponible
+            FROM panier_produit pp
+            JOIN produit p ON pp.id_produit = p.id_produit
+            WHERE pp.id_produit = :id_produit AND pp.id_panier = :id_panier
+        ");
+        $stmt_info->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+        $info = $stmt_info->fetch(PDO::FETCH_ASSOC);
+
+        if ($info) {
+            $quantite_actuelle = (int) $info['quantite'];
+            $stock_dispo = (int) $info['stock_disponible'];
+
+            if ($action === 'plus') {
+                if ($quantite_actuelle < $stock_dispo) {
+                    $sql = "UPDATE panier_produit 
+                            SET quantite = quantite + 1 
+                            WHERE id_produit = :id_produit AND id_panier = :id_panier";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+                }
+            } elseif ($action === 'moins') {
+                if ($quantite_actuelle > 1) {
+                    $sql = "UPDATE panier_produit 
+                            SET quantite = quantite - 1 
+                            WHERE id_produit = :id_produit AND id_panier = :id_panier";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+                }
+            } elseif ($action === 'supprimer_produit') {
+                $stmt = $pdo->prepare("
+                    DELETE FROM panier_produit 
+                    WHERE id_produit = :id_produit AND id_panier = :id_panier
+                ");
+                $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
+            }
         }
     }
 
@@ -243,7 +281,7 @@ try {
                                     <div class="actions-souhait">
                                         <form action="" method="post">
                                             <input type="hidden" name="action" value="ajouter_panier_depuis_fav">
-                                            <input type="hidden" name="id_produit" value="<?= $fav['id_produit'] ?>">
+                                            <input type="hidden" name="id_produit_favoris" value="<?= $fav['id_produit'] ?>">
                                             <button type="submit" class="btn-ajout-panier">Ajouter</button>
                                         </form>
                                         <a href="produitdetail.php?article=<?= $fav['id_produit'] ?>" class="lien-savoir-plus">En savoir plus</a>

@@ -1,61 +1,31 @@
-// daltonien.js — simulation daltonisme via filtres SVG (même technique que Chrome DevTools)
-// Aucune dépendance externe, fonctionne sur toutes les couleurs ET les images
+// daltonien.js — mode daltonien via RGBlind (cdn.jsdelivr.net)
 
-const MODES = {
-    deuteranopie: 'url(#filter-deuteranopie)',
-    protanopie:   'url(#filter-protanopie)',
-    tritanopie:   'url(#filter-tritanopie)',
+const modes = ['deuteranopie', 'protanopie', 'tritanopie'];
+
+// Map entre nos noms et les méthodes RGBlind
+const rgblindMap = {
+    deuteranopie: 'deuteranopia',
+    protanopie:   'protanopia',
+    tritanopie:   'tritanopia',
 };
 
-// Injection des filtres SVG dans le DOM
-function injecterFiltresSVG() {
-    if (document.getElementById('dal-svg-filters')) return;
-
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('id', 'dal-svg-filters');
-    svg.setAttribute('style', 'position:absolute;width:0;height:0;overflow:hidden;');
-    svg.innerHTML = `
-        <defs>
-            <!-- Deuteranopie : insensibilite au vert -->
-            <filter id="filter-deuteranopie">
-                <feColorMatrix type="matrix" values="
-                    0.625 0.375 0     0 0
-                    0.7   0.3   0     0 0
-                    0     0.3   0.7   0 0
-                    0     0     0     1 0"/>
-            </filter>
-            <!-- Protanopie : insensibilite au rouge -->
-            <filter id="filter-protanopie">
-                <feColorMatrix type="matrix" values="
-                    0.567 0.433 0     0 0
-                    0.558 0.442 0     0 0
-                    0     0.242 0.758 0 0
-                    0     0     0     1 0"/>
-            </filter>
-            <!-- Tritanopie : insensibilite au bleu -->
-            <filter id="filter-tritanopie">
-                <feColorMatrix type="matrix" values="
-                    0.95  0.05  0     0 0
-                    0     0.433 0.567 0 0
-                    0     0.475 0.525 0 0
-                    0     0     0     1 0"/>
-            </filter>
-        </defs>
-    `;
-    document.body.appendChild(svg);
-}
-
 function appliquerMode(mode) {
-    document.documentElement.style.filter = '';
+    // Reset d'abord
+    if (typeof rgblind !== 'undefined') {
+        rgblind.reset();
+    }
 
+    // Mettre à jour les boutons
     document.querySelectorAll('.dal-btn, .dal-option').forEach(btn => {
         btn.classList.toggle('actif', btn.dataset.mode === mode);
     });
 
     const trigger = document.getElementById('dal-trigger');
 
-    if (mode && MODES[mode]) {
-        document.documentElement.style.filter = MODES[mode];
+    if (mode && rgblindMap[mode]) {
+        if (typeof rgblind !== 'undefined') {
+            rgblind[rgblindMap[mode]]();
+        }
         localStorage.setItem('daltonien', mode);
         if (trigger) trigger.classList.add('dal-actif');
     } else {
@@ -65,9 +35,7 @@ function appliquerMode(mode) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    injecterFiltresSVG();
-
-    // Appliquer le mode stocke au chargement
+    // Appliquer le mode stocké
     const modeStocke = localStorage.getItem('daltonien');
     if (modeStocke) appliquerMode(modeStocke);
 
@@ -75,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.dal-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const mode = btn.dataset.mode;
-            const actif = document.documentElement.style.filter.includes('filter-' + mode);
+            const actif = btn.classList.contains('actif');
             appliquerMode(actif ? null : mode);
         });
     });
@@ -96,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.dal-option').forEach(btn => {
         btn.addEventListener('click', () => {
             const mode = btn.dataset.mode;
-            const actif = document.documentElement.style.filter.includes('filter-' + mode);
+            const actif = btn.classList.contains('actif');
             appliquerMode(actif ? null : mode);
             if (dropdown) dropdown.classList.remove('ouvert');
         });

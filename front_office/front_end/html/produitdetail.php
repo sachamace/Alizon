@@ -450,9 +450,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                             <p class="prix-ht">Prix HT : <?= number_format($infos['prix_unitaire_ht'], 2, ',', ' ') ?>€</p>
                         <?php endif; ?>
                         </div>
-                        <div class="boutons">
-                                <?php if($button){
-                                    echo '
+                        
+                        <?php if($button){?>
+                            <div class="boutons"> 
                                 <form action="" method="post" style="display:inline;">
                                     <input type="hidden" name="action" value="panier">
                                     <button type="submit">Ajouter au panier</button>
@@ -461,9 +461,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                 <form action="" method="post" style="display:inline;">
                                     <input type="hidden" name="action" value="payer">
                                     <button type="submit">Payer maintenant</button>
-                                </form>';
-                                } else { 
-                                    echo '<form action="" method="post" style="display:inline;">
+                                </form>
+                            </div>
+                        <?php } else { ?>
+                            <div class="boutons" style ="background-color : gray;"> 
+                                <form action="" method="post" style="display:inline;">
                                     <input type="hidden" name="action" value="panier">
                                     <button type="submit" disabled>Ajouter au panier</button>
                                 </form>
@@ -471,9 +473,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                 <form action="" method="post" style="display:inline;">
                                     <input type="hidden" name="action" value="payer">
                                     <button type="submit" disabled>Payer maintenant</button>
-                                </form>';
-                                }?>
-                        </div>
+                                </form>
+                            </div>
+                        <?php } ?>
                     </div>
                     <p class="description">
                         <?= htmlspecialchars($infos['description_produit']) ?>

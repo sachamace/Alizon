@@ -69,13 +69,16 @@ try {
 // pose des variables 
 if(isset($_SESSION['id_panier'])){
     $id_panier = $_SESSION['id_panier'];
-    $id_panier = $_SESSION['id_panier'];
 }
 
 // recuperation du stock
 $stmt_stock = $pdo->prepare("SELECT stock_disponible FROM produit WHERE id_produit = :id_produit");
 $stmt_stock->execute([':id_produit' => $id_produit]);
 $stock_dispo = (int) $stmt_stock->fetchColumn();
+
+if($stock_dispo < 0){
+    $button = false;
+}
 
 // php avis du produit
 $requete_avis = $pdo->prepare("
@@ -292,7 +295,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $_SESSION["message_success"] = "Article ajouté au panier !";
             }
             else{
-                $button = false;
                 $_SESSION["message_erreur"] = "Stock Indisponible pour cet article !";
             }
         }
@@ -326,7 +328,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     $_SESSION["message_success"] = "Article ajouté au panier !";
                 }
                 else{
-                    $button = false;
                     $_SESSION["message_erreur"] = "Stock Indisponible pour cet article !";
                 }
             }

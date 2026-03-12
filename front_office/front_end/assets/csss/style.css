@@ -1782,6 +1782,7 @@ footer.footer.mobile, footer.footer.tablette {
   border-radius: 10px;
   color: #000;
   text-decoration: none;
+  font-weight: 400;
 }
 .main_panier .panier_actions {
   margin-top: 1em;
@@ -1884,10 +1885,6 @@ footer.footer.mobile, footer.footer.tablette {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  /* Ajout spécifique pour la liste de souhait */
-}
-.main_panier .colonne-droite-panier .box-droite.liste-souhait {
-  min-height: 300px;
 }
 .main_panier {
   /* --- Style des articles dans la liste de souhait --- */

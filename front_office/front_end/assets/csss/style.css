@@ -4208,6 +4208,15 @@ table td {
   background: #efefef;
   font-weight: 700;
 }
+.daltonien-switcher .dal-dropdown .dal-option .dal-pastille {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.daltonien-switcher .dal-dropdown .dal-option.dal-deuteranopie .dal-pastille, .daltonien-switcher .dal-dropdown .dal-option.dal-protanopie .dal-pastille, .daltonien-switcher .dal-dropdown .dal-option.dal-tritanopie .dal-pastille {
+  background: #666;
+}
 .daltonien-switcher .dal-dropdown .dal-reset {
   display: block;
   width: 100%;
@@ -4223,6 +4232,219 @@ table td {
 }
 .daltonien-switcher .dal-dropdown .dal-reset:hover {
   background: #f5f5f5;
+}
+
+body.deuteranopie nav nav:first-child form input {
+  border-color: #E87722;
+}
+body.deuteranopie nav nav:last-child div a {
+  background: #E87722;
+}
+body.deuteranopie .body__connexion {
+  background: #E87722;
+}
+body.deuteranopie input:focus,
+body.deuteranopie select:focus,
+body.deuteranopie textarea:focus,
+body.deuteranopie .input-style:focus {
+  border-color: #E87722 !important;
+}
+body.deuteranopie .forgot-password,
+body.deuteranopie .recuperation-links a {
+  color: #E87722;
+}
+body.deuteranopie .btn__connexion, body.deuteranopie .btn__link,
+body.deuteranopie .btn-confirm,
+body.deuteranopie .btn-primary,
+body.deuteranopie .btn-primary:hover,
+body.deuteranopie .payer-btn,
+body.deuteranopie .confirmer,
+body.deuteranopie .compte__button,
+body.deuteranopie .toggle-view-reponse {
+  background: #E87722 !important;
+  border-color: #E87722 !important;
+}
+body.deuteranopie .btn__creer-compte {
+  border-color: #E87722;
+}
+body.deuteranopie .btn__creer-compte:hover {
+  background: #E87722;
+}
+body.deuteranopie .prix {
+  color: #E87722;
+}
+body.deuteranopie ::-webkit-scrollbar-thumb {
+  background: #E87722;
+}
+body.deuteranopie input[type=checkbox] {
+  accent-color: #E87722;
+}
+body.deuteranopie .prix-valeur {
+  background: #E87722 !important;
+}
+body.deuteranopie .description {
+  border-left-color: #E87722 !important;
+}
+body.deuteranopie .avis-item {
+  border-left-color: #E87722 !important;
+}
+body.deuteranopie .step.active .step-icon {
+  background: #E87722;
+  border-color: #E87722;
+}
+body.deuteranopie .step-line.full {
+  background: #E87722;
+}
+body.deuteranopie .client-info {
+  border-left-color: #E87722;
+}
+body.deuteranopie .order-details h3 {
+  border-bottom-color: #E87722;
+}
+body.deuteranopie .compte__button {
+  background: #E87722;
+}
+
+body.protanopie nav nav:first-child form input {
+  border-color: #0099CC;
+}
+body.protanopie nav nav:last-child div a {
+  background: #0099CC;
+}
+body.protanopie .body__connexion {
+  background: #0099CC;
+}
+body.protanopie input:focus,
+body.protanopie select:focus,
+body.protanopie textarea:focus,
+body.protanopie .input-style:focus {
+  border-color: #0099CC !important;
+}
+body.protanopie .forgot-password,
+body.protanopie .recuperation-links a {
+  color: #0099CC;
+}
+body.protanopie .btn__connexion, body.protanopie .btn__link,
+body.protanopie .btn-confirm,
+body.protanopie .btn-primary,
+body.protanopie .btn-primary:hover,
+body.protanopie .payer-btn,
+body.protanopie .confirmer,
+body.protanopie .compte__button,
+body.protanopie .toggle-view-reponse {
+  background: #0099CC !important;
+  border-color: #0099CC !important;
+}
+body.protanopie .btn__creer-compte {
+  border-color: #0099CC;
+}
+body.protanopie .btn__creer-compte:hover {
+  background: #0099CC;
+}
+body.protanopie .prix {
+  color: #0099CC;
+}
+body.protanopie ::-webkit-scrollbar-thumb {
+  background: #0099CC;
+}
+body.protanopie input[type=checkbox] {
+  accent-color: #0099CC;
+}
+body.protanopie .prix-valeur {
+  background: #0099CC !important;
+}
+body.protanopie .description {
+  border-left-color: #0099CC !important;
+}
+body.protanopie .avis-item {
+  border-left-color: #0099CC !important;
+}
+body.protanopie .step.active .step-icon {
+  background: #0099CC;
+  border-color: #0099CC;
+}
+body.protanopie .step-line.full {
+  background: #0099CC;
+}
+body.protanopie .client-info {
+  border-left-color: #0099CC;
+}
+body.protanopie .order-details h3 {
+  border-bottom-color: #0099CC;
+}
+body.protanopie .compte__button {
+  background: #0099CC;
+}
+
+body.tritanopie nav nav:first-child form input {
+  border-color: #CC3399;
+}
+body.tritanopie nav nav:last-child div a {
+  background: #CC3399;
+}
+body.tritanopie .body__connexion {
+  background: #CC3399;
+}
+body.tritanopie input:focus,
+body.tritanopie select:focus,
+body.tritanopie textarea:focus,
+body.tritanopie .input-style:focus {
+  border-color: #CC3399 !important;
+}
+body.tritanopie .forgot-password,
+body.tritanopie .recuperation-links a {
+  color: #CC3399;
+}
+body.tritanopie .btn__connexion, body.tritanopie .btn__link,
+body.tritanopie .btn-confirm,
+body.tritanopie .btn-primary,
+body.tritanopie .btn-primary:hover,
+body.tritanopie .payer-btn,
+body.tritanopie .confirmer,
+body.tritanopie .compte__button,
+body.tritanopie .toggle-view-reponse {
+  background: #CC3399 !important;
+  border-color: #CC3399 !important;
+}
+body.tritanopie .btn__creer-compte {
+  border-color: #CC3399;
+}
+body.tritanopie .btn__creer-compte:hover {
+  background: #CC3399;
+}
+body.tritanopie .prix {
+  color: #CC3399;
+}
+body.tritanopie ::-webkit-scrollbar-thumb {
+  background: #CC3399;
+}
+body.tritanopie input[type=checkbox] {
+  accent-color: #CC3399;
+}
+body.tritanopie .prix-valeur {
+  background: #CC3399 !important;
+}
+body.tritanopie .description {
+  border-left-color: #CC3399 !important;
+}
+body.tritanopie .avis-item {
+  border-left-color: #CC3399 !important;
+}
+body.tritanopie .step.active .step-icon {
+  background: #CC3399;
+  border-color: #CC3399;
+}
+body.tritanopie .step-line.full {
+  background: #CC3399;
+}
+body.tritanopie .client-info {
+  border-left-color: #CC3399;
+}
+body.tritanopie .order-details h3 {
+  border-bottom-color: #CC3399;
+}
+body.tritanopie .compte__button {
+  background: #CC3399;
 }
 
 body.deuteranopie {

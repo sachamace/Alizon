@@ -26,13 +26,22 @@ $id_client = $row['id_client'];
 $id_vendeur = $_SESSION['vendeur_id'];
 
 try {
+    // Récupération de l'id_num du client
+    $stmt_id_num = $pdo->prepare("
+        SELECT id_num
+        FROM compte_client
+        WHERE id_client = :id_client
+    ");
+    $stmt_id_num->execute([':id_client' => $id_client]);
+    $id_num = $stmt_id_num->fetch(PDO::FETCH_ASSOC)['id_num'];
+
     // Récupération des informations du client
     $stmt_client = $pdo->prepare("
         SELECT nom, prenom, adresse_mail, num_tel
         FROM compte_client
-        WHERE id_client = :id_client
+        WHERE id_num = :id_num
     ");
-    $stmt_client->execute([':id_client' => $id_client]);
+    $stmt_client->execute([':id_num' => $id_num]);
     $client = $stmt_client->fetch(PDO::FETCH_ASSOC);
     
     // Récupération de l'adresse de livraison

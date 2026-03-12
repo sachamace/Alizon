@@ -4,6 +4,11 @@
 @use "variables" as *;
 @use "mixin" as *;
 
+:root {
+  --primary: #{$primary-color};
+}
+
+
 // =============================================================================
 // BASE & LAYOUT
 // =============================================================================
@@ -88,7 +93,7 @@ header {
             width: 1150px;
             height: 45px;
             border-radius: 25px;
-            border-color: $primary-color;
+            border-color: var(--primary);
             padding: 10px 10px 10px 40px;
             background-image: url(../images/magnifying-glass-solid-full\ \(1\).svg);
             background-repeat: no-repeat;
@@ -154,7 +159,7 @@ header {
           margin-bottom: 7px;
 
           a {
-            background: $primary-color;
+            background: var(--primary);
             text-align: center;
             padding: 10px;
             font-size: 14px;
@@ -226,7 +231,7 @@ footer.footer {
   margin: 0;
   padding: 0;
   font-family: $font-family;
-  background: $primary-color;
+  background: var(--primary);
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -303,7 +308,7 @@ footer.footer {
 
   &:focus {
     outline: none;
-    border-color: $primary-color;
+    border-color: var(--primary);
     background-color: $white;
   }
 
@@ -313,7 +318,7 @@ footer.footer {
 }
 
 .forgot-password {
-  color: $primary-color;
+  color: var(--primary);
   text-decoration: none;
   font-size: 0.9em;
   align-self: flex-end;
@@ -326,7 +331,7 @@ footer.footer {
 }
 
 .btn__connexion {
-  background: $primary-color;
+  background: var(--primary);
   color: $black;
   border: none;
   border-radius: 10px;
@@ -376,7 +381,7 @@ footer.footer {
 .btn__creer-compte {
   background: $white;
   color: $black;
-  border: 2px solid $primary-color;
+  border: 2px solid var(--primary);
   border-radius: 10px;
   padding: 15px;
   font-size: 1.1em;
@@ -388,7 +393,7 @@ footer.footer {
   transition: all $transition-speed ease;
 
   &:hover {
-    background: $primary-color;
+    background: var(--primary);
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba($primary-color, 0.2);
   }
@@ -423,7 +428,7 @@ footer.footer {
   margin-top: 20px;
 
   a {
-    color: $primary-color;
+    color: var(--primary);
     text-decoration: none;
 
     &:hover {
@@ -578,7 +583,7 @@ footer.footer {
     .prix {
       font-size: 1.4em;
       font-weight: 800;
-      color: $primary-color;
+      color: var(--primary);
       margin: 0;
     }
 
@@ -642,7 +647,7 @@ footer.footer {
 
         &:focus {
           outline: none;
-          border-color: $primary-color;
+          border-color: var(--primary);
           background-color: $white;
         }
       }
@@ -663,7 +668,7 @@ footer.footer {
 
           &:focus {
             outline: none;
-            border-color: $primary-color;
+            border-color: var(--primary);
           }
         }
       }
@@ -683,7 +688,7 @@ footer.footer {
 
         input[type="checkbox"] {
           margin-right: 10px;
-          accent-color: $primary-color;
+          accent-color: var(--primary);
           cursor: pointer;
         }
 
@@ -696,7 +701,7 @@ footer.footer {
           transition: color 0.2s;
 
           &:hover {
-            color: $primary-color;
+            color: var(--primary);
           }
         }
       }
@@ -767,7 +772,7 @@ footer.footer {
     }
     
     &::-webkit-scrollbar-thumb {
-      background: $primary-color;
+      background: var(--primary);
       border-radius: 10px;
       opacity: 0.7;
     }
@@ -903,7 +908,7 @@ footer.footer {
     }
     
     &::-webkit-scrollbar-thumb {
-      background: $primary-color;
+      background: var(--primary);
       border-radius: 10px;
     }
 
@@ -1117,7 +1122,7 @@ footer.footer {
 
           i {
             font-size: 2.2rem;
-            color: $primary-color;
+            color: var(--primary);
             cursor: pointer;
             flex-shrink: 0;
             
@@ -1228,7 +1233,7 @@ footer.footer {
           padding: 1.5rem;
           background: #fafafa;
           border-radius: 12px;
-          border-left: 5px solid $primary-color;
+          border-left: 5px solid var(--primary);
           
           
           // Téléphone (428px)
@@ -1246,7 +1251,7 @@ footer.footer {
           margin-top: auto;
             
           button {
-            background: $primary-color;
+            background: var(--primary);
             color: $black;
             border: none;
             padding: 1.3rem 2rem;
@@ -1311,7 +1316,7 @@ footer.footer {
       }
 
       .input-style:focus {
-        border-color: $primary-color;   /* Bordure bleue au focus */
+        border-color: var(--primary);   /* Bordure bleue au focus */
         background-color: #fff;  /* Le fond devient blanc pur */
         box-shadow: 0 0 5px rgba(0, 123, 255, 0.2); /* Légère lueur */
       }
@@ -1340,7 +1345,7 @@ footer.footer {
         }
 
         .btn-confirm {
-          background-color: $primary-color;
+          background-color: var(--primary);
         }
         .btn-confirm:hover{
           filter: brightness(0.95);
@@ -1414,15 +1419,15 @@ footer.footer {
       margin-bottom: 1.5rem;
       background: #fafafa;
       border-radius: 12px;
-      border-left: 4px solid $primary-color;
+      border-left: 4px solid var(--primary);
       .avis-button{
         display: flex;
         gap: 1em;
 
         .toggle-view-reponse {
           max-height: 50%;
-          background: $primary-color;
-          border: 1px solid $primary-color;
+          background: var(--primary);
+          border: 1px solid var(--primary);
           color: $black;
           padding: 0.4rem 0.8rem; // Petit padding
           font-size: 0.85rem;     // Texte fin
@@ -1608,7 +1613,7 @@ footer.footer {
         color: $black;
 
         &:focus {
-          border-color: $primary-color;
+          border-color: var(--primary);
           outline: none;
         }
         
@@ -1743,7 +1748,7 @@ footer.footer {
 
       button {
         margin-top: 1.5rem;
-        background: $primary-color;
+        background: var(--primary);
         color: $black;
         border: none;
         padding: 1rem 2rem;
@@ -1912,7 +1917,7 @@ footer.footer {
         width: 203px;     
         min-width: 203px; 
 
-        background: $primary-color;
+        background: var(--primary);
         text-align: center;
         padding: 10px;
         font-size: 14px;
@@ -2033,7 +2038,7 @@ footer.footer {
 // =============================================================================
 
 // Assurez-vous que vos variables sont définies au début de votre fichier
-// $font-family, $black, $primary-color, $white, $gray-light, $gray-medium, $border-radius
+// $font-family, $black, var(--primary), $white, $gray-light, $gray-medium, $border-radius
 
 .body_paiement,
 .body_profilClient {
@@ -2202,7 +2207,7 @@ footer.footer {
 
         .modifier,
         .confirmer {
-          background-color: $primary-color;
+          background-color: var(--primary);
           color: #fff;
           &:hover { background-color: #218838; }
         }
@@ -2391,7 +2396,7 @@ footer.footer {
     // Bouton payer (En dehors du .bloc ou dedans, selon votre HTML)
     .payer-btn {
       width: 100%;
-      background: $primary-color;
+      background: var(--primary);
       border: none;
       border-radius: 8px;
       padding: 1rem;
@@ -2545,7 +2550,7 @@ footer.footer {
     padding: 1.5rem;
     border-radius: 12px;
     margin: 2rem 0;
-    border-left: 4px solid $primary-color;
+    border-left: 4px solid var(--primary);
 
     p {
         margin: 0.5rem 0;
@@ -2566,7 +2571,7 @@ footer.footer {
         color: $gray-darker;
         margin-bottom: 1.5rem;
         font-size: 1.3rem;
-        border-bottom: 2px solid $primary-color;
+        border-bottom: 2px solid var(--primary);
         padding-bottom: 0.5rem;
     }
 
@@ -2622,12 +2627,12 @@ footer.footer {
     transition: all $transition-speed ease;
 
     &-primary {
-        background: $primary-color;
+        background: var(--primary);
         color: $black;
         box-shadow: 0 4px 15px rgba(108, 211, 255, 0.3);
 
         &:hover {
-            background: $primary-color;
+            background: var(--primary);
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(108, 211, 255, 0.4);
         }
@@ -2781,7 +2786,7 @@ footer.footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: $primary-color;
+  background: var(--primary);
   padding: 14px 16px;
   margin: 18px 20px;
   border-radius: 8px;
@@ -3550,7 +3555,7 @@ footer.footer {
 
     // Bouton Principal (Voir détail)
     &-primary {
-        background: $primary-color;
+        background: var(--primary);
         color: $black; 
 
         &:hover {
@@ -3626,7 +3631,7 @@ footer.footer {
         color: $gray-darker;
         
         span {
-            color: $primary-color;
+            color: var(--primary);
         }
     }
 
@@ -3764,8 +3769,8 @@ footer.footer {
         // État Actif (Passé ou Courant)
         &.active {
             .step-icon {
-                background: $primary-color;
-                border-color: $primary-color;
+                background: var(--primary);
+                border-color: var(--primary);
                 color: $white;
                 box-shadow: 0 0 0 4px rgba($primary-color, 0.2);
             }
@@ -3787,7 +3792,7 @@ footer.footer {
         z-index: 1;
 
         &.full {
-            background: $primary-color;
+            background: var(--primary);
         }
     }
 }
@@ -4119,7 +4124,7 @@ footer.footer {
         box-sizing: border-box;
         
         strong {
-            color: $primary-color;
+            color: var(--primary);
         }
       }
     }
@@ -4137,7 +4142,7 @@ footer.footer {
         font-size: 1.2rem;
         
         span:last-child {
-          color: $primary-color;
+          color: var(--primary);
         }
       }
     }
@@ -4534,165 +4539,50 @@ table td {
 
 
 
+// =============================================================================
+// MODES DALTONIEN — simple override de --primary + couleurs spécifiques
+// =============================================================================
 
-// =============================================================================
-// MODE DEUTERANOPIE — confusion rouge/vert (le plus fréquent)
-// Palette : bleu + orange, on évite tout vert et rouge purs
-// =============================================================================
 body.deuteranopie {
-  @include dal-primary-override($dal-deut-primary);
+  --primary: #{$dal-deut-primary};
 
-  // primary rose → orange vif
-  --dal-primary: #{$dal-deut-primary};
-  --dal-success: #{$dal-deut-success};
-  --dal-error:   #{$dal-deut-error};
-  --dal-warning: #{$dal-deut-warning};
-  --dal-badge:   #{$dal-deut-success};
-
-  // boutons primaires (connexion, panier, etc.)
-  .btn__connexion,
-  .btn-popup.btn-valider,
-  .payer-btn,
-  .confirmer,
-  .btn.btn-primary {
-    background-color: $dal-deut-primary !important;
-    border-color: $dal-deut-primary !important;
-  }
-
-  // badges de remise (normalement rouge/vert)
-  .badge-remise-panier,
-  .remise-badge,
-  .badge-remise {
-    background-color: $dal-deut-success !important;
-  }
-
-  // statuts de commande
+  .badge-remise-panier, .remise-badge, .badge-remise { background-color: $dal-deut-success !important; }
   .commande-statut {
-    &.statut-validée    { background: $dal-deut-success !important; }
-    &.statut-livrée     { background: $dal-deut-success !important; }
-    &.statut-expédiée   { background: $dal-deut-primary !important; }
-    &.statut-annulée    { background: $dal-deut-neutral !important; }
+    &.statut-validée, &.statut-livrée { background: $dal-deut-success !important; }
+    &.statut-expédiée                 { background: $dal-deut-primary !important; }
+    &.statut-annulée                  { background: $dal-deut-neutral !important; }
   }
-
-  // succès (vert → bleu)
   .succes-message { color: $dal-deut-success !important; }
-
-  // erreurs (rouge → orange)
-  span[style*="color:red"],
-  .error,
-  .erreur-msg { color: $dal-deut-error !important; }
-
-  // liens catégories dans le header
-  nav nav:last-child div a {
-    background: $dal-deut-primary !important;
-  }
-
-  // primary color général
-  a.btn__creer-compte,
-  .gerer-adresses-btn {
-    background-color: $dal-deut-primary !important;
-  }
+  span[style*="color:red"], .error, .erreur-msg { color: $dal-deut-error !important; }
 }
 
-// =============================================================================
-// MODE PROTANOPIE — le rouge disparaît, semble très sombre
-// Palette : bleu + cyan, on évite rouge et vert
-// =============================================================================
 body.protanopie {
-  @include dal-primary-override($dal-prot-primary);
+  --primary: #{$dal-prot-primary};
 
-  --dal-primary: #{$dal-prot-primary};
-  --dal-success: #{$dal-prot-primary};
-  --dal-error:   #{$dal-prot-error};
-  --dal-warning: #{$dal-prot-error};
-  --dal-badge:   #{$dal-prot-primary};
-
-  .btn__connexion,
-  .btn-popup.btn-valider,
-  .payer-btn,
-  .confirmer,
-  .btn.btn-primary {
-    background-color: $dal-prot-primary !important;
-    border-color: $dal-prot-primary !important;
-  }
-
-  .badge-remise-panier,
-  .remise-badge,
-  .badge-remise {
-    background-color: $dal-prot-primary !important;
-  }
-
+  .badge-remise-panier, .remise-badge, .badge-remise { background-color: $dal-prot-primary !important; }
   .commande-statut {
-    &.statut-validée    { background: $dal-prot-primary !important; }
-    &.statut-livrée     { background: $dal-prot-primary !important; }
-    &.statut-expédiée   { background: $dal-prot-error !important; }
-    &.statut-annulée    { background: $dal-prot-neutral !important; }
+    &.statut-validée, &.statut-livrée { background: $dal-prot-primary !important; }
+    &.statut-expédiée                 { background: $dal-prot-error !important; }
+    &.statut-annulée                  { background: $dal-prot-neutral !important; }
   }
-
   .succes-message { color: $dal-prot-primary !important; }
-
-  span[style*="color:red"],
-  .error,
-  .erreur-msg { color: $dal-prot-error !important; }
-
-  nav nav:last-child div a {
-    background: $dal-prot-primary !important;
-  }
-
-  a.btn__creer-compte {
-    background-color: $dal-prot-primary !important;
-  }
+  span[style*="color:red"], .error, .erreur-msg { color: $dal-prot-error !important; }
 }
 
-// =============================================================================
-// MODE TRITANOPIE — confusion bleu/jaune (rare)
-// Palette : rouge + vert, on évite bleu et jaune
-// =============================================================================
 body.tritanopie {
-  @include dal-primary-override($dal-trit-primary);
+  --primary: #{$dal-trit-primary};
 
-  --dal-primary: #{$dal-trit-primary};
-  --dal-success: #{$dal-trit-success};
-  --dal-error:   #{$dal-trit-error};
-  --dal-warning: #{$dal-trit-primary};
-  --dal-badge:   #{$dal-trit-success};
-
-  .btn__connexion,
-  .btn-popup.btn-valider,
-  .payer-btn,
-  .confirmer,
-  .btn.btn-primary {
-    background-color: $dal-trit-primary !important;
-    border-color: $dal-trit-primary !important;
-  }
-
-  .badge-remise-panier,
-  .remise-badge,
-  .badge-remise {
-    background-color: $dal-trit-success !important;
-  }
-
+  .badge-remise-panier, .remise-badge, .badge-remise { background-color: $dal-trit-success !important; }
   .commande-statut {
-    &.statut-validée    { background: $dal-trit-success !important; }
-    &.statut-livrée     { background: $dal-trit-success !important; }
-    &.statut-expédiée   { background: $dal-trit-primary !important; }
-    &.statut-annulée    { background: $dal-trit-neutral !important; }
+    &.statut-validée, &.statut-livrée { background: $dal-trit-success !important; }
+    &.statut-expédiée                 { background: $dal-trit-primary !important; }
+    &.statut-annulée                  { background: $dal-trit-neutral !important; }
   }
-
   .succes-message { color: $dal-trit-success !important; }
-
-  span[style*="color:red"],
-  .error,
-  .erreur-msg { color: $dal-trit-error !important; }
-
-  nav nav:last-child div a {
-    background: $dal-trit-primary !important;
-  }
-
-  a.btn__creer-compte {
-    background-color: $dal-trit-primary !important;
-  }
+  span[style*="color:red"], .error, .erreur-msg { color: $dal-trit-error !important; }
 }
+
+
 /* Style de base du toast (caché par défaut) */
 .toast {
     visibility: hidden;

@@ -18,7 +18,7 @@ body {
 }
 
 /* Bloc principale du main, la seul partie qui change dans le index.php en gros */
-.dashboard {
+body:not(.body__facture) .dashboard {
   display: flex;
   height: 100vh;
 }
@@ -6695,17 +6695,27 @@ textarea.error {
     font-family: 'DejaVu Sans', Arial, sans-serif;
     color: $gray-darker;
     line-height: 1.6;
+    background-color: #e8e8e8;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    .header{
+      display: table;
+      width: 100%;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+    }
 }
 
 .page-break {
     page-break-after: always;
-}
-
-.header {
-    display: table;
-    width: 100%;
-    margin-bottom: 40px;
-    padding-bottom: 20px;
 }
 
 .logo-section {

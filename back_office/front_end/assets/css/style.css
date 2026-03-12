@@ -11,7 +11,7 @@ body {
 }
 
 /* Bloc principale du main, la seul partie qui change dans le index.php en gros */
-.dashboard {
+body:not(.body__facture) .dashboard {
   display: flex;
   height: 100vh;
 }
@@ -6313,17 +6313,26 @@ textarea.error:focus {
   font-family: "DejaVu Sans", Arial, sans-serif;
   color: #333;
   line-height: 1.6;
+  background-color: #e8e8e8;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
-
-.page-break {
-  page-break-after: always;
-}
-
-.header {
+.body__facture .header {
   display: table;
   width: 100%;
   margin-bottom: 40px;
   padding-bottom: 20px;
+}
+
+.page-break {
+  page-break-after: always;
 }
 
 .logo-section {

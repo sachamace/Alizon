@@ -4502,6 +4502,16 @@ table td {
       &:hover { background: #f5f5f5; }
       &.actif  { background: #efefef; font-weight: 700; }
 
+      .dal-pastille {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      &.dal-deuteranopie .dal-pastille,
+      &.dal-protanopie   .dal-pastille,
+      &.dal-tritanopie   .dal-pastille { background: $gray-dark; }
     }
 
     .dal-reset {
@@ -4521,6 +4531,11 @@ table td {
     }
   }
 }
+
+
+body.deuteranopie { @include dal-primary-override($dal-deut-primary); }
+body.protanopie   { @include dal-primary-override($dal-prot-primary); }
+body.tritanopie   { @include dal-primary-override($dal-trit-primary); }
 
 // =============================================================================
 // MODE DEUTERANOPIE — confusion rouge/vert (le plus fréquent)

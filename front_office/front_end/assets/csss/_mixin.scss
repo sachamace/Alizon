@@ -143,3 +143,66 @@
 @mixin transition($properties...) {
   transition: $properties $transition-speed ease;
 }
+
+// =============================================================================
+// MIXIN DALTONIEN — override primary-color pour les 3 modes
+// =============================================================================
+@mixin dal-primary-override($color) {
+  // barre de recherche
+  nav nav:first-child form input { border-color: $color; }
+
+  // catégories header
+  nav nav:last-child div a { background: $color; }
+
+  // page connexion
+  .body__connexion { background: $color; }
+
+  // inputs focus
+  input:focus,
+  select:focus,
+  textarea:focus,
+  .input-style:focus { border-color: $color !important; }
+
+  // liens
+  .forgot-password,
+  .recuperation-links a { color: $color; }
+
+  // boutons principaux
+  .btn__connexion,
+  .btn-confirm,
+  .btn-primary,
+  .btn-primary:hover,
+  .payer-btn,
+  .confirmer,
+  .compte__button,
+  .toggle-view-reponse { background: $color !important; border-color: $color !important; }
+
+  // bouton créer compte
+  .btn__creer-compte { border-color: $color; }
+  .btn__creer-compte:hover { background: $color; }
+
+  // prix produits
+  .prix { color: $color; }
+
+  // scrollbar
+  ::-webkit-scrollbar-thumb { background: $color; }
+
+  // checkbox
+  input[type="checkbox"] { accent-color: $color; }
+
+  // page produit
+  .prix-valeur { background: $color !important; }
+  .description { border-left-color: $color !important; }
+  .avis-item { border-left-color: $color !important; }
+
+  // steps commande
+  .step.active .step-icon { background: $color; border-color: $color; }
+  .step-line.full { background: $color; }
+
+  // confirmation achat
+  .client-info { border-left-color: $color; }
+  .order-details h3 { border-bottom-color: $color; }
+
+  // compte
+  .compte__button { background: $color; }
+}

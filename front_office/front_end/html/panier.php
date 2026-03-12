@@ -241,6 +241,7 @@ try {
     <footer class="footer mobile">
         <?php include 'footer.php'?>
     </footer>
+    <script src="../assets/js/toast.js"></script>
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll(".supprimer-produit").forEach(form => {
@@ -263,6 +264,7 @@ try {
         }
     });
     </script>
+
     <?php if (isset($_SESSION['message_plus'])): ?>
         <script>
             document.addEventListener("DOMContentLoaded", function() {

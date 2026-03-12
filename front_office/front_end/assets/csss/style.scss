@@ -2627,20 +2627,16 @@ footer.footer {
 
         &:hover {
             background: $primary-color;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(108, 211, 255, 0.4);
         }
     }
 
     &-secondary {
         background: $gray-darker;
-        color: $white;
+        color: #4a4a6a;
         box-shadow: $shadow-sm;
 
         &:hover {
-            background: #555;
-            transform: translateY(-3px);
-            box-shadow: $shadow-md;
+            background: $white;
         }
     }
 }
@@ -3553,19 +3549,17 @@ footer.footer {
         color: $black; 
 
         &:hover {
-            background: darken($primary-color, 5%); 
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba($black, 0.1);
+            background: darken($primary-color, 5%);
         }
     }
 
     // Bouton Secondaire (Facture)
     &-secondary {
-        background: $status-inactive; 
-        color: $white;
+        background: $white; 
+        color: #4a4a6a;
 
         &:hover {
-            background: darken($status-inactive, 10%);
+            border-color: #4a4a6a;
         }
     }
 }

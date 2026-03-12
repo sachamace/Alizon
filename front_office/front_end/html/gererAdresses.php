@@ -198,338 +198,305 @@ try {
     <link rel="stylesheet" href="../assets/csss/style.css">
     <style>
         .adresses-container {
-            max-width: 1400px;
+            max-width: 860px;
             margin: 0 auto;
-            padding: 150px 3rem 2rem 3rem;
+            padding: 150px 2rem 4rem 2rem;
         }
 
-        .messages {
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #1a1a2e;
             margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
         }
+
+        /* ── MESSAGES ── */
+        .messages { margin-bottom: 1.5rem; }
 
         .message-succes {
-            background: #d4edda;
-            color: #155724;
-            padding: 1.2rem;
-            border-radius: 8px;
-            border: 1px solid #c3e6cb;
+            background: #edfff5;
+            color: #1a7a45;
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            border-left: 4px solid #2ed573;
+            font-size: 0.95rem;
+            font-weight: 500;
             margin-bottom: 1rem;
-            font-size: 1rem;
         }
 
         .message-erreur {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 1.2rem;
-            border-radius: 8px;
-            border: 1px solid #f5c6cb;
+            background: #fff0f1;
+            color: #b02030;
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            border-left: 4px solid #ff4757;
+            font-size: 0.95rem;
+            font-weight: 500;
             margin-bottom: 1rem;
-            font-size: 1rem;
         }
 
-        .adresse-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: relative;
-        }
-
-        .adresse-card.defaut {
-            border: 3px solid #ff6ce2;
-        }
-
-        .badge-defaut {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: #ff6ce2;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .adresse-header {
-            display: flex;
-            justify-content: space-between;
+        /* ── COMPTEUR ── */
+        .limite-info {
+            display: inline-flex;
             align-items: center;
-            margin-bottom: 1.2rem;
-        }
-
-        .adresse-header h3 {
-            margin: 0;
-            color: #333;
-            font-size: 1.4rem;
-        }
-
-        .adresse-infos p {
-            margin: 0.5rem 0;
-            color: #666;
-            font-size: 1.05rem;
-        }
-
-        .adresse-infos strong {
-            font-weight: 600;
-            color: #333;
-            min-width: 120px;
-            display: inline-block;
-        }
-
-        .adresse-actions {
-            display: flex;
-            gap: 0.8rem;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 0.7rem 1.3rem;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: #ff6ce2;
-            color: #000;
-        }
-
-        .btn-primary:hover {
-            background: #ff5cd5;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(255, 108, 226, 0.3);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #ff6ce2;
-            color: #ff6ce2;
-        }
-
-        .btn-outline:hover {
-            background: #ff6ce2;
-            color: #000;
-            transform: translateY(-2px);
-        }
-
-        .btn-profil,
-        .btn-compte {
-            background: #6c757d;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 600;
-            font-size: 1rem;
-            margin-top: 1rem;
-            transition: all 0.3s;
-        }
-
-        .btn-profil:hover,
-        .btn-compte:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
-        }
-
-        .form-ajout {
-            background: #f9f9f9;
-            padding: 2rem;
-            border-radius: 12px;
+            gap: 0.4rem;
+            background: #fff0fc;
+            color: #d946ba;
+            font-size: 0.88rem;
+            font-weight: 700;
+            padding: 0.6rem 1.1rem;
+            border-radius: 999px;
+            border: 1.5px solid #ffd6f7;
             margin-bottom: 2rem;
-            border: 1px solid #e0e0e0;
+        }
+
+        /* ── FORMULAIRE AJOUT ── */
+        .form-ajout {
+            background: #ffffff;
+            border: 1.5px solid #ede8f5;
+            border-radius: 14px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 2px 8px rgba(180, 80, 200, 0.07);
         }
 
         .form-ajout h3 {
-            margin-top: 0;
-            color: #333;
-            font-size: 1.4rem;
+            margin: 0 0 1.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #1a1a2e;
+            letter-spacing: -0.01em;
         }
 
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
+        .form-group { margin-bottom: 1.1rem; }
 
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333;
-            font-size: 1rem;
+            margin-bottom: 0.4rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #4a4a6a;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
 
         .form-group input {
             width: 100%;
-            padding: 0.9rem;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1.05rem;
+            padding: 0.85rem 1rem;
+            border: 1.5px solid #ede8f5;
+            border-radius: 10px;
+            font-size: 0.97rem;
+            color: #1a1a2e;
+            background: #fafafa;
             box-sizing: border-box;
-            transition: border-color 0.3s;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
         }
 
         .form-group input:focus {
             outline: none;
             border-color: #ff6ce2;
-            box-shadow: 0 0 0 3px rgba(255, 108, 226, 0.1);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(255, 108, 226, 0.12);
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        .limite-info {
-            text-align: center;
-            color: #666;
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: #f0f0f0;
-            border-radius: 8px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-        }
-
-        .modal-content {
-            background: white;
-            margin: 5% auto;
-            padding: 2.5rem;
-            border-radius: 12px;
-            max-width: 700px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-
-        .modal-content h3 {
-            margin-top: 0;
-            font-size: 1.5rem;
-            color: #333;
-        }
-
-        /* Responsive pour tablettes */
-        @media (max-width: 1200px) {
-            .adresses-container {
-                max-width: 95%;
-                padding: 150px 2rem 2rem 2rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .adresses-container {
-                padding: 120px 1rem 2rem 1rem;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .adresse-actions {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                text-align: center;
-            }
-            
-            .badge-defaut {
-                position: static;
-                display: inline-block;
-                margin-bottom: 1rem;
-            }
-            
-            .adresse-card {
-                padding: 1.5rem;
-            }
-            
-            .modal-content {
-                max-width: 90%;
-                margin: 10% auto;
-                padding: 1.5rem;
-            }
-        }
-
-        h2 {
-            font-size: 1.8rem;
-            color: #333;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-        }
-
-        /* Style pour les boutons de retour */
-        .navigation-buttons {
-            display: flex;
             gap: 1rem;
-            margin-top: 2rem;
+        }
+
+        /* ── CARDS ── */
+        .adresse-card {
+            background: #ffffff;
+            border: 1.5px solid #ede8f5;
+            border-radius: 14px;
+            padding: 1.8rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(180, 80, 200, 0.07);
+            transition: box-shadow 0.25s, border-color 0.25s;
+        }
+
+        .adresse-card:hover {
+            box-shadow: 0 6px 24px rgba(180, 80, 200, 0.12);
+        }
+
+        .adresse-card.defaut {
+            border-color: #ff6ce2;
+            box-shadow: 0 0 0 3px rgba(255, 108, 226, 0.1);
+        }
+
+        .badge-defaut {
+            position: absolute;
+            top: 1.4rem;
+            right: 1.4rem;
+            background: #ff6ce2;
+            color: white;
+            padding: 0.3rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+
+        .adresse-header { margin-bottom: 1rem; }
+
+        .adresse-header h3 {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #1a1a2e;
+        }
+
+        .adresse-infos p {
+            margin: 0.35rem 0;
+            color: #4a4a6a;
+            font-size: 0.93rem;
+            line-height: 1.6;
+        }
+
+        .adresse-infos strong {
+            font-weight: 600;
+            color: #1a1a2e;
+            min-width: 110px;
+            display: inline-block;
+        }
+
+        .adresse-actions {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 1.3rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid #ede8f5;
             flex-wrap: wrap;
         }
 
+        /* BOUTONS  */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: transform 0.18s, background 0.18s;
+            white-space: nowrap;
+        }
+
+        .btn-outline {
+            background: #fff0fc;
+            border: 1.5px solid #ffd6f7;
+            color: #d946ba;
+        }
+        .btn-outline:hover {
+            background: #ffd6f7;
+            border-color: #ff6ce2;
+            box-shadow: 0 4px 12px rgba(255, 108, 226, 0.2);
+        }
+
+        .btn-danger {
+            background: #fff0f1;
+            border: 1.5px solid #ffc0c5;
+            color: #ff4757;
+        }
+        .btn-danger:hover {
+            background: #ff4757;
+            border-color: #ff4757;
+            color: white;
+        }
+
+        /* ── BOUTONS NAVIGATION (en haut) ── */
+        .navigation-buttons {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-profil,
+        .btn-compte {
+            background: #ffffff;
+            border: 1.5px solid #ede8f5;
+            color: #4a4a6a;
+            padding: 0.6rem 1.2rem;
+            border-radius: 9px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 700;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+        }
+        .btn-profil:hover,
+        .btn-compte:hover {
+            border-color: #ff6ce2;
+            color: #d946ba;
+            background: #fff0fc;
+            box-shadow: 0 4px 12px rgba(255, 108, 226, 0.15);
+        }
+
+        /* ── MODAL ── */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            inset: 0;
+            background: rgba(26, 26, 46, 0.5);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal[style*="block"] { display: flex !important; }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 2.2rem;
+            width: 100%;
+            max-width: 580px;
+            box-shadow: 0 16px 48px rgba(180, 80, 200, 0.18);
+            border: 1.5px solid #ede8f5;
+            animation: modalIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalIn {
+            from { transform: scale(0.9) translateY(20px); opacity: 0; }
+            to   { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .modal-content h3 {
+            margin: 0 0 1.5rem 0;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #1a1a2e;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .adresses-container { padding: 150px 2rem 2rem 2rem; }
+        }
+
+        @media (max-width: 768px) {
+            .adresses-container { padding: 120px 1rem 2rem 1rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .adresse-actions { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+            .badge-defaut { position: static; display: inline-block; margin-bottom: 1rem; }
+            .adresse-card { padding: 1.4rem; }
+            .modal-content { max-width: 92%; padding: 1.6rem; margin: 0 1rem; }
+            .navigation-buttons { flex-direction: column; }
+            .btn-profil, .btn-compte { justify-content: center; }
+        }
+
         @media (max-width: 428px) {
-            .adresses-container{
-                margin: 0;
-                padding: 0 1.5rem 1rem 1.5rem;
-            }
-            .adresse-header h3 {
-                font-size: 1.2rem;
-            }
-            
-            .adresse-infos p {
-                font-size: 0.95rem;
-            }
-            
-            .btn {
-                font-size: 0.9rem;
-                padding: 0.6rem 1rem;
-            }
-            .btn-compte, .btn-profil{
-                margin: auto;
-                width: 75%;
-            }
-            .btn-compte{
-                margin-bottom: 50px;
-                margin-top: 10px;
-            }
+            .adresses-container { padding: 0 1.2rem 2rem 1.2rem; }
         }
     </style>
 </head>
@@ -551,6 +518,12 @@ try {
             <?php if ($message_erreur): ?>
                 <div class="message-erreur"><?= htmlspecialchars($message_erreur) ?></div>
             <?php endif; ?>
+        </div>
+
+        <!-- Boutons navigation -->
+        <div class="navigation-buttons">
+            <a href="consulterProfilClient.php" class="btn-profil">← Retour au profil</a>
+            <a href="compte.php" class="btn-compte">← Retour au compte</a>
         </div>
 
         <!-- Info limite -->
@@ -693,13 +666,6 @@ try {
             <?php endforeach; ?>
         <?php endif; ?>
         
-        <div>
-            <a href="consulterProfilClient.php" class="btn btn-profil">← Retour au profil</a>
-        </div>
-
-        <div>
-            <a href="compte.php" class="btn btn-compte">← Retour au compte</a>
-        </div>
     </main>
 
     <footer class="footer mobile">

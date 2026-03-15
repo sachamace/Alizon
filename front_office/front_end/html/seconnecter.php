@@ -53,10 +53,8 @@
             } else {
                 $_SESSION['dernier_envoi'] = $time;
                 
-                // 2. CRUCIAL : On utilise bien create() et non createFromSecret()
                 $otp = TOTP::create($secret);
                 
-                // 3. TOLÉRANCE : Le "1" permet une marge de 30 secondes en cas de décalage d'horloge
                 if ($otp->verify($code_saisi, null, 1)) {
                     
                     // --- LE CODE EST BON ---
@@ -92,7 +90,7 @@
             }
         }
     }
-    // Connexion normale (Etape 1 : Vérif Login/MDP) uniquement si l'âge est vérifié et qu'on ne traite pas l'A2F
+   
     elseif ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['motdepasse']) && $age_verifie) {
         $mdp = trim($_POST['motdepasse']);
         $email = trim($_POST['adresse_mail']);

@@ -43,6 +43,10 @@
         if (!$secret) {
             $erreur_a2f = "Session expirée, veuillez vous reconnecter.";
             $attente_a2f = false; 
+            die("<div style='background:red; color:white; padding:20px; font-size:20px;'>
+                 <strong>ERREUR CRITIQUE 1 :</strong> Le secret a disparu de la session !<br>
+                 Soit la session a expiré, soit elle a été écrasée.
+                 </div>");
         } else {
             // 1. Gestion du délai (anti-spam)
             if (isset($_SESSION['dernier_envoi']) && ($time - $_SESSION['dernier_envoi']) < $delai_attente) {
@@ -86,6 +90,16 @@
                     $erreur_a2f = "Code de vérification incorrect.";
                     $attente_a2f = true; 
                     $_SESSION["message_erreur"] = $erreur_a2f;
+                    die("<div style='background:black; color:#00ff00; padding:20px; font-size:18px; font-family:monospace;'>
+                 <strong>--- DEBUG REPORT ---</strong><br><br>
+                 1. Code tapé par l'utilisateur : '$code_saisi'<br>
+                 2. Secret extrait de la BDD : '$secret'<br>
+                 3. Code attendu par le serveur MAINTENANT : '$code_attendu'<br><br>
+                 <strong>DIAGNOSTIC :</strong><br>
+                 - Si le 'Code tapé' est vide, c'est ton HTML (formulaire en double) qui bugue.<br>
+                 - Si le 'Code attendu' est différent de ton téléphone, c'est l'horloge du serveur.<br>
+                 - Si le 'Secret' n'est pas celui que tu as vu sur la page d'activation, c'est ta base de données qui n'est pas à jour.
+                 </div>");
                 }
             }
         }

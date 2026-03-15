@@ -46,9 +46,11 @@
         } else {
 
             $secret_attendu = $_SESSION['temp_secret_a2f'] ?? 'AUCUN SECRET';
+            $code_attendu_par_le_serveur = $otp->now(); // Le code valide à cet instant T
+            
             echo json_encode([
                 'success' => false, 
-                'message' => "Erreur. Code reçu : '$code_recu'. Secret stocké : '$secret_attendu'."
+                'message' => "Reçu: $code_recu | Le serveur attend: $code_attendu_par_le_serveur | Secret: $secret_attendu"
             ]);
             exit();
         }

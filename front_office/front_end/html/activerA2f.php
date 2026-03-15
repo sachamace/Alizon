@@ -6,74 +6,70 @@
     require_once '../../../vendor/autoload.php';
     
     $id_client_connecte = $_SESSION['id_client'];  
-     
+
     if ($_SERVER["REQUEST_METHOD"] === "GET") {
-        $clock = new class implements \Psr\Clock\ClockInterface {
-            public function now(): \DateTimeImmutable {
-                return new \DateTimeImmutable();
-            }
-        };
-        $otp = TOTP::generate($clock);
+
+        $otp = TOTP::create(); 
         $_SESSION['temp_secret_a2f'] = $otp->getSecret(); 
     } else {
         if (isset($_SESSION['temp_secret_a2f'])) {
             $otp = TOTP::create($_SESSION['temp_secret_a2f']);
         } else {
+            // Si la session est perdue lors de l'AJAX
+            if (isset($_POST['code'])) {
+                echo json_encode(['success' => false, 'message' => "Session expirée, veuillez recharger la page."]);
+                exit();
+            }
             header("Location: activerA2f.php");
             exit();
         }
     }
 
+
     if (isset($_POST['code'])) {
-        $code_recu = $_POST['code'];
+
+        $code_recu = trim($_POST['code']); 
         
-        // On recrée l'objet OTP à partir du secret sauvegardé en session
-        if (isset($_SESSION['temp_secret_a2f'])) {
-            $otp = TOTP::create($_SESSION['temp_secret_a2f']);
+
+        if ($otp->verify($code_recu, null, 1)) {
+
+            $stmtcode = $pdo->prepare("UPDATE compte_client SET codea2f = :codea2f WHERE id_client = :id_client");
+            $stmtcode->execute([
+                'id_client' => $id_client_connecte,
+                'codea2f' => $_SESSION['temp_secret_a2f']
+            ]);
+            unset($_SESSION['temp_secret_a2f']);
             
-            if ($otp->verify($code_recu)) {
-                // Le code est bon ! On met à jour la BDD
-                $stmtcode = $pdo->prepare("UPDATE compte_client SET codea2f = :codea2f WHERE id_client = :id_client");
-                $stmtcode->execute([
-                    'id_client' => $id_client_connecte,
-                    'codea2f' => $_SESSION['temp_secret_a2f']
-                ]);
-                unset($_SESSION['temp_secret_a2f']);
-                
-                // On répond au JS que c'est un succès (format JSON)
-                echo json_encode(['success' => true]);
-                exit();
-            } else {
-                // On répond au JS que le code est faux
-                echo json_encode(['success' => false, 'message' => "Le code à 6 chiffres n'est pas bon !"]);
-                exit();
-            }
-        }else {
-            // 2. IMPORTANT : Gérer le cas où la session a expiré
-            echo json_encode(['success' => false, 'message' => "Session expirée, veuillez recharger la page."]);
+
+            echo json_encode(['success' => true]);
+            exit();
+        } else {
+
+            echo json_encode(['success' => false, 'message' => "Le code à 6 chiffres n'est pas bon !"]);
             exit();
         }
     }   
-
     $attente_a2f = false;
     if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['code'])){
         $attente_a2f = true;
     }
 
+    
+    if (!$attente_a2f) {
+        $code_secret = $otp->getSecret(); 
 
-    $code_secret = $otp->getSecret(); 
+        $stmtmail = $pdo->prepare("SELECT adresse_mail FROM compte_client WHERE id_client = :id_client");
+        $stmtmail->execute([
+            'id_client' => $id_client_connecte
+        ]);
+        $mail = $stmtmail->fetchColumn();
 
-    // Configuration de l'affichage 
-    $stmtmail = $pdo->prepare("SELECT adresse_mail FROM compte_client WHERE id_client = :id_client");
-    $stmtmail->execute([
-        'id_client' => $id_client_connecte
-    ]);
-    $mail = $stmtmail->fetchColumn();
-
-    $otp = $otp->withLabel($mail); 
-    $otp = $otp->withIssuer('AuthentikATOR');
-    $provisioningUri = $otp->getProvisioningUri();  
+        $otp = $otp->withLabel($mail); 
+        $otp = $otp->withIssuer('AuthentikATOR');
+        $provisioningUri = $otp->getProvisioningUri();  
+    }
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>

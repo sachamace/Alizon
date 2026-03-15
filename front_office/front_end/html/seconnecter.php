@@ -119,9 +119,9 @@
             // pour finaliser la connexion après la vérification A2F
             $_SESSION['temp_user'] = $user;
 
-            $stmtsecret = $pdo->prepare("SELECT codea2f FROM compte_client WHERE adresse_mail = :adresse_mail");
+            $stmtsecret = $pdo->prepare("SELECT codea2f FROM compte_client WHERE id_client = :id_client");
             $stmtsecret->execute([
-                'adresse_mail' => $email
+                'id_client' => $user['id_client']
             ]);
             $secret = $stmtsecret->fetchColumn();
 
@@ -206,44 +206,6 @@
 
             <?php if (!empty($erreur_a2f)): ?>
                 <div class="erreur-msg"><?= htmlspecialchars($erreur_a2f) ?></div>
-            <?php endif; ?>
-            <?php if (!empty($message)): ?>
-                <div class="erreur-msg"><?= htmlspecialchars($message) ?></div>
-            <?php endif; ?>
-        </div>
-    </div>
-    <?php endif; ?>
-
-
-    <?php if ($attente_a2f): ?>
-    <div class="popup-overlay">
-        <div class="popup-content">
-            <h2>Double Authentification</h2>
-            
-            <form action="" class="form__connexion" method="post" enctype="multipart/form-data">
-                <p>Veuillez entrer le code de vérification à 6 chiffres pour sécuriser votre connexion.</p>
-                
-                <input type="text" name="code_a2f" placeholder="000000" maxlength="6" required autofocus autocomplete="one-time-code">
-                
-                <div class="popup-buttons">
-                    <button type="submit" class="btn-popup btn-valider" >
-                        Vérifier
-                    </button>
-                </div>
-                <div style="margin-top: 15px;">
-                     <a href="seconnecter.php" style="color: #666; text-decoration: none; font-size: 14px;">Annuler et retourner à la connexion</a>
-                </div>
-            </form>
-
-            <?php if (!empty($erreur_a2f)): ?>
-                <div class="erreur-msg">
-                    <?= htmlspecialchars($erreur_a2f) ?>
-                </div>
-            <?php endif; ?>
-            <?php if (!empty($message)): ?>
-                <div class="erreur-msg">
-                    <?= htmlspecialchars($message) ?>
-                </div>
             <?php endif; ?>
         </div>
     </div>

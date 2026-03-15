@@ -1,11 +1,12 @@
 <?php
+    use OTPHP\TOTP;
     include 'config.php';
     include 'session.php';
     include 'sessionindex.php';
     require_once '../../../vendor/autoload.php';
     
     $id_client_connecte = $_SESSION['id_client'];   
-    use OTPHP\TOTP;
+    
 
     if (isset($_POST['code'])) {
         $code_recu = $_POST['code'];
@@ -31,6 +32,10 @@
                 echo json_encode(['success' => false, 'message' => "Le code à 6 chiffres n'est pas bon !"]);
                 exit();
             }
+        }else {
+            // 2. IMPORTANT : Gérer le cas où la session a expiré
+            echo json_encode(['success' => false, 'message' => "Session expirée, veuillez recharger la page."]);
+            exit();
         }
     }   
 
@@ -91,7 +96,7 @@
                     <input type="text" id="code_2fa" placeholder="000000" maxlength="6" required autofocus autocomplete="one-time-code">
                     
                     <div class="popup-buttons">
-                        <button type="submit" class="btn-popup btn-valider" onclick="valider()">
+                        <button type="button" class="btn-popup btn-valider" onclick="valider()">
                             Vérifier
                         </button>
                     </div>

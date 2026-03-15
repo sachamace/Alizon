@@ -36,71 +36,40 @@
 
     // Gestion de la vérification du code A2F
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f'])) {
-        $time = time();
         $code_saisi = trim($_POST['code_a2f']);
+        // --- AJOUT ICI : On récupère le secret de la session ---
         $secret = $_SESSION['temp_secret'] ?? null;
-
-        if (!$secret) {
-            $erreur_a2f = "Session expirée, veuillez vous reconnecter.";
-            $attente_a2f = false; 
-            die("<div style='background:red; color:white; padding:20px; font-size:20px;'>
-                 <strong>ERREUR CRITIQUE 1 :</strong> Le secret a disparu de la session !<br>
-                 Soit la session a expiré, soit elle a été écrasée.
-                 </div>");
-        } else {
-            // 1. Gestion du délai (anti-spam)
-            if (isset($_SESSION['dernier_envoi']) && ($time - $_SESSION['dernier_envoi']) < $delai_attente) {
-                $temps_restant = $delai_attente - ($time - $_SESSION['dernier_envoi']);
-                $erreur_a2f = "Trop vite ! Veuillez patienter encore $temps_restant secondes.";
-                $attente_a2f = true; 
-                $_SESSION["message_erreur"] = $erreur_a2f;
-            } else {
-                $_SESSION['dernier_envoi'] = $time;
-                
-                $otp = TOTP::create($secret);
-                
-                if ($otp->verify($code_saisi, null, 1)) {
+        
+        if ($secret) {
+            $otp = TOTP::createFromSecret($secret);
+            if ($otp->verify($code_saisi)) {
+                // La vérification A2F a réussi, on connecte l'utilisateur
+                // On récupère les infos temporaires stockées en session lors de la première étape
+                if(isset($_SESSION['temp_user'])) {
+                    $user = $_SESSION['temp_user'];
                     
-                    // --- LE CODE EST BON ---
-                    if(isset($_SESSION['temp_user'])) {
-                        $user = $_SESSION['temp_user'];
-                        
-                        // Récup panier
-                        $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_num = ?");
-                        $panier_sql->execute([$user['id_num']]); 
-                        $panier = $panier_sql->fetch();
+                    // Récup panier
+                    $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_client = ?");
+                    $panier_sql->execute([$user['id_client']]); 
+                    $panier = $panier_sql->fetch();
 
-                        // Connexion définitive
-                        $_SESSION['id'] = $user['id_num'];
-                        $_SESSION['login'] = $user['login'];
-                        $_SESSION['id_client'] = $user['id_client'];
-                        $_SESSION['id_panier'] = $panier['id_panier'] ?? null;
-                        $_SESSION["message_success"] = "Connexion avec succès !";
-                        
-                        // Nettoyage
-                        unset($_SESSION['temp_user']);
-                        unset($_SESSION['temp_secret']);
-                        
-                        // Redirection propre en PHP
-                        header("Location: /index.php");
-                        exit();
-                    }
-                } else {
-                    // --- LE CODE EST FAUX ---
-                    $erreur_a2f = "Code de vérification incorrect.";
-                    $attente_a2f = true; 
-                    $_SESSION["message_erreur"] = $erreur_a2f;
-                    die("<div style='background:black; color:#00ff00; padding:20px; font-size:18px; font-family:monospace;'>
-                 <strong>--- DEBUG REPORT ---</strong><br><br>
-                 1. Code tapé par l'utilisateur : '$code_saisi'<br>
-                 2. Secret extrait de la BDD : '$secret'<br>
-                 3. Code attendu par le serveur MAINTENANT : '$code_attendu'<br><br>
-                 <strong>DIAGNOSTIC :</strong><br>
-                 - Si le 'Code tapé' est vide, c'est ton HTML (formulaire en double) qui bugue.<br>
-                 - Si le 'Code attendu' est différent de ton téléphone, c'est l'horloge du serveur.<br>
-                 - Si le 'Secret' n'est pas celui que tu as vu sur la page d'activation, c'est ta base de données qui n'est pas à jour.
-                 </div>");
+                    // Connexion définitive
+                    $_SESSION['id'] = $user['id_num'];
+                    $_SESSION['login'] = $user['login'];
+                    $_SESSION['id_client'] = $user['id_client'];
+                    $_SESSION['id_panier'] = $panier['id_panier'];
+                    
+                    // Nettoyage
+                    unset($_SESSION['temp_user']);
+                    unset($_SESSION['temp_secret']);
+                    
+                    echo "<script>window.location.href = '/index.php';</script>";
+                    exit();
                 }
+            } else {
+                // Code incorrect, on réaffiche la popup A2F avec une erreur
+                $erreur_a2f = "Code de vérification incorrect.";
+                $attente_a2f = true; 
             }
         }
     }

@@ -1,11 +1,12 @@
 <?php
+    use OTPHP\TOTP;
     date_default_timezone_set('Europe/Paris');
     session_start();
     include 'config.php';
     
     require_once '../../../vendor/autoload.php';
 
-    use OTPHP\TOTP;
+    
 
     
 

@@ -90,21 +90,27 @@
             if ($secret) {
                 $otp = TOTP::createFromSecret($secret);
                 if ($otp->verify($code_saisi)) {
-                    // La vérification A2F a réussi
-                    if(isset($_SESSION['temp_vendeur'])) {
-                        $vendeur = $_SESSION['temp_vendeur'];
+                    // La vérification A2F a réussi, on connecte l'utilisateur
+                    // On récupère les infos temporaires stockées en session lors de la première étape
+                    if(isset($_SESSION['temp_user'])) {
+                        $user = $_SESSION['temp_user'];
                         
-                        // Connexion définitive (Variables originales de connecter.php)
-                        $_SESSION['vendeur_id'] = $vendeur['id_vendeur'];
-                        $_SESSION['vendeur_nom'] = $vendeur['raison_sociale'];
-                        $_SESSION['vendeur_email'] = $vendeur['login'];
-                        $_SESSION['est_connecte'] = true;
+                        // Récup panier
+                        $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_num = ?");
+                        $panier_sql->execute([$user['id_num']]); 
+                        $panier = $panier_sql->fetch();
+
+                        // Connexion définitive
+                        $_SESSION['id'] = $user['id_num'];
+                        $_SESSION['login'] = $user['login'];
+                        $_SESSION['id_client'] = $user['id_client'];
+                        $_SESSION['id_panier'] = $panier['id_panier'];
                         $_SESSION["message_success"] = "Connexion avec succès !";
                         // Nettoyage
-                        unset($_SESSION['temp_vendeur']);
+                        unset($_SESSION['temp_user']);
                         unset($_SESSION['temp_secret']);
                         
-                        echo "<script>window.location.href = 'index.php?page=dashboard';</script>";
+                        echo "<script>window.location.href = '/index.php';</script>";
                         exit();
                     }
                 } else {

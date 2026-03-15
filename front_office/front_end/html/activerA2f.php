@@ -45,7 +45,11 @@
             exit();
         } else {
 
-            echo json_encode(['success' => false, 'message' => "Le code à 6 chiffres n'est pas bon !"]);
+            $secret_attendu = $_SESSION['temp_secret_a2f'] ?? 'AUCUN SECRET';
+            echo json_encode([
+                'success' => false, 
+                'message' => "Erreur. Code reçu : '$code_recu'. Secret stocké : '$secret_attendu'."
+            ]);
             exit();
         }
     }   

@@ -93,7 +93,7 @@
                     <input type="text" id="code_2fa" placeholder="000000" maxlength="6" required autofocus autocomplete="one-time-code">
                     
                     <div class="popup-buttons">
-                        <button type="button" class="btn-popup btn-valider" onclick="valider()">
+                        <button type="submit" class="btn-popup btn-valider" onclick="valider()">
                             Vérifier
                         </button>
                     </div>

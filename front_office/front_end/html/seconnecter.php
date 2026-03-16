@@ -20,7 +20,6 @@
 
     $age_verifie = isset($_COOKIE['age_verifie']) && $_COOKIE['age_verifie'] === '1';
     $attente_a2f = false;
-    $delai_attente = 5;
 
     // Gestion de la vérification d'âge
     if (isset($_POST['verif_age'])) {
@@ -34,28 +33,22 @@
         }
     }
 
-// Gestion de la vérification du code A2F
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f'])) {
         $code_saisi = trim($_POST['code_a2f']);
-        // On récupère le secret de la session
+        // --- AJOUT ICI : On récupère le secret de la session ---
         $secret = $_SESSION['temp_secret'] ?? null;
         
         if ($secret) {
             $otp = TOTP::createFromSecret($secret);
-            
-            // --- LIGNES DE DEBUG ---
-            $code_attendu = $otp->now(); // Le code que le serveur s'attend à recevoir
-            $heure_serveur = date('Y-m-d H:i:s'); // L'heure actuelle du serveur
-            // -----------------------
-
-            if ($otp->verify($code_saisi, null, 2)) {
+            if ($otp->verify($code_saisi)) {
                 // La vérification A2F a réussi, on connecte l'utilisateur
+                // On récupère les infos temporaires stockées en session lors de la première étape
                 if(isset($_SESSION['temp_user'])) {
                     $user = $_SESSION['temp_user'];
                     
                     // Récup panier
-                    $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_num = ?");
-                    $panier_sql->execute([$user['id_num']]); 
+                    $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_client = ?");
+                    $panier_sql->execute([$user['id_client']]); 
                     $panier = $panier_sql->fetch();
 
                     // Connexion définitive
@@ -72,18 +65,13 @@
                     exit();
                 }
             } else {
-                // --- AFFICHAGE DU DEBUG ---
-                // Au lieu de juste dire "Code incorrect", on affiche ce que le serveur voit
-                $erreur_a2f = "DEBUG -> Saisi : $code_saisi | Attendu : $code_attendu | Heure Serveur : $heure_serveur";
+                // Code incorrect, on réaffiche la popup A2F avec une erreur
+                $erreur_a2f = "Code de vérification incorrect.";
                 $attente_a2f = true; 
             }
-        } else {
-            // Debug si la session a été perdue
-            $erreur_a2f = "DEBUG -> Erreur : Le secret est introuvable en session !";
-            $attente_a2f = true;
         }
     }
-   
+    // Connexion normale (Etape 1 : Vérif Login/MDP) uniquement si l'âge est vérifié et qu'on ne traite pas l'A2F
     elseif ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['motdepasse']) && $age_verifie) {
         $mdp = trim($_POST['motdepasse']);
         $email = trim($_POST['adresse_mail']);
@@ -99,12 +87,10 @@
         // 1) LOGIN INCORRECT
         if (!$user) {
             $erreur_ident = "Identifiant incorrect";
-            $_SESSION["message_erreur"] = $erreur_ident;
         }
         // 2) MOT DE PASSE INCORRECT
         elseif ($mdp !== $user['mdp']) {
             $erreur_mdp = "Mot de passe incorrect";
-            $_SESSION["message_erreur"] = $erreur_mdp;
         }
         // 3) OK → DECLENCHER A2F (Au lieu de connecter direct)
         else {
@@ -112,29 +98,23 @@
             // pour finaliser la connexion après la vérification A2F
             $_SESSION['temp_user'] = $user;
 
-            $stmtsecret = $pdo->prepare("SELECT codea2f FROM compte_client WHERE id_client = :id_client");
+            $stmtsecret = $pdo->prepare("SELECT codea2f FROM compte_client WHERE adresse_mail = :adresse_mail");
             $stmtsecret->execute([
-                'id_client' => $user['id_client']
+                'adresse_mail' => $email
             ]);
             $secret = $stmtsecret->fetchColumn();
 
-            if($secret && strcmp($secret, "") != 0){
+            if(strcmp($secret,"") != 0){
                 $_SESSION['temp_secret'] = $secret;
                 $attente_a2f = true; // On active l'affichage de la popup A2F
             }
             else{
-
-                // Récup panier
-                $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_num = ?");
-                $panier_sql->execute([$user['id_num']]); 
-                $panier = $panier_sql->fetch();
-
                 // Connexion définitive
                 $_SESSION['id'] = $user['id_num'];
                 $_SESSION['login'] = $user['login'];
                 $_SESSION['id_client'] = $user['id_client'];
                 $_SESSION['id_panier'] = $panier['id_panier'];
-                $_SESSION["message_success"] = "Connexion avec succès !";
+                
                 // Nettoyage
                 unset($_SESSION['temp_user']);
 
@@ -143,7 +123,7 @@
             }
             
         }
-    } 
+    }
 ?>
 
 <!DOCTYPE html>

@@ -34,17 +34,22 @@
         }
     }
 
-    // Gestion de la vérification du code A2F
+// Gestion de la vérification du code A2F
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['code_a2f'])) {
         $code_saisi = trim($_POST['code_a2f']);
-        // --- AJOUT ICI : On récupère le secret de la session ---
+        // On récupère le secret de la session
         $secret = $_SESSION['temp_secret'] ?? null;
         
         if ($secret) {
             $otp = TOTP::createFromSecret($secret);
+            
+            // --- LIGNES DE DEBUG ---
+            $code_attendu = $otp->now(); // Le code que le serveur s'attend à recevoir
+            $heure_serveur = date('Y-m-d H:i:s'); // L'heure actuelle du serveur
+            // -----------------------
+
             if ($otp->verify($code_saisi)) {
                 // La vérification A2F a réussi, on connecte l'utilisateur
-                // On récupère les infos temporaires stockées en session lors de la première étape
                 if(isset($_SESSION['temp_user'])) {
                     $user = $_SESSION['temp_user'];
                     
@@ -67,10 +72,15 @@
                     exit();
                 }
             } else {
-                // Code incorrect, on réaffiche la popup A2F avec une erreur
-                $erreur_a2f = "Code de vérification incorrect.";
+                // --- AFFICHAGE DU DEBUG ---
+                // Au lieu de juste dire "Code incorrect", on affiche ce que le serveur voit
+                $erreur_a2f = "DEBUG -> Saisi : $code_saisi | Attendu : $code_attendu | Heure Serveur : $heure_serveur";
                 $attente_a2f = true; 
             }
+        } else {
+            // Debug si la session a été perdue
+            $erreur_a2f = "DEBUG -> Erreur : Le secret est introuvable en session !";
+            $attente_a2f = true;
         }
     }
    

@@ -133,6 +133,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 ':note' => $note,
                 ':description' => $description
             ]);
+
+            // Traitement des images de l'avis
+            if (isset($_FILES['nouvelle_image']) && !empty($_FILES['nouvelle_image']['name'][0])) {
+
+                $uploadDir  = __DIR__ . "/../assets/images_avis/";   // chemin physique
+                $uploadName = "/front_office/front_end/assets/images_avis/"; // chemin BDD
+
+                // Créer le dossier s'il n'existe pas encore
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                foreach ($_FILES['nouvelle_image']['name'] as $index => $name) {
+                    if ($_FILES['nouvelle_image']['error'][$index] === UPLOAD_ERR_OK) {
+
+                        $tmp       = $_FILES['nouvelle_image']['tmp_name'][$index];
+                        $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+
+                        // Sécurité : n'accepter que les images
+                        $extensions_autorisees = ['jpg', 'jpeg', 'png', 'webp'];
+                        if (!in_array($extension, $extensions_autorisees)) {
+                            continue;
+                        }
+
+                        $fileName = uniqid("avis_{$id_client}_") . "." . $extension;
+                        $filePath = $uploadDir . $fileName;
+                        $cheminBDD = "/front_office/front_end/assets/images_avis/" . $fileName;
+
+                        if (move_uploaded_file($tmp, $filePath)) {
+                            $stmt_img = $pdo->prepare("
+                                INSERT INTO media_avis (id_client, id_produit, chemin_image)
+                                VALUES (:id_client, :id_produit, :chemin)
+                            ");
+                            $stmt_img->execute([
+                                ':id_client'  => $id_client,
+                                ':id_produit' => $id_produit,
+                                ':chemin'     => $cheminBDD
+                            ]);
+                        }
+                    }
+                }
+            }
             
             echo "<script>
                 window.location.href = '" . $_SERVER['REQUEST_URI'] . "';
@@ -187,6 +229,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         if ($action === 'supprimer_avis') {
             $id_client = $_SESSION['id_client'];
 
+            // Supprimer les fichiers physiques des images
+            $req_imgs = $pdo->prepare("SELECT chemin_image FROM media_avis WHERE id_client = :id_client AND id_produit = :id_produit");
+            $req_imgs->execute([':id_client' => $id_client, ':id_produit' => $id_produit]);
+            $imgs = $req_imgs->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($imgs as $img) {
+                $chemin_physique = $_SERVER['DOCUMENT_ROOT'] . $img['chemin_image'];
+                if (file_exists($chemin_physique)) {
+                    unlink($chemin_physique);
+                }
+            }
+
+            // Supprimer les images en BDD
+            $req_suppr_imgs = $pdo->prepare("DELETE FROM media_avis WHERE id_client = :id_client AND id_produit = :id_produit");
+            $req_suppr_imgs->execute([':id_client' => $id_client, ':id_produit' => $id_produit]);
+
+            // Supprimer l'avis
             $requete_suppr = $pdo->prepare("
                 DELETE FROM avis 
                 WHERE id_produit = :id_produit AND id_client = :id_client
@@ -455,7 +514,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                 <span class="avis-etoiles">' . $etoiles . '</span>
                             </div>
                             <p class="avis-commentaire">' . htmlspecialchars($un_avis['description']) . '</p>';
-                        
+                        // Images de l'avis
+                        $req_images_avis = $pdo->prepare("SELECT id_media, chemin_image FROM media_avis WHERE id_client = :id_client AND id_produit = :id_produit");
+                        $req_images_avis->execute([':id_client' => $id_client, ':id_produit' => $id_produit]);
+                        $images_avis = $req_images_avis->fetchAll(PDO::FETCH_ASSOC);
+
+                        if (!empty($images_avis)) {
+                            echo '<div class="avis-images">';
+                            foreach ($images_avis as $img_avis) {
+                                echo '<div class="avis-image-wrapper">';
+                                echo '<img src="' . htmlspecialchars($img_avis['chemin_image']) . '" alt="Photo avis" class="avis-img">';
+                                if (isset($_SESSION["id_client"]) && $_SESSION["id_client"] == $id_client) {
+                                    echo '
+                                    <form method="post">
+                                        <input type="hidden" name="action" value="supprimer_image_avis">
+                                        <input type="hidden" name="id_media" value="' . $img_avis['id_media'] . '">
+                                    </form>';
+                                }
+                                echo '</div>';
+                            }
+                            echo '</div>';
+                        }
                         echo '<div class="avis-button">';
                         if ($reponse = $req_reponse->fetch()){
                             ?>
@@ -735,7 +814,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         fileInput.type = "file";
                         fileInput.name = "nouvelle_image[]";
                         fileInput.hidden = true;
-                        document.forms[0].appendChild(fileInput);
+                        document.getElementById('avisForm').appendChild(fileInput);
 
                         const dataTransfer = new DataTransfer();
                         dataTransfer.items.add(resizedFile);

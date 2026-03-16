@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['motdepasse']) && $age
     // 3) OK → CONNECTER
     else {
         // Récup panier
-        $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_client = ?");
+        $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_num = ?");
         $panier_sql->execute([$user['id_client']]); 
         $panier = $panier_sql->fetch();
 

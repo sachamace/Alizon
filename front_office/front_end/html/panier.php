@@ -47,7 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $requete_ajout->execute([":id_produit"=> $id_produit_favoris, ":id_panier"=> $id_panier]);
             }
         }
-        header("Location: " . $_SERVER['PHP_SELF']);
+        echo "<script>window.location.href = '" . $_SERVER['PHP_SELF'] . "';</script>";
+        
         exit();
     }
     else{

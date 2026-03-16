@@ -112,16 +112,16 @@ $moyenne_arrondie = 0;
 if (count($avis) > 0) {
     $total_notes = 0;
     foreach ($avis as $un_avis) {
-        $total_notes += floatval($un_avis['note']); // Utiliser floatval au lieu de int
+        $total_notes += floatval($un_avis['note']);
     }
     $moyenne = $total_notes / count($avis);
-    $moyenne_arrondie = round($moyenne * 2) / 2; // Arrondir au 0.5 le plus proche
+    $moyenne_arrondie = round($moyenne * 2) / 2;
 }
 
 
 // Traitement du formulaire d'avis
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajouter_avis') {
-    $note = floatval($_POST['note']); // Utiliser floatval
+    $note = floatval($_POST['note']);
     $description = trim($_POST['description']);
     if ($note >= 0.5 && $note <= 5 && !empty($description) && isset($_SESSION['id_panier'])) {
         $id_client = $_SESSION['id_client'];
@@ -361,7 +361,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     $_SESSION["message_success"] = "Article ajouté au panier !";
                 }
             }
-            echo "<script>
+    
+        $newImagesCount = 0;
+        if (isset($_FILES['nouvelle_image']) && !empty($_FILES['nouvelle_image']['name'][0])) {
+            $newImagesCount = count(array_filter($_FILES['nouvelle_image']['name']));
+        }
+
+        if ($newImagesCount < 1) {
+            $errors['images'] = "Vous devez avoir au moins une image pour ce produit.";
+        }
+
+        if ($newImagesCount > 3) {
+            $errors['images'] = "Vous ne pouvez pas avoir plus de 3 images par produit.";
+        }
+
+        echo "<script>
                 window.location.href = 'panier.php';
             </script>";
             exit();
@@ -715,7 +729,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
                 <?php if (isset($erreur_avis)) echo "<p class='erreur'>$erreur_avis</p>"; ?>
 
-                <form action="" method="post" id="avisForm">
+                <form action="" method="post" id="avisForm" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="ajouter_avis">
                     <input type="hidden" name="note" id="noteInput" value="">
 
@@ -733,6 +747,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
                     <label for="description">Votre avis :</label>
                     <textarea name="description" id="description" rows="4" placeholder="Partagez votre expérience..." required></textarea>
+
+                    <article>
+                        <h3>Médias (<span id="imageCount">0</span>/3)</h3>
+
+                        <div id="mediaGallery" class="media-gallery"></div>
+
+                        <div class="media-upload">
+                            <label for="nouvelle_image">Ajouter images :</label>
+                            <input type="file" id="nouvelle_image" name="nouvelle_image" accept="image/*">
+                        </div>
+
+                        <?php if (isset($errors['images'])) { ?>
+                            <p class="error"><?php echo $errors['images']; ?></p>
+                        <?php } ?>
+                    </article>
 
                     <button type="submit">Envoyer mon avis</button>
                 </form>
@@ -825,7 +854,109 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         if(cancelBtnSignalement) {
             cancelBtnSignalement.addEventListener('click', fermerSignalement);
         }
+        
+        let newImagesPreview = [];
 
+        function updateImageCount() {
+            const newImages = newImagesPreview.length;
+
+            document.getElementById('imageCount').textContent = newImages;
+
+            const fileInput = document.getElementById('nouvelle_image');
+            if (newImages >= 3) {
+                fileInput.disabled = true;
+                fileInput.parentElement.style.opacity = '0.5';
+            } else {
+                fileInput.disabled = false;
+                fileInput.parentElement.style.opacity = '1';
+            }
+        }
+        
+        const MAX_SIZE = 2 * 1024 * 1024;
+        const MAX_WIDTH = 300;
+        const MAX_HEIGHT = 300;
+        const QUALITY = 0.8;
+
+        document.getElementById("nouvelle_image").addEventListener("change", function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (file.size > MAX_SIZE) {
+                alert("L'image est trop lourde (max 2 Mo).");
+                e.target.value = "";
+                return;
+            }
+
+            const newImages = newImagesPreview.length;
+            if (newImages >= 3) {
+                alert("Maximum 3 images !");
+                e.target.value = "";
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const imgEl = new Image();
+                imgEl.onload = () => {
+                    // Calcul des nouvelles dimensions en gardant le ratio
+                    let width = imgEl.width;
+                    let height = imgEl.height;
+                    if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+                        const ratio = Math.min(MAX_WIDTH / width, MAX_HEIGHT / height);
+                        width = Math.round(width * ratio);
+                        height = Math.round(height * ratio);
+                    }
+
+                    // Redimensionnement via canvas
+                    const canvas = document.createElement("canvas");
+                    canvas.width = width;
+                    canvas.height = height;
+                    canvas.getContext("2d").drawImage(imgEl, 0, 0, width, height);
+
+                    // Conversion en Blob compressé
+                    canvas.toBlob(blob => {
+                        const resizedFile = new File([blob], file.name, { type: "image/jpeg" });
+
+                        const div = document.createElement("div");
+                        div.classList.add("media-item", "preview");
+
+                        const preview = document.createElement("img");
+                        preview.src = canvas.toDataURL("image/jpeg", QUALITY);
+
+                        const btn = document.createElement("button");
+                        btn.textContent = "Supprimer";
+                        btn.style = "button";
+                        btn.addEventListener("click", function () {
+                            div.remove();
+                            newImagesPreview = newImagesPreview.filter(f => f !== resizedFile);
+                            fileInput.remove();
+                            updateImageCount();
+                        });
+
+                        div.appendChild(preview);
+                        div.appendChild(btn);
+                        document.getElementById("mediaGallery").appendChild(div);
+
+                        // Injection du fichier redimensionné dans le formulaire
+                        const fileInput = document.createElement("input");
+                        fileInput.type = "file";
+                        fileInput.name = "nouvelle_image[]";
+                        fileInput.hidden = true;
+                        document.forms[0].appendChild(fileInput);
+
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(resizedFile);
+                        fileInput.files = dataTransfer.files;
+                        newImagesPreview.push(resizedFile);
+                        updateImageCount();
+                    }, "image/jpeg", QUALITY);
+                };
+                imgEl.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+            e.target.value = "";
+        });
+        updateImageCount();
     </script>
     <script src="/front_office/front_end/assets/js/AvisLike.js"></script>
     <script src="/front_office/front_end/assets/js/noteEtoile.js"></script>

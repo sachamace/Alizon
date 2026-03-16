@@ -881,6 +881,7 @@ footer.footer.mobile, footer.footer.tablette {
   flex-direction: column;
 }
 .main_produit .fiche-produit .fiche-container .images-produit {
+  position: relative;
   flex: 0 0 50%;
   background: #f8f8f8;
   padding: 3rem;
@@ -939,16 +940,26 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .main_produit .fiche-produit .fiche-container .images-produit .btn-favoris {
   position: absolute;
-  top: 16.5em; /* Distance par rapport au haut de l'image */
-  right: 13em; /* Distance par rapport à la droite de l'image */
+  top: 2rem;
+  right: 2rem;
   width: 5em;
   height: 5em;
   border: none;
-  background-color: #f8f8f8;
+  background: none;
   padding: 0;
   cursor: pointer;
-  z-index: 10; /* S'assure que le bouton passe au-dessus de l'image */
+  z-index: 10;
   outline: none;
+}
+@media (max-width: 428px) {
+  .main_produit .fiche-produit .fiche-container .images-produit .btn-favoris {
+    top: 1rem;
+    right: 1rem;
+  }
+  .main_produit .fiche-produit .fiche-container .images-produit .btn-favoris svg {
+    width: 2.2em;
+    height: 2.2em;
+  }
 }
 .main_produit .fiche-produit .fiche-container .titre-prix-boutons {
   display: flex;
@@ -1836,10 +1847,13 @@ footer.footer.mobile, footer.footer.tablette {
     margin-top: 200px;
     z-index: auto;
     flex: none;
-    width: 80%;
+    width: 90%;
   }
   .main_panier section article {
     margin: 0;
+    flex-direction: column; /* On empile l'image et le texte sur mobile */
+    align-items: center;
+    text-align: center;
   }
   .main_panier section article .panier_info {
     display: flex;
@@ -1872,6 +1886,40 @@ footer.footer.mobile, footer.footer.tablette {
   }
   .main_panier aside {
     margin-bottom: 80px;
+  }
+  .main_panier .colonne-droite-panier {
+    width: 90%; /* Même largeur que la section principale */
+  }
+  .main_panier .colonne-droite-panier aside {
+    width: 100%;
+    margin: 0; /* Enlève les marges pour que ça fitte bien */
+    padding: 1.5em 1em;
+    box-sizing: border-box; /* S'assure que le padding ne dépasse pas le width */
+  }
+  .main_panier .colonne-droite-panier .item-souhait {
+    flex-direction: column; /* On empile l'image et les infos sur la liste de souhait */
+    text-align: center;
+  }
+  .main_panier .colonne-droite-panier .item-souhait .img-souhait {
+    width: 80px;
+    height: 80px;
+  }
+  .main_panier .colonne-droite-panier .item-souhait .details-souhait {
+    width: 100%;
+  }
+  .main_panier .colonne-droite-panier .item-souhait .details-souhait .actions-souhait {
+    flex-direction: column; /* On empile le bouton ajouter et le lien savoir plus */
+    gap: 10px;
+  }
+  .main_panier .colonne-droite-panier .item-souhait .details-souhait .actions-souhait form {
+    width: 100%;
+  }
+  .main_panier .colonne-droite-panier .item-souhait .details-souhait .actions-souhait .btn-ajout-panier {
+    width: 100%; /* Le bouton prend toute la largeur sur mobile */
+  }
+  .main_panier .colonne-droite-panier .item-souhait .details-souhait .actions-souhait .lien-savoir-plus {
+    width: 100%;
+    text-align: center;
   }
 }
 .main_panier .colonne-droite-panier {

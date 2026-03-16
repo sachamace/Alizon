@@ -47,8 +47,8 @@
                     $user = $_SESSION['temp_user'];
                     
                     // Récup panier
-                    $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_client = ?");
-                    $panier_sql->execute([$user['id_client']]); 
+                    $panier_sql = $pdo->prepare("SELECT id_panier FROM public.panier WHERE id_num = ?");
+                    $panier_sql->execute([$user['id_num']]); 
                     $panier = $panier_sql->fetch();
 
                     // Connexion définitive

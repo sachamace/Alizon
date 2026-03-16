@@ -1,8 +1,5 @@
-// daltonien.js — mode daltonien via RGBlind (cdn.jsdelivr.net)
+// daltonien.js — via RGBlind
 
-const modes = ['deuteranopie', 'protanopie', 'tritanopie'];
-
-// Map entre nos noms et les méthodes RGBlind
 const rgblindMap = {
     deuteranopie: 'deuteranopia',
     protanopie:   'protanopia',
@@ -10,69 +7,53 @@ const rgblindMap = {
 };
 
 function appliquerMode(mode) {
-    // Reset d'abord
-    if (typeof rgblind !== 'undefined') {
-        rgblind.reset();
-    }
+    if (typeof rgblind !== 'undefined') rgblind.reset();
 
-    // Mettre à jour les boutons
-    document.querySelectorAll('.dal-btn, .dal-option').forEach(btn => {
-        btn.classList.toggle('actif', btn.dataset.mode === mode);
+    document.querySelectorAll('.dal-option').forEach(btn => {
+        btn.style.fontWeight = btn.dataset.mode === mode ? '700' : '400';
+        btn.style.background = btn.dataset.mode === mode ? '#f0f0f0' : 'none';
     });
 
     const trigger = document.getElementById('dal-trigger');
 
     if (mode && rgblindMap[mode]) {
-        if (typeof rgblind !== 'undefined') {
-            rgblind[rgblindMap[mode]]();
-        }
+        if (typeof rgblind !== 'undefined') rgblind[rgblindMap[mode]]();
         localStorage.setItem('daltonien', mode);
-        if (trigger) trigger.classList.add('dal-actif');
+        if (trigger) trigger.style.borderColor = '#666';
     } else {
         localStorage.removeItem('daltonien');
-        if (trigger) trigger.classList.remove('dal-actif');
+        if (trigger) trigger.style.borderColor = '#ccc';
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Appliquer le mode stocké
     const modeStocke = localStorage.getItem('daltonien');
     if (modeStocke) appliquerMode(modeStocke);
 
-    // 3 boutons cercles
-    document.querySelectorAll('.dal-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const mode = btn.dataset.mode;
-            const actif = btn.classList.contains('actif');
-            appliquerMode(actif ? null : mode);
-        });
-    });
-
-    // Dropdown
     const trigger  = document.getElementById('dal-trigger');
     const dropdown = document.getElementById('dal-dropdown');
 
     if (trigger && dropdown) {
         trigger.addEventListener('click', e => {
             e.stopPropagation();
-            dropdown.classList.toggle('ouvert');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         });
-        document.addEventListener('click', () => dropdown.classList.remove('ouvert'));
+        document.addEventListener('click', () => { if (dropdown) dropdown.style.display = 'none'; });
         dropdown.addEventListener('click', e => e.stopPropagation());
     }
 
     document.querySelectorAll('.dal-option').forEach(btn => {
         btn.addEventListener('click', () => {
             const mode = btn.dataset.mode;
-            const actif = btn.classList.contains('actif');
+            const actif = btn.style.fontWeight === '700';
             appliquerMode(actif ? null : mode);
-            if (dropdown) dropdown.classList.remove('ouvert');
+            if (dropdown) dropdown.style.display = 'none';
         });
     });
 
     const reset = document.getElementById('dal-reset');
     if (reset) reset.addEventListener('click', () => {
         appliquerMode(null);
-        if (dropdown) dropdown.classList.remove('ouvert');
+        if (dropdown) dropdown.style.display = 'none';
     });
 });

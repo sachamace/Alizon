@@ -94,6 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([':id_produit' => $id_produit, ':id_panier' => $id_panier]);
             $_SESSION["message_supprimé"] = "Produit supprimé avec succès !";
         }
+        }
     }
 
     header("Location: " . $_SERVER['PHP_SELF']);

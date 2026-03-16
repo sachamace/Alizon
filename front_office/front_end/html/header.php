@@ -66,6 +66,17 @@
                 </a>
             <?php } ?>
         <button id="openFilter" class="filter-btn" aria-label="Filtres"><img src="/front_office/front_end/assets/images/filtre.png" alt="filtre" width="30" height="30"></button>
+
+        <!-- Switcher daltonien -->
+        <div id="daltonien-switcher" style="position:relative; flex-shrink:0; margin-left:10px;">
+            <button id="dal-trigger" style="background:none; border:1px solid #ccc; border-radius:6px; padding:5px 12px; font-size:0.78rem; font-weight:600; cursor:pointer; white-space:nowrap;">Daltonisme</button>
+            <div id="dal-dropdown" style="display:none; position:absolute; top:calc(100% + 6px); left:0; background:#fff; border:1px solid #ccc; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.1); min-width:150px; z-index:99999;">
+                <button class="dal-option" data-mode="deuteranopie" style="display:block; width:100%; padding:8px 12px; background:none; border:none; cursor:pointer; text-align:left; font-size:0.82rem;">Deutéranopie</button>
+                <button class="dal-option" data-mode="protanopie" style="display:block; width:100%; padding:8px 12px; background:none; border:none; cursor:pointer; text-align:left; font-size:0.82rem;">Protanopie</button>
+                <button class="dal-option" data-mode="tritanopie" style="display:block; width:100%; padding:8px 12px; background:none; border:none; cursor:pointer; text-align:left; font-size:0.82rem;">Tritanopie</button>
+                <button id="dal-reset" style="display:block; width:100%; padding:7px 12px; background:none; border:none; border-top:1px solid #eee; cursor:pointer; text-align:left; font-size:0.75rem; color:#666;">Réinitialiser</button>
+            </div>
+        </div>
         </div>
         <?php if($isLogged):?><a href="/front_office/front_end/html/compte.php"><svg class="icone" width="48" height="48" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M144 128a80 80 0 1 1 160 0 80 80 0 1 1 -160 0zm208 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0zM48 480c0-70.7 57.3-128 128-128l96 0c70.7 0 128 57.3 128 128l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8c0-97.2-78.8-176-176-176l-96 0C78.8 304 0 382.8 0 480l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8z"/></svg>Compte</a>
         <?php else: ?><a href="/front_office/front_end/html/seconnecter.php">S'identifier</a>

@@ -48,7 +48,7 @@
             $heure_serveur = date('Y-m-d H:i:s'); // L'heure actuelle du serveur
             // -----------------------
 
-            if ($otp->verify($code_saisi)) {
+            if ($otp->verify($code_saisi, null, 2)) {
                 // La vérification A2F a réussi, on connecte l'utilisateur
                 if(isset($_SESSION['temp_user'])) {
                     $user = $_SESSION['temp_user'];

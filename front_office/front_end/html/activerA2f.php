@@ -6,16 +6,25 @@
     require_once '../../../vendor/autoload.php';
     
     $id_client_connecte = $_SESSION['id_client'];  
+    
+    $attente_a2f = false;
+    
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['code'])){
+        $attente_a2f = true;
+    }
 
     if ($_SERVER["REQUEST_METHOD"] === "GET") {
-
-        $otp = TOTP::create(); 
+        $clock = new class implements \Psr\Clock\ClockInterface {
+            public function now(): \DateTimeImmutable {
+                return new \DateTimeImmutable();
+            }
+        };
+        $otp = TOTP::generate($clock);
         $_SESSION['temp_secret_a2f'] = $otp->getSecret(); 
     } else {
         if (isset($_SESSION['temp_secret_a2f'])) {
             $otp = TOTP::create($_SESSION['temp_secret_a2f']);
         } else {
-            // Si la session est perdue lors de l'AJAX
             if (isset($_POST['code'])) {
                 echo json_encode(['success' => false, 'message' => "Session expirée, veuillez recharger la page."]);
                 exit();
@@ -24,6 +33,7 @@
             exit();
         }
     }
+    
 
 
     if (isset($_POST['code'])) {
@@ -49,11 +59,6 @@
             exit();
         }
     }   
-    $attente_a2f = false;
-    if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['code'])){
-        $attente_a2f = true;
-    }
-
     
     if (!$attente_a2f) {
         $code_secret = $otp->getSecret(); 

@@ -1,14 +1,14 @@
 <?php
+    use OTPHP\TOTP;
+    
+    session_start();
     
     date_default_timezone_set('Europe/Paris');
     
     include 'config.php';
     
     require_once '../../../vendor/autoload.php';
-    use OTPHP\TOTP;
-    
-    session_start();
-    
+
 
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 

@@ -55,40 +55,21 @@
                 </a>
             <?php } ?>
         <button id="openFilter" class="filter-btn" aria-label="Filtres"><img src="/front_office/front_end/assets/images/filtre.png" alt="filtre" width="30" height="30"></button>
+
+        <!-- Switcher daltonien -->
+        <div class="daltonien-switcher">
+            <button class="dal-trigger" id="dal-trigger">Daltonisme</button>
+            <div class="dal-dropdown" id="dal-dropdown">
+                <button class="dal-option dal-deuteranopie" data-mode="deuteranopie">Deutéranopie</button>
+                <button class="dal-option dal-protanopie" data-mode="protanopie">Protanopie</button>
+                <button class="dal-option dal-tritanopie" data-mode="tritanopie">Tritanopie</button>
+                <button class="dal-reset" id="dal-reset">Réinitialiser</button>
+            </div>
+        </div>
         </div>
         <?php if($isLogged):?><a href="/front_office/front_end/html/compte.php"><svg class="icone" width="48" height="48" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M144 128a80 80 0 1 1 160 0 80 80 0 1 1 -160 0zm208 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0zM48 480c0-70.7 57.3-128 128-128l96 0c70.7 0 128 57.3 128 128l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8c0-97.2-78.8-176-176-176l-96 0C78.8 304 0 382.8 0 480l0 8c0 13.3 10.7 24 24 24s24-10.7 24-24l0-8z"/></svg>Compte</a>
         <?php else: ?><a href="/front_office/front_end/html/seconnecter.php">S'identifier</a>
         <?php endif; ?>
-
-        <!-- Switcher daltonien -->
-        <div class="daltonien-switcher">
-            <button class="dal-trigger" id="dal-trigger">Accessibilité</button>
-            <div class="dal-dropdown" id="dal-dropdown">
-                <p class="dal-dropdown-titre">Mode visuel</p>
-                <button class="dal-option dal-deuteranopie" data-mode="deuteranopie">
-                    <span class="dal-pastille"></span>
-                    <span>
-                        Deutéranopie
-                        <span class="dal-sous-titre">Confusion rouge / vert</span>
-                    </span>
-                </button>
-                <button class="dal-option dal-protanopie" data-mode="protanopie">
-                    <span class="dal-pastille"></span>
-                    <span>
-                        Protanopie
-                        <span class="dal-sous-titre">Rouge sombre</span>
-                    </span>
-                </button>
-                <button class="dal-option dal-tritanopie" data-mode="tritanopie">
-                    <span class="dal-pastille"></span>
-                    <span>
-                        Tritanopie
-                        <span class="dal-sous-titre">Confusion bleu / jaune</span>
-                    </span>
-                </button>
-                <button class="dal-reset" id="dal-reset">Réinitialiser</button>
-            </div>
-        </div>
     </nav>
 </nav>
 <!-- Le script doit être chargé sur toutes les pages via le header -->

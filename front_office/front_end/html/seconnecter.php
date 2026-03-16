@@ -88,7 +88,7 @@
         if (!$user) {
             $erreur_ident = "Identifiant incorrect";
         }
-        // 2) MOT DE PASSE INCORRECT
+        // 2) MOT DE PASSE INCORRECT ! S
         elseif ($mdp !== $user['mdp']) {
             $erreur_mdp = "Mot de passe incorrect";
         }

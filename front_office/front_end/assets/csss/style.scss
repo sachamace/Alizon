@@ -985,6 +985,7 @@ footer.footer {
         flex-direction: column;
 
       .images-produit {
+        position: relative;
         flex: 0 0 50%;
         background: #f8f8f8;
         padding: 3rem;
@@ -1045,16 +1046,25 @@ footer.footer {
         }
         .btn-favoris {
           position: absolute;
-          top: 16.5em;      /* Distance par rapport au haut de l'image */
-          right: 13em;    /* Distance par rapport à la droite de l'image */
+          top: 2rem;
+          right: 2rem;
           width: 5em;
           height: 5em;
           border: none;
-          background-color: #f8f8f8;
+          background: none; 
           padding: 0;
           cursor: pointer;
-          z-index: 10;      /* S'assure que le bouton passe au-dessus de l'image */
+          z-index: 10;      
           outline: none;
+          @media (max-width: 428px) {
+            top: 1rem;   
+            right: 1rem;
+            
+            svg {
+              width: 2.2em; 
+              height: 2.2em;
+            }
+          }
         }
       }
       .titre-prix-boutons {
@@ -2066,10 +2076,13 @@ footer.footer {
       margin-top: 200px;
       z-index: auto;
       flex: none;
-      width: 80%;
+      width: 90%;
 
       article {
         margin: 0;
+        flex-direction: column; /* On empile l'image et le texte sur mobile */
+        align-items: center;
+        text-align: center;
 
         .panier_info {
           display: flex;
@@ -2109,6 +2122,49 @@ footer.footer {
 
     aside {
       margin-bottom: 80px;
+    }
+
+    .colonne-droite-panier {
+      width: 90%; /* Même largeur que la section principale */
+      
+      aside {
+        width: 100%;
+        margin: 0; /* Enlève les marges pour que ça fitte bien */
+        padding: 1.5em 1em;
+        box-sizing: border-box; /* S'assure que le padding ne dépasse pas le width */
+      }
+
+      .item-souhait {
+        flex-direction: column; /* On empile l'image et les infos sur la liste de souhait */
+        text-align: center;
+        
+        .img-souhait {
+          width: 80px;
+          height: 80px;
+        }
+
+        .details-souhait {
+          width: 100%;
+
+          .actions-souhait {
+            flex-direction: column; /* On empile le bouton ajouter et le lien savoir plus */
+            gap: 10px;
+
+            form {
+                width: 100%;
+            }
+
+            .btn-ajout-panier {
+              width: 100%; /* Le bouton prend toute la largeur sur mobile */
+            }
+
+            .lien-savoir-plus {
+              width: 100%;
+              text-align: center;
+            }
+          }
+        }
+      }
     }
   }
 

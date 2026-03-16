@@ -3,8 +3,8 @@ include 'config.php';
 include 'sessionindex.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_produit = (int) $_POST['id_produit'];
-    $id_produit_favoris = (int) $_POST['id_produit_favoris'];
+    $id_produit = (int) ($_POST['id_produit'] ?? 0);
+    $id_produit_favoris = (int) ($_POST['id_produit_favoris'] ?? 0);
     $action = $_POST['action'];
     $id_panier = $_SESSION['id_panier'];
 

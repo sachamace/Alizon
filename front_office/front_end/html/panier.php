@@ -137,6 +137,42 @@ try {
                 <h2>Votre panier est vide</h2>
                 <a href="../../../index.php" class="btn-retour">Retour à la boutique</a>
             </section>
+            <aside class="box-droite liste-souhait">
+                    <h2>Liste de souhait</h2>
+                    <?php
+                    $stmt_fav = $pdo->prepare("
+                        SELECT p.id_produit, p.nom_produit, 
+                            (SELECT chemin_image FROM media_produit WHERE id_produit = p.id_produit LIMIT 1) AS image_produit
+                        FROM favoris f
+                        JOIN produit p ON f.id_produit = p.id_produit
+                        WHERE f.id_client = ?
+                    ");
+                    $stmt_fav->execute([$_SESSION["id_client"]]);
+                    $favoris = $stmt_fav->fetchAll(PDO::FETCH_ASSOC);
+                    if (count($favoris) != 0){
+                        foreach ($favoris as $fav) {
+                            $image_src = !empty($fav['image_produit']) ? htmlspecialchars($fav['image_produit']) : 'front_end/assets/images_produits/default.png';
+                            ?>
+                            <div class="item-souhait">
+                                <img src="<?= $image_src ?>" alt="<?= htmlspecialchars($fav['nom_produit']) ?>" class="img-souhait">
+                                <div class="details-souhait">
+                                    <h5><?= htmlspecialchars($fav['nom_produit']) ?></h5>
+                                    <div class="actions-souhait">
+                                        <form action="" method="post">
+                                            <input type="hidden" name="action" value="ajouter_panier_depuis_fav">
+                                            <input type="hidden" name="id_produit_favoris" value="<?= $fav['id_produit'] ?>">
+                                            <button type="submit" class="btn-ajout-panier">Ajouter</button>
+                                        </form>
+                                        <a href="produitdetail.php?article=<?= $fav['id_produit'] ?>" class="lien-savoir-plus">En savoir plus</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="separateur-souhait">
+                            <?php
+                        }
+                    }
+                    ?>
+            </aside>
         <?php else : ?>
             <section>
                 <?php

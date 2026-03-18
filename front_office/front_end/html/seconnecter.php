@@ -109,7 +109,7 @@
             $panier_sql->execute([$user['id_num']]); 
             $panier = $panier_sql->fetch();
             
-            if(strcmp($secret,"") != 0){
+            if (!empty($secret)) {
                 $_SESSION['temp_secret'] = $secret;
                 $attente_a2f = true; // On active l'affichage de la popup A2F
             }

@@ -1,4 +1,8 @@
 @charset "UTF-8";
+:root {
+  --primary: #ff6ce2;
+}
+
 body {
   background-color: #e8e8e8;
   margin: 0;
@@ -20,6 +24,7 @@ header {
   position: fixed;
   top: 0;
   z-index: 9999;
+  overflow: visible;
 }
 header nav {
   display: flex;
@@ -68,7 +73,7 @@ header nav nav:first-child form input {
   width: 1150px;
   height: 45px;
   border-radius: 25px;
-  border-color: #ff6ce2;
+  border-color: var(--primary);
   padding: 10px 10px 10px 40px;
   background-image: url(../images/magnifying-glass-solid-full\ \(1\).svg);
   background-repeat: no-repeat;
@@ -113,14 +118,14 @@ header nav nav:first-child form button {
 header nav nav:last-child {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 header nav nav:last-child div {
   display: flex;
   margin-bottom: 7px;
 }
 header nav nav:last-child div a {
-  background: #ff6ce2;
+  background: var(--primary);
   text-align: center;
   padding: 10px;
   font-size: 14px;
@@ -139,16 +144,23 @@ header nav nav:last-child div button {
   }
 }
 header nav nav:last-child a {
-  margin-left: auto;
   text-decoration: none;
   color: #000;
   font-size: 23px;
   font-weight: bold;
   margin-right: 30px;
 }
+header nav nav:last-child .daltonien-switcher {
+  margin-left: auto;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
 @media (max-width: 428px) {
   header nav nav:last-child {
     transform: scale(0.9);
+  }
+  header nav nav:last-child .daltonien-switcher {
+    display: none;
   }
 }
 header nav nav .notif {
@@ -174,7 +186,7 @@ footer.footer.mobile, footer.footer.tablette {
   margin: 0;
   padding: 0;
   font-family: "Space Grotesk", sans-serif;
-  background: #ff6ce2;
+  background: var(--primary);
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -249,7 +261,7 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .input__connexion:focus {
   outline: none;
-  border-color: #ff6ce2;
+  border-color: var(--primary);
   background-color: #fff;
 }
 .input__connexion::-moz-placeholder {
@@ -260,7 +272,7 @@ footer.footer.mobile, footer.footer.tablette {
 }
 
 .forgot-password {
-  color: #ff6ce2;
+  color: var(--primary);
   text-decoration: none;
   font-size: 0.9em;
   align-self: flex-end;
@@ -272,7 +284,7 @@ footer.footer.mobile, footer.footer.tablette {
 }
 
 .btn__connexion, .btn__link {
-  background: #ff6ce2;
+  background: var(--primary);
   color: #000;
   border: none;
   border-radius: 10px;
@@ -316,7 +328,7 @@ footer.footer.mobile, footer.footer.tablette {
 .btn__creer-compte {
   background: #fff;
   color: #000;
-  border: 2px solid #ff6ce2;
+  border: 2px solid var(--primary);
   border-radius: 10px;
   padding: 15px;
   font-size: 1.1em;
@@ -328,7 +340,7 @@ footer.footer.mobile, footer.footer.tablette {
   transition: all 0.3s ease;
 }
 .btn__creer-compte:hover {
-  background: #ff6ce2;
+  background: var(--primary);
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(255, 108, 226, 0.2);
 }
@@ -345,7 +357,7 @@ footer.footer.mobile, footer.footer.tablette {
   margin-top: 20px;
 }
 .recuperation-links a {
-  color: #ff6ce2;
+  color: var(--primary);
   text-decoration: none;
 }
 .recuperation-links a:hover {
@@ -536,7 +548,7 @@ footer.footer.mobile, footer.footer.tablette {
 .div__catalogue article .prix {
   font-size: 1.4em;
   font-weight: 800;
-  color: #ff6ce2;
+  color: var(--primary);
   margin: 0;
 }
 .div__catalogue article .stock-info {
@@ -573,7 +585,7 @@ footer.footer.mobile, footer.footer.tablette {
   flex-direction: column;
   gap: 25px;
 }
-.div__catalogue aside form label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]) {
+.div__catalogue aside form label:not([for$="1"]):not([for$="2"]):not([for$="3"]):not([for$="4"]):not([for$="5"]):not([for$="6"]):not([for$="7"]):not([for$="8"]):not([for$="9"]):not([for$="0"]) {
   display: block;
   font-weight: 700;
   font-size: 0.85rem;
@@ -594,7 +606,7 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .div__catalogue aside form select:focus {
   outline: none;
-  border-color: #ff6ce2;
+  border-color: var(--primary);
   background-color: #fff;
 }
 .div__catalogue aside form .inputs {
@@ -603,7 +615,7 @@ footer.footer.mobile, footer.footer.tablette {
   gap: 10px;
   align-items: center;
 }
-.div__catalogue aside form .inputs input[type=number] {
+.div__catalogue aside form .inputs input[type=number], .div__catalogue aside form .inputs input[type=button] {
   width: 100%;
   padding: 10px;
   border-radius: 8px;
@@ -612,9 +624,9 @@ footer.footer.mobile, footer.footer.tablette {
   margin-bottom: 0;
   transition: border-color 0.2s;
 }
-.div__catalogue aside form .inputs input[type=number]:focus {
+.div__catalogue aside form .inputs input[type=number]:focus, .div__catalogue aside form .inputs input[type=button]:focus {
   outline: none;
-  border-color: #ff6ce2;
+  border-color: var(--primary);
 }
 .div__catalogue aside form fieldset {
   border: none;
@@ -630,7 +642,7 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .div__catalogue aside form fieldset input[type=checkbox] {
   margin-right: 10px;
-  accent-color: #ff6ce2;
+  accent-color: var(--primary);
   cursor: pointer;
 }
 .div__catalogue aside form fieldset label {
@@ -642,7 +654,7 @@ footer.footer.mobile, footer.footer.tablette {
   transition: color 0.2s;
 }
 .div__catalogue aside form fieldset label:hover {
-  color: #ff6ce2;
+  color: var(--primary);
 }
 .div__catalogue aside form label[for="1"], .div__catalogue aside form label[for="2"], .div__catalogue aside form label[for="3"], .div__catalogue aside form label[for="4"], .div__catalogue aside form label[for="5"] {
   color: #ffb800;
@@ -672,6 +684,82 @@ footer.footer.mobile, footer.footer.tablette {
   background: #ddd;
   border-radius: 10px;
 }
+.div__catalogue #map-toggle-btn {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  background: #ff6ce2;
+  color: white;
+  border: none;
+  border-radius: 8px 0 0 8px;
+  width: 36px;
+  height: 60px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s, right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.div__catalogue #map-panel {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 50vw;
+  min-width: 350px;
+  height: 100vh;
+  z-index: 999;
+  background: white;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+.div__catalogue #map-panel h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: #333;
+  flex-shrink: 0;
+  z-index: 10000;
+}
+.div__catalogue #map-panel.ouvert {
+  right: 0;
+}
+.div__catalogue #map {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+.div__catalogue .dept-tooltip {
+  background: white;
+  border: 1px solid #2c5f8a;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-weight: bold;
+  font-size: 13px;
+  color: #1a3f6f;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.div__catalogue .leaflet-control-layers {
+  border-radius: 10px !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  font-family: inherit;
+}
+.div__catalogue .leaflet-control-layers-toggle {
+  background-color: white;
+  border-radius: 10px;
+  width: 50px !important;
+  height: 50px !important;
+}
+.div__catalogue .leaflet-control-layers-expanded {
+  padding: 10px 14px !important;
+  font-size: 13px;
+}
 @media (max-width: 428px) {
   .div__catalogue {
     display: grid !important;
@@ -698,7 +786,7 @@ footer.footer.mobile, footer.footer.tablette {
     border-radius: 10px;
   }
   .div__catalogue::-webkit-scrollbar-thumb {
-    background: #ff6ce2;
+    background: var(--primary);
     border-radius: 10px;
     opacity: 0.7;
   }
@@ -813,7 +901,7 @@ footer.footer.mobile, footer.footer.tablette {
     border-radius: 10px;
   }
   .div__catalogue::-webkit-scrollbar-thumb {
-    background: #ff6ce2;
+    background: var(--primary);
     border-radius: 10px;
   }
   .div__catalogue article {
@@ -1025,7 +1113,7 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .main_produit .fiche-produit .fiche-container .infos-produit .titre-ligne i {
   font-size: 2.2rem;
-  color: #ff6ce2;
+  color: var(--primary);
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -1126,7 +1214,7 @@ footer.footer.mobile, footer.footer.tablette {
   padding: 1.5rem;
   background: #fafafa;
   border-radius: 12px;
-  border-left: 5px solid #ff6ce2;
+  border-left: 5px solid var(--primary);
 }
 @media (max-width: 428px) {
   .main_produit .fiche-produit .fiche-container .infos-produit .description {
@@ -1142,7 +1230,7 @@ footer.footer.mobile, footer.footer.tablette {
   margin-top: auto;
 }
 .main_produit .fiche-produit .fiche-container .infos-produit .boutons button {
-  background: #ff6ce2;
+  background: var(--primary);
   color: #000;
   border: none;
   padding: 1.3rem 2rem;
@@ -1199,7 +1287,7 @@ footer.footer.mobile, footer.footer.tablette {
   transition: border 0.3s; /* Animation douce au clic */
 }
 .main_produit .popup form .input-style:focus {
-  border-color: #ff6ce2; /* Bordure bleue au focus */
+  border-color: var(--primary); /* Bordure bleue au focus */
   background-color: #fff; /* Le fond devient blanc pur */
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.2); /* Légère lueur */
 }
@@ -1231,7 +1319,7 @@ footer.footer.mobile, footer.footer.tablette {
   transform: scale(0.98);
 }
 .main_produit .popup form .actions .btn-confirm {
-  background-color: #ff6ce2;
+  background-color: var(--primary);
 }
 .main_produit .popup form .actions .btn-confirm:hover {
   filter: brightness(0.95);
@@ -1295,7 +1383,7 @@ footer.footer.mobile, footer.footer.tablette {
   margin-bottom: 1.5rem;
   background: #fafafa;
   border-radius: 12px;
-  border-left: 4px solid #ff6ce2;
+  border-left: 4px solid var(--primary);
 }
 .main_produit .avis .avis-item .avis-button {
   display: flex;
@@ -1303,8 +1391,8 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .main_produit .avis .avis-item .avis-button .toggle-view-reponse {
   max-height: 50%;
-  background: #ff6ce2;
-  border: 1px solid #ff6ce2;
+  background: var(--primary);
+  border: 1px solid var(--primary);
   color: #000;
   padding: 0.4rem 0.8rem;
   font-size: 0.85rem;
@@ -1526,7 +1614,7 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .main_produit .avis .form-avis select:focus,
 .main_produit .avis .form-avis textarea:focus {
-  border-color: #ff6ce2;
+  border-color: var(--primary);
   outline: none;
 }
 @media (max-width: 428px) {
@@ -1638,7 +1726,7 @@ footer.footer.mobile, footer.footer.tablette {
 }
 .main_produit .avis .form-avis button {
   margin-top: 1.5rem;
-  background: #ff6ce2;
+  background: var(--primary);
   color: #000;
   border: none;
   padding: 1rem 2rem;
@@ -1785,7 +1873,7 @@ footer.footer.mobile, footer.footer.tablette {
   white-space: nowrap;
   width: 203px;
   min-width: 203px;
-  background: #ff6ce2;
+  background: var(--primary);
   text-align: center;
   padding: 10px;
   font-size: 14px;
@@ -2233,7 +2321,7 @@ footer.footer.mobile, footer.footer.tablette {
 .body_profilClient .main_paiement .profil-container .btn-modif .confirmer,
 .body_profilClient .main_profilClient .profil-container .btn-modif .modifier,
 .body_profilClient .main_profilClient .profil-container .btn-modif .confirmer {
-  background-color: #ff6ce2;
+  background-color: var(--primary);
   color: #fff;
 }
 .body_paiement .main_paiement .profil-container .btn-modif .modifier:hover,
@@ -2507,7 +2595,7 @@ footer.footer.mobile, footer.footer.tablette {
 .body_profilClient .main_paiement .payer-btn,
 .body_profilClient .main_profilClient .payer-btn {
   width: 100%;
-  background: #ff6ce2;
+  background: var(--primary);
   border: none;
   border-radius: 8px;
   padding: 1rem;
@@ -2696,7 +2784,7 @@ footer.footer.mobile, footer.footer.tablette {
   padding: 1.5rem;
   border-radius: 12px;
   margin: 2rem 0;
-  border-left: 4px solid #ff6ce2;
+  border-left: 4px solid var(--primary);
 }
 .client-info p {
   margin: 0.5rem 0;
@@ -2715,7 +2803,7 @@ footer.footer.mobile, footer.footer.tablette {
   color: #333;
   margin-bottom: 1.5rem;
   font-size: 1.3rem;
-  border-bottom: 2px solid #ff6ce2;
+  border-bottom: 2px solid var(--primary);
   padding-bottom: 0.5rem;
 }
 .order-details p {
@@ -2764,24 +2852,22 @@ footer.footer.mobile, footer.footer.tablette {
   transition: all 0.3s ease;
 }
 .btn-primary {
-  background: #ff6ce2;
+  background: var(--primary);
   color: #000;
   box-shadow: 0 4px 15px rgba(108, 211, 255, 0.3);
 }
 .btn-primary:hover {
-  background: #ff6ce2;
+  background: var(--primary);
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(108, 211, 255, 0.4);
 }
 .btn-secondary {
   background: #333;
-  color: #fff;
+  color: #4a4a6a;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 .btn-secondary:hover {
-  background: #555;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background: #fff;
 }
 
 @media (max-width: 428px) {
@@ -2899,7 +2985,7 @@ footer.footer.mobile, footer.footer.tablette {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #ff6ce2;
+  background: var(--primary);
   padding: 14px 16px;
   margin: 18px 20px;
   border-radius: 8px;
@@ -3536,20 +3622,18 @@ footer.footer.mobile, footer.footer.tablette {
   font-family: "Space Grotesk", sans-serif;
 }
 .btn-primary {
-  background: #ff6ce2;
+  background: var(--primary);
   color: #000;
 }
 .btn-primary:hover {
   background: rgb(255, 82.5, 220.9693877551);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .btn-secondary {
-  background: #6c757d;
-  color: #fff;
+  background: #fff;
+  color: #4a4a6a;
 }
 .btn-secondary:hover {
-  background: rgb(84.3605150215, 91.3905579399, 97.6394849785);
+  border-color: #4a4a6a;
 }
 
 @media (max-width: 768px) {
@@ -3600,7 +3684,7 @@ footer.footer.mobile, footer.footer.tablette {
   color: #333;
 }
 .detail-header h1 span {
-  color: #ff6ce2;
+  color: var(--primary);
 }
 .detail-header .date-commande {
   margin: 0.5rem 0 0 0;
@@ -3729,8 +3813,8 @@ footer.footer.mobile, footer.footer.tablette {
   cursor: pointer;
 }
 .suivi-timeline .step.active .step-icon {
-  background: #ff6ce2;
-  border-color: #ff6ce2;
+  background: var(--primary);
+  border-color: var(--primary);
   color: #fff;
   box-shadow: 0 0 0 4px rgba(255, 108, 226, 0.2);
 }
@@ -3748,7 +3832,7 @@ footer.footer.mobile, footer.footer.tablette {
   z-index: 1;
 }
 .suivi-timeline .step-line.full {
-  background: #ff6ce2;
+  background: var(--primary);
 }
 
 .detail-content {
@@ -4018,7 +4102,7 @@ footer.footer.mobile, footer.footer.tablette {
     box-sizing: border-box;
   }
   .table-articles td:nth-child(4) strong {
-    color: #ff6ce2;
+    color: var(--primary);
   }
   .recap-box {
     background-color: #f9f9f9;
@@ -4031,7 +4115,7 @@ footer.footer.mobile, footer.footer.tablette {
     font-size: 1.2rem;
   }
   .recap-box .ligne-recap.total-final span:last-child {
-    color: #ff6ce2;
+    color: var(--primary);
   }
 }
 @page {
@@ -4414,361 +4498,6 @@ table td {
 }
 .daltonien-switcher .dal-dropdown .dal-reset:hover {
   background: #f5f5f5;
-}
-
-body.deuteranopie nav nav:first-child form input {
-  border-color: #E87722;
-}
-body.deuteranopie nav nav:last-child div a {
-  background: #E87722;
-}
-body.deuteranopie .body__connexion {
-  background: #E87722;
-}
-body.deuteranopie input:focus,
-body.deuteranopie select:focus,
-body.deuteranopie textarea:focus,
-body.deuteranopie .input-style:focus {
-  border-color: #E87722 !important;
-}
-body.deuteranopie .forgot-password,
-body.deuteranopie .recuperation-links a {
-  color: #E87722;
-}
-body.deuteranopie .btn__connexion, body.deuteranopie .btn__link,
-body.deuteranopie .btn-confirm,
-body.deuteranopie .btn-primary,
-body.deuteranopie .btn-primary:hover,
-body.deuteranopie .payer-btn,
-body.deuteranopie .confirmer,
-body.deuteranopie .compte__button,
-body.deuteranopie .toggle-view-reponse {
-  background: #E87722 !important;
-  border-color: #E87722 !important;
-}
-body.deuteranopie .btn__creer-compte {
-  border-color: #E87722;
-}
-body.deuteranopie .btn__creer-compte:hover {
-  background: #E87722;
-}
-body.deuteranopie .prix {
-  color: #E87722;
-}
-body.deuteranopie ::-webkit-scrollbar-thumb {
-  background: #E87722;
-}
-body.deuteranopie input[type=checkbox] {
-  accent-color: #E87722;
-}
-body.deuteranopie .prix-valeur {
-  background: #E87722 !important;
-}
-body.deuteranopie .description {
-  border-left-color: #E87722 !important;
-}
-body.deuteranopie .avis-item {
-  border-left-color: #E87722 !important;
-}
-body.deuteranopie .step.active .step-icon {
-  background: #E87722;
-  border-color: #E87722;
-}
-body.deuteranopie .step-line.full {
-  background: #E87722;
-}
-body.deuteranopie .client-info {
-  border-left-color: #E87722;
-}
-body.deuteranopie .order-details h3 {
-  border-bottom-color: #E87722;
-}
-body.deuteranopie .compte__button {
-  background: #E87722;
-}
-
-body.protanopie nav nav:first-child form input {
-  border-color: #0099CC;
-}
-body.protanopie nav nav:last-child div a {
-  background: #0099CC;
-}
-body.protanopie .body__connexion {
-  background: #0099CC;
-}
-body.protanopie input:focus,
-body.protanopie select:focus,
-body.protanopie textarea:focus,
-body.protanopie .input-style:focus {
-  border-color: #0099CC !important;
-}
-body.protanopie .forgot-password,
-body.protanopie .recuperation-links a {
-  color: #0099CC;
-}
-body.protanopie .btn__connexion, body.protanopie .btn__link,
-body.protanopie .btn-confirm,
-body.protanopie .btn-primary,
-body.protanopie .btn-primary:hover,
-body.protanopie .payer-btn,
-body.protanopie .confirmer,
-body.protanopie .compte__button,
-body.protanopie .toggle-view-reponse {
-  background: #0099CC !important;
-  border-color: #0099CC !important;
-}
-body.protanopie .btn__creer-compte {
-  border-color: #0099CC;
-}
-body.protanopie .btn__creer-compte:hover {
-  background: #0099CC;
-}
-body.protanopie .prix {
-  color: #0099CC;
-}
-body.protanopie ::-webkit-scrollbar-thumb {
-  background: #0099CC;
-}
-body.protanopie input[type=checkbox] {
-  accent-color: #0099CC;
-}
-body.protanopie .prix-valeur {
-  background: #0099CC !important;
-}
-body.protanopie .description {
-  border-left-color: #0099CC !important;
-}
-body.protanopie .avis-item {
-  border-left-color: #0099CC !important;
-}
-body.protanopie .step.active .step-icon {
-  background: #0099CC;
-  border-color: #0099CC;
-}
-body.protanopie .step-line.full {
-  background: #0099CC;
-}
-body.protanopie .client-info {
-  border-left-color: #0099CC;
-}
-body.protanopie .order-details h3 {
-  border-bottom-color: #0099CC;
-}
-body.protanopie .compte__button {
-  background: #0099CC;
-}
-
-body.tritanopie nav nav:first-child form input {
-  border-color: #CC3399;
-}
-body.tritanopie nav nav:last-child div a {
-  background: #CC3399;
-}
-body.tritanopie .body__connexion {
-  background: #CC3399;
-}
-body.tritanopie input:focus,
-body.tritanopie select:focus,
-body.tritanopie textarea:focus,
-body.tritanopie .input-style:focus {
-  border-color: #CC3399 !important;
-}
-body.tritanopie .forgot-password,
-body.tritanopie .recuperation-links a {
-  color: #CC3399;
-}
-body.tritanopie .btn__connexion, body.tritanopie .btn__link,
-body.tritanopie .btn-confirm,
-body.tritanopie .btn-primary,
-body.tritanopie .btn-primary:hover,
-body.tritanopie .payer-btn,
-body.tritanopie .confirmer,
-body.tritanopie .compte__button,
-body.tritanopie .toggle-view-reponse {
-  background: #CC3399 !important;
-  border-color: #CC3399 !important;
-}
-body.tritanopie .btn__creer-compte {
-  border-color: #CC3399;
-}
-body.tritanopie .btn__creer-compte:hover {
-  background: #CC3399;
-}
-body.tritanopie .prix {
-  color: #CC3399;
-}
-body.tritanopie ::-webkit-scrollbar-thumb {
-  background: #CC3399;
-}
-body.tritanopie input[type=checkbox] {
-  accent-color: #CC3399;
-}
-body.tritanopie .prix-valeur {
-  background: #CC3399 !important;
-}
-body.tritanopie .description {
-  border-left-color: #CC3399 !important;
-}
-body.tritanopie .avis-item {
-  border-left-color: #CC3399 !important;
-}
-body.tritanopie .step.active .step-icon {
-  background: #CC3399;
-  border-color: #CC3399;
-}
-body.tritanopie .step-line.full {
-  background: #CC3399;
-}
-body.tritanopie .client-info {
-  border-left-color: #CC3399;
-}
-body.tritanopie .order-details h3 {
-  border-bottom-color: #CC3399;
-}
-body.tritanopie .compte__button {
-  background: #CC3399;
-}
-
-body.deuteranopie {
-  --dal-primary: #E87722;
-  --dal-success: #0077BB;
-  --dal-error: #E87722;
-  --dal-warning: #885500;
-  --dal-badge: #0077BB;
-}
-body.deuteranopie .btn__connexion, body.deuteranopie .btn__link,
-body.deuteranopie .btn-popup.btn-valider,
-body.deuteranopie .payer-btn,
-body.deuteranopie .confirmer,
-body.deuteranopie .btn.btn-primary {
-  background-color: #E87722 !important;
-  border-color: #E87722 !important;
-}
-body.deuteranopie .badge-remise-panier,
-body.deuteranopie .remise-badge,
-body.deuteranopie .badge-remise {
-  background-color: #0077BB !important;
-}
-body.deuteranopie .commande-statut.statut-validée {
-  background: #0077BB !important;
-}
-body.deuteranopie .commande-statut.statut-livrée {
-  background: #0077BB !important;
-}
-body.deuteranopie .commande-statut.statut-expédiée {
-  background: #E87722 !important;
-}
-body.deuteranopie .commande-statut.statut-annulée {
-  background: #555555 !important;
-}
-body.deuteranopie .succes-message {
-  color: #0077BB !important;
-}
-body.deuteranopie span[style*="color:red"],
-body.deuteranopie .error,
-body.deuteranopie .erreur-msg {
-  color: #E87722 !important;
-}
-body.deuteranopie nav nav:last-child div a {
-  background: #E87722 !important;
-}
-body.deuteranopie a.btn__creer-compte,
-body.deuteranopie .gerer-adresses-btn {
-  background-color: #E87722 !important;
-}
-
-body.protanopie {
-  --dal-primary: #0099CC;
-  --dal-success: #0099CC;
-  --dal-error: #FF8C00;
-  --dal-warning: #FF8C00;
-  --dal-badge: #0099CC;
-}
-body.protanopie .btn__connexion, body.protanopie .btn__link,
-body.protanopie .btn-popup.btn-valider,
-body.protanopie .payer-btn,
-body.protanopie .confirmer,
-body.protanopie .btn.btn-primary {
-  background-color: #0099CC !important;
-  border-color: #0099CC !important;
-}
-body.protanopie .badge-remise-panier,
-body.protanopie .remise-badge,
-body.protanopie .badge-remise {
-  background-color: #0099CC !important;
-}
-body.protanopie .commande-statut.statut-validée {
-  background: #0099CC !important;
-}
-body.protanopie .commande-statut.statut-livrée {
-  background: #0099CC !important;
-}
-body.protanopie .commande-statut.statut-expédiée {
-  background: #FF8C00 !important;
-}
-body.protanopie .commande-statut.statut-annulée {
-  background: #555555 !important;
-}
-body.protanopie .succes-message {
-  color: #0099CC !important;
-}
-body.protanopie span[style*="color:red"],
-body.protanopie .error,
-body.protanopie .erreur-msg {
-  color: #FF8C00 !important;
-}
-body.protanopie nav nav:last-child div a {
-  background: #0099CC !important;
-}
-body.protanopie a.btn__creer-compte {
-  background-color: #0099CC !important;
-}
-
-body.tritanopie {
-  --dal-primary: #CC3399;
-  --dal-success: #009966;
-  --dal-error: #CC0000;
-  --dal-warning: #CC3399;
-  --dal-badge: #009966;
-}
-body.tritanopie .btn__connexion, body.tritanopie .btn__link,
-body.tritanopie .btn-popup.btn-valider,
-body.tritanopie .payer-btn,
-body.tritanopie .confirmer,
-body.tritanopie .btn.btn-primary {
-  background-color: #CC3399 !important;
-  border-color: #CC3399 !important;
-}
-body.tritanopie .badge-remise-panier,
-body.tritanopie .remise-badge,
-body.tritanopie .badge-remise {
-  background-color: #009966 !important;
-}
-body.tritanopie .commande-statut.statut-validée {
-  background: #009966 !important;
-}
-body.tritanopie .commande-statut.statut-livrée {
-  background: #009966 !important;
-}
-body.tritanopie .commande-statut.statut-expédiée {
-  background: #CC3399 !important;
-}
-body.tritanopie .commande-statut.statut-annulée {
-  background: #555555 !important;
-}
-body.tritanopie .succes-message {
-  color: #009966 !important;
-}
-body.tritanopie span[style*="color:red"],
-body.tritanopie .error,
-body.tritanopie .erreur-msg {
-  color: #CC0000 !important;
-}
-body.tritanopie nav nav:last-child div a {
-  background: #CC3399 !important;
-}
-body.tritanopie a.btn__creer-compte {
-  background-color: #CC3399 !important;
 }
 
 /* Style de base du toast (caché par défaut) */

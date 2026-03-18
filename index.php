@@ -78,9 +78,10 @@
         </aside>
       
         <button id="map-toggle-btn" title="Voir la carte">›</button>
-
+        
         <!-- Panneau latéral -->
         <div id="map-panel">
+            <h2>Nos vendeurs en Bretagne</h2>
             <div id="map"></div>
         </div>
         <?php

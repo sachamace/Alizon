@@ -14,7 +14,7 @@ if (!$id_commande) {
     die("Aucune commande spécifiée");
 }
 
-$id_client = $_SESSION['id'];
+$id_client = $_SESSION['id_client'];
 
 try {
     // Vérifier que la commande appartient bien au client connecté

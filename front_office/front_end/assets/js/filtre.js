@@ -50,31 +50,28 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    let timeout = null;
-    const inputs = document.querySelectorAll('#prixMinInput, #prixMaxInput, #noteMinInput, #noteMaxInput');
-    inputs.forEach(input => {
-        input.addEventListener('input', function() {
-            clearTimeout(timeout);
-            timeout = setTimeout(function() {
-                document.getElementById('tri-form').submit();
-            }, 800);
-        });
-    });
-});
+    const prixMin = document.getElementById('prixMinInput');
+    const prixMax = document.getElementById('prixMaxInput');
+    const noteMin = document.getElementById('noteMinInput');
+    const noteMax = document.getElementById('noteMaxInput');
 
-document.addEventListener("DOMContentLoaded", function(){
-    const triElements = document.querySelectorAll('#tri, input[type="checkbox"]');
-    triElements.forEach(el => {
-        el.addEventListener('change', function() {
-            document.getElementById('tri-form').submit();
-        });
-    });
+    const validerBornes = () => {
+        if (prixMin.value && prixMax.value && parseFloat(prixMin.value) > parseFloat(prixMax.value)) {
+            prixMin.value = prixMax.value - 1;
+        }
+        if (noteMin.value && noteMax.value && parseFloat(noteMin.value) > parseFloat(noteMax.value)) {
+            noteMin.value = noteMax.value -1;
+        }
+    };
+
     let timeout = null;
-    const inputs = document.querySelectorAll('#prixMinInput, #prixMaxInput, #noteMinInput, #noteMaxInput');
-    inputs.forEach(input => {
+    const inputsAuto = document.querySelectorAll('#prixMinInput, #prixMaxInput, #noteMinInput, #noteMaxInput');
+    
+    inputsAuto.forEach(input => {
         input.addEventListener('input', function() {
             clearTimeout(timeout);
             timeout = setTimeout(function() {
+                validerBornes(); 
                 document.getElementById('tri-form').submit();
             }, 800);
         });

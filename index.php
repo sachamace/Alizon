@@ -215,15 +215,53 @@
             // --- 3. GESTION DES FILTRES (Prix, Vendeurs, Notes) ---
             
             // Filtre Prix Min (HAVING car c'est un calcul)
-            if (!empty($_GET['prixMin'])) {
+            /*if (!empty($_GET['prixMin'])) {
+                if (!empty($_GET['prixMax']) && $_GET['prixMin'] > $_GET['prixMax']) {
+                    // Si le prix min est supérieur au prix max, on ignore le filtre min
+                    unset($_GET['prixMin']);
+                }
                 $having .= " AND ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) >= :prixMin";
                 $params['prixMin'] = $_GET['prixMin'];
             }
 
             // Filtre Prix Max
             if (!empty($_GET['prixMax'])) {
+                if (!empty($_GET['prixMin']) && $_GET['prixMax'] < $_GET['prixMin']) {
+                    // Si le prix max est inférieur au prix min, on ignore le filtre max
+                    unset($_GET['prixMax']);
+                }
                 $having .= " AND ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) <= :prixMax";
                 $params['prixMax'] = $_GET['prixMax'];
+            }*/
+
+            /*if (!empty($_GET['prixMin'])) {
+                $prixMin = $_GET['prixMin'];
+                if (!empty($_GET['prixMax'])){
+                    $prixMax = $_GET['prixMax'];
+                    if ($prixMin > $prixMax) {
+                        $prixMin = $prixMax - 1;
+                    }
+                    $having .= " AND ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) <= :prixMax";
+                    $params['prixMax'] = $prixMax;                }
+                $having .= " AND ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) >= :prixMin";
+                $params['prixMin'] = $prixMin;
+            }*/
+
+            $prixMin = !empty($_GET['prixMin']) ? (float)$_GET['prixMin'] : null;
+            $prixMax = !empty($_GET['prixMax']) ? (float)$_GET['prixMax'] : null;
+
+            if ($prixMin !== null && $prixMax !== null && $prixMin > $prixMax) {
+                $prixMin = $prixMax;
+            }
+
+            if ($prixMin !== null) {
+                $having .= " AND ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) >= :prixMin";
+                $params['prixMin'] = $prixMin;
+            }
+
+            if ($prixMax !== null) {
+                $having .= " AND ROUND(p.prix_unitaire_ht * (1 + COALESCE(t.taux, 0) / 100), 2) <= :prixMax";
+                $params['prixMax'] = $prixMax;
             }
 
             // Filtre Vendeurs (Tableau de cases cochées)

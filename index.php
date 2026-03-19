@@ -480,15 +480,29 @@
         fetch('front_office/front_end/html/get_vendeur_map.php')
             .then(r => r.json())
             .then(vendeurs => {
+                // Vérifie si au moins une checkbox vendeur est cochée
+                const toutesCheckboxes = document.querySelectorAll('input[name="vendeurs[]"]');
+                const auMoinsUnCoche = Array.from(toutesCheckboxes).some(cb => cb.checked);
+
                 vendeurs.forEach(v => {
                     const checkbox = document.getElementById('vend_' + v.id_vendeur);
                     const estCoche = checkbox && checkbox.checked;
 
+                    // Si il y a au moins une checkbox coché, on affiche les cochés sinon on affiche tout
+                    if (auMoinsUnCoche && !estCoche) {
+                        return; // on saute ce vendeur
+                    }
+
+                    const nbProduits = v.nb_produits ?? 0;
                     const marker = L.marker([parseFloat(v.latitude), parseFloat(v.longitude)], {
                         icon: estCoche ? redIcon : blueIcon
                     });
 
-                    marker.bindPopup(`<b>${v.raison_sociale}</b><br>${v.adresse}`);
+                    marker.bindPopup(`
+                        <b>${v.raison_sociale}</b><br>
+                        ${v.adresse}<br>
+                        <b>${nbProduits}</b> produit${nbProduits !== 1 ? 's' : ''} en vente
+                    `);
 
                     marker.on('mouseover', function() { this.openPopup(); });
                     marker.on('mouseout', function() { this.closePopup(); });

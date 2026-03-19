@@ -998,16 +998,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
                         const div = document.createElement("div");
                         div.classList.add("media-item", "preview");
-                        div.style.cssText = "display:flex; flex-direction:column; align-items:center; gap:8px;";
+                        div.style.cssText = "display:inline-flex; flex-direction:row; align-items:center; gap:12px; margin-bottom:8px;";
 
                         const preview = document.createElement("img");
                         preview.src = canvas.toDataURL("image/jpeg", QUALITY);
+                        preview.style.cssText = "width:120px; height:120px; object-fit:cover; border-radius:8px;";
 
                         const btn = document.createElement("button");
                         btn.textContent = "Supprimer";
                         btn.type = "button";
                         btn.classList.add("btn-supprimer-image-preview");
-                        btn.style.cssText = "background:var(--primary); color:#000; border:none; border-radius:6px; padding:0.5rem 1.2rem; font-size:0.85rem; font-weight:600; cursor:pointer; width:100%;";
+                        btn.style.cssText = "background:var(--primary); color:#000; border:none; border-radius:6px; padding:0.5rem 1rem; font-size:0.82rem; font-weight:600; cursor:pointer;";
                         btn.addEventListener("click", function () {
                             div.remove();
                             newImagesPreview = newImagesPreview.filter(f => f !== resizedFile);

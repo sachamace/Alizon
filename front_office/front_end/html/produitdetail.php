@@ -141,8 +141,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             // Traitement des images de l'avis
             if (isset($_FILES['nouvelle_image']) && !empty($_FILES['nouvelle_image']['name'][0])) {
 
-                $uploadDir  = __DIR__ . "/../assets/images_avis/";   // chemin physique
-                $uploadName = "/front_office/front_end/assets/images_avis/"; // chemin BDD
+                $uploadDir  = __DIR__ . "/../assets/image_avis/";   // chemin physique
+                $uploadName = "/front_office/front_end/assets/image_avis/"; // chemin BDD
 
                 // Créer le dossier s'il n'existe pas encore
                 if (!is_dir($uploadDir)) {
@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                         $fileName = uniqid("avis_{$id_client}_") . "." . $extension;
                         $filePath = $uploadDir . $fileName;
-                        $cheminBDD = "/front_office/front_end/assets/images_avis/" . $fileName;
+                        $cheminBDD = "/front_office/front_end/assets/image_avis/" . $fileName;
 
                         if (move_uploaded_file($tmp, $filePath)) {
                             $stmt_img = $pdo->prepare("

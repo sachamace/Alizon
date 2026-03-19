@@ -1006,6 +1006,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         btn.textContent = "Supprimer";
                         btn.type = "button";
                         btn.classList.add("btn-supprimer-image-preview");
+                        btn.style.cssText = "background:var(--primary); color:#000; border:none; border-radius:6px; padding:0.4rem 0.9rem; font-size:0.8rem; font-weight:600; cursor:pointer; margin-top:0.4rem;";
                         btn.addEventListener("click", function () {
                             div.remove();
                             newImagesPreview = newImagesPreview.filter(f => f !== resizedFile);

@@ -4535,19 +4535,4 @@ table td {
 } /* Rouge */
 .toast.info {
   background-color: #2196F3;
-} /* Bleu */
-.btn-supprimer-image-preview {
-  background: var(--primary);
-  color: #000;
-  border: none;
-  border-radius: 6px;
-  padding: 0.4rem 0.9rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 0.4rem;
-  transition: filter 0.15s;
-}
-.btn-supprimer-image-preview:hover {
-  filter: brightness(0.9);
-}/*# sourceMappingURL=style.css.map */
+} /* Bleu *//*# sourceMappingURL=style.css.map */

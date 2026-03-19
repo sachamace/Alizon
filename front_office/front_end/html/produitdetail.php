@@ -165,6 +165,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         $filePath = $uploadDir . $fileName;
                         $cheminBDD = "/front_office/front_end/assets/image_avis/" . $fileName;
 
+                        if (!is_writable($uploadDir)) {
+                            die("ERREUR : le dossier $uploadDir n'est pas accessible en écriture.");
+                        }
                         if (move_uploaded_file($tmp, $filePath)) {
                             $stmt_img = $pdo->prepare("
                                 INSERT INTO media_avis (id_client, id_produit, chemin_image)

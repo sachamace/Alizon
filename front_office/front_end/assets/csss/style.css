@@ -118,7 +118,7 @@ header nav nav:first-child form button {
 header nav nav:last-child {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 header nav nav:last-child div {
   display: flex;
@@ -144,7 +144,6 @@ header nav nav:last-child div button {
   }
 }
 header nav nav:last-child a {
-  margin-left: auto;
   text-decoration: none;
   color: #000;
   font-size: 23px;
@@ -4536,4 +4535,19 @@ table td {
 } /* Rouge */
 .toast.info {
   background-color: #2196F3;
-} /* Bleu *//*# sourceMappingURL=style.css.map */
+} /* Bleu */
+.btn-supprimer-image-preview {
+  background: var(--primary);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.4rem;
+  transition: filter 0.15s;
+}
+.btn-supprimer-image-preview:hover {
+  filter: brightness(0.9);
+}/*# sourceMappingURL=style.css.map */

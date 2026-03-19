@@ -153,7 +153,7 @@ header {
       &:last-child {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-start;
 
         div {
           display: flex;
@@ -180,7 +180,6 @@ header {
         }
 
         a {
-          margin-left: auto;
           text-decoration: none;
           color: $black;
           font-size: 23px;
@@ -4874,3 +4873,20 @@ table td {
 .toast.succes { background-color: #4CAF50; } /* Vert */
 .toast.erreur { background-color: #F44336; } /* Rouge */
 .toast.info { background-color: #2196F3; }   /* Bleu */
+// Bouton supprimer image preview (formulaire avis)
+.btn-supprimer-image-preview {
+  background: var(--primary);
+  color: $black;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.4rem;
+  transition: filter 0.15s;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+}

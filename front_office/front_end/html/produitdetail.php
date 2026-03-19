@@ -1004,7 +1004,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
                         const btn = document.createElement("button");
                         btn.textContent = "Supprimer";
-                        btn.style = "button";
+                        btn.type = "button";
+                        btn.classList.add("btn-supprimer-image-preview");
                         btn.addEventListener("click", function () {
                             div.remove();
                             newImagesPreview = newImagesPreview.filter(f => f !== resizedFile);
